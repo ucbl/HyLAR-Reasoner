@@ -16,10 +16,14 @@ Run HyLAR (initial port: 3000)
 
 Once HyLAR is launched, it can be requested as follows:
 
+(GET) `/classify`
+
+Parameters: `filename` (the absolute path of the ontology file to be processed)
+
 Parses and classify an ontology (RDF/XML). Supports Classes, ObjectProperties and DatatypeProperties. This step has to be done before sending any SPARQL query (but only once, as the reasoner instance is kept in-memory).
-> (GET) `/classify`
-> Parameters: `filename` (the absolute path of the ontology file to be processed)
+
+(GET) `/query`
+
+Parameters: `query` (the SPARQL query string)
 
 Processes a SPARQL query on the reasoner. Supports SELECT, INSERT, DELETE queries as well as NAMED GRAPHS.
-> (GET) `/query`
-> Parameters: `query` (the SPARQL query string)
