@@ -1,2 +1,5 @@
 node_modules
 npm-debug.log
+hylar/server/ontologies/*
+hylar/server/db/*
+hylar/test.js
