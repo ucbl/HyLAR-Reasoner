@@ -25,47 +25,20 @@ OWL2RL = {
                 new Logics.fact(JswRDF.IRIs.SUBCLASS, '?c1', '?c2', [], true),
                 new Logics.fact(JswRDF.IRIs.TYPE, '?x', '?c1', [], true)],
             new Logics.fact(JswRDF.IRIs.TYPE, '?x', '?c2', [], true)),
+            
+        // scm-spo
+        new Logics.rule([
+                new Logics.fact('http://www.w3.org/2000/01/rdf-schema#subPropertyOf', '?p1', '?p2', [], true),
+                new Logics.fact('http://www.w3.org/2000/01/rdf-schema#subPropertyOf', '?p2', '?p3', [], true)],
+            new Logics.fact(JswRDF.IRIs.SUBCLASS, '?p1', '?p3', [], true)),
 
-        // scm-cls
+        // prp-spo1
         new Logics.rule([
-                new Logics.fact(JswRDF.IRIs.TYPE, '?c', JswOWL.IRIs.CLASS, [], true)],
-            new Logics.fact(JswRDF.IRIs.SUBCLASS, '?c', '?c', [], true)),
-        new Logics.rule([
-                new Logics.fact(JswRDF.IRIs.TYPE, '?c', JswOWL.IRIs.CLASS, [], true)],
-            new Logics.fact(JswOWL.IRIs.EQUIVALENT_CLASS, '?c', '?c', [], true)),
-        new Logics.rule([
-                new Logics.fact(JswRDF.IRIs.TYPE, '?c', JswOWL.IRIs.CLASS, [], true)],
-            new Logics.fact(JswRDF.IRIs.SUBCLASS, '?c', JswOWL.IRIs.THING, [], true)),
-        new Logics.rule([
-                new Logics.fact(JswRDF.IRIs.TYPE, '?c', JswOWL.IRIs.CLASS, [], true)],
-            new Logics.fact(JswRDF.IRIs.SUBCLASS, JswOWL.IRIs.NOTHING, '?c', [], true))
+                new Logics.fact('http://www.w3.org/2000/01/rdf-schema#subPropertyOf', '?p1', '?p2', [], true),
+                new Logics.fact('?p1', '?x', '?y', [], true)],
+            new Logics.fact('?p2', '?x', '?y', [], true))
+
     ]
-        // eq-sym
-        .concat(
-        'T(?x, owl:sameAs, ?y) -> T(?y, owl:sameAs, ?x)'
-            .toRuleSet())
-
-        // eq-trans
-        .concat(
-        'T(?x, owl:sameAs, ?y) ^ T(?y, owl:sameAs, ?z) -> T(?x, owl:sameAs, ?z)'
-            .toRuleSet())
-
-        // cls-hv1
-        /*.concat(
-        'T(?x, owl:hasValue, ?y) ^ T(?x, owl:onProperty, ?p) ^ T(?u, rdf:type, ?x) -> T(?u, ?p, ?y)'
-            .toRuleSet())*/
-
-        //cax-eqc1
-        .concat(
-        'T(?c1, owl:equivalentClass, ?c2) ^ T(?x, rdf:type, ?c1) -> T(?x, rdf:type, ?c2)'
-            .toRuleSet())
-
-        //cax-eqc2
-        .concat(
-        'T(?c1, owl:equivalentClass, ?c2) ^ T(?x, rdf:type, ?c2) -> T(?x, rdf:type, ?c1)'
-            .toRuleSet())
-
-        .slice(0,2)
 };
 
 module.exports = {
