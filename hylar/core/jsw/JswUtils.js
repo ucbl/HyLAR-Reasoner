@@ -2,7 +2,7 @@
  * Created by Spadon on 14/10/2014.
  */
 
-DOMParser = require('xmldom').DOMParser;
+DOMParser = require('../xmldom/dom-parser').DOMParser;
 
 JswUtils = {
 

@@ -9,7 +9,7 @@ var Combinatorics = require('js-combinatorics'),
     _ = require('lodash');
 
 String.prototype.toRuleSet = function() {
-    return Core.parseStrRule(this);
+    return Logics.parseStrRule(this);
 };
 
 /**
@@ -137,30 +137,24 @@ Rule.prototype = {
      */
     consequences: function(newFacts, originalFacts) {
 
-        var allFacts = Core.mergeFactSets(newFacts, originalFacts, Core.mergeGraphs(newFacts));
+        var allFacts = Logics.mergeFactSets(newFacts, originalFacts, Logics.mergeGraphs(newFacts));
 
         // Calculation of all possible permuted combinations
-        var conjAll = this.findConjunctionsWith(allFacts),
-            conjOrig = this.findConjunctionsWith(Core.substractFactSets(originalFacts, newFacts)),
-            consAll = [], consOrig = [];
+        var conjunctions = this.findConjunctionsWith(allFacts),
+            consequences = [];
 
         // Checks if any conjunction shares the same pattern as current rule
-        for (var key in conjAll) {
-            var cons = this.matches(conjAll[key]);
-            if(cons) consAll = Core.mergeFactSets([cons], consAll);
+        for (var key in conjunctions) {
+            var cons = this.matches(conjunctions[key]);
+            if(cons) consequences = Logics.mergeFactSets([cons], consequences);
         }
 
-        for (var key in conjOrig) {
-            var cons = this.matches(conjOrig[key]);
-            if(cons) consOrig = Core.mergeFactSets([cons], consOrig);
-        }
+        consequences = Logics.substractFactSets(consequences, newFacts);
 
-        var consDiff = Core.substractFactSets(consAll, consOrig);
-
-        if(Core.substractFactSets(consDiff, newFacts) == 0) {
+        if(consequences.length == 0) {
             return newFacts;
         } else {
-            newFacts = Core.mergeFactSets(consDiff, newFacts);
+            newFacts = Logics.mergeFactSets(consequences, newFacts);
             return this.consequences(newFacts, originalFacts);
         }
     },
@@ -178,7 +172,7 @@ Rule.prototype = {
             var reattr = thisRule.rightFact.reattribute(Utils.completeMap(map,initialMap));
             reattr.obtainedFrom = conj;
             reattr.explicit = false;
-            reattr.graphs = Core.mergeGraphs(conj);
+            reattr.graphs = Logics.mergeGraphs(conj);
             return reattr;
         } else {
             return false;
@@ -392,7 +386,7 @@ Fact.prototype = {
  * All necessary stuff around the Logics module
  * @type {{substractFactSets: Function, mergeFactSets: Function}}
  */
-Core = {
+Logics = {
     /**
      * Returns fs1 without the facts occuring in fs2.
      * If a fact in fs2 also appears on any graph not concerned by fs1,
@@ -610,5 +604,5 @@ module.exports = {
         return new Fact(name, li, ri, obt, expl, graphs);
     },
 
-    core: Core
+    core: Logics
 };
