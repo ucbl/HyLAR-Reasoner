@@ -1,6 +1,6 @@
-# HyLAR-server- # 
+# HyLAR-Reasoner #
 
-HyLAR-server- is a server-side OWL 2 RL reasoner that uses [JSW and OWLReasoner](https://code.google.com/p/owlreasoner/) as a triplestore and provides an additional incremental reasoning engine. The full implementation of HyLAR is available [here](https://github.com/ucbl/HyLAR).
+HyLAR-Reasoner is an OWL 2 RL reasoner that uses JSW and OWLReasoner (https://code.google.com/p/owlreasoner/) as a triplestore and provides an additional incremental reasoning engine. The framework implementation of HyLAR is available [here](https://github.com/ucbl/HyLAR).
 
 ## Getting started ##
 

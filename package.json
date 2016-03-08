@@ -1,7 +1,7 @@
 {
   "name": "hylar",
   "main": "hylar/core/hylar.js",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "dependencies": {
     "body-parser": "^1.11.0",
     "connect-busboy": "0.0.2",
@@ -15,7 +15,8 @@
   "devDependencies": {
     "readable-stream": ">=2.0.5",
     "request": "^2.60.0",
-    "streamsearch": "^0.1.2"
+    "streamsearch": "^0.1.2",
+    "mocha": "~2.4.5"
   },
   "engines": {
     "node": ">=0.10.0"
