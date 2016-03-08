@@ -4,26 +4,21 @@ HyLAR-Reasoner is an OWL 2 RL reasoner that uses JSW and OWLReasoner (https://co
 
 ## Getting started ##
 
-Install each necessary package first
+### Install HyLAR's reasoner module ###
 
-`npm install`
+`npm install --save hylar`
 
-Run HyLAR (initial port: 3000)
+### Classify your ontology and query it ###
 
-`node hylar/hylar.js`
+(currently accepts OWL 2 XML serialization only)
 
-## Usage ##
+```
+var Hylar = require('hylar');
+var classifiedOntology, queryResults;
 
-Once HyLAR is launched, it can be requested as follows:
+classifiedOntology = Hylar.classify('./fipa.owl'));
 
-(GET) `/classify`
-> Parameters
-`filename` (the absolute path of the ontology file to be processed)
-
-Parses and classify an ontology (RDF/XML). Supports Classes, ObjectProperties and DatatypeProperties. This step has to be done before sending any SPARQL query (but only once, as the reasoner instance is kept in-memory).
-
-(GET) `/query`
-> Parameters
-`query` (the SPARQL query string)
-
-Processes a SPARQL query on the reasoner. Supports SELECT, INSERT, DELETE queries as well as NAMED GRAPHS.
+queryResults = Hylar.query('PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
+                            'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ' +
+                            'SELECT ?a ?b { ?a rdfs:subClassOf ?b }');
+```
