@@ -36,7 +36,7 @@ OWL2RL = {
         new Logics.rule([
                 new Logics.fact('http://www.w3.org/2000/01/rdf-schema#subPropertyOf', '?p1', '?p2', [], true),
                 new Logics.fact('?p1', '?x', '?y', [], true)],
-            new Logics.fact('?p2', '?x', '?y', [], true)),
+            new Logics.fact('?p2', '?x', '?y', [], true))n
 
 	// prp-trp
 	new Logics.rule([
