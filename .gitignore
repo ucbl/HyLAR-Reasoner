@@ -3,3 +3,4 @@ npm-debug.log
 hylar/server/ontologies/*
 hylar/server/db/*
 hylar/test.js
+hylar/server/*.log
