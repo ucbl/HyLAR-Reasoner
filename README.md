@@ -31,9 +31,12 @@ queryResults = Hylar.query('PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax
 `npm install -g hylar`
 
 2) Use CLI to run HyLAR as a server:
-`hylar --port 3000`
+`hylar --port 3000 -od /usr/local/share/ontologies`
 
 `--port <port_number>` or `-p <port_number>` is optional. HyLAR runs at port 3000 by default.
+
+`--ontology-directory </your/base/ontology/directory>` or `-od </your/base/ontology/directory>` is also optional.
+This parameter specifies the directory in which ontologies are located, in order to classify them. By default, HyLAR uses its module path, i.e. `{path_to_hylar}/server/ontologies`.
 
 It then outputs:
 ```

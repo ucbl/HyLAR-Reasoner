@@ -15,8 +15,13 @@ var fs = require('fs'),
     ClassificationData = null,
     stringifiedReasoner = null,
     appDir = path.dirname(require.main.filename),
-    ontoDir = appDir + '/ontologies/',
-    dbDir = appDir + '/db/';
+    ontoDir = appDir + '/ontologies/';
+
+process.argv.forEach(function(value, index) {
+    if ((value == '-od') || (value == '--ontology-directory')) {
+        ontoDir = process.argv[index + 1] + '/';
+    }
+});
 
 module.exports = {
 
