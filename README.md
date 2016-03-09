@@ -32,7 +32,9 @@ queryResults = Hylar.query('PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax
 
 2) Use CLI to run HyLAR as a server:
 `hylar --port 3123`
+
 `--port <port_number>` or `-p <port_number>` is optional. HyLAR runs at port 3000 by default.
+
 It then outputs:
 ```
 [HyLAR] Setting up routes...
