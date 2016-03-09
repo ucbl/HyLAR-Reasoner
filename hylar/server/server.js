@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 var express = require('express'),
-    app = express()
+    app = express(),
     path = require('path');
 
 var bodyParser = require('body-parser'),

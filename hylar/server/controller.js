@@ -19,7 +19,7 @@ var fs = require('fs'),
 
 process.argv.forEach(function(value, index) {
     if ((value == '-od') || (value == '--ontology-directory')) {
-        ontoDir = process.argv[index + 1] + '/';
+        ontoDir = process.argv[index + 1];
     }
 });
 
@@ -92,17 +92,6 @@ module.exports = {
             }
             return val
         });
-
-        if(!fs.existsSync(dbDir)) {
-            fs.mkdirSync(dbDir);
-        }
-
-        fs.writeFileSync(dbDir + req.param('filename') + '.json',
-            '{' +
-                'reasoner: ' + stringifiedReasoner + ',' +
-                'ontology: ' + JSON.stringify(ClassificationData.ontology) +
-            '}'
-        );
 
         res.status(200).send({
             data : {
