@@ -10,7 +10,7 @@ var Queue = require('./JswQueue'),
     JswRDF = require('./JswRDF'),
     JswOntology = require('./JswOntology'),
     OWL2RL = require('./OWL2RL'),
-    Logics = require('./Logics'),
+    Logics = require('./Logics/Logics'),
     ReasoningEngine = require('./ReasoningEngine');
 
 /**
@@ -34,7 +34,7 @@ Reasoner = function (ontology, RMethod) {
 
     /** Preparing the aBox */
     this.aBox = new TrimQueryABox.trimQueryABox();
-    facts = Logics.core.mergeFactSets(this.resultOntology.convertEntities(), this.resultOntology.convertAxioms());
+    facts = Logics.mergeFactSets(this.resultOntology.convertEntities(), this.resultOntology.convertAxioms());
     preConsequences = RMethod(facts, [], [], this.rules);
     preTriplesImplicit = this.aBox.consequencesToTriples(preConsequences.fi, false);
     preTriplesExplicit = this.aBox.consequencesToTriples(preConsequences.fe, true);

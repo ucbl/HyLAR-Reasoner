@@ -1,7 +1,7 @@
 /**
  * Created by Spadon on 17/10/2014.
  */
-var Logics = require('./Logics'),
+var Fact = require('./Logics/Fact'),
     ReasoningEngine = require('./ReasoningEngine'),
     Utils = require('./Utils'),
     _ = require('lodash');
@@ -368,7 +368,7 @@ TrimQueryABox.prototype = {
         for(var key in this.database.ClassAssertion) {
             assertion = this.database.ClassAssertion[key];
             facts.push(
-                new Logics.fact(rdfType,
+                new Fact(rdfType,
                     assertion.individual,
                     assertion.className,
                     Utils.unStringifyAddCommas(assertion.obtainedFrom),
@@ -379,7 +379,7 @@ TrimQueryABox.prototype = {
         for(var key in this.database.ObjectPropertyAssertion) {
             assertion = this.database.ObjectPropertyAssertion[key];
             facts.push(
-                new Logics.fact(assertion.objectProperty,
+                new Fact(assertion.objectProperty,
                     assertion.leftIndividual,
                     assertion.rightIndividual,
                     Utils.unStringifyAddCommas(assertion.obtainedFrom),
@@ -390,7 +390,7 @@ TrimQueryABox.prototype = {
         for(var key in this.database.DataPropertyAssertion) {
             assertion = this.database.DataPropertyAssertion[key];
             facts.push(
-                new Logics.fact(assertion.dataProperty,
+                new Fact(assertion.dataProperty,
                     assertion.leftIndividual,
                     assertion.rightValue,
                     Utils.unStringifyAddCommas(assertion.obtainedFrom),
@@ -414,7 +414,7 @@ TrimQueryABox.prototype = {
             pred = triple.predicate;
             obj = triple.object;
             graphs = triple.graphs;
-            newFacts.push(new Logics.fact(pred.value, sub.value, obj.value, [], true, graphs));
+            newFacts.push(new Fact(pred.value, sub.value, obj.value, [], true, graphs));
         }
 
         return newFacts;

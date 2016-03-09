@@ -2,80 +2,153 @@
  * Created by Spadon on 11/09/2015.
  */
 
-var Logics = require('./Logics');
+var Logics = require('./Logics/Logics'),
+    Solver = require('./Logics/Solver');
+
 
 ReasoningEngine = {
     /**
-     * A naive reasoner that recalculates the entire knowledge base
+     * A naive reasoner that recalculates the entire knowledge base.
+     * Concat is preferred over merge for evaluation purposes.
      * @param triplesIns
      * @param triplesDel
      * @param rules
      * @returns {{fi: *, fe: *}}
      */
     naive: function(FeAdd, FeDel, F, R) {
-        // Total facts
-        F = Logics.core.mergeFactSets(F, FeAdd);
-
-        // Restriction on graphs from both deletion/addition
-        F = Logics.core.restrictToGraphsFrom(F, Logics.core.mergeFactSets(FeDel, FeAdd));
+        var FiDel = [], FiAdd = [], FiAddNew = [],
+            Fe = Logics.getOnlyExplicitFacts(F),
+            Fi = Logics.getOnlyImplicitFacts(F),
+            initialFi, initialFiAdd;
 
         // Deletion
-        var consequencesToDel = Logics.core.evaluateRuleSet(R, F, FeDel);
-        F = Logics.core.substractFactSets(F, consequencesToDel);
+        if(FeDel && FeDel.length) {
+            do {
+                initialFi = Fi;
+                FiDel = Solver.evaluateRuleSet(R, Logics.mergeFactSetsIn([Fe, Fi, FeDel]));
+                Fe = Logics.substractFactSets(Fe, FeDel);
+                Fi = Logics.substractFactSets(Fi, FiDel);
+            } while (initialFi.length == Fi.length);
+
+
+            do {
+                initialFiAdd = FiAdd;
+                FiAdd = Logics.mergeFactSets(initialFiAdd, Solver.evaluateRuleSet(R, Logics.mergeFactSets(Fe,Fi)));
+            } while (initialFiAdd.length == FiAdd.length);
+        }
 
         // Insertion
-        var consequencesToAdd = Logics.core.evaluateRuleSet(R, F, FeAdd);
-        F = Logics.core.mergeFactSets(consequencesToAdd, F);
+        if(FeAdd && FeAdd.length) {
+            do {
+                FiAdd = Logics.mergeFactSets(FiAddNew, FiAdd);
+                FiAddNew = Solver.evaluateRuleSet(R, Logics.mergeFactSetsIn([Fe, Fi, FeAdd, FiAdd]));
+            } while (!Logics.containsFacts(FiAdd, FiAddNew));
+        }
 
         return {
-            fi: Logics.core.getOnlyImplicitFacts(F),
-            fe: Logics.core.getOnlyExplicitFacts(F)
+            additions: Logics.mergeFactSets(FeAdd, FiAdd),
+            deletions: Logics.mergeFactSets(FeDel, FiDel)
         };
     },
 
     /**
-     * Incremental reasoning which avoids complete recalculation of facts
+     * Incremental reasoning which avoids complete recalculation of facts.
+     * Concat is preferred over merge for evaluation purposes.
      * @param R set of rules
      * @param F set of assertions
      * @param FeAdd set of assertions to be added
      * @param FeDel set of assertions to be deleted
      */
     incremental: function (FeAdd, FeDel, F, R) {
-        var Rdel = [],
-            Rred = [],
-            Rins = [],
-            FiDel = [],
-            FiAdd = [];
+        var Rdel = [], Rred, Rins = [],
+            FiDel = [], FiAdd = [],
+            FiDelNew = [], FiAddNew = [],
+            superSet = [],
 
-        // Total facts
-        F = Logics.core.mergeFactSets(F, FeAdd);
-        F = Logics.core.restrictToGraphsFrom(F, Logics.core.mergeFactSets(FeDel, FeAdd));
+            Fe = Logics.getOnlyExplicitFacts(F),
+            Fi = Logics.getOnlyImplicitFacts(F);
 
-        // Deletion
-        if (FeDel && FeDel.length) {
-            Rdel = Logics.core.restrictRuleSet(R, Logics.core.mergeFactSets(FeDel, FiDel));
-            FiDel = Logics.core.evaluateRuleSet(Rdel, F, FeDel);
-            F = Logics.core.substractFactSets(F, Logics.core.mergeFactSets(FeDel, FiDel));
+        if(FeDel && FeDel.length) {
+            // Overdeletion
+            do {
+                FiDel = Logics.uniques(FiDel, FiDelNew);
+                Rdel = Logics.restrictRuleSet(R, Logics.uniques(FeDel, FiDel));
+                FiDelNew = Solver.evaluateRuleSet(Rdel, Logics.uniques(Logics.uniques(Fi, Fe), FeDel));
+            } while (!Logics.containsFacts(FiDel, FiDelNew));
+            Fe = Logics.minus(Fe, FeDel);
+            Fi = Logics.minus(Fi, FiDel);
 
-            Rred = Logics.core.restrictRuleSet(R, FiDel);
-            FiAdd = Logics.core.evaluateRuleSet(Rred, F, FiDel);
+            // Rederivation
+            do {
+                FiAdd = Logics.uniques(FiAdd, FiAddNew);
+                Rred = Logics.restrictRuleSet(R, FiDel);
+                FiAdd = Solver.evaluateRuleSet(Rred, Logics.uniques(Logics.uniques(Fe, Fi), FiAdd));
+            } while(!Logics.containsFacts(FiAdd, FiAddNew));
+
         }
 
         // Insertion
-        if (FeAdd && FeAdd.length) {
-            Rins = Logics.core.restrictRuleSet(R, Logics.core.mergeFactSets(Logics.core.mergeFactSets(F, FeAdd), FiAdd));
-            FiAdd = Logics.core.mergeFactSets(FiAdd, Logics.core.evaluateRuleSet(Rins, F, Logics.core.mergeFactSets(FeAdd, FiAdd)));
-            F = Logics.core.mergeFactSets(F, Logics.core.mergeFactSets(FeAdd, FiAdd));
+        if(FeAdd && FeAdd.length) {
+            do {
+                FiAdd = Logics.uniques(FiAdd, FiAddNew);
+                superSet = Logics.uniques(Logics.uniques(Logics.uniques(Fe, Fi), FeAdd), FiAdd);
+                Rins = Logics.restrictRuleSet(R,superSet);
+                FiAddNew = Solver.evaluateRuleSet(Rins, superSet);
+            } while (!Logics.containsFacts(FiAdd, FiAddNew));
         }
 
         return {
-            fi: Logics.core.getOnlyImplicitFacts(F),
-            fe: Logics.core.getOnlyExplicitFacts(F)
+            additions: Logics.uniques(FeAdd, FiAdd),
+            deletions: Logics.uniques(FeDel, FiDel)
+        };
+    },
+
+    tagFilter: function(F, refs) {
+        var validSet = [], kb_fe = Logics.getOnlyExplicitFacts(refs), f;
+        for (var i = 0; i < F.length; i++) {
+            f = F[i];
+            if(f.explicit && f.valid) {
+                validSet.push(f);
+            } else if(f.isValid(kb_fe)) {
+                validSet.push(f)
+            }
+        }
+        return validSet;
+    },
+
+    tagging: function(FeAdd, FeDel, F, R) {
+        var FiAddNew = [],
+            FiAdd = [],
+            Rins = [],
+            Fe = Logics.getOnlyExplicitFacts(F),
+            Fi = Logics.getOnlyImplicitFacts(F),
+            superSet, conjunctions;
+
+        if(FeDel.length > 0) {
+            FeDel = Logics.invalidate(Fe, FeDel);
+        }
+
+        if(FeAdd.length > 0) {
+            if(!Logics.containsFacts(Fe, FeAdd)) {
+                do {
+                    FiAdd = Logics.mergeFactSets(FiAdd, FiAddNew);
+                    superSet = Logics.mergeFactSetsIn([Fe, Fi, FeAdd, FiAdd]);
+                    Rins = Logics.restrictRuleSet(R, superSet);
+                    FiAddNew = Solver.evaluateRuleSet(Rins, superSet);
+
+                } while (!Logics.containsFacts(FiAdd, FiAddNew));
+            }
+        }
+
+        return {
+            additions: Logics.mergeFactSetsIn([FeDel, FeAdd, FiAdd])
         };
     }
 };
 
 module.exports = {
     naive: ReasoningEngine.naive,
-    incremental: ReasoningEngine.incremental
+    incremental: ReasoningEngine.incremental,
+    tagging: ReasoningEngine.tagging,
+    tagFilter: ReasoningEngine.tagFilter
 };

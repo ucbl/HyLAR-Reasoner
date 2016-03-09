@@ -68,7 +68,7 @@ module.exports = {
         var ontology = req.ontology,
             initialTime = new Date().getTime(),
             RMethod;
-        if (req.param('reasoningMethod') == 'incremental') RMethod = ReasoningEngine.incremental;
+        if (req.param('reasoningMethod') != 'naive') RMethod = ReasoningEngine.incremental;
 
         var reasoner = new Reasoner.create(ontology, RMethod);
 
@@ -144,7 +144,7 @@ module.exports = {
                 query = sparql.parse(req.param('query')),
                 results, RMethod;
 
-            if (req.param('reasoningMethod') == 'incremental') RMethod = ReasoningEngine.incremental;
+            if (req.param('reasoningMethod') != 'naive') RMethod = ReasoningEngine.incremental;
             results = ClassificationData.reasoner.aBox.answerQuery(query, ClassificationData.reasoner.resultOntology, OWL2RL.rules, RMethod);
 
             processedTime = new Date().getTime();
