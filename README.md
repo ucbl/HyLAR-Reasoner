@@ -57,3 +57,4 @@ Parses and classify an ontology (OWL 2 XML serialization). Supports Classes, Obj
 (GET) `/query`
 > Parameters
 `query` (the SPARQL query string)
+Being a GET request parameter, the query must be urlencoded accordingly.
