@@ -1,6 +1,5 @@
-/**
- * Created by Spadon on 02/10/2014.
- */
+#!/usr/bin/env node
+
 var express = require('express'),
     app = express();
 
@@ -10,13 +9,32 @@ var bodyParser = require('body-parser'),
 var OntologyController = require('./controller'),
     Utils = require('../core/jsw/Utils');
 
+var port = 3000,
+    parsedPort;
+
+process.argv.forEach(function(value, index) {
+    if((value=='-p') || (value=='--port')) {
+        parsedPort = parseInt(process.argv[index+1]);
+        if(parsedPort !== NaN && parsedPort > 0) {
+            port = parsedPort;
+        }
+    }
+});
+
+process.on('uncaughtException', function(err) {
+    console.error('[HyLAR] Fatal error!');
+    throw err;
+});
+
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(busboy({ immediate: true }));
 
 // parse application/json
-app.use(bodyParser.json())
+app.use(bodyParser.json());
+
+console.log('[HyLAR] Setting up routes...');
 
 // Server utils
 app.all('*', Utils.allowCrossDomain);   // Cross domain allowed
@@ -40,8 +58,12 @@ app.get('/ontology', OntologyController.list);
 app.get('/sparql',  OntologyController.getExternalOntology, OntologyController.parseString, OntologyController.generateReasoner,
                     OntologyController.processSPARQL);
 
-//Time
+console.log('[HyLAR] Done.');
+console.log('[HyLAR] Exposing server to port ' + port + '...');
 
 // Launching server
-app.listen(3000);
+app.listen(port);
+console.log('[HyLAR] Done.');
+console.log('[HyLAR] HyLAR is running.');
+
 
