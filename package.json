@@ -22,7 +22,6 @@
     "node": ">=0.10.0"
   },
   "bin": {
-    "hylar": "hylar/server/server.js",
-    "test":
+    "hylar": "hylar/server/server.js"
   }
 }
