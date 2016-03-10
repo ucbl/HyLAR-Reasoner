@@ -45,9 +45,15 @@ ReasoningEngine = {
             } while (!Logics.containsFacts(FiAdd, FiAddNew));
         }
 
+        additions = Logics.uniques(FeAdd, FiAdd);
+        deletions = Logics.uniques(FeDel, FiDel);
+        F = Logics.uniques(F, additions);
+        F = Logics.substractFactSets(F, deletions);
+
         return {
-            additions: Logics.mergeFactSets(FeAdd, FiAdd),
-            deletions: Logics.mergeFactSets(FeDel, FiDel)
+            additions: additions,
+            deletions: deletions,
+            updatedF: F
         };
     },
 
@@ -64,6 +70,8 @@ ReasoningEngine = {
             FiDel = [], FiAdd = [],
             FiDelNew = [], FiAddNew = [],
             superSet = [],
+
+            additions, deletions,
 
             Fe = Logics.getOnlyExplicitFacts(F),
             Fi = Logics.getOnlyImplicitFacts(F);
@@ -97,9 +105,15 @@ ReasoningEngine = {
             } while (!Logics.containsFacts(FiAdd, FiAddNew));
         }
 
+        additions = Logics.uniques(FeAdd, FiAdd);
+        deletions = Logics.uniques(FeDel, FiDel);
+        F = Logics.uniques(F, additions);
+        F = Logics.substractFactSets(F, deletions);
+
         return {
-            additions: Logics.uniques(FeAdd, FiAdd),
-            deletions: Logics.uniques(FeDel, FiDel)
+            additions: additions,
+            deletions: deletions,
+            updatedF: F
         };
     },
 

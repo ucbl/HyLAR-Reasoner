@@ -186,14 +186,14 @@ TrimQueryABox.prototype = {
         if (query.statementType == 'DELETE') {
             F = this.convertAssertions();
             consequences = RMethod(new Array(), this.convertTriples(query.triples), F, R);
-            query.triples = this.consequencesToTriples(consequences.deletions, true);
+            query.triples = this.consequencesToTriples(consequences.updatedF, true);
             this.purgeABox();
             return this.createInsertStatement(query.triples).join('');
 
         } else if (query.statementType == 'INSERT') {
             F = this.convertAssertions();
             consequences = RMethod(this.convertTriples(query.triples), new Array(), F, R);
-            query.triples = this.consequencesToTriples(consequences.additions, true);
+            query.triples = this.consequencesToTriples(consequences.updatedF, true);
             this.purgeABox();
             return this.createInsertStatement(query.triples).join('');
 
