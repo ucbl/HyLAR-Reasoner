@@ -158,22 +158,10 @@ module.exports = {
     },
 
     upload: function(req, res) {
-        req.pipe(req.busboy);
-        req.busboy.on('file', function (fieldname, file, filename) {
-
-            if(!fs.existsSync(ontoDir)) {
-                fs.mkdirSync(ontoDir);
-            }
-
-            var filePath = ontoDir + filename,
-                fstream = fs.createWriteStream(filePath), list;
-            file.pipe(fstream).on('finish', function () {
-                list = fs.readdirSync(ontoDir);
-                res.json({
-                    filename: filename,
-                    list: list
-                });
-            });
+        fs.renameSync(req.file.destination + req.file.filename, req.file.destination + req.file.originalname);
+        res.json({
+            filename: req.file.originalname,
+            list: fs.readdirSync(ontoDir)
         });
     },
 

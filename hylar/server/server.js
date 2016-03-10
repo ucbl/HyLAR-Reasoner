@@ -2,10 +2,14 @@
 
 var express = require('express'),
     app = express(),
-    path = require('path');
 
-var bodyParser = require('body-parser'),
-    busboy  = require('connect-busboy');
+    path = require('path'),
+    bodyParser = require('body-parser'),
+    multer  = require('multer');
+
+var appDir = path.dirname(require.main.filename),
+    ontoDir = appDir + '/ontologies/',
+    upload = multer({ dest: ontoDir });
 
 var OntologyController = require('./controller'),
     Utils = require('../core/jsw/Utils');
@@ -30,8 +34,6 @@ process.on('uncaughtException', function(err) {
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use(busboy({ immediate: true }));
-
 // parse application/json
 app.use(bodyParser.json());
 
@@ -50,7 +52,7 @@ app.get('/classify', OntologyController.getOntology, OntologyController.parseStr
 app.get('/query', OntologyController.processSPARQL);
 
 //File uploading
-app.post('/ontology', OntologyController.upload);
+app.post('/ontology', upload.single('file'), OntologyController.upload);
 
 //Ontology listing
 app.get('/ontology', OntologyController.list);
