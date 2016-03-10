@@ -10,7 +10,7 @@ var fs = require('fs');
     ReasoningEngine = require('./jsw/ReasoningEngine'),
     OWL2RL = require('./jsw/OWL2RL'),
 
-    ClassificationData = null;
+        ClassificationData = null;
 
 module.exports = {
     /**

@@ -33,7 +33,7 @@ Solver = {
 
             // Maps rule causes variables to the actual conjunction
             for (var j = 0; j < rule.causes.length; j++) {
-                this.mapValues(conjunction[j], rule.causes[j], mapping);
+                mapping = this.mapValues(conjunction[j], rule.causes[j], mapping);
             }
 
             // Replaces variable mappings on the rule consequences
@@ -59,17 +59,17 @@ Solver = {
                 if (!this.alreadyMapped(mapping, ruleFactRows[i]) && this.mapsNothing(mapping, factRows[i])) {
                     mapping[ruleFactRows[i]] = factRows[i];
                 } else if (this.mapsNothing(mapping, factRows[i])) {
-                    return;
+                    return false;
                 }
                 if(!this.alreadyMapped(mapping, ruleFactRows[i])) {
-                    return;
+                    return false;
                 }
             } else if ((ruleFactRows[i] != factRows[i])) {
-                return;
+                return false;
             }
         }
 
-        return;
+        return mapping;
     },
 
     replaceMappings: function(mapping, rule) {

@@ -186,16 +186,14 @@ TrimQueryABox.prototype = {
         if (query.statementType == 'DELETE') {
             F = this.convertAssertions();
             consequences = RMethod(new Array(), this.convertTriples(query.triples), F, R);
-            query.triples = this.consequencesToTriples(consequences.fe, true).concat(
-                            this.consequencesToTriples(consequences.fi, false));
+            query.triples = this.consequencesToTriples(consequences.deletions, true);
             this.purgeABox();
             return this.createInsertStatement(query.triples).join('');
 
         } else if (query.statementType == 'INSERT') {
             F = this.convertAssertions();
             consequences = RMethod(this.convertTriples(query.triples), new Array(), F, R);
-            query.triples = this.consequencesToTriples(consequences.fe, true).concat(
-                            this.consequencesToTriples(consequences.fi, false));
+            query.triples = this.consequencesToTriples(consequences.additions, true);
             this.purgeABox();
             return this.createInsertStatement(query.triples).join('');
 
@@ -429,40 +427,40 @@ TrimQueryABox.prototype = {
         var triples = [];
         for(var key in consequences) {
             var fact = consequences[key];
-            if(fact.rightIndividual.match(/"[^"]*"/g)) {
+            if(fact.object.match(/"[^"]*"/g)) {
                 triples.push({
                     subject: {
-                        value: fact.leftIndividual,
+                        value: fact.subject,
                         type: rdf.ExpressionTypes.IRI_REF
                     },
                     predicate : {
-                        value: fact.name,
+                        value: fact.predicate,
                         type: rdf.ExpressionTypes.IRI_REF
                     },
                     object: {
-                        value: fact.rightIndividual,
+                        value: fact.object,
                         type: rdf.ExpressionTypes.LITERAL
                     },
                     explicit: explicit,
-                    obtainedFrom: fact.obtainedFrom,
+                    obtainedFrom: fact.causedBy,
                     graphs: fact.graphs
                 });
             } else {
                 triples.push({
                     subject: {
-                        value: fact.leftIndividual,
+                        value: fact.subject,
                         type: rdf.ExpressionTypes.IRI_REF
                     },
                     predicate : {
-                        value: fact.name,
+                        value: fact.predicate,
                         type: rdf.ExpressionTypes.IRI_REF
                     },
                     object: {
-                        value: fact.rightIndividual,
+                        value: fact.object,
                         type: rdf.ExpressionTypes.IRI_REF
                     },
                     explicit: explicit,
-                    obtainedFrom: fact.obtainedFrom,
+                    obtainedFrom: fact.causedBy,
                     graphs: fact.graphs
                 });
             }
