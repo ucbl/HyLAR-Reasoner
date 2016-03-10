@@ -36,8 +36,8 @@ Reasoner = function (ontology, RMethod) {
     this.aBox = new TrimQueryABox.trimQueryABox();
     facts = Logics.mergeFactSets(this.resultOntology.convertEntities(), this.resultOntology.convertAxioms());
     preConsequences = RMethod(facts, [], [], this.rules);
-    preTriplesImplicit = this.aBox.consequencesToTriples(preConsequences.fi, false);
-    preTriplesExplicit = this.aBox.consequencesToTriples(preConsequences.fe, true);
+    preTriplesImplicit = this.aBox.consequencesToTriples(Logics.getOnlyImplicitFacts(preConsequences.additions), false);
+    preTriplesExplicit = this.aBox.consequencesToTriples(Logics.getOnlyExplicitFacts(preConsequences.additions), true);
     preInsertStatement = this.aBox.createInsertStatement(preTriplesExplicit.concat(preTriplesImplicit));
     this.aBox.processSql(preInsertStatement);
 };
