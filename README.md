@@ -1,6 +1,16 @@
 # HyLAR-Reasoner #
 
-HyLAR-Reasoner is an OWL 2 RL reasoner that uses JSW and OWLReasoner (https://code.google.com/p/owlreasoner/) as a triplestore and provides an additional incremental reasoning engine. The framework implementation of HyLAR is available at https://github.com/ucbl/HyLAR.
+OWL 2 RL incremental reasoner
+
+## Description ###
+
+HyLAR-Reasoner is an OWL 2 RL reasoner that uses JSW and OWLReasoner as a triplestore and provides an additional incremental reasoning engine.
+The framework implementation of HyLAR can be tested online at [[http://dataconf.liris.cnrs.fr/hylar/]]
+
+### Supported OWL constructs and inferences ###
+
+Our reasoner currently supports partial OWL2-RL semantics (ObjectSomeValuesFrom, DataSomeValuesFrom, InverseObjectProperties, ObjectPropertyRange, ObjectPropertyDomain and DataPropertyRange).
+It also provides inferences on Class and Object Properties subsumption and equivalence (owl:subClassOf, owl:subPropertyOf, owl:equivalentClasses).
 
 ## Getting started ##
 
