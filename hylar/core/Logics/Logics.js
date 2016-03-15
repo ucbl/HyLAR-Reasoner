@@ -110,20 +110,18 @@ module.exports = {
     },
 
     restrictFactSet: function(rule, fs) {
-        var restriction = [],
-            predicates = [];
+        var restriction = [];
 
-        for (var ckey in rule.causes) {
-            var rpred = rule.causes[ckey].predicate;
-            if(predicates.indexOf(rpred) == -1) {
-                predicates.push(rpred)
-            }
-        }
+        for (var k = 0; k < fs.length; k++) {
+            var fact = fs[k];
 
-        for (var fkey in fs) {
-            var fact = fs[fkey];
-            if(predicates.indexOf(fact.predicate) > -1) {
-                restriction.push(fact);
+            for (var i = 0; i < rule.causes.length; i++) {
+                var cause = rule.causes[i];
+
+                if (this.causeMatchesFact(cause, fact)) {
+                    restriction.push(fact)
+                    break;
+                }
             }
         }
 
@@ -131,31 +129,47 @@ module.exports = {
     },
 
     restrictRuleSet: function(rs, fs) {
-        var restriction = [],
-            predicates = [];
+        var restriction = [];
 
-        for (var fkey in fs) {
-            var fact = fs[fkey];
-            if(predicates.indexOf(fact.predicate) == -1) {
-                predicates.push(fact.predicate);
-            }
-        }
+        for (var i = 0; i < rs.length; i++) {
+            var rule = rs[i], matches = false;
 
-        for (var rkey in rs) {
-            var rule = rs[rkey],
-                restrict = false;
-            for (var ckey in rule.causes) {
-                var rpred = rule.causes[ckey].predicate;
-                if(predicates.indexOf(rpred) == -1) {
-                    restrict = true;
+            for (var j = 0; j < rule.causes.length; j++) {
+                var cause = rule.causes[j];
+
+                for (var k = 0; k < fs.length; k++) {
+                    var fact = fs[k];
+
+                    if (this.causeMatchesFact(cause, fact)) {
+                        matches = true;
+                        break;
+                    }
                 }
-            }
-            if (!restrict) {
-                restriction.push(rule);
+
+                if (matches) {
+                    restriction.push(rule);
+                    break;
+                }
             }
         }
 
         return restriction;
+    },
+
+    causeMatchesFact: function(cause, fact) {
+        return this.causeMemberMatchesFactMember(cause.subject, fact.subject)
+            && this.causeMemberMatchesFactMember(cause.predicate, fact.predicate)
+            && this.causeMemberMatchesFactMember(cause.object, fact.object);
+    },
+
+    causeMemberMatchesFactMember: function(causeMember, factMember) {
+        if (this.isVariable(causeMember)) {
+            return true;
+        } else if(causeMember == factMember) {
+            return true;
+        } else {
+            return false;
+        }
     },
 
     mergeGraphs: function(fs) {
@@ -331,5 +345,21 @@ module.exports = {
         }
 
         return newSet;
-    }
+    },
+
+    addUriIfNotExists: function(uri, array) {
+        if(!this.isVariable(uri)
+            && array.indexOf(uri) === -1) {
+            array.push(uri);
+        }
+        return array;
+    },
+
+    isVariable: function(str) {
+        try {
+            return (str.indexOf('?') === 0);
+        } catch(e) {
+            return false;
+        }
+    },
 };

@@ -16,39 +16,29 @@ ReasoningEngine = {
      * @returns {{fi: *, fe: *}}
      */
     naive: function(FeAdd, FeDel, F, R) {
-        var FiDel = [], FiAdd = [], FiAddNew = [],
-            Fe = Logics.getOnlyExplicitFacts(F),
-            Fi = Logics.getOnlyImplicitFacts(F),
-            initialFi, initialFiAdd;
+        var FiAdd = [], FiAddNew = [], additions, deletions,
+            Fe = Logics.getOnlyExplicitFacts(F), FiAddNew = [];
 
         // Deletion
         if(FeDel && FeDel.length) {
-            do {
-                initialFi = Fi;
-                FiDel = Solver.evaluateRuleSet(R, Logics.mergeFactSetsIn([Fe, Fi, FeDel]));
-                Fe = Logics.substractFactSets(Fe, FeDel);
-                Fi = Logics.substractFactSets(Fi, FiDel);
-            } while (initialFi.length == Fi.length);
-
-
-            do {
-                initialFiAdd = FiAdd;
-                FiAdd = Logics.mergeFactSets(initialFiAdd, Solver.evaluateRuleSet(R, Logics.mergeFactSets(Fe,Fi)));
-            } while (initialFiAdd.length == FiAdd.length);
+            Fe = Logics.minus(Fe, FeDel);
         }
 
         // Insertion
         if(FeAdd && FeAdd.length) {
-            do {
-                FiAdd = Logics.mergeFactSets(FiAddNew, FiAdd);
-                FiAddNew = Solver.evaluateRuleSet(R, Logics.mergeFactSetsIn([Fe, Fi, FeAdd, FiAdd]));
-            } while (!Logics.containsFacts(FiAdd, FiAddNew));
+            Fe = Logics.uniques(Fe, FeAdd);
         }
 
+        // Recalculation
+        do {
+            FiAdd = Logics.uniques(FiAdd, FiAddNew);
+            FiAddNew = Solver.evaluateRuleSet(R, Logics.uniques(Fe, FiAdd));
+        } while (!Logics.containsFacts(FiAdd, FiAddNew));
+
         additions = Logics.uniques(FeAdd, FiAdd);
-        deletions = Logics.uniques(FeDel, FiDel);
-        F = Logics.uniques(F, additions);
-        F = Logics.substractFactSets(F, deletions);
+        deletions = Logics.minus(F, Logics.uniques(Fe, FiAdd));
+
+        F = Logics.uniques(Fe, FiAdd);
 
         return {
             additions: additions,
@@ -90,7 +80,7 @@ ReasoningEngine = {
             do {
                 FiAdd = Logics.uniques(FiAdd, FiAddNew);
                 Rred = Logics.restrictRuleSet(R, FiDel);
-                FiAdd = Solver.evaluateRuleSet(Rred, Logics.uniques(Logics.uniques(Fe, Fi), FiAdd));
+                FiAddNew = Solver.evaluateRuleSet(Rred, Logics.uniques(Logics.uniques(Fe, Fi), FiAdd));
             } while(!Logics.containsFacts(FiAdd, FiAddNew));
 
         }
@@ -100,15 +90,16 @@ ReasoningEngine = {
             do {
                 FiAdd = Logics.uniques(FiAdd, FiAddNew);
                 superSet = Logics.uniques(Logics.uniques(Logics.uniques(Fe, Fi), FeAdd), FiAdd);
-                Rins = Logics.restrictRuleSet(R,superSet);
+                Rins = Logics.restrictRuleSet(R, superSet);
                 FiAddNew = Solver.evaluateRuleSet(Rins, superSet);
             } while (!Logics.containsFacts(FiAdd, FiAddNew));
         }
 
         additions = Logics.uniques(FeAdd, FiAdd);
         deletions = Logics.uniques(FeDel, FiDel);
+
         F = Logics.uniques(F, additions);
-        F = Logics.substractFactSets(F, deletions);
+        F = Logics.minus(F, deletions);
 
         return {
             additions: additions,

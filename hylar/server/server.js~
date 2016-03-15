@@ -12,7 +12,7 @@ var appDir = path.dirname(require.main.filename),
     upload = multer({ dest: ontoDir });
 
 var OntologyController = require('./controller'),
-    Utils = require('../core/Utils');
+    Utils = require('../core/jsw/Utils');
 
 var port = 3000,
     parsedPort;
@@ -52,7 +52,7 @@ app.get('/classify', OntologyController.getOntology, OntologyController.parseStr
 app.get('/query', OntologyController.processSPARQL);
 
 //File uploading
-app.post('/ontology', upload.single('file'), OntologyController.upload);
+app.post('/ontology', OntologyController.upload);
 
 //Ontology listing
 app.get('/ontology', OntologyController.list);

@@ -6,11 +6,11 @@ var fs = require('fs'),
     path = require('path'),
     request = require('request'),
 
-    JswParser = require('../core/JswParser'),
-    Reasoner = require('../core/Reasoner'),
-    JswSPARQL = require('../core/JswSPARQL'),
-    ReasoningEngine = require('../core/ReasoningEngine'),
-    OWL2RL = require('../core/OWL2RL'),
+    JswParser = require('../core/jsw/JswParser'),
+    Reasoner = require('../core/jsw/Reasoner'),
+    JswSPARQL = require('../core/jsw/JswSPARQL'),
+    ReasoningEngine = require('../core/jsw/ReasoningEngine'),
+    OWL2RL = require('../core/jsw/OWL2RL'),
 
     ClassificationData = null,
     stringifiedReasoner = null,
@@ -158,10 +158,22 @@ module.exports = {
     },
 
     upload: function(req, res) {
-        fs.renameSync(req.file.destination + req.file.filename, req.file.destination + req.file.originalname);
-        res.json({
-            filename: req.file.originalname,
-            list: fs.readdirSync(ontoDir)
+        req.pipe(req.busboy);
+        req.busboy.on('file', function (fieldname, file, filename) {
+
+            if(!fs.existsSync(ontoDir)) {
+                fs.mkdirSync(ontoDir);
+            }
+
+            var filePath = ontoDir + filename,
+                fstream = fs.createWriteStream(filePath), list;
+            file.pipe(fstream).on('finish', function () {
+                list = fs.readdirSync(ontoDir);
+                res.json({
+                    filename: filename,
+                    list: list
+                });
+            });
         });
     },
 

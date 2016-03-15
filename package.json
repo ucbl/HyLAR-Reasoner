@@ -1,7 +1,7 @@
 {
   "name": "hylar",
   "main": "hylar/core/hylar.js",
-  "version": "1.4.5",
+  "version": "1.4.6",
   "dependencies": {
     "body-parser": "^1.11.0",
     "express": "^4.11.1",

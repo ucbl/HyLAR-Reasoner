@@ -55,7 +55,7 @@ Solver = {
             ruleFactRows = [ruleFact.subject, ruleFact.predicate, ruleFact.object];
         
         for (var i = 0; i < 3; i++) {
-            if (this.isVariable(ruleFactRows[i])) {
+            if (Logics.isVariable(ruleFactRows[i])) {
                 if (!this.alreadyMapped(mapping, ruleFactRows[i]) && this.mapsNothing(mapping, factRows[i])) {
                     mapping[ruleFactRows[i]] = factRows[i];
                 } else if (this.mapsNothing(mapping, factRows[i])) {
@@ -90,7 +90,7 @@ Solver = {
             return false;
         }
 
-        if(this.isVariable(ruleFact.subject)) {
+        if(Logics.isVariable(ruleFact.subject)) {
             if (mapping[ruleFact.subject] !== undefined) {
                 consequence.subject = mapping[ruleFact.subject]
             } else {
@@ -100,7 +100,7 @@ Solver = {
             consequence.subject = ruleFact.subject;
         }
 
-        if(this.isVariable(ruleFact.predicate)) {
+        if(Logics.isVariable(ruleFact.predicate)) {
             if (mapping[ruleFact.predicate] !== undefined) {
                 consequence.predicate = mapping[ruleFact.predicate]
             } else {
@@ -110,7 +110,7 @@ Solver = {
             consequence.predicate = ruleFact.predicate;
         }
 
-        if(this.isVariable(ruleFact.object)) {
+        if(Logics.isVariable(ruleFact.object)) {
             if (mapping[ruleFact.object] !== undefined) {
                 consequence.object = mapping[ruleFact.object]
             } else {
@@ -138,14 +138,6 @@ Solver = {
 
     objectExistsIn: function(array, value) {
         return (JSON.stringify(array).indexOf(JSON.stringify(value)) > -1);
-    },
-
-    isVariable: function(str) {
-        try {
-            return (str.indexOf('?') === 0);
-        } catch(e) {
-            return false;
-        }
     },
 
     getConjunctions: function(facts, length) {
