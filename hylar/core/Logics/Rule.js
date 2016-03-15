@@ -25,6 +25,40 @@ Rule.prototype = {
             factConj += ' ^ ' + this.causes[key].toString();
         }
         return factConj.substr(3) + ' -> ' + this.consequences.toString();
+    },
+
+    orderCausesByMostRestrictive: function() {
+        var orderedCauses = [],
+            totalConstantOccurences = [];
+
+        for (var i = 0; i < this.causes.length; i++) {
+            var cause = this.causes[i],
+                constantOccurences = 0;
+            if (!(cause.subject.indexOf('?') === 0)) {
+                constantOccurences++;
+            }
+            if (!(cause.predicate.indexOf('?') === 0)) {
+                constantOccurences++;
+            }
+            if (!(cause.object.indexOf('?') === 0)) {
+                constantOccurences++;
+            }
+            totalConstantOccurences.push({
+                cause: cause,
+                constantOccurences: constantOccurences
+            });
+        }
+
+        totalConstantOccurences = totalConstantOccurences.sort(function(a, b) {
+            var x = a.constantOccurences; var y = b.constantOccurences;
+            return ((x > y) ? -1 : ((x < y) ? 1 : 0));
+        });
+
+        for(var i = 0; i < totalConstantOccurences.length; i++) {
+            orderedCauses.push(totalConstantOccurences[i].cause);
+        }
+
+        this.causes = orderedCauses;
     }
 };
 

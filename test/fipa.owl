@@ -1,0 +1,936 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE Ontology [
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY xml "http://www.w3.org/XML/1998/namespace" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<Ontology xmlns="http://www.w3.org/2002/07/owl#"
+     xml:base="http://sites.google.com/site/smartappliancesproject/ontologies/fipa"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     ontologyIRI="http://sites.google.com/site/smartappliancesproject/ontologies/fipa">
+    <Prefix name="" IRI="http://www.w3.org/2002/07/owl#"/>
+    <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
+    <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+    <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
+    <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
+    <Annotation>
+        <AnnotationProperty IRI="http://purl.org/dc/terms/publisher"/>
+        <Literal datatypeIRI="&xsd;string">TNO</Literal>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty IRI="http://purl.org/dc/terms/creator"/>
+        <Literal datatypeIRI="&xsd;string">Laura Daniele (laura.daniele@tno.nl)</Literal>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty IRI="http://purl.org/dc/terms/issued"/>
+        <Literal datatypeIRI="&xsd;string">01-04-2015</Literal>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty IRI="http://purl.org/dc/terms/created"/>
+        <Literal datatypeIRI="&xsd;string">14-11-2014</Literal>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty IRI="http://purl.org/dc/terms/title"/>
+        <Literal datatypeIRI="&xsd;string">Fipa: FIPA (Foundation for Intelligent Physical Agents) Device Ontology </Literal>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty IRI="http://purl.org/dc/terms/description"/>
+        <Literal datatypeIRI="&xsd;string">The Fipa ontology describes a device ontology that aims at enabling interoperability between software agents, as defined by the FIPA Device Ontology Specification. This ontology can be used by agents when communicating about devices: when agents pass profiles of devices to each other, these profiles can be validated using the information contained in this ontology. </Literal>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty abbreviatedIRI="owl:versionInfo"/>
+        <Literal datatypeIRI="&xsd;string">1.0</Literal>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty IRI="http://purl.org/dc/terms/source"/>
+        <Literal datatypeIRI="&xsd;string">&apos;FIPA Device Ontology Specification&apos;, document number SC00091E , 3 December 2002, available at http://www.fipa.org/specs/fipa00091/SI00091E.pdf</Literal>
+    </Annotation>
+    <Declaration>
+        <Class IRI="#ConnectionDescription"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Device"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Function"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#HwDescription"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#InfoDescription"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MemoryDescription"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MemoryTypeDescription"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#QoS"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#RequestDeviceInfo"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ResolutionDescription"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ScreenDescription"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SwDescription"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#UIDescription"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasAP"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasAvailable"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasConnection"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasConnectionInfo"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasDeviceInfo"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasHwProperties"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasMaximum"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasMemory"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasOperatingSystem"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasQoS"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasResolution"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasScreen"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasSwProperties"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasUserInterface"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasAgentCompliancy"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasAmount"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasAudioInput"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasAudioOutput"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasBpp"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasCPU"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasColor"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasGraphics"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasHeight"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasMemoryUnit"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasMemoryUsageType"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasName"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasResolutionUnit"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasType"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasVendor"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasVersion"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasWidth"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasWidthHeightUnit"/>
+    </Declaration>
+    <SubClassOf>
+        <Class IRI="#Device"/>
+        <ObjectExactCardinality cardinality="1">
+            <ObjectProperty IRI="#hasDeviceInfo"/>
+            <Class IRI="#InfoDescription"/>
+        </ObjectExactCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MemoryDescription"/>
+        <ObjectMinCardinality cardinality="0">
+            <ObjectProperty IRI="#hasAvailable"/>
+            <Class IRI="#MemoryTypeDescription"/>
+        </ObjectMinCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MemoryDescription"/>
+        <ObjectMinCardinality cardinality="0">
+            <ObjectProperty IRI="#hasMaximum"/>
+            <Class IRI="#MemoryTypeDescription"/>
+        </ObjectMinCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MemoryTypeDescription"/>
+        <DataMinCardinality cardinality="0">
+            <DataProperty IRI="#hasAmount"/>
+        </DataMinCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#QoS"/>
+        <Class abbreviatedIRI="owl:Thing"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#RequestDeviceInfo"/>
+        <Class IRI="#Function"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ResolutionDescription"/>
+        <DataMinCardinality cardinality="0">
+            <DataProperty IRI="#hasHeight"/>
+        </DataMinCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ResolutionDescription"/>
+        <DataMinCardinality cardinality="0">
+            <DataProperty IRI="#hasWidth"/>
+        </DataMinCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ScreenDescription"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="#hasResolution"/>
+            <Class IRI="#ResolutionDescription"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ScreenDescription"/>
+        <DataMinCardinality cardinality="0">
+            <DataProperty IRI="#hasHeight"/>
+        </DataMinCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ScreenDescription"/>
+        <DataMinCardinality cardinality="0">
+            <DataProperty IRI="#hasWidth"/>
+        </DataMinCardinality>
+    </SubClassOf>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasAP"/>
+        <Class IRI="#SwDescription"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasConnection"/>
+        <Class IRI="#HwDescription"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasConnectionInfo"/>
+        <Class IRI="#ConnectionDescription"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasDeviceInfo"/>
+        <Class IRI="#Device"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasHwProperties"/>
+        <Class IRI="#Device"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasMemory"/>
+        <Class IRI="#HwDescription"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasOperatingSystem"/>
+        <Class IRI="#SwDescription"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasQoS"/>
+        <Class IRI="#ConnectionDescription"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasResolution"/>
+        <Class IRI="#ScreenDescription"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasScreen"/>
+        <Class IRI="#UIDescription"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasSwProperties"/>
+        <Class IRI="#Device"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasUserInterface"/>
+        <Class IRI="#HwDescription"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasConnection"/>
+        <Class IRI="#ConnectionDescription"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasConnectionInfo"/>
+        <Class IRI="#InfoDescription"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasDeviceInfo"/>
+        <Class IRI="#InfoDescription"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasHwProperties"/>
+        <Class IRI="#HwDescription"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasMemory"/>
+        <Class IRI="#MemoryDescription"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasOperatingSystem"/>
+        <Class IRI="#InfoDescription"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasQoS"/>
+        <Class IRI="#QoS"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasResolution"/>
+        <Class IRI="#ResolutionDescription"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasScreen"/>
+        <Class IRI="#ScreenDescription"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasSwProperties"/>
+        <Class IRI="#SwDescription"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasUserInterface"/>
+        <Class IRI="#UIDescription"/>
+    </ObjectPropertyRange>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasAgentCompliancy"/>
+        <Class IRI="#Device"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasAudioInput"/>
+        <Class IRI="#UIDescription"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasAudioOutput"/>
+        <Class IRI="#UIDescription"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasBpp"/>
+        <Class IRI="#ResolutionDescription"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasCPU"/>
+        <Class IRI="#HwDescription"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasColor"/>
+        <Class IRI="#ScreenDescription"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasGraphics"/>
+        <Class IRI="#ResolutionDescription"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasMemoryUnit"/>
+        <Class IRI="#MemoryTypeDescription"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasMemoryUsageType"/>
+        <Class IRI="#MemoryTypeDescription"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasName"/>
+        <Class IRI="#InfoDescription"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasResolutionUnit"/>
+        <Class IRI="#ResolutionDescription"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasType"/>
+        <Class IRI="#Device"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasVendor"/>
+        <Class IRI="#InfoDescription"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasVersion"/>
+        <Class IRI="#InfoDescription"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasWidthHeightUnit"/>
+        <Class IRI="#ScreenDescription"/>
+    </DataPropertyDomain>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasAgentCompliancy"/>
+        <Datatype abbreviatedIRI="xsd:boolean"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasAmount"/>
+        <Datatype abbreviatedIRI="xsd:integer"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasAudioInput"/>
+        <Datatype abbreviatedIRI="xsd:boolean"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasAudioOutput"/>
+        <Datatype abbreviatedIRI="xsd:boolean"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasBpp"/>
+        <Datatype abbreviatedIRI="xsd:integer"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasCPU"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasColor"/>
+        <Datatype abbreviatedIRI="xsd:boolean"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasGraphics"/>
+        <Datatype abbreviatedIRI="xsd:boolean"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasHeight"/>
+        <Datatype abbreviatedIRI="xsd:integer"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasMemoryUnit"/>
+        <DataOneOf>
+            <Literal datatypeIRI="&xsd;string">B</Literal>
+            <Literal datatypeIRI="&xsd;string">KB</Literal>
+            <Literal datatypeIRI="&xsd;string">MB</Literal>
+        </DataOneOf>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasMemoryUsageType"/>
+        <DataOneOf>
+            <Literal datatypeIRI="&xsd;string">application</Literal>
+            <Literal datatypeIRI="&xsd;string">application &amp; storage</Literal>
+            <Literal datatypeIRI="&xsd;string">storage</Literal>
+        </DataOneOf>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasName"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasResolutionUnit"/>
+        <DataOneOf>
+            <Literal datatypeIRI="&xsd;string">characters</Literal>
+            <Literal datatypeIRI="&xsd;string">pixels</Literal>
+        </DataOneOf>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasType"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasVendor"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasVersion"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasWidth"/>
+        <Datatype abbreviatedIRI="xsd:integer"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasWidthHeightUnit"/>
+        <DataOneOf>
+            <Literal datatypeIRI="&xsd;string">cm</Literal>
+            <Literal datatypeIRI="&xsd;string">inch</Literal>
+            <Literal datatypeIRI="&xsd;string">mm</Literal>
+        </DataOneOf>
+    </DataPropertyRange>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#ConnectionDescription</IRI>
+        <Literal datatypeIRI="&xsd;string">description that can be used to define the connection-related details of a given device.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#ConnectionDescription</IRI>
+        <Literal datatypeIRI="&xsd;string">Connection description</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Device</IRI>
+        <Literal datatypeIRI="&xsd;string">Description that can be used to define the device with its most general properties</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Device</IRI>
+        <Literal datatypeIRI="&xsd;string">Device</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Function</IRI>
+        <Literal datatypeIRI="&xsd;string">Function</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#HwDescription</IRI>
+        <Literal datatypeIRI="&xsd;string">Description that can be used to define the hardware capabilities of a given device</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#HwDescription</IRI>
+        <Literal datatypeIRI="&xsd;string">Hardware Description</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#InfoDescription</IRI>
+        <Literal datatypeIRI="&xsd;string">The description that can be used to define the name, vendor and version of some product.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#InfoDescription</IRI>
+        <Literal datatypeIRI="&xsd;string">Info description</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#MemoryDescription</IRI>
+        <Literal datatypeIRI="&xsd;string">Description that can be used to define the maximum memory of a given device, as well as the memory available at the time of query.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#MemoryDescription</IRI>
+        <Literal datatypeIRI="&xsd;string">Memory description</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#MemoryTypeDescription</IRI>
+        <Literal datatypeIRI="&xsd;string">Memory type description</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#QoS</IRI>
+        <Literal datatypeIRI="&xsd;string">The class QoS is part of the FIPA-Agent-Management ontology that can be found in [FIPA00014]</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#QoS</IRI>
+        <Literal datatypeIRI="&xsd;string">QoS</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#RequestDeviceInfo</IRI>
+        <Literal datatypeIRI="&xsd;string">An agent can make a query in order to request the device information.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#RequestDeviceInfo</IRI>
+        <Literal datatypeIRI="&xsd;string">Request device info</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#ResolutionDescription</IRI>
+        <Literal datatypeIRI="&xsd;string">description that can be used to define the resolution details of a given display</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#ResolutionDescription</IRI>
+        <Literal datatypeIRI="&xsd;string">Resolution description</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#ScreenDescription</IRI>
+        <Literal datatypeIRI="&xsd;string">description that can be used to define the screen of a given device.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#ScreenDescription</IRI>
+        <Literal datatypeIRI="&xsd;string">Screen description</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#SwDescription</IRI>
+        <Literal datatypeIRI="&xsd;string">Description that can be used to define the software capabilities of a given device.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#SwDescription</IRI>
+        <Literal datatypeIRI="&xsd;string">Software Description</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#UIDescription</IRI>
+        <Literal datatypeIRI="&xsd;string">description that can be used to define the user interface(s) of a given device</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#UIDescription</IRI>
+        <Literal datatypeIRI="&xsd;string">UIDescription</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasAP</IRI>
+        <Literal datatypeIRI="&xsd;string">Description of the agent platform the device in question has. Can be used only if agent-compliancy of device level is either true or unspecified.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasAP</IRI>
+        <Literal datatypeIRI="&xsd;string">has AP</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasAgentCompliancy</IRI>
+        <Literal datatypeIRI="&xsd;string">Capability to host a FIPA-agent platform or participate in a distributed one.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasAgentCompliancy</IRI>
+        <Literal datatypeIRI="&xsd;string">has agent compliancy</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasAmount</IRI>
+        <Literal datatypeIRI="&xsd;string">The amount of memory. This value must not be negative.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasAmount</IRI>
+        <Literal datatypeIRI="&xsd;string">has amount</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasAudioInput</IRI>
+        <Literal datatypeIRI="&xsd;string">Specifies whether the device in question is capable of receiving audio input.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasAudioInput</IRI>
+        <Literal datatypeIRI="&xsd;string">has audio input</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasAudioOutput</IRI>
+        <Literal datatypeIRI="&xsd;string">Specifies whether the device in question is capable of producing audio output.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasAudioOutput</IRI>
+        <Literal datatypeIRI="&xsd;string">has audio output</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasAvailable</IRI>
+        <Literal datatypeIRI="&xsd;string">The amount of memory available.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasAvailable</IRI>
+        <Literal datatypeIRI="&xsd;string">has available</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasBpp</IRI>
+        <Literal datatypeIRI="&xsd;string">Bits per pixel.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasBpp</IRI>
+        <Literal datatypeIRI="&xsd;string">has bpp</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasCPU</IRI>
+        <Literal datatypeIRI="&xsd;string">The type of the central processing unit that the device has.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasCPU</IRI>
+        <Literal datatypeIRI="&xsd;string">has CPU</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasColor</IRI>
+        <Literal datatypeIRI="&xsd;string">Has the value true if the device has a color screen; false if it has a monochrome screen.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasColor</IRI>
+        <Literal datatypeIRI="&xsd;string">has color</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasConnection</IRI>
+        <Literal datatypeIRI="&xsd;string">The type of the connection the device uses.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasConnection</IRI>
+        <Literal datatypeIRI="&xsd;string">has connection</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasConnectionInfo</IRI>
+        <Literal datatypeIRI="&xsd;string">General information for the connection.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasConnectionInfo</IRI>
+        <Literal datatypeIRI="&xsd;string">has info</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasDeviceInfo</IRI>
+        <Literal datatypeIRI="&xsd;string">General information for the device.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasDeviceInfo</IRI>
+        <Literal datatypeIRI="&xsd;string">has info</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasGraphics</IRI>
+        <Literal datatypeIRI="&xsd;string">Has the value true if the device is capable of displaying graphics; false if the device is capable of displaying only characters.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasGraphics</IRI>
+        <Literal datatypeIRI="&xsd;string">has graphics</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasHeight</IRI>
+        <Literal datatypeIRI="&xsd;string">The height of the screen or the number of resolution units vertically. This value must be positive.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasHeight</IRI>
+        <Literal datatypeIRI="&xsd;string">has height </Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasHwProperties</IRI>
+        <Literal datatypeIRI="&xsd;string">List of properties describing the hardware features of the device in question.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasHwProperties</IRI>
+        <Literal datatypeIRI="&xsd;string">has hw properties</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasMaximum</IRI>
+        <Literal datatypeIRI="&xsd;string">The maximum amount of memory </Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasMaximum</IRI>
+        <Literal datatypeIRI="&xsd;string">has maximum</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasMemory</IRI>
+        <Literal datatypeIRI="&xsd;string">The amount of memory that the device has.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasMemory</IRI>
+        <Literal datatypeIRI="&xsd;string">has memory</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasMemoryUnit</IRI>
+        <Literal datatypeIRI="&xsd;string">has memory unit</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasMemoryUsageType</IRI>
+        <Literal datatypeIRI="&xsd;string">The usage type of the memory. Either application, storage, or both.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasMemoryUsageType</IRI>
+        <Literal datatypeIRI="&xsd;string">has memory usage type</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasName</IRI>
+        <Literal datatypeIRI="&xsd;string">The name of the product in question.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasName</IRI>
+        <Literal datatypeIRI="&xsd;string">has name</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasOperatingSystem</IRI>
+        <Literal datatypeIRI="&xsd;string">Details of the operating system that the device has.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasOperatingSystem</IRI>
+        <Literal datatypeIRI="&xsd;string">has operating system</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasQoS</IRI>
+        <Literal datatypeIRI="&xsd;string">Detailed information about the Quality of Service of this connection type</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasQoS</IRI>
+        <Literal datatypeIRI="&xsd;string">has QoS</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasResolution</IRI>
+        <Literal datatypeIRI="&xsd;string">The resolution description for the screen.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasResolution</IRI>
+        <Literal datatypeIRI="&xsd;string">has resolution</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasResolutionUnit</IRI>
+        <Literal datatypeIRI="&xsd;string">The unit for the resolution.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasResolutionUnit</IRI>
+        <Literal datatypeIRI="&xsd;string">has resolution unit</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasScreen</IRI>
+        <Literal datatypeIRI="&xsd;string">Information characterizing the screen of the device.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasScreen</IRI>
+        <Literal datatypeIRI="&xsd;string">has screen</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasSwProperties</IRI>
+        <Literal datatypeIRI="&xsd;string">List of properties describing the software features of the device in question.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasSwProperties</IRI>
+        <Literal datatypeIRI="&xsd;string">has sw properties</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasType</IRI>
+        <Literal datatypeIRI="&xsd;string">The type(s) of the device. General type(s) of devices like 3G phones, PDA&apos;s etc. To be used as a sequence from general to more specific types.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasType</IRI>
+        <Literal datatypeIRI="&xsd;string">has type</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasUserInterface</IRI>
+        <Literal datatypeIRI="&xsd;string">List of the user interfaces that the device offers.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasUserInterface</IRI>
+        <Literal datatypeIRI="&xsd;string">has user interface</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasVendor</IRI>
+        <Literal datatypeIRI="&xsd;string">The vendor of the product in question</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasVendor</IRI>
+        <Literal datatypeIRI="&xsd;string">has vendor</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasVersion</IRI>
+        <Literal datatypeIRI="&xsd;string">The version of the product in question</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasVersion</IRI>
+        <Literal datatypeIRI="&xsd;string">has version</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasWidth</IRI>
+        <Literal datatypeIRI="&xsd;string">The width of the screen or the number of resolution units horizontally. This value must be positive.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasWidth</IRI>
+        <Literal datatypeIRI="&xsd;string">has width</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasWidthHeightUnit</IRI>
+        <Literal datatypeIRI="&xsd;string">The unit for the width and height parameters of the Screen Description class.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasWidthHeightUnit</IRI>
+        <Literal datatypeIRI="&xsd;string">has width height unit</Literal>
+    </AnnotationAssertion>
+</Ontology>
+
+
+
+<!-- Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net -->
+

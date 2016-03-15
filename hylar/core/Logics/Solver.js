@@ -11,10 +11,100 @@ Solver = {
     evaluateRuleSet: function(rs, facts) {
         var newCons, cons = [];
         for (var key in rs) {
-            newCons = this.evaluate(rs[key], facts);
-            cons = Logics.mergeFactSets(cons, newCons);
+            newCons = this.evaluateThroughRestriction(rs[key], facts);
+            cons = Logics.uniques(cons, newCons);
         }
         return cons;
+    },
+
+    evaluateThroughRestriction: function(rule, facts) {
+        var pastConsequences = [],
+            newConsequences,
+            matchingFacts = {};
+
+        rule.orderCausesByMostRestrictive();
+
+        while ((newConsequences === undefined) || (newConsequences.length > pastConsequences.length)) {
+            var j = 0,
+                mapping = {};
+
+            if (newConsequences === undefined) {
+                newConsequences = [];
+            } else {
+                pastConsequences = newConsequences;
+            }
+
+            for (var i = 0; i < facts.length; i++) {
+                var fact = facts[i],
+                    cause = rule.causes[j],
+                    consequences;
+
+                if(matchingFacts[fact.toString()] === undefined) {
+                    matchingFacts[fact.toString()] = [];
+                }
+
+                if (matchingFacts[fact.toString()][j] === undefined) {
+                    if (this.factMatchesCause(fact, cause, mapping)) { // updates mapping
+                        matchingFacts[fact.toString()][j] = cause.toString();
+                        i = -1; j++;
+                    }
+                }
+
+                consequences = this.replaceMappings(mapping, rule);
+
+                if (consequences.length > 0) {
+                    newConsequences = Logics.uniques(pastConsequences, consequences);
+                    break;
+                }
+            }
+        }
+
+        return newConsequences;
+    },
+
+    factMatchesCause: function(fact, cause, mapping) {
+        var localMapping = {}; // so that global mapping is not altered in case of false returning
+
+        if (Logics.isVariable(cause.subject)) {
+            if (mapping[cause.subject] && (mapping[cause.subject] != fact.subject)) {
+                return false;
+            } else {
+                localMapping[cause.subject] = fact.subject;
+            }
+        } else {
+            if (fact.subject != cause.subject) {
+                return false;
+            }
+        }
+
+        if (Logics.isVariable(cause.predicate)) {
+            if (mapping[cause.predicate] && (mapping[cause.predicate] != fact.predicate)) {
+                return false;
+            } else {
+                localMapping[cause.predicate] = fact.predicate;
+            }
+        } else {
+            if (fact.predicate != cause.predicate) {
+                return false;
+            }
+        }
+
+        if (Logics.isVariable(cause.object)) {
+            if (mapping[cause.object] && (mapping[cause.object] != fact.object)) {
+                return false;
+            } else {
+                localMapping[cause.object] = fact.object;
+            }
+        } else {
+            if (fact.object != cause.object) {
+                return false;
+            }
+        }
+
+        for (var key in localMapping) {
+            mapping[key] = localMapping[key];
+        }
+        return true;
     },
 
     evaluate: function(rule, facts) {
@@ -134,10 +224,6 @@ Solver = {
             }
         }
         return true;
-    },
-
-    objectExistsIn: function(array, value) {
-        return (JSON.stringify(array).indexOf(JSON.stringify(value)) > -1);
     },
 
     getConjunctions: function(facts, length) {

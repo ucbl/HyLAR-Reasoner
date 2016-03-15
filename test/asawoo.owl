@@ -1,0 +1,915 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE Ontology [
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY xml "http://www.w3.org/XML/1998/namespace" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<Ontology xmlns="http://www.w3.org/2002/07/owl#"
+     xml:base="http://www.irit.fr/recherches/MELODI/ontologies/IoT-O.owl"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     ontologyIRI="http://www.irit.fr/recherches/MELODI/ontologies/IoT-O.owl">
+    <Prefix name="" IRI="http://www.w3.org/2002/07/owl#"/>
+    <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
+    <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+    <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
+    <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
+    <Import>http://purl.oclc.org/NET/ssnx/ssn</Import>
+    <Import>http://www.irit.fr/recherches/MELODI/ontologies/SAN.owl</Import>
+    <Import>http://sites.google.com/site/smartappliancesproject/ontologies/fipa</Import>
+    <Import>http://www.irit.fr/recherches/MELODI/ontologies/hrests.rdf</Import>
+    <Annotation>
+        <AnnotationProperty IRI="http://purl.org/dc/elements/1.1/date"/>
+        <Literal datatypeIRI="&rdf;PlainLiteral">2015-03-05</Literal>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <Literal datatypeIRI="&rdf;PlainLiteral">This is a populated instance of our IoT-O ontology, intended to demonstrate its use in a simple inference case both based on rules and defined classes. Please note that Pellet encounters an issue when running against DUL, and that in order to launch the reasonning process it is necessary to un-import DUL.</Literal>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty IRI="http://purl.org/dc/terms/creator"/>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Nicolas Seydoux, Mahdi Ben Alaya, Nathalie Hernandez, Thierry Monteil</Literal>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <Literal datatypeIRI="&rdf;PlainLiteral">This ontology is intended to be used as a knowledge model for IoT applications, and especially it will be used in a oneM2M implementation.</Literal>
+    </Annotation>
+    <Declaration>
+        <Class IRI="#AboveMaxValueProperty"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AbsoluteImpact"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BelowMinValueProperty"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BusinessOperation"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BusinessService"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ConstrainedProperty"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ControlledSystem"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#DefectuousSystem"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#DeviceManagementOperation"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#DeviceManagementService"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ImpactOnProperty"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#LightBulb"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#LightBulb_actuating_capability"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#LightBulb_actuating_capability_Red"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#LightBulb_actuating_capability_White"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#LightSensor"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#LightningService"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#LogicalContext"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#LoopbackTolerance"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Manager"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MaximumValue"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MinimumValue"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#NegativeImpact"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#OutOfBoundProperty"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PositiveImpact"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#RelativeImpact"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SwitchOff"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SwitchOn"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#TemporalContext"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Thing"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.irit.fr/recherches/MELODI/ontologies/SAN.owl#ActuatingCapability"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.irit.fr/recherches/MELODI/ontologies/SAN.owl#ActuatingDevice"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.irit.fr/recherches/MELODI/ontologies/SAN.owl#ActuationValue"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.wsmo.org/ns/wsmo-lite#Message"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.wsmo.org/ns/wsmo-lite#Operation"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.wsmo.org/ns/wsmo-lite#Service"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="http://purl.oclc.org/NET/ssnx/ssn#hasSensorOutput"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#diagnosedWith"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#getsFeedbackFrom"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasImpact"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasRelationshipWithProperty"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasService"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#holdsInContext"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#isConstrainedBy"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#isServiceOf"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#onProperty"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#providesFeedbackTo"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="http://www.loa-cnr.it/ontologies/DUL.owl#isParametrizedBy"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="http://www.wsmo.org/ns/wsmo-lite#hasInputMessage"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="http://www.wsmo.org/ns/wsmo-lite#hasOperation"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="http://www.wsmo.org/ns/wsmo-lite#hasOutputMessage"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasTimeStamp"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="http://www.loa-cnr.it/ontologies/DUL.owl#hasDataValue"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="http://www.wsmo.org/ns/hrests#hasAddress"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="http://www.wsmo.org/ns/hrests#hasMethod"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#EmptyMessage"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#SimpleDataContent"/>
+    </Declaration>
+    <Declaration>
+        <AnnotationProperty IRI="http://www.loa-cnr.it/ontologies/DUL.owl#isParametrizedBy"/>
+    </Declaration>
+    <Declaration>
+        <Datatype IRI="http://www.wsmo.org/ns/hrests#URITemplate"/>
+    </Declaration>
+    <SubClassOf>
+        <Class IRI="http://elite.polito.it/ontologies/dogont.owl#Notification"/>
+        <Class IRI="http://www.loa-cnr.it/ontologies/DUL.owl#InformationEntity"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://iserve.kmi.open.ac.uk/ns/msm#MessagePart"/>
+        <Class IRI="http://www.loa-cnr.it/ontologies/DUL.owl#Object"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://iserve.kmi.open.ac.uk/ns/msm#Operation"/>
+        <Class IRI="http://www.wsmo.org/ns/wsmo-lite#Operation"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://iserve.kmi.open.ac.uk/ns/msm#Operation"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="http://iserve.kmi.open.ac.uk/ns/msm#hasInput"/>
+            <Class IRI="http://iserve.kmi.open.ac.uk/ns/msm#MessageContent"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://iserve.kmi.open.ac.uk/ns/msm#Operation"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="http://iserve.kmi.open.ac.uk/ns/msm#hasOutput"/>
+            <Class IRI="http://iserve.kmi.open.ac.uk/ns/msm#MessageContent"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://iserve.kmi.open.ac.uk/ns/msm#Service"/>
+        <Class IRI="http://www.wsmo.org/ns/wsmo-lite#Service"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://iserve.kmi.open.ac.uk/ns/msm#Service"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="http://iserve.kmi.open.ac.uk/ns/msm#hasOperation"/>
+            <Class IRI="http://iserve.kmi.open.ac.uk/ns/msm#Operation"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://purl.oclc.org/NET/ssnx/ssn#Device"/>
+        <Class IRI="#Thing"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://purl.oclc.org/NET/ssnx/ssn#MeasurementCapability"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="http://purl.oclc.org/NET/ssnx/ssn#forProperty"/>
+            <Class IRI="http://qudt.org/schema/qudt#QuantityKind"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://purl.oclc.org/NET/ssnx/ssn#MeasurementProperty"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="http://purl.oclc.org/NET/ssnx/ssn#hasValue"/>
+            <Class IRI="http://www.loa-cnr.it/ontologies/DUL.owl#Amount"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://purl.oclc.org/NET/ssnx/ssn#MeasurementProperty"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="http://www.loa-cnr.it/ontologies/DUL.owl#isParametrizedBy"/>
+            <Class IRI="http://qudt.org/schema/qudt#Unit"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://purl.oclc.org/NET/ssnx/ssn#ObservationValue"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="http://www.loa-cnr.it/ontologies/DUL.owl#isParametrizedBy"/>
+            <Class IRI="http://qudt.org/schema/qudt#Unit"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://purl.oclc.org/NET/ssnx/ssn#ObservationValue"/>
+        <DataSomeValuesFrom>
+            <DataProperty IRI="http://www.loa-cnr.it/ontologies/DUL.owl#hasDataValue"/>
+            <Datatype abbreviatedIRI="xsd:integer"/>
+        </DataSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://purl.oclc.org/NET/ssnx/ssn#OperatingProperty"/>
+        <DataSomeValuesFrom>
+            <DataProperty IRI="http://www.loa-cnr.it/ontologies/DUL.owl#hasDataValue"/>
+            <Datatype abbreviatedIRI="xsd:integer"/>
+        </DataSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AboveMaxValueProperty"/>
+        <Class IRI="#OutOfBoundProperty"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AbsoluteImpact"/>
+        <Class IRI="#ImpactOnProperty"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BelowMinValueProperty"/>
+        <Class IRI="#OutOfBoundProperty"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BusinessOperation"/>
+        <Class IRI="http://iserve.kmi.open.ac.uk/ns/msm#Operation"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BusinessService"/>
+        <Class IRI="http://iserve.kmi.open.ac.uk/ns/msm#Service"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BusinessService"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="#hasRelationshipWithProperty"/>
+            <Class IRI="http://purl.oclc.org/NET/ssnx/ssn#Property"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ConstrainedProperty"/>
+        <Class IRI="http://purl.oclc.org/NET/ssnx/ssn#Property"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ControlledSystem"/>
+        <Class IRI="http://purl.oclc.org/NET/ssnx/ssn#System"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ControlledSystem"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="#getsFeedbackFrom"/>
+            <Class IRI="http://purl.oclc.org/NET/ssnx/ssn#Sensor"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#DefectuousSystem"/>
+        <Class IRI="#ControlledSystem"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#DeviceManagementOperation"/>
+        <Class IRI="http://iserve.kmi.open.ac.uk/ns/msm#Operation"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#DeviceManagementService"/>
+        <Class IRI="http://iserve.kmi.open.ac.uk/ns/msm#Service"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ImpactOnProperty"/>
+        <Class IRI="http://www.wsmo.org/ns/wsmo-lite#Effect"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#LightBulb"/>
+        <Class IRI="http://www.irit.fr/recherches/MELODI/ontologies/SAN.owl#ActuatingDevice"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#LightBulb_actuating_capability"/>
+        <Class IRI="http://www.irit.fr/recherches/MELODI/ontologies/SAN.owl#ActuatingCapability"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#LightBulb_actuating_capability_Red"/>
+        <Class IRI="#LightBulb_actuating_capability"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#LightBulb_actuating_capability_White"/>
+        <Class IRI="#LightBulb_actuating_capability"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#LightSensor"/>
+        <Class IRI="http://purl.oclc.org/NET/ssnx/ssn#SensingDevice"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#LightningService"/>
+        <Class IRI="#BusinessService"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#LoopbackTolerance"/>
+        <Class IRI="http://purl.oclc.org/NET/ssnx/ssn#OperatingProperty"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#LoopbackTolerance"/>
+        <DataSomeValuesFrom>
+            <DataProperty IRI="http://www.loa-cnr.it/ontologies/DUL.owl#hasDataValue"/>
+            <Datatype abbreviatedIRI="xsd:integer"/>
+        </DataSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Manager"/>
+        <Class IRI="#Thing"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#NegativeImpact"/>
+        <Class IRI="#AbsoluteImpact"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#OutOfBoundProperty"/>
+        <Class IRI="#ConstrainedProperty"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PositiveImpact"/>
+        <Class IRI="#AbsoluteImpact"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#RelativeImpact"/>
+        <Class IRI="#ImpactOnProperty"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SwitchOff"/>
+        <Class IRI="#BusinessOperation"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SwitchOn"/>
+        <Class IRI="#BusinessOperation"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Thing"/>
+        <Class IRI="http://www.loa-cnr.it/ontologies/DUL.owl#Object"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Thing"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="#hasService"/>
+            <Class IRI="http://iserve.kmi.open.ac.uk/ns/msm#Service"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.irit.fr/recherches/MELODI/ontologies/SAN.owl#ActuationValue"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="http://www.loa-cnr.it/ontologies/DUL.owl#isParametrizedBy"/>
+            <Class IRI="http://qudt.org/schema/qudt#Unit"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.irit.fr/recherches/MELODI/ontologies/SAN.owl#ActuationValue"/>
+        <DataSomeValuesFrom>
+            <DataProperty IRI="http://www.loa-cnr.it/ontologies/DUL.owl#hasDataValue"/>
+            <Datatype abbreviatedIRI="xsd:integer"/>
+        </DataSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.wsmo.org/ns/wsmo-lite#Message"/>
+        <Class IRI="http://www.loa-cnr.it/ontologies/DUL.owl#Object"/>
+    </SubClassOf>
+    <ClassAssertion>
+        <Class IRI="http://www.wsmo.org/ns/wsmo-lite#Message"/>
+        <NamedIndividual IRI="#EmptyMessage"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="http://iserve.kmi.open.ac.uk/ns/msm#MessageContent"/>
+        <NamedIndividual IRI="#SimpleDataContent"/>
+    </ClassAssertion>
+    <InverseObjectProperties>
+        <ObjectProperty IRI="#getsFeedbackFrom"/>
+        <ObjectProperty IRI="#providesFeedbackTo"/>
+    </InverseObjectProperties>
+    <InverseObjectProperties>
+        <ObjectProperty IRI="#isServiceOf"/>
+        <ObjectProperty IRI="#hasService"/>
+    </InverseObjectProperties>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#diagnosedWith"/>
+        <Class IRI="#OutOfBoundProperty"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasImpact"/>
+        <Class IRI="http://iserve.kmi.open.ac.uk/ns/msm#Operation"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasService"/>
+        <Class IRI="http://www.loa-cnr.it/ontologies/DUL.owl#Entity"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#isConstrainedBy"/>
+        <Class IRI="#ConstrainedProperty"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#onProperty"/>
+        <Class IRI="#ImpactOnProperty"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="http://www.wsmo.org/ns/hrests#hasMethod"/>
+        <Class IRI="http://www.wsmo.org/ns/wsmo-lite#Operation"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="http://www.wsmo.org/ns/wsmo-lite#hasInputMessage"/>
+        <Class IRI="http://www.wsmo.org/ns/wsmo-lite#Operation"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="http://www.wsmo.org/ns/wsmo-lite#hasOperation"/>
+        <Class IRI="http://www.wsmo.org/ns/wsmo-lite#Service"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="http://www.wsmo.org/ns/wsmo-lite#hasOutputMessage"/>
+        <Class IRI="http://www.wsmo.org/ns/wsmo-lite#Operation"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#diagnosedWith"/>
+        <Class IRI="http://purl.oclc.org/NET/ssnx/ssn#ObservationValue"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasImpact"/>
+        <Class IRI="#ImpactOnProperty"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#onProperty"/>
+        <Class IRI="http://purl.oclc.org/NET/ssnx/ssn#Property"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="http://www.wsmo.org/ns/wsmo-lite#hasInputMessage"/>
+        <Class IRI="http://www.wsmo.org/ns/wsmo-lite#Message"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="http://www.wsmo.org/ns/wsmo-lite#hasOperation"/>
+        <Class IRI="http://www.wsmo.org/ns/wsmo-lite#Operation"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="http://www.wsmo.org/ns/wsmo-lite#hasOutputMessage"/>
+        <Class IRI="http://www.wsmo.org/ns/wsmo-lite#Message"/>
+    </ObjectPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasTimeStamp"/>
+        <Datatype abbreviatedIRI="xsd:dateTimeStamp"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="http://www.wsmo.org/ns/hrests#hasMethod"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://iserve.kmi.open.ac.uk/ns/msm#Operation</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">An operation is a function provided by a service. It implements a functionnality, and can be accessed by an end user by any mean offered by the service.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://iserve.kmi.open.ac.uk/ns/msm#Service</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">A service is a set of operation, and provides a user a way to issu requests  through an interface. Underlying implementation needn&apos;t to be known by the end user.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#AboveMaxValueProperty</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">This property has a value beyond the maximum aceptable value in its current context.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#AboveMaxValueProperty</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Above max value property</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#AbsoluteImpact</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">In this case, the impat of the operation on the property can&apos;t be modified, it is arbitrary? For example, &quot;switch on the light&quot; is an operation with an absolute impact.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#AbsoluteImpact</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Absolute impact</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#BelowMinValueProperty</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">This property has a value under the acceptable minimum in its current context</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#BelowMinValueProperty</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Below min value property</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#BusinessOperation</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Service operation that is relevant to the business function of the service (and the object underneath in the case of IoT). This type of functions may be linked to a property the object deals with (monitoring or modification)</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#BusinessOperation</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Business operation</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#BusinessService</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Service intended to be an interface for the functionnalities the object was designed to perform : measure temperature for a temperature sensor, switch on/off for a switch...</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#BusinessService</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Business service</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#ConstrainedProperty</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">This property has been submitted to a constraint by the user, and should be monitored by the system.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#ConstrainedProperty</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Constrained property</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#ControlledSystem</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">System implementing a control feedback loop in order to control an actuator thanks to the feedback of some sensors.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#ControlledSystem</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Controlled system</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#DefectuousSystem</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Controlled system that requires an operator attention, because it is not functionnig properly. Detected when the difference between the Observations and the Actuation made on the monitored property is out of its operating range.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#DefectuousSystem</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Defectuous System</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#DeviceManagementOperation</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Service operation that deals with device management</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#DeviceManagementOperation</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Device management operation</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#DeviceManagementService</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Device management service</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#DeviceManagementService</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">This kind of service offers a set of operations regarding device management. That means it&apos;s not related to the functionnality of the object itsefl, but rather to its inner working : battery state, connectivity, firmware update...</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#EmptyMessage</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Specific message that has no content, its sole transfer achieves its purpose. For example, if an empty message is sent to the &quot;switch light on&quot; service of a light bulb, there is no need for an explicit content of the message asking the light to be turned on.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#EmptyMessage</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Empty message</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#ImpactOnProperty</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">This class describes the impact an operation may have on a property. It makes sense in an IoT environement, where things can manage properties of their environment and modify them.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#ImpactOnProperty</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Impact on property</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#LightBulb</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">A connected light bulb. Sets a good example of connected actuator</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#LightBulb</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Light bulb</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#LightBulb_actuating_capability</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Illustrates description : useful if the light bulb doesn&apos;t have the same range of functionning depending on the color it is.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#LightSensor</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">A sensor that measures luminosity at a given place. Useful here for demonstration.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#LightSensor</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Light sensor</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#LightningService</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Service groupig a set of functionnalities regarding light system</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#LightningService</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Lightning service</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#LoopbackTolerance</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Tolerance on the difference between the loopback value provided by a sensor and the input value provided to a controlled actuator.
+
+NB : This property should be linked to the property monitored by the controlled system that uses it.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#LoopbackTolerance</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Loopback tolerance</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Manager</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">A manager is an application that offers management capabilities as described in the OneM2M norm.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Manager</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Manager</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#MaximumValue</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Maxmimal accpectable value for a property</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#MaximumValue</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Maximum value</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#MinimumValue</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Minimal acceptable value for a given property</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#MinimumValue</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Mimimum value</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#OutOfBoundProperty</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">This class represents the class of constrained properties that do not respect the constraints that have been applied upon them in their current context.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#OutOfBoundProperty</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Out of bound property</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#RelativeImpact</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">In this case, the impact of the operation on the property is not predefined, and may depend on the operation&apos;s input parameters, or other factors. For example, &quot;set temperature to 23°C&quot; would be an operation with a relative impact on temperature.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#RelativeImpact</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Relative impact</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#SimpleDataContent</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">This individual represents the body of a request containing simple data, such as a numerical value.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#SimpleDataContent</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Simple data content</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#SwitchOff</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Switch off</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#SwitchOn</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral"></Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#SwitchOn</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Switch on</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Thing</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Most general thing in an iot ontology, a Thing can either be a physical connected object, an application, an abstracted interface... The class Object of DUL, from whom it inherits, doen&apos;t only represent physical objects, and can cover a fonction for instance.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Thing</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">IoT-Thing</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#diagnosedWith</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Relationship that helps to trace the observation that triggered the inconsistency</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#diagnosedWith</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">diagnosed with</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#getsFeedbackFrom</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Relation between a controlled system and the entities that provide it with a feedback about its action, usually sensors.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#getsFeedbackFrom</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">gets feedback from</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasImpact</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Relationship between an operation and its impact on a property</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasImpact</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">has impact</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasRelationshipWithProperty</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Generic property that marks the relationship between some entity and some DUL:Property. Dependant on context, it can be sensing, acting or else. Useful to descrie a generic service offered by a complex system that aggregates both sensors and actuators.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasRelationshipWithProperty</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">has relationship with property</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasService</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Relationship between an Entity and a service that is accessible through it.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasService</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">has service</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasTimeStamp</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Associates an Instant individual with a timestamp</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#holdsInContext</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">holds in context</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#isConstrainedBy</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">is constrainted by</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#isServiceOf</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Relationship between a service and an entity that accesses it.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#isServiceOf</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">is service of</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#onProperty</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Relationship between an impact and the impacted property</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#onProperty</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">on property</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#providesFeedbackTo</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Relationship between an entity that provides informations to a system and this system, that interprets these informations as a feedback of its action.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#providesFeedbackTo</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">provides feedback to</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.wsmo.org/ns/hrests#hasAddress</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Associates a ressource to a URI in compliance with REST principles</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.wsmo.org/ns/hrests#hasAddress</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">has address</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.wsmo.org/ns/hrests#hasMethod</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">has method</Literal>
+    </AnnotationAssertion>
+</Ontology>
+
+
+
+<!-- Generated by the OWL API (version 3.5.1) http://owlapi.sourceforge.net -->
+

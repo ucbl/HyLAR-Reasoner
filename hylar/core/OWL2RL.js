@@ -46,8 +46,8 @@ OWL2RL = {
         transitivity: [
             // prp-trp
             new Rule([
-                    new Fact(JswRDF.IRIs.TYPE, '?p', 'http://www.w3.org/2002/07/owl#TransitiveProperty', [], true),
                     new Fact('?p', '?x', '?y', [], true),
+                    new Fact(JswRDF.IRIs.TYPE, '?p', 'http://www.w3.org/2002/07/owl#TransitiveProperty', [], true),
                     new Fact('?p', '?y', '?z', [], true)],
                 [new Fact('?p', '?x', '?z', [], true)])
         ],

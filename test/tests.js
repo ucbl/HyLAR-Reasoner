@@ -7,30 +7,30 @@ var fs = require('fs');
 var path = require('path');
 var _ = require('lodash');
 
-var JswParser = require('../server/ontology/jsw/JswParser');
-var JswOWL = require('../server/ontology/jsw/JswOWL');
-var JswRDF = require('../server/ontology/jsw/JswRDF');
-var Reasoner = require('../server/ontology/jsw/Reasoner');
-var JswSPARQL = require('../server/ontology/jsw/JswSPARQL');
+var JswParser = require('../hylar/core/JswParser');
+var JswOWL = require('../hylar/core/JswOWL');
+var JswRDF = require('../hylar/core/JswRDF');
+var Reasoner = require('../hylar/core/Reasoner');
+var JswSPARQL = require('../hylar/core/JswSPARQL');
 
-var Logics = require('../server/ontology/jsw/Logics');
-var Utils = require('../server/ontology/jsw/Utils');
-var ReasoningEngine = require('../server/ontology/jsw/ReasoningEngine');
+var Logics = require('../hylar/core/Logics/Logics');
+var Utils = require('../hylar/core/Utils');
+var ReasoningEngine = require('../hylar/core/ReasoningEngine');
 
-var owl, ontology, reasoner, rule, fipa = '/../server/ontologies/fipa.owl', asawoo = '/../server/ontologies/fipa.owl';
+var owl, ontology, reasoner, filepath = '/fipa.owl';
 
 var before, after, bIns, ts, tf;
 
 describe('File access', function () {
     it('should access the file', function () {
-        var exists = fs.existsSync(path.resolve(__dirname + asawoo));
+        var exists = fs.existsSync(path.resolve(__dirname + filepath));
         exists.should.equal(true);
     });
 });
 
 describe('File reading', function () {
     it('should correctly read the file', function () {
-        var data = fs.readFileSync(path.resolve(__dirname + asawoo));
+        var data = fs.readFileSync(path.resolve(__dirname + filepath));
         data.should.exist;
         owl = data.toString().replace(/(&)([a-z0-9]+)(;)/gi, '$2:');
     });
