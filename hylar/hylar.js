@@ -4,11 +4,11 @@
 
 var fs = require('fs');
 
-    JswParser = require('./jsw/JswParser'),
-    JswReasoner = require('./jsw/Reasoner'),
-    JswSPARQL = require('./jsw/JswSPARQL'),
-    ReasoningEngine = require('./jsw/ReasoningEngine'),
-    OWL2RL = require('./jsw/OWL2RL'),
+    JswParser = require('./core/JswParser'),
+    JswReasoner = require('./core/Reasoner'),
+    JswSPARQL = require('./core/JswSPARQL'),
+    ReasoningEngine = require('./core/ReasoningEngine'),
+    OWL2RL = require('./core/OWL2RL'),
 
         ClassificationData = null;
 
