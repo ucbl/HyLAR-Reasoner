@@ -17,7 +17,7 @@ var Logics = require('../hylar/core/Logics/Logics');
 var Utils = require('../hylar/core/Utils');
 var ReasoningEngine = require('../hylar/core/ReasoningEngine');
 
-var owl, ontology, reasoner, filepath = '/fipa.owl';
+var owl, ontology, reasoner, filepath = '/poster6.owl';
 
 var before, after, bIns, ts;
 
@@ -40,7 +40,7 @@ describe('Ontology Parsing', function () {
     it('should parse the ontology', function () {
         ts = new Date().getTime();
         ontology = JswParser.parse(owl, function (err) {
-            console.err(err);
+            console.error(err);
         });
         ontology.should.exist;
         console.log((new Date().getTime() - ts) + ' ms ');

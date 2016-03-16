@@ -36,7 +36,8 @@ Solver = {
             for (var i = 0; i < facts.length; i++) {
                 var fact = facts[i],
                     cause = rule.causes[j],
-                    consequences;
+                    consequences,
+                    currentMatchingFacts = [];
 
                 if(matchingFacts[fact.toString()] === undefined) {
                     matchingFacts[fact.toString()] = [];
@@ -45,11 +46,12 @@ Solver = {
                 if (matchingFacts[fact.toString()][j] === undefined) {
                     if (this.factMatchesCause(fact, cause, mapping)) { // updates mapping
                         matchingFacts[fact.toString()][j] = cause.toString();
+                        currentMatchingFacts.push(fact);
                         i = -1; j++;
                     }
                 }
 
-                consequences = this.replaceMappings(mapping, rule);
+                consequences = this.replaceMappings(mapping, rule, currentMatchingFacts);
 
                 if (consequences.length > 0) {
                     newConsequences = Logics.uniques(pastConsequences, consequences);
@@ -106,12 +108,15 @@ Solver = {
         return true;
     },
 
-    replaceMappings: function(mapping, rule) {
+    replaceMappings: function(mapping, rule, matchingFacts) {
         var consequences = [],
             consequence;
         for (var i = 0; i < rule.consequences.length; i++) {
             consequence = this.replaceMapping(mapping, rule.consequences[i]);
             if(consequence) {
+                consequence.causedBy = [];
+                consequence.causedBy.push(matchingFacts);
+                consequence.explicit = false;
                 consequences.push(consequence);
             }
         }
