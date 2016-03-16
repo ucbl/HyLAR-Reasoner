@@ -19,7 +19,7 @@ var ReasoningEngine = require('../hylar/core/ReasoningEngine');
 
 var owl, ontology, reasoner, filepath = '/fipa.owl';
 
-var before, after, bIns, ts, tf;
+var before, after, bIns, ts;
 
 describe('File access', function () {
     it('should access the file', function () {

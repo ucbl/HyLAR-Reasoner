@@ -347,14 +347,6 @@ module.exports = {
         return newSet;
     },
 
-    addUriIfNotExists: function(uri, array) {
-        if(!this.isVariable(uri)
-            && array.indexOf(uri) === -1) {
-            array.push(uri);
-        }
-        return array;
-    },
-
     isVariable: function(str) {
         try {
             return (str.indexOf('?') === 0);
