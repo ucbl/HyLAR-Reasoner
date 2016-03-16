@@ -10,7 +10,7 @@ var concat = require('gulp-concat');
 var replace = require('gulp-replace');
 var debug = require('gulp-debug');
 
-var libPath = 'lib';
+var libPath = 'hylar/client';
 
 var regtofix = /context = context \? _\.defaults\(root\.Object\(\), context, _\.pick\(root, contextProps\)\) : root;/g;
 var lodashfix = 'context = context ? _.defaults(root.Object(), ' +
@@ -24,7 +24,7 @@ process.argv.forEach(function(value, index) {
 });
 
 gulp.task('clean', function () {
-    return gulp.src(libPath + '/hylar.js', {read: false})
+    return gulp.src(libPath + '/hylar-client.js', {read: false})
         .pipe(clean());
 });
 
