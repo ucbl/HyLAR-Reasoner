@@ -44,6 +44,9 @@ app.all('*', Utils.allowCrossDomain);   // Cross domain allowed
 app.get('/', Utils.hello);              // Hello world
 app.get('/time', Utils.time);
 
+// List of rules
+app.get('/rules', OntologyController.getRules);
+
 // OWL ontology parsing, getting, classifying
 app.get('/ontology/:filename', OntologyController.getOntology, OntologyController.sendOntology);
 app.get('/classify', OntologyController.getOntology, OntologyController.parseString, OntologyController.generateReasoner, OntologyController.sendClassificationData);

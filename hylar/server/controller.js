@@ -48,6 +48,10 @@ module.exports = {
         });
     },
 
+    getRules: function(req, res) {
+        res.status(200).send(OWL2RL.rules.toString());
+    },
+
     /**
      * String parser
      * @param req

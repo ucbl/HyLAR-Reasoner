@@ -1,26 +1,56 @@
 # HyLAR-Reasoner #
 
-OWL 2 RL incremental reasoner
+An OWL 2 RL incremental reasoner for the Web.
 
 ## Description ###
 
 HyLAR-Reasoner is an OWL 2 RL reasoner that uses JSW and OWLReasoner as a triplestore and provides an additional incremental reasoning engine.
-The framework implementation of HyLAR can be tested online at [[http://dataconf.liris.cnrs.fr/hylar/]]
+The framework implementation of HyLAR can be tested online at http://dataconf.liris.cnrs.fr/hylar/
 
 ### Supported OWL constructs and inferences ###
 
-Our reasoner currently supports partial OWL2-RL semantics (ObjectSomeValuesFrom, DataSomeValuesFrom, InverseObjectProperties, ObjectPropertyRange, ObjectPropertyDomain and DataPropertyRange).
-It also provides inferences on Class and Object Properties subsumption and equivalence (owl:subClassOf, owl:subPropertyOf, owl:equivalentClasses).
+HyLAR currently supports partial OWL 2 constructs (ObjectSomeValuesFrom, DataSomeValuesFrom, InverseObjectProperties, ObjectPropertyRange, ObjectPropertyDomain and DataPropertyRange).
+It also provides the following inferences, based on the semantics presented in https://www.w3.org/TR/owl2-profiles/#Reasoning_in_OWL_2_RL_and_RDF_Graphs_using_Rules :
+
+`(?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2) ^ (?c2, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c3) -> (?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c3)`
+
+`(?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2) ^ (?x, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?c1) -> (?x, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?c2)`
+
+`(?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) ^ (?p2, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p3) -> (?p1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?p3)`
+
+`(?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) ^ (?x, ?p1, ?y) -> (?x, ?p2, ?y)`
+
+`(?x, ?p, ?y) ^ (?p, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/2002/07/owl#TransitiveProperty) ^ (?y, ?p, ?z) -> (?x, ?p, ?z)`
+
+`(?p1, http://www.w3.org/2002/07/owl#inverseOf, ?p2) ^ (?x, ?p1, ?y) -> (?y, ?p2, ?x)`
+
+`(?p1, http://www.w3.org/2002/07/owl#inverseOf, ?p2) ^ (?x, ?p2, ?y) -> (?y, ?p1, ?x)`
+
+`(?c1, http://www.w3.org/2002/07/owl#equivalentClass, ?c2) ^ (?x, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?c1) -> (?x, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?c2)`
+
+`(?c1, http://www.w3.org/2002/07/owl#equivalentClass, ?c2) ^ (?x, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?c2) -> (?x, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?c1)`
+
+`(?p1, http://www.w3.org/2002/07/owl#equivalentProperty, ?p2) ^ (?x, ?p1, y) -> (?x, ?p2, ?y)`
+
+`(?p1, http://www.w3.org/2002/07/owl#equivalentProperty, ?p2) ^ (?x, ?p2, y) -> (?x, ?p1, ?y)`
+
+`(?s1, http://www.w3.org/2002/07/owl#sameAs, ?s2) ^ (?s1, ?p, ?o) -> (?s2, ?p, ?o)`
+
+`(?p1, http://www.w3.org/2002/07/owl#sameAs, ?p2) ^ (?s, ?p1, ?o) -> (?s, ?p2, ?o)`
+
+`(?o1, http://www.w3.org/2002/07/owl#sameAs, ?o2) ^ (?s, ?p, ?o1) -> (?s, ?p, ?o2)`
+
+`(?x, http://www.w3.org/2002/07/owl#sameAs, ?y) ^ (?y, http://www.w3.org/2002/07/owl#sameAs, ?z) -> (?x, http://www.w3.org/2002/07/owl#sameAs, ?z)`
 
 ## Getting started ##
 
 ### Use HyLAR's reasoner module locally ###
 
-1) Install locally
+#### I. Install locally ####
 
 `npm install --save hylar`
 
-2) Import HyLAR, then classify your ontology and query it
+#### II. Import HyLAR, then classify your ontology and query it ####
 
 (currently accepts OWL 2 XML serialization only)
 
@@ -37,10 +67,12 @@ queryResults = Hylar.query('PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax
 
 ### Use HyLAR as a server ###
 
-1) Install HyLAR globally:
+#### I. Install HyLAR globally ####
+
 `npm install -g hylar`
 
-2) Use CLI to run HyLAR as a server:
+#### II. Use CLI to run HyLAR as a server ####
+
 `hylar --port 3000 -od /usr/local/share/ontologies/`
 
 `--port <port_number>` or `-p <port_number>` is optional. HyLAR runs at port 3000 by default.
@@ -57,7 +89,7 @@ It then outputs:
 [HyLAR] HyLAR is running.
 ```
 
-3) Once HyLAR is launched, it can be requested as follows:
+#### III. Request HyLAR as follows ####
 
 (GET) `/classify`
 > Parameters
