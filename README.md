@@ -42,6 +42,9 @@ It also provides the following inferences, based on the semantics presented in h
 
 `(?x, http://www.w3.org/2002/07/owl#sameAs, ?y) ^ (?y, http://www.w3.org/2002/07/owl#sameAs, ?z) -> (?x, http://www.w3.org/2002/07/owl#sameAs, ?z)`
 
+This list of rules can be restricted by editing the file `(root)/hylar/core/OWL2RL.js`.
+At classification time, inferences are performed in the default graph.
+
 ## Getting started ##
 
 ### Use HyLAR's reasoner module locally ###
