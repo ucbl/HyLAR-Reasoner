@@ -43,20 +43,22 @@ Solver = {
                     matchingFacts[fact.toString()] = [];
                 }
 
-                if (matchingFacts[fact.toString()][j] === undefined) {
+                if (matchingFacts[fact.toString()].indexOf(j) === -1) {
                     if (this.factMatchesCause(fact, cause, mapping)) { // updates mapping
-                        matchingFacts[fact.toString()][j] = cause.toString();
+                        matchingFacts[fact.toString()].push(j);
                         currentMatchingFacts.push(fact);
                         i = -1; j++;
                     }
                 }
 
-                consequences = this.replaceMappings(mapping, rule, currentMatchingFacts);
-
-                if (consequences.length > 0) {
-                    newConsequences = Logics.uniques(pastConsequences, consequences);
-                    break;
+                if (j == rule.causes.length) {
+                    consequences = this.replaceMappings(mapping, rule, currentMatchingFacts);
+                    if(consequences.length > 0) {
+                        newConsequences = Logics.uniques(pastConsequences, consequences);
+                        break;
+                    }
                 }
+
             }
         }
 

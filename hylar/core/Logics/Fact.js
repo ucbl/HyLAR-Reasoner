@@ -13,6 +13,7 @@
 Fact = function(name, li, ri, originConjs, expl, graphs) {
     if(originConjs === undefined) originConjs = [];
     if(graphs === undefined) graphs = [];
+    if(expl === undefined) expl = true;
 
     this.predicate = name;
     this.subject = li;
