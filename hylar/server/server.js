@@ -26,6 +26,13 @@ process.argv.forEach(function(value, index) {
     }
 });
 
+process.argv.forEach(function(value, index) {
+    if ((value == '-od') || (value == '--ontology-directory')) {
+        ontoDir = process.argv[index + 1];
+        upload = multer({ dest: ontoDir });
+    }
+});
+
 process.on('uncaughtException', function(err) {
     console.error('[HyLAR] Fatal error!');
     throw err;
