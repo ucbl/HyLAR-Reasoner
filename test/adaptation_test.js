@@ -12,7 +12,7 @@ var Rule = require('../hylar/core/Logics/Rule');
 var facts = [
     new Fact('lowerOrEqualsSize', 'OntologySize', '200'),
     new Fact('exceedsPercent', 'BatteryLevel', '20'),
-    new Fact('lowerOrEqualsMs', 'Ping', '150')
+    new Fact('exceedsMs', 'Ping', '150')
 ];
 
 this.parameters = {
@@ -59,11 +59,11 @@ var rules = {
 
 describe('Adaptation tests', function () {
     it('should execute each task on the client side', function () {
-        var //queryingLocationAnswer = Solver.evaluateRuleSet(rules.queryingLocation, facts),
+        var queryingLocationAnswer = Solver.evaluateRuleSet(rules.queryingLocation, facts),
             classificationLocationAnswer = Solver.evaluateRuleSet(rules.classifLocation, facts);
 
-        //queryingLocationAnswer.length.should.equal(1);
-        //queryingLocationAnswer[0].object.should.equal('client');
+        queryingLocationAnswer.length.should.equal(1);
+        queryingLocationAnswer[0].object.should.equal('client');
         classificationLocationAnswer.length.should.equal(1);
         classificationLocationAnswer[0].object.should.equal('client');
     });
