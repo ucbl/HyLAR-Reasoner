@@ -11,7 +11,7 @@ var appDir = path.dirname(require.main.filename),
     ontoDir = appDir + '/ontologies/',
     upload = multer({ dest: ontoDir });
 
-var OntologyController = require('./controller'),
+var Controller = require('./controller'),
     Utils = require('../core/Utils');
 
 var port = 3000,
@@ -47,29 +47,22 @@ app.use(bodyParser.json());
 console.log('[HyLAR] Setting up routes...');
 
 // Server utils
-app.all('*', Utils.allowCrossDomain);   // Cross domain allowed
-app.get('/', Utils.hello);              // Hello world
-app.get('/time', Utils.time);
-
-// List of rules
-app.get('/rules', OntologyController.getRules);
+app.all('*', Controller.allowCrossDomain);   // Cross domain allowed
+app.get('/', Controller.hello);              // Hello world
+app.get('/time', Controller.time);
 
 // OWL ontology parsing, getting, classifying
-app.get('/ontology/:filename', OntologyController.getOntology, OntologyController.sendOntology);
-app.get('/classify', OntologyController.getOntology, OntologyController.parseString, OntologyController.generateReasoner, OntologyController.sendClassificationData);
+app.get('/ontology/:filename', Controller.getOntology, Controller.sendOntology);
+app.get('/classify', Controller.getOntology, Controller.loadOntology, Controller.sendHylarContents);
 
 //SPARQL query processing
-app.get('/query', OntologyController.processSPARQL);
-
-//File uploading
-app.post('/ontology', upload.single('file'), OntologyController.upload);
+app.get('/query', Controller.processSPARQL);
 
 //Ontology listing
-app.get('/ontology', OntologyController.list);
+app.get('/ontology', Controller.list);
 
-//External full step reasoning, no caching
-app.get('/sparql',  OntologyController.getExternalOntology, OntologyController.parseString, OntologyController.generateReasoner,
-                    OntologyController.processSPARQL);
+//File uploading
+app.post('/ontology', upload.single('file'), Controller.upload);
 
 console.log('[HyLAR] Done.');
 console.log('[HyLAR] Exposing server to port ' + port + '...');

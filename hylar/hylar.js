@@ -2,44 +2,34 @@
  * Created by Spadon on 02/10/2014.
  */
 
-var fs = require('fs');
+var fs = require('fs'),
+    path = require('path');
 
-    JswParser = require('./core/JswParser'),
-    JswReasoner = require('./core/Reasoner'),
-    JswSPARQL = require('./core/JswSPARQL'),
-    ReasoningEngine = require('./core/ReasoningEngine'),
-    OWL2RL = require('./core/OWL2RL'),
-
-        ClassificationData = null;
+var Hylar = require('./core/Hylar');
 
 module.exports = {
     /**
-     * Classifies an ontology
+     * Loads and classifies an ontology
      * @param filepath The full path of the owl file
      */
     classify: function(filepath) {
-        var rdfXml, ontology, reasoner, RMethod = ReasoningEngine.incremental;
+        var mimeType = mime.contentType(path.extname(filepath))
+            .replace(/;.*/g, ''),
+            rawOntology;
 
-        rdfXml = fs.readFileSync(filepath).toString().replace(/(&)([a-z0-9]+)(;)/gi, '$2:');
-    
-        ontology = JswParser.parse(rdfXml, function(err) {
+        fs.readFile(ontoDir + filename, function(err, data) {
             if(err) {
+                console.error(err);
                 throw err;
-            }
-        });
-
-        reasoner = new JswReasoner.create(ontology, RMethod);
-
-        if (!reasoner) {
-            throw 'Error while classifying';
-        } else {
-            ClassificationData = {
-                reasoner: reasoner,
-                ontology: ontology
+            } else {
+                rawOntology = data.toString().replace(/(&)([a-z0-9]+)(;)/gi, '$2:');
+                return Hylar.load(rawOntology, mimeType, req.param('reasoningMethod'))
+                    .then(function() {
+                        console.log('Ontology successfully loaded and classified.');
+                        return true;
+                    });
             };
-
-            return ClassificationData;
-        }
+        });
     },
 
     /**
@@ -47,17 +37,9 @@ module.exports = {
      * @param query The query text
      */
     query: function(query) {
-        var sparql = JswSPARQL.sparql,
-                results, RMethod = ReasoningEngine.incremental,
-                parsedQuery = sparql.parse(query);
-
-        if(!ClassificationData) {
-            throw 'Reasoner not initialized!';
-        } else {
-            results = ClassificationData.reasoner.aBox.answerQuery(parsedQuery, ClassificationData.reasoner.resultOntology, OWL2RL.rules, RMethod);
-            return {
-                data : results                
-            };
-        }
+        return Hylar.query(query, req.param('reasoningMethod'))
+            .then(function(results) {
+                return results;
+            });
     }    
 };

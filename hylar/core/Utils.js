@@ -2,7 +2,7 @@
  * Created by Spadon on 13/02/2015.
  */
 
-var _ = require('lodash');
+var q = require('q');
 
 module.exports = {
 
@@ -56,7 +56,7 @@ module.exports = {
         for(var prop in obj) {
             if(obj.hasOwnProperty(prop) ) {
                 if(obj[prop] === value )
-                    return obj;
+                    return prop;
             }
         }
         return false;
@@ -80,32 +80,33 @@ module.exports = {
         return newMap;
     },
 
-    /**
-     * Simple HelloWorld
-     * @param req
-     * @param res
-     */
-    hello: function(req, res) {
-        res.send('hello world');
+    getCombinations: function(arr, k) {
+        var i,
+            subI,
+            ret = [],
+            sub,
+            next;
+        for(i = 0; i < arr.length; i++){
+            if(k === 1){
+                ret.push( [ arr[i] ] );
+            }else{
+                sub = this.getCombinations(arr.slice(i+1, arr.length), k-1);
+                for(subI = 0; subI < sub.length; subI++ ){
+                    next = sub[subI];
+                    next.unshift(arr[i]);
+                    ret.push( next );
+                }
+            }
+        }
+        return ret;
     },
 
-    /**
-     * CORS Middleware
-     * @param req
-     * @param res
-     */
-    allowCrossDomain: function(req, res, next) {
-        res.header('Access-Control-Allow-Origin', '*');
-        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-        res.header('Access-Control-Allow-Headers', 'Content-Type');
-        next();
-    },
-
-    /** Current server time */
-    time: function(req, res) {
-        res.send({
-            milliseconds: new Date().getTime()
-        });
+    getCombinationsMax: function(arr, max) {
+        var combs = [];
+        for(var i = 1; i <= max; i++) {
+            combs = combs.concat(this.getCombinations(arr, i));
+        }
+        return combs;
     }
 
 };

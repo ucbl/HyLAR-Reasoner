@@ -5,15 +5,10 @@
 var fs = require('fs'),
     path = require('path'),
     request = require('request'),
+    mime = require('mime-types'),
 
-    JswParser = require('../core/JswParser'),
-    Reasoner = require('../core/Reasoner'),
-    JswSPARQL = require('../core/JswSPARQL'),
-    ReasoningEngine = require('../core/ReasoningEngine'),
-    OWL2RL = require('../core/OWL2RL'),
+    Hylar = require('../core/Hylar'),
 
-    ClassificationData = null,
-    stringifiedReasoner = null,
     appDir = path.dirname(require.main.filename),
     ontoDir = appDir + '/ontologies/';
 
@@ -33,79 +28,46 @@ module.exports = {
      */
     getOntology: function(req, res, next) {
         var initialTime = req.param('time'),
-            receivedReqTime = new Date().getTime();
+            receivedReqTime = new Date().getTime(),
+            filename = req.param('filename');
 
+        req.mimeType = mime.contentType(path.extname(ontoDir + filename))
+            .replace(/;.*/g, '');
         req.requestDelay =  receivedReqTime - initialTime;
-        var filename = req.param('filename');
 
         fs.readFile(ontoDir + filename, function(err, data) {
             if(err) {
                 res.status(500).send(err.toString());
             } else {
-                req.owl = data.toString().replace(/(&)([a-z0-9]+)(;)/gi, '$2:');
+                req.rawOntology = data.toString().replace(/(&)([a-z0-9]+)(;)/gi, '$2:');
                 next();
             };
         });
     },
 
-    getRules: function(req, res) {
-        res.status(200).send(OWL2RL.rules.toString());
+    loadOntology: function(req, res, next) {
+        var rawOntology = req.rawOntology,
+            mimeType = req.mimeType,
+            initialTime = new Date().getTime();
+
+        Hylar.load(rawOntology, mimeType, req.param('reasoningMethod'))
+            .then(function() {
+                req.processingDelay  = new Date().getTime() - initialTime;
+                next();
+            });
     },
 
-    /**
-     * String parser
-     * @param req
-     * @param res
-     */
-    parseString: function(req, res, next) {
-        var rdfXml = req.owl,
-            ontology = JswParser.parse(rdfXml,
-                function(err) {
-                    res.status(500).send(err);
-                });
-
-        req.ontology = ontology;
-        next();
-    },
-
-    generateReasoner: function(req, res, next) {
-        var ontology = req.ontology,
-            initialTime = new Date().getTime(),
-            RMethod;
-        if (req.param('reasoningMethod') != 'naive') RMethod = ReasoningEngine.incremental;
-
-        var reasoner = new Reasoner.create(ontology, RMethod);
-
-        req.processingDelay  = new Date().getTime() - initialTime;
-        req.classificationData = {
-            reasoner: reasoner,
-            ontology: ontology
-        };
-
-        next();
-    },
-
-    sendClassificationData: function(req, res) {
-        var seen = [];
-        ClassificationData = req.classificationData;
-        stringifiedReasoner = JSON.stringify(ClassificationData.reasoner, function(key, val) {
-            if (val != null && typeof val == "object") {
-                if (seen.indexOf(val) >= 0)
-                    return;
-                seen.push(val)
-            }
-            return val
-        });
-
-        res.status(200).send({
-            data : {
-                reasoner: stringifiedReasoner,
-                ontology: ClassificationData.ontology,
-                requestDelay: req.requestDelay,
+    sendHylarContents: function(req, res) {
+        Hylar.getStorage().then(function(hylarStorage) {
+            res.status(200).json({
+                data: {
+                    storage: hylarStorage,
+                    dictionary: Hylar.getDictionary()
+                },
                 processingDelay: req.processingDelay,
-                time: new Date().getTime(),
-                name: req.param('filename')
-            }
+                requestDelay : req.requestDelay,
+                serverTime : new Date().getTime()
+            });
         });
     },
 
@@ -115,13 +77,14 @@ module.exports = {
      * @param res
      */
     sendOntology: function(req, res) {
-        res.send({
-            'data': {
-                'ontology': req.owl,
-                'requestDelay': req.requestDelay,
-                'time': new Date().getTime(),
-                'name': req.param('filename')
-            }
+        res.header('Content-Type', 'application/xml');
+        res.status(200).json({
+            data: {
+                ontologyTxt: req.rawOntology,
+                mimeType: req.mimeType
+            },
+            requestDelay: req.requestDelay,
+            serverTime: new Date().getTime()
         });
     },
 
@@ -131,42 +94,17 @@ module.exports = {
             requestDelay =  receivedReqTime - initialTime,
             processedTime;
 
-        if(req.classificationData) {
-          ClassificationData = req.classificationData;
-        }
+        Hylar.query(req.param('query'), req.param('reasoningMethod'))
+            .then(function(results) {
+                processedTime = new Date().getTime();
 
-        if(!ClassificationData) {
-            processedTime = new Date().getTime();
-            res.status(500).send({
-                data : 'Reasoner not initialized!',
-                processingDelay: 0,
-                requestDelay : requestDelay,
-                time: processedTime
+                res.status(200).send({
+                    data : results,
+                    processingDelay: processedTime - receivedReqTime,
+                    requestDelay : requestDelay,
+                    serverTime : new Date().getTime()
+                });
             });
-        } else {
-            var sparql = JswSPARQL.sparql,
-                query = sparql.parse(req.param('query')),
-                results, RMethod;
-
-            if (req.param('reasoningMethod') != 'naive') RMethod = ReasoningEngine.incremental;
-            results = ClassificationData.reasoner.aBox.answerQuery(query, ClassificationData.reasoner.resultOntology, OWL2RL.rules, RMethod);
-
-            processedTime = new Date().getTime();
-            res.status(200).send({
-                data : results,
-                processingDelay: processedTime - receivedReqTime,
-                requestDelay : requestDelay,
-                time : new Date().getTime()
-            });
-        }
-    },
-
-    upload: function(req, res) {
-        fs.renameSync(req.file.destination + req.file.filename, req.file.destination + req.file.originalname);
-        res.json({
-            filename: req.file.originalname,
-            list: fs.readdirSync(ontoDir)
-        });
     },
 
     list: function(req, res) {
@@ -180,17 +118,53 @@ module.exports = {
      * @param next
      */
     getExternalOntology: function(req, res, next) {
-      var initialTime = 0,
-        receivedReqTime = new Date().getTime();
+        var initialTime = 0,
+            receivedReqTime = new Date().getTime();
 
-      req.requestDelay =  receivedReqTime - initialTime;
-      var url = req.param('url');
+        req.requestDelay =  receivedReqTime - initialTime;
+        var url = req.param('url');
 
-      request.get(url, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-          req.owl = body.toString().replace(/(&)([a-z0-9]+)(;)/gi, '$2:');
-          next();
-        }
-      });
+        request.get(url, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                req.rawOntology = body.toString().replace(/(&)([a-z0-9]+)(;)/gi, '$2:');
+                next();
+            }
+        });
+    },
+
+    /**
+     * Simple HelloWorld
+     * @param req
+     * @param res
+     */
+    hello: function(req, res) {
+        res.send('hello world');
+    },
+
+    /**
+     * CORS Middleware
+     * @param req
+     * @param res
+     */
+    allowCrossDomain: function(req, res, next) {
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+        res.header('Access-Control-Allow-Headers', 'Content-Type');
+        next();
+    },
+
+    /** Current server time */
+    time: function(req, res) {
+        res.status(200).json({
+            ms: new Date().getTime()
+        });
+    },
+
+    upload: function(req, res) {
+        fs.renameSync(req.file.destination + req.file.filename, req.file.destination + req.file.originalname);
+        res.json({
+            filename: req.file.originalname,
+            list: fs.readdirSync(ontoDir)
+        });
     }
 };
