@@ -30,4 +30,14 @@ describe('Solver tests', function() {
         var consequences = Solver.evaluateRuleSet([rules[4]], facts);
         consequences.length.should.equal(1);
     });
+    it('should return inference wrt. subsumption rule', function() {
+        var facts = [
+            new Fact('http://www.w3.org/2000/01/rdf-schema#subClassOf', '#a', '#b', [], true),
+            new Fact('http://www.w3.org/1999/02/22-rdf-syntax-ns#type', '#c', '#a', [], true),
+            new Fact('http://www.w3.org/1999/02/22-rdf-syntax-ns#type', '#c', '#b', [], true)
+        ];
+
+        var consequences = Solver.evaluateRuleSet([rules[1]], facts);
+        consequences.length.should.equal(1);
+    });
 });
