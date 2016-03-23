@@ -51,11 +51,14 @@ Solver = {
                     }
                 }
 
-                if (j == rule.causes.length) {
+                if ((j == rule.causes.length) || (i == facts.length-1 && j == rule.causes.length-1)) {
                     consequences = this.replaceMappings(mapping, rule, currentMatchingFacts);
                     if(consequences.length > 0) {
                         newConsequences = Logics.uniques(pastConsequences, consequences);
                         break;
+                    } else {
+                        i = -1; j = 0;
+                        mapping = {};
                     }
                 }
 

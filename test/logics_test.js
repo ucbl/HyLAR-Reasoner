@@ -8,6 +8,7 @@ var rules = require('../hylar/core/OWL2RL').rules;
 
 var Solver = require('../hylar/core/Logics/Solver');
 var Fact = require('../hylar/core/Logics/Fact');
+var Prefixes = require('../hylar/core/Prefixes');
 
 describe('Rule tests', function () {
     it('should order the rule causes (most to least restrictive)', function () {
@@ -28,6 +29,15 @@ describe('Solver tests', function() {
         ];
 
         var consequences = Solver.evaluateRuleSet([rules[4]], facts);
+        consequences.length.should.equal(1);
+    });
+    it('should return inference wrt. transitivity rule', function() {
+        var facts = [
+            new Fact('http://www.w3.org/2000/01/rdf-schema#subClassOf', '#mammal', '#animal', [], true),
+            new Fact('http://www.w3.org/1999/02/22-rdf-syntax-ns#type', '#lion', '#mammal', [], true)
+        ];
+
+        var consequences = Solver.evaluateRuleSet([rules[1]], facts);
         consequences.length.should.equal(1);
     });
 });

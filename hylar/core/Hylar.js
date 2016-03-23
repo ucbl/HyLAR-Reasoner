@@ -234,6 +234,12 @@ Hylar = {
                             return classify();
                         });
                     break;
+                case 'application/rdf+xml':
+                    return StorageManager.loadRdfXml(ontologyTxt)
+                        .then(function() {
+                            return classify();
+                        });
+                    break;
                 case false:
                     console.error('Unrecognized or unsupported mimetype. ' +
                         'Supported formats are rdf/xml, jsonld, turtle, n3');

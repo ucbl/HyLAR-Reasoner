@@ -72,7 +72,7 @@ ReasoningEngine = {
                 FiDel = Logics.uniques(FiDel, FiDelNew);
                 Rdel = Logics.restrictRuleSet(R, Logics.uniques(FeDel, FiDel));
                 FiDelNew = Solver.evaluateRuleSet(Rdel, Logics.uniques(Logics.uniques(Fi, Fe), FeDel));
-            } while (!Logics.containsFacts(FiDel, FiDelNew));
+            } while (Logics.uniques(FiDel, FiDelNew).length > FiDel.length);
             Fe = Logics.minus(Fe, FeDel);
             Fi = Logics.minus(Fi, FiDel);
 
@@ -81,7 +81,7 @@ ReasoningEngine = {
                 FiAdd = Logics.uniques(FiAdd, FiAddNew);
                 Rred = Logics.restrictRuleSet(R, FiDel);
                 FiAddNew = Solver.evaluateRuleSet(Rred, Logics.uniques(Logics.uniques(Fe, Fi), FiAdd));
-            } while(!Logics.containsFacts(FiAdd, FiAddNew));
+            } while(Logics.uniques(FiAdd, FiAddNew).length > FiAdd.length);
 
         }
 
@@ -92,7 +92,7 @@ ReasoningEngine = {
                 superSet = Logics.uniques(Logics.uniques(Logics.uniques(Fe, Fi), FeAdd), FiAdd);
                 Rins = Logics.restrictRuleSet(R, superSet);
                 FiAddNew = Solver.evaluateRuleSet(Rins, superSet);
-            } while (!Logics.containsFacts(FiAdd, FiAddNew));
+            } while (Logics.uniques(FiAdd, FiAddNew).length > FiAdd.length);
         }
 
         additions = Logics.uniques(FeAdd, FiAdd);

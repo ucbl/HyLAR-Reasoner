@@ -17,8 +17,6 @@ var a, b, c;
 
 var reasoningMethod = process.env.rm, ontologyFilename = '/ontologies/fipa.ttl';
 
-Hylar.setTagBased();
-
 describe('File access', function () {
     it('should access the file', function () {
         var exists = fs.existsSync(path.resolve(__dirname + ontologyFilename));
