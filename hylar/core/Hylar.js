@@ -2,12 +2,21 @@
  * Created by MT on 01/12/2015.
  */
 
+var fs = require('fs'),
+    path = require('path');
+
 var Dictionary = require('./Dictionary'),
     ParsingInterface = require('./ParsingInterface'),
     StorageManager = require('./StorageManager'),
     Reasoner = require('./Reasoner');
 
 var rMethod;
+
+console.notify = function(msg) {
+    console.log('[HyLAR] ' + msg);
+};
+
+
 
 /**
  * Private function to process updates queries.
@@ -26,13 +35,17 @@ var treatUpdate = function(sparql) {
         .then(function(r) {
             for (var i = 0; i < sparql.updates.length; i++) {
                 update = sparql.updates[i];
-                for (var j = 0; j < update.insert.length; j++) {
-                    insertion = update.insert[j];
-                    iTriples = iTriples.concat(insertion.triples);
+                if(update.insert) {
+                    for (var j = 0; j < update.insert.length; j++) {
+                        insertion = update.insert[j];
+                        iTriples = iTriples.concat(insertion.triples);
+                    }
                 }
-                for (var j = 0; j < update.delete.length; j++) {
-                    deletion = update.delete[j];
-                    dTriples = iTriples.concat(deletion.triples);
+                if(update.delete) {
+                    for (var j = 0; j < update.delete.length; j++) {
+                        deletion = update.delete[j];
+                        dTriples = iTriples.concat(deletion.triples);
+                    }
                 }
             }
 
@@ -169,6 +182,7 @@ Hylar = {
      */
     setIncremental: function() {
         rMethod = Reasoner.process.it.incrementally;
+        console.notify('Reasoner set as incremental.');
     },
 
     /**
@@ -176,6 +190,7 @@ Hylar = {
      */
     setTagBased: function() {
         rMethod = Reasoner.process.it.tagBased;
+        console.notify('Reasoner set as tag-based.');
     },
 
     /**
@@ -191,6 +206,9 @@ Hylar = {
                 this.setIncremental();
                 break;
             default:
+                if (!rMethod) {
+                    this.setIncremental();
+                }
                 break;
         }
     },
@@ -216,10 +234,18 @@ Hylar = {
                             return classify();
                         });
                     break;
+                case false:
+                    console.error('Unrecognized or unsupported mimetype. ' +
+                        'Supported formats are rdf/xml, jsonld, turtle, n3');
+                    return false;
+                    break;
                 default:
                     return StorageManager.load(ontologyTxt, mimeType)
                         .then(function() {
                             return classify();
+                        }, function(error) {
+                            console.error(error);
+                            throw error;
                         });
             }
         });

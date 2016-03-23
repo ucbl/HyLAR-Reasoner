@@ -34,6 +34,9 @@ module.exports = {
         return ParsingInterface.rdfXmlToTurtle(data)
         .then(function(ttl) {
             return that.load(ttl, 'text/turtle');
+        }, function(error) {
+            console.error(error);
+            throw error;
         })
     },
 

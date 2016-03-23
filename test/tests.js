@@ -4,28 +4,37 @@
 
 var should = require('should');
 var fs = require('fs');
-var path = require('path')
+var path = require('path');
+var mime = require('mime-types');
 
-var Logics = require('../server/hylar/Logics/Logics');
+var Logics = require('../hylar/core/Logics/Logics');
 
-var Hylar = require('../server/hylar/Hylar');
-var queries = require('./query-examples-60t');
-var owl, ontology, fipa = '/../server/ontologies/fipa.xml', asawoo = '/../server/ontologies/fipa.xml';
+var Hylar = require('../hylar/core/Hylar');
+var queries = require('./query-examples-200t');
+var owl, ontology, mimeType;
 
 var a, b, c;
+
+var reasoningMethod = process.env.rm, ontologyFilename = '/ontologies/fipa.ttl';
 
 Hylar.setTagBased();
 
 describe('File access', function () {
     it('should access the file', function () {
-        var exists = fs.existsSync(path.resolve(__dirname + asawoo));
+        var exists = fs.existsSync(path.resolve(__dirname + ontologyFilename));
         exists.should.equal(true);
     });
 });
 
 describe('File reading', function () {
     it('should correctly read the file', function () {
-        var data = fs.readFileSync(path.resolve(__dirname + asawoo));
+        var data = fs.readFileSync(path.resolve(__dirname + ontologyFilename)),
+            extension = path.extname(path.resolve(__dirname + ontologyFilename));
+
+        mimeType = mime.contentType(extension);
+        if(mimeType) {
+            mimeType = mimeType.replace(/;.*/g, '');
+        }
         data.should.exist;
         owl = data.toString().replace(/(&)([a-z0-9]+)(;)/gi, '$2:');
     });
@@ -33,7 +42,7 @@ describe('File reading', function () {
 
 describe('Ontology Parsing and classification', function () {
     it('should parse and classify the ontology', function () {
-        return Hylar.load(owl, 'application/rdf+xml')
+        return Hylar.load(owl, mimeType, reasoningMethod)
         .then(function() {
             return Hylar.query(
                 'CONSTRUCT { ?a ?b ?c } WHERE { ?a ?b ?c }');
@@ -41,7 +50,7 @@ describe('Ontology Parsing and classification', function () {
         .then(function(r) {
             before = r.length;
             b=r;
-            r.length.should.be.above(280);
+            r.length.should.be.above(0);
         });
     });
 });
@@ -135,7 +144,6 @@ describe('DELETE query with subsumption', function () {
                     'CONSTRUCT { ?a ?b ?c } WHERE { ?a ?b ?c }');
             })
             .then(function(r) {
-                Logics;
                 r.length.should.be.exactly(before);
             });
     });

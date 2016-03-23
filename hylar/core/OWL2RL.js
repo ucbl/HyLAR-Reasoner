@@ -19,8 +19,8 @@ var Class = Prefixes.OWL + 'Class',
     Nothing = Prefixes.OWL + 'Nothing',
     Type = Prefixes.RDF + 'type',
     SubClassOf = Prefixes.RDFS + 'subClassOf',
-    SubPropertyOf = Prefixes.OWL + 'subPropertyOf',
-    TransitiveProperty = Prefixes.OWL + 'transitiveProperty',
+    SubPropertyOf = Prefixes.RDFS + 'subPropertyOf',
+    TransitiveProperty = Prefixes.OWL + 'TransitiveProperty',
     InverseOf = Prefixes.OWL + 'inverseOf',
     SameAs = Prefixes.OWL + 'sameAs';
 

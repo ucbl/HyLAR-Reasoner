@@ -5,20 +5,40 @@
 var fs = require('fs'),
     path = require('path'),
     request = require('request'),
-    mime = require('mime-types'),
+    mime = require('mime-types');
 
-    Hylar = require('../core/Hylar'),
+var Hylar = require('../core/Hylar');
 
-    appDir = path.dirname(require.main.filename),
-    ontoDir = appDir + '/ontologies/';
+var appDir = path.dirname(require.main.filename),
+    ontoDir = appDir + '/ontologies',
+    port = 3000,
+    parsedPort;
 
 process.argv.forEach(function(value, index) {
     if ((value == '-od') || (value == '--ontology-directory')) {
-        ontoDir = process.argv[index + 1];
+        ontoDir = path.resolve(process.argv[index + 1]);
+    }
+});
+
+process.argv.forEach(function(value, index) {
+    if((value=='-p') || (value=='--port')) {
+        parsedPort = parseInt(process.argv[index+1]);
+        if(parsedPort !== NaN && parsedPort > 0) {
+            port = parsedPort;
+        }
     }
 });
 
 module.exports = {
+
+    /**
+     * Server configuration
+     */
+    configuration: {
+        appDir: appDir,
+        ontoDir: ontoDir,
+        port: port
+    },
 
     /**
      * OWL File content to text
@@ -29,13 +49,20 @@ module.exports = {
     getOntology: function(req, res, next) {
         var initialTime = req.param('time'),
             receivedReqTime = new Date().getTime(),
-            filename = req.param('filename');
+            filename = req.param('filename'),
+            absolutePathToFile = ontoDir + '/' + filename,
+            extension = path.extname(absolutePathToFile),
+            contentType = mime.contentType(extension);
 
-        req.mimeType = mime.contentType(path.extname(ontoDir + filename))
-            .replace(/;.*/g, '');
+        if(contentType) {
+            req.mimeType = contentType.replace(/;.*/g, '');
+        } else {
+            req.mimeType = contentType;
+        }
+
         req.requestDelay =  receivedReqTime - initialTime;
 
-        fs.readFile(ontoDir + filename, function(err, data) {
+        fs.readFile(absolutePathToFile, function(err, data) {
             if(err) {
                 res.status(500).send(err.toString());
             } else {
