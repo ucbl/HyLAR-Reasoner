@@ -25,11 +25,15 @@ describe('Solver tests', function() {
         var facts = [
             new Fact('#parentOf', '#papy', '#papa', [], true),
             new Fact('#parentOf', '#papa', '#fiston', [], true),
+            new Fact('#parentOf', '#grandpapy', '#papy', [], true),
             new Fact('http://www.w3.org/1999/02/22-rdf-syntax-ns#type', '#parentOf', 'http://www.w3.org/2002/07/owl#TransitiveProperty', [], true)
         ];
 
-        var consequences = Solver.evaluateRuleSet([rules[4]], facts);
-        consequences.length.should.equal(1);
+        return Solver.evaluateRuleSetUsingConstruct(rules, facts)
+            .then(function(consequences) {
+                consequences.length.should.equal(2);
+            });
+
     });
     it('should return inference wrt. transitivity rule', function() {
         var facts = [
@@ -37,7 +41,9 @@ describe('Solver tests', function() {
             new Fact('http://www.w3.org/1999/02/22-rdf-syntax-ns#type', '#lion', '#mammal', [], true)
         ];
 
-        var consequences = Solver.evaluateRuleSet([rules[1]], facts);
-        consequences.length.should.equal(1);
+        return Solver.evaluateRuleSetUsingConstruct(rules, facts)
+            .then(function(consequences) {
+                consequences.length.should.equal(1);
+            });
     });
 });

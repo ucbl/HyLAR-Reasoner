@@ -10,7 +10,7 @@ var mime = require('mime-types');
 var Logics = require('../hylar/core/Logics/Logics');
 
 var Hylar = require('../hylar/core/Hylar');
-var queries = require('./query-examples-200t');
+var queries = require('./query-examples');
 var owl, ontology, mimeType;
 
 var a, b, c;
@@ -118,14 +118,14 @@ describe('SELECT query with derivations', function () {
             });
     });
 
-    it('should find a subsumed class assertion', function () {
+    it('should find two subsumed class assertions', function () {
         // Subsumption test
         return Hylar.query(
                 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
                 'PREFIX fipa: <http://sites.google.com/site/smartappliancesproject/ontologies/fipa#> ' +
                 'SELECT * { ?a rdf:type fipa:Function . } ')
             .then(function(r) {
-                r.length.should.equal(1);
+                r.length.should.equal(2);
             });
     });
 

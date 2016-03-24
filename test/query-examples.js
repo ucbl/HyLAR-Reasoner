@@ -11,6 +11,7 @@
          'fipa:Inspiron fipa:hasConnection fipa:Ethernet100mbps . ' +
          'fipa:Inspiron fipa:hasConnection fipa:Bluetooth . ' +
          'fipa:Request1 rdf:type fipa:RequestDeviceInfo . ' +
+         'fipa:Request2 rdf:type fipa:RequestDeviceInfo . ' +
          'fipa:Inspiron fipa:hasName "Dell Inspiron 15R" . ' +
          'fipa:Wifi rdf:type fipa:ConnectionDescription . ' +
          'fipa:Bluetooth rdf:type fipa:ConnectionDescription . ' +
@@ -26,6 +27,7 @@
          'fipa:Inspiron fipa:hasConnection fipa:Ethernet100mbps . ' +
          'fipa:Inspiron fipa:hasConnection fipa:Bluetooth . ' +
          'fipa:Request1 rdf:type fipa:RequestDeviceInfo . ' +
+         'fipa:Request2 rdf:type fipa:RequestDeviceInfo . ' +
          'fipa:Inspiron fipa:hasName "Dell Inspiron 15R" . ' +
          'fipa:Wifi rdf:type fipa:ConnectionDescription . ' +
          'fipa:Bluetooth rdf:type fipa:ConnectionDescription . ' +

@@ -29,16 +29,24 @@ module.exports = {
         return deferred.promise;
     },
 
-    tripleToFact: function(t) {
-        return new Fact(t.predicate.toString(), t.subject.toString(), t.object.toString(), [], true)
+    tripleToFact: function(t, explicit) {
+        if(explicit === undefined) {
+            explicit = true;
+        }
+        return new Fact(t.predicate.toString(), t.subject.toString(), t.object.toString(), [], explicit)
     },
 
-    triplesToFacts: function(t) {
+    triplesToFacts: function(t, explicit) {
         var arr = [], triple,
             that = this;
+
+        if(explicit === undefined) {
+            explicit = true;
+        }
+
         for (var i = 0; i < t.length; i++) {
             triple = t[i];
-            arr.push(that.tripleToFact(triple));
+            arr.push(that.tripleToFact(triple, explicit));
         }
         return arr;
     },
@@ -82,6 +90,16 @@ module.exports = {
             ttl += that.factToTurtle(fact);
         }
         return ttl;
+    },
+
+    ruleToTurtle: function(rule) {
+        var causesTurtle = this.factsToTurtle(rule.causes),
+            consequencesTurtle = this.factsToTurtle(rule.consequences);
+
+        return {
+            causes: causesTurtle,
+            consequences: consequencesTurtle
+        }
     },
 
     parseSPARQL: function(query) {

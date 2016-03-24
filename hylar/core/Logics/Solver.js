@@ -5,6 +5,11 @@
 var Fact = require('./Fact');
 var Logics = require('./Logics');
 
+var ParsingInterface = require('../ParsingInterface');
+
+var rdfstore = require('rdfstore');
+var q = require('q');
+
 Solver = {
 
     evaluateRuleSet: function(rs, facts) {
@@ -25,7 +30,8 @@ Solver = {
 
         while ((newConsequences === undefined) || (newConsequences.length > pastConsequences.length)) {
             var j = 0,
-                mapping = {};
+                mapping = {},
+                currentMatchingFacts = [];
 
             if (newConsequences === undefined) {
                 newConsequences = [];
@@ -36,8 +42,7 @@ Solver = {
             for (var i = 0; i < facts.length; i++) {
                 var fact = facts[i],
                     cause = rule.causes[j],
-                    consequences,
-                    currentMatchingFacts = [];
+                    consequences;
 
                 if(matchingFacts[fact.toString()] === undefined) {
                     matchingFacts[fact.toString()] = [];
@@ -46,9 +51,9 @@ Solver = {
                 if (matchingFacts[fact.toString()].indexOf(j) === -1) {
                     if (this.factMatchesCause(fact, cause, mapping)) { // updates mapping
                         matchingFacts[fact.toString()].push(j);
-                        currentMatchingFacts.push(fact);
-                        i = -1; j++;
                     }
+                    currentMatchingFacts.push(i);
+                    i = -1; j++;
                 }
 
                 if ((j == rule.causes.length) || (i == facts.length-1 && j == rule.causes.length-1)) {
@@ -57,7 +62,8 @@ Solver = {
                         newConsequences = Logics.uniques(pastConsequences, consequences);
                         break;
                     } else {
-                        i = -1; j = 0;
+                        i = -1;
+                        j = 0;
                         mapping = {};
                     }
                 }
@@ -66,6 +72,43 @@ Solver = {
         }
 
         return newConsequences;
+    },
+
+    evaluateRuleSetUsingConstruct: function (rs, facts) {
+        var newConsPromises = [],
+            cons = [];
+
+        for (var key in rs) {
+            newConsPromises.push(this.evaluateUsingConstruct(rs[key], facts));
+        }
+        return q.all(newConsPromises)
+            .then(function(resultsArray) {
+                for (var i = 0; i < resultsArray.length; i++) {
+                    cons = Logics.uniques(cons, resultsArray[i]);
+                }
+                return cons;
+            });
+    },
+
+    evaluateUsingConstruct: function (rule, facts) {
+
+        var turtleFacts = ParsingInterface.factsToTurtle(facts),
+            turtleRule = ParsingInterface.ruleToTurtle(rule),
+
+            deferred = q.defer();
+
+        rdfstore.create(function (err, store) {
+            store.execute('INSERT DATA { ' + turtleFacts + ' }',
+                function (err, results) {
+                    store.execute('CONSTRUCT { ' + turtleRule.consequences + ' } WHERE { ' + turtleRule.causes + ' }',
+                        function (err, results) {
+                            deferred.resolve(ParsingInterface.triplesToFacts(results.triples, false));
+                        });
+                });
+        });
+
+        return deferred.promise;
+
     },
 
     factMatchesCause: function(fact, cause, mapping) {
