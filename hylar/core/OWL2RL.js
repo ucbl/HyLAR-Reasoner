@@ -133,12 +133,12 @@ OWL2RL = {
 };
 
 module.exports = {
-    rules: OWL2RL.rules.classSubsumption
+    rules: [OWL2RL.rules.classSubsumption
         .concat(OWL2RL.rules.propertySubsumption)
         .concat(OWL2RL.rules.transitivity)
         .concat(OWL2RL.rules.inverse)
         .concat(OWL2RL.rules.equivalence)
-        .concat(OWL2RL.rules.equality),
+        .concat(OWL2RL.rules.equality)[1]],
 
     subsumption: OWL2RL.rules.classSubsumption
         .concat(OWL2RL.rules.propertySubsumption),

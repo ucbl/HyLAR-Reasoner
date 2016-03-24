@@ -5,11 +5,6 @@
 var Fact = require('./Fact');
 var Logics = require('./Logics');
 
-var ParsingInterface = require('../ParsingInterface');
-
-var rdfstore = require('rdfstore');
-var q = require('q');
-
 Solver = {
 
     evaluateRuleSet: function(rs, facts) {
@@ -22,93 +17,52 @@ Solver = {
     },
 
     evaluateThroughRestriction: function(rule, facts) {
-        var pastConsequences = [],
-            newConsequences,
-            matchingFacts = {};
-
+        var causesToMap, i = 0,
+            consequences = [];
         rule.orderCausesByMostRestrictive();
+        causesToMap = [rule.causes[i]];
 
-        while ((newConsequences === undefined) || (newConsequences.length > pastConsequences.length)) {
-            var j = 0,
-                mapping = {},
-                currentMatchingFacts = [];
+        while (i < rule.causes.length) {
+            causesToMap = this.replaceNextCauses(causesToMap, rule.causes[i+1], facts);
+            i++;
+        }
 
-            if (newConsequences === undefined) {
-                newConsequences = [];
-            } else {
-                pastConsequences = newConsequences;
+        for (var i = 0; i < causesToMap.length; i++) {
+            for (var j = 0; j < rule.consequences.length; j++) {
+                consequences.push(this.replaceMapping(causesToMap[i], rule.consequences[j]));
             }
+        }
 
-            for (var i = 0; i < facts.length; i++) {
-                var fact = facts[i],
-                    cause = rule.causes[j],
-                    consequences;
+        return consequences;
+    },
 
-                if(matchingFacts[fact.toString()] === undefined) {
-                    matchingFacts[fact.toString()] = [];
+    replaceNextCauses: function(currentCauses, nextCause, facts) {
+        var replacedNextCauses = [],
+            mappings = [];
+        for (var i = 0; i < currentCauses.length; i++) {
+            for (var j = 0; j < facts.length; j++) {
+                var mapping = currentCauses[i].mapping,
+                    replacedNextCause;
+                if (mapping === undefined) {
+                    mapping = {};
                 }
-
-                if (matchingFacts[fact.toString()].indexOf(j) === -1) {
-                    if (this.factMatchesCause(fact, cause, mapping)) { // updates mapping
-                        matchingFacts[fact.toString()].push(j);
-                    }
-                    currentMatchingFacts.push(i);
-                    i = -1; j++;
-                }
-
-                if ((j == rule.causes.length) || (i == facts.length-1 && j == rule.causes.length-1)) {
-                    consequences = this.replaceMappings(mapping, rule, currentMatchingFacts);
-                    if(consequences.length > 0) {
-                        newConsequences = Logics.uniques(pastConsequences, consequences);
-                        break;
+                if (this.factMatchesCause(facts[j], currentCauses[i], mapping)) {
+                    if (nextCause) {
+                        replacedNextCause = this.replaceMapping(mapping, nextCause);
+                        replacedNextCause.mapping = mapping;
+                        replacedNextCauses.push(replacedNextCause);
                     } else {
-                        i = -1;
-                        j = 0;
-                        mapping = {};
+                        mappings.push(mapping);
                     }
                 }
-
             }
         }
 
-        return newConsequences;
-    },
-
-    evaluateRuleSetUsingConstruct: function (rs, facts) {
-        var newConsPromises = [],
-            cons = [];
-
-        for (var key in rs) {
-            newConsPromises.push(this.evaluateUsingConstruct(rs[key], facts));
+        if(nextCause) {
+            return replacedNextCauses;
+        } else {
+            return mappings;
         }
-        return q.all(newConsPromises)
-            .then(function(resultsArray) {
-                for (var i = 0; i < resultsArray.length; i++) {
-                    cons = Logics.uniques(cons, resultsArray[i]);
-                }
-                return cons;
-            });
-    },
-
-    evaluateUsingConstruct: function (rule, facts) {
-
-        var turtleFacts = ParsingInterface.factsToTurtle(facts),
-            turtleRule = ParsingInterface.ruleToTurtle(rule),
-
-            deferred = q.defer();
-
-        rdfstore.create(function (err, store) {
-            store.execute('INSERT DATA { ' + turtleFacts + ' }',
-                function (err, results) {
-                    store.execute('CONSTRUCT { ' + turtleRule.consequences + ' } WHERE { ' + turtleRule.causes + ' }',
-                        function (err, results) {
-                            deferred.resolve(ParsingInterface.triplesToFacts(results.triples, false));
-                        });
-                });
-        });
-
-        return deferred.promise;
-
     },
 
     factMatchesCause: function(fact, cause, mapping) {
@@ -156,7 +110,66 @@ Solver = {
         return true;
     },
 
-    replaceMappings: function(mapping, rule, matchingFacts) {
+    replaceMappingOnElement: function(elem, mapping) {
+        if(Logics.isVariable(elem)) {
+            if (mapping[elem] !== undefined) {
+                return mapping[elem]
+            }
+        }
+        return elem;
+    },
+
+    replaceMapping: function(mapping, cause) {
+        var consequence = new Fact();
+        if (!mapping) {
+            return cause;
+        }
+
+        consequence.subject = this.replaceMappingOnElement(cause.subject, mapping);
+        consequence.predicate = this.replaceMappingOnElement(cause.predicate, mapping);
+        consequence.object = this.replaceMappingOnElement(cause.object, mapping);
+
+        return consequence;
+    }
+
+    /*evaluateRuleSetUsingConstruct: function (rs, facts) {
+        var newConsPromises = [],
+            cons = [];
+
+        for (var key in rs) {
+            newConsPromises.push(this.evaluateUsingConstruct(rs[key], facts));
+        }
+        return q.all(newConsPromises)
+            .then(function(resultsArray) {
+                for (var i = 0; i < resultsArray.length; i++) {
+                    cons = Logics.uniques(cons, resultsArray[i]);
+                }
+                return cons;
+            });
+    },
+
+    evaluateUsingConstruct: function (rule, facts) {
+
+        var turtleFacts = ParsingInterface.factsToTurtle(facts),
+            turtleRule = ParsingInterface.ruleToTurtle(rule),
+
+            deferred = q.defer();
+
+        rdfstore.create(function (err, store) {
+            store.execute('INSERT DATA { ' + turtleFacts + ' }',
+                function (err, results) {
+                    store.execute('CONSTRUCT { ' + turtleRule.consequences + ' } WHERE { ' + turtleRule.causes + ' }',
+                        function (err, results) {
+                            deferred.resolve(ParsingInterface.triplesToFacts(results.triples, false));
+                        });
+                });
+        });
+
+        return deferred.promise;
+
+    },*/
+
+    /*replaceMappings: function(mapping, rule, matchingFacts) {
         var consequences = [],
             consequence;
         for (var i = 0; i < rule.consequences.length; i++) {
@@ -208,7 +221,7 @@ Solver = {
         }
 
         return consequence;
-    }
+    },*/
 };
 
 module.exports = Solver;
