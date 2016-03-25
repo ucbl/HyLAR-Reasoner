@@ -17,7 +17,7 @@ var Logics = require('../hylar/core/Logics/Logics');
 var Utils = require('../hylar/core/Utils');
 var ReasoningEngine = require('../hylar/core/ReasoningEngine');
 
-var owl, ontology, reasoner, filepath = '/ontologies/fipa.owl';
+var owl, ontology, reasoner, filepath = '/ontologies/asawoo.owl';
 
 var before, after, bIns, ts;
 
@@ -80,6 +80,7 @@ describe('[I] INSERT query with subsumption', function () {
         //'<#nspiron> <#hasConnection> <#Ethernet100mbps> . ' +
         //'<#ron> <#hasConnection> <#Bluetooth> . ' +
         '<#Request1> rdf:type <#RequestDeviceInfo> . ' +
+        '<#Request12> rdf:type <#RequestDeviceInfo> . ' +
         //'<#equest1> rdf:type <#RequestDeviceInfo> . ' +
         //'<#quest1> rdf:type <#RequestDeviceInfo> . ' +
         //'<#uest1> rdf:type <#RequestDeviceInfo> . ' +
@@ -220,7 +221,7 @@ describe('SELECT query with subsumption', function () {
         _.findIndex(results[0], {'a': '"Dell Inspiron 15R"'}).should.be.above(-1);
     });
 
-    it('should find a subsumed class assertion', function () {
+    it('should find two subsumed class assertions', function () {
         // Subsumption test
         query = JswSPARQL.sparql.parse('PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
         'SELECT ?a { ?a rdf:type <#Function> . }');
