@@ -28,8 +28,12 @@ Solver = {
         }
 
         for (var i = 0; i < causesToMap.length; i++) {
+            var causedBy = [];
+            for (var k = 0; k < rule.causes.length; k++) {
+                causedBy.push(this.replaceMapping(causesToMap[i], rule.causes[k]).toString());
+            }
             for (var j = 0; j < rule.consequences.length; j++) {
-                consequences.push(this.replaceMapping(causesToMap[i], rule.consequences[j]));
+                consequences.push(this.replaceMapping(causesToMap[i], rule.consequences[j], causedBy));
             }
         }
 
@@ -123,17 +127,23 @@ Solver = {
         return elem;
     },
 
-    replaceMapping: function(mapping, cause) {
-        var consequence = new Fact();
+    replaceMapping: function(mapping, unReplacedFact, causedBy) {
+        var replacedFact = new Fact(),
+            replacedCauses = [];
         if (!mapping) {
-            return cause;
+            return unReplacedFact;
         }
 
-        consequence.subject = this.replaceMappingOnElement(cause.subject, mapping);
-        consequence.predicate = this.replaceMappingOnElement(cause.predicate, mapping);
-        consequence.object = this.replaceMappingOnElement(cause.object, mapping);
+        if (causedBy) {
+            replacedFact.causedBy = [causedBy];
+            replacedFact.explicit = false;
+        }
 
-        return consequence;
+        replacedFact.subject = this.replaceMappingOnElement(unReplacedFact.subject, mapping);
+        replacedFact.predicate = this.replaceMappingOnElement(unReplacedFact.predicate, mapping);
+        replacedFact.object = this.replaceMappingOnElement(unReplacedFact.object, mapping);
+
+        return replacedFact;
     }
 
     /*evaluateRuleSetUsingConstruct: function (rs, facts) {

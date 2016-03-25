@@ -172,8 +172,8 @@ module.exports = {
     },
 
     getValidBindings: function(bindings, triple, ttl) {
-        var bindings = [],
-            replaced, subject, predicate, object;
+        var replaced, subject, predicate, object,
+            validBindings = [];
         for (var key in bindings) {
             subject = this.replaceVar(triple.subject, bindings, key);
             object = this.replaceVar(triple.object, bindings, key);
@@ -181,10 +181,10 @@ module.exports = {
             replaced = subject + ' ' + predicate + ' ' + object + ' . ';
 
             if(replaced && ttl.toString().indexOf(replaced) !== -1) {
-                bindings.push(bindings);
+                validBindings.push(bindings);
             }
         }
-        return bindings;
+        return validBindings;
     },
 
     reformSelectResults: function(parsedQuery, results, ttl) {

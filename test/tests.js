@@ -15,7 +15,7 @@ var owl, ontology, mimeType;
 
 var a, b, c;
 
-var reasoningMethod = process.env.rm, ontologyFilename = '/ontologies/functionalities.jsonld';
+var reasoningMethod = process.env.rm, ontologyFilename = '/ontologies/IoT-O.rdf';
 
 describe('File access', function () {
     it('should access the file', function () {

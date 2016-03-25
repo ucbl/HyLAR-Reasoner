@@ -127,7 +127,7 @@ ReasoningEngine = {
             Rins = [],
             Fe = Logics.getOnlyExplicitFacts(F),
             Fi = Logics.getOnlyImplicitFacts(F),
-            superSet, conjunctions;
+            superSet;
 
         if(FeDel.length > 0) {
             FeDel = Logics.invalidate(Fe, FeDel);
@@ -146,7 +146,8 @@ ReasoningEngine = {
         }
 
         return {
-            additions: Logics.mergeFactSetsIn([FeDel, FeAdd, FiAdd])
+            additions: Logics.mergeFactSetsIn([FeDel, FeAdd, FiAdd]),
+            deletions: []
         };
     }
 };
