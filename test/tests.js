@@ -10,7 +10,7 @@ var mime = require('mime-types');
 var Logics = require('../hylar/core/Logics/Logics');
 
 var Hylar = require('../hylar/core/Hylar');
-var queries = require('./query-examples');
+var queries = require('./query-examples-200t');
 var owl, ontology, mimeType;
 
 var a, b, c;

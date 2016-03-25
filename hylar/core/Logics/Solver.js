@@ -42,17 +42,20 @@ Solver = {
         for (var i = 0; i < currentCauses.length; i++) {
             for (var j = 0; j < facts.length; j++) {
                 var mapping = currentCauses[i].mapping,
-                    replacedNextCause;
+                    replacedNextCause,
+                    newMapping;
                 if (mapping === undefined) {
                     mapping = {};
                 }
-                if (this.factMatchesCause(facts[j], currentCauses[i], mapping)) {
+
+                newMapping = this.factMatchesCause(facts[j], currentCauses[i], mapping);
+                if (newMapping) {
                     if (nextCause) {
-                        replacedNextCause = this.replaceMapping(mapping, nextCause);
-                        replacedNextCause.mapping = mapping;
+                        replacedNextCause = this.replaceMapping(newMapping, nextCause);
+                        replacedNextCause.mapping = newMapping;
                         replacedNextCauses.push(replacedNextCause);
                     } else {
-                        mappings.push(mapping);
+                        mappings.push(newMapping);
                     }
                 }
             }
@@ -66,7 +69,7 @@ Solver = {
     },
 
     factMatchesCause: function(fact, cause, mapping) {
-        var localMapping = {}; // so that global mapping is not altered in case of false returning
+        var localMapping = {}; // Generates new mapping
 
         if (Logics.isVariable(cause.subject)) {
             if (mapping[cause.subject] && (mapping[cause.subject] != fact.subject)) {
@@ -104,10 +107,11 @@ Solver = {
             }
         }
 
-        for (var key in localMapping) {
-            mapping[key] = localMapping[key];
+        for (var key in mapping) {
+            localMapping[key] = mapping[key];
         }
-        return true;
+
+        return localMapping;
     },
 
     replaceMappingOnElement: function(elem, mapping) {
