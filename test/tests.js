@@ -2,7 +2,6 @@
  * Created by Spadon on 19/08/2015.
  */
 
-var should = require('should');
 var fs = require('fs');
 var path = require('path');
 var mime = require('mime-types');
@@ -220,4 +219,63 @@ describe('Re-INSERT exact same query', function () {
                 r.length.should.be.exactly(bIns);
             });
     });
+});
+
+describe('SELECT query with derivations', function () {
+    var query, results;
+    it('should find a class assertion', function () {
+        // ClassAssertion Test
+        return Hylar.query(
+                'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
+                'PREFIX fipa: <http://sites.google.com/site/smartappliancesproject/ontologies/fipa#> ' +
+                'SELECT * { ?a rdf:type fipa:Device . } ')
+            .then(function(r) {
+                r.length.should.equal(1);
+            });
+    });
+
+    it('should find another class assertion', function () {
+        // Multiple ClassAssertion Test
+        return Hylar.query(
+                'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
+                'PREFIX fipa: <http://sites.google.com/site/smartappliancesproject/ontologies/fipa#> ' +
+                'SELECT * { ?a rdf:type fipa:ConnectionDescription . } ')
+            .then(function(r) {
+                r.length.should.equal(4);
+            });
+    });
+
+    it('should find an objectProperty assertion', function () {
+        // ObjectProperty Test
+        return Hylar.query(
+                'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
+                'PREFIX fipa: <http://sites.google.com/site/smartappliancesproject/ontologies/fipa#> ' +
+                'SELECT * { ?a fipa:hasConnection fipa:Wifi . } ')
+            .then(function(r) {
+                r.length.should.equal(1);
+            });
+    });
+
+    it('should find a dataProperty assertion', function () {
+        // DataProperty Test
+        return Hylar.query(
+                'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
+                'PREFIX fipa: <http://sites.google.com/site/smartappliancesproject/ontologies/fipa#> ' +
+                'SELECT * { fipa:Inspiron fipa:hasName ?a . } ')
+            .then(function(r) {
+                r.length.should.equal(1);
+            });
+    });
+
+    it('should find two subsumed class assertions', function () {
+        // Subsumption test
+        return Hylar.query(
+                'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
+                'PREFIX fipa: <http://sites.google.com/site/smartappliancesproject/ontologies/fipa#> ' +
+                'SELECT * { ?a rdf:type fipa:Function . } ')
+            .then(function(r) {
+                r.length.should.equal(2);
+            });
+    });
+
 });
