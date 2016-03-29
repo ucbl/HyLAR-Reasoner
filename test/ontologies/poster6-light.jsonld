@@ -1,0 +1,1050 @@
+[ {
+  "@id" : "_:genid1",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Restriction" ],
+  "http://www.w3.org/2002/07/owl#onProperty" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasKeyword"
+  }, {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasSubKeyword"
+  } ],
+  "http://www.w3.org/2002/07/owl#someValuesFrom" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#Poster"
+  }, {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#Keyword"
+  } ]
+}, {
+  "@id" : "_:genid2",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Restriction" ],
+  "http://www.w3.org/2002/07/owl#onProperty" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasKeyword"
+  }, {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasSubKeyword"
+  } ],
+  "http://www.w3.org/2002/07/owl#someValuesFrom" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#Keyword"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/1",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster1"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/103",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster103"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/104",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster104"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/105",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster105"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/106",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster106"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/108",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster108"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/112",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster112"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/116",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster116"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/117",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster117"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/119",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster119"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/120",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster120"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/122",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster122"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/125",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster125"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/128",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster128"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/129",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster129"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/13",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster13"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/131",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster131"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/132",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster132"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/139",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster139"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/141",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster141"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/142",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster142"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/15",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster15"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/156",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster156"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/159",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster159"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/162",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster162"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/167",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster167"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/170",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster170"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/171",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster171"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/178",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster178"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/179",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster179"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/181",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster181"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/182",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster182"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/185",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster185"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/19",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster19"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/190",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster190"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/192",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster192"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/196",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster196"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/199",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster199"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/200",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster200"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/201",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster201"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/202",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster202"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/206",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster206"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/208",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster208"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/21",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster21"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/212",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster212"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/213",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster213"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/215",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster215"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/220",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster220"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/222",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster222"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/226",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster226"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/227",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster227"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/229",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster229"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/233",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster233"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/238",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster238"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/241",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster241"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/242",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster242"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/244",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster244"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/255",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster255"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/256",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster256"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/258",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster258"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/259",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster259"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/26",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster26"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/263",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster263"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/268",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster268"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/32",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster32"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/35",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster35"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/36",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster36"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/37",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster37"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/39",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster39"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/40",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster40"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/41",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster41"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/43",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster43"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/46",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster46"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/47",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster47"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/50",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster50"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/51",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster51"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/54",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster54"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/55",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster55"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/57",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster57"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/59",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster59"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/60",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster60"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/61",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster61"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/66",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster66"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/67",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster67"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/68",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster68"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/69",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster69"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/72",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster72"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/73",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster73"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/75",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster75"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/76",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster76"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/77",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster77"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/82",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster82"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/85",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster85"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/88",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster88"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/9",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster9"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/92",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster92"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/93",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster93"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/94",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster94"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/95",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster95"
+  } ]
+}, {
+  "@id" : "http://data.semanticweb.org/conference/www/2012/poster/97",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ],
+  "http://www.w3.org/2002/07/owl#sameAs" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster97"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Ontology" ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#Keyword",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_access_control",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_security"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_accessibility",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_human_factors"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_ad-hoc_ride_sharing",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#Keyword"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_ad_relevance",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_advertising"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_ad_selection",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_advertising"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_ads_visual_appearance",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_advertising"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_advertising",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_monetization"
+  } ],
+  "http://www.w3.org/2002/07/owl#equivalentClass" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_online_advertising"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_affective_computing",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_human_factors"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_answer_extraction",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_web_mining"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_approximation_algorithms",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#Keyword"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_assisted_mashup_development",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_mash-ups"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_auction",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#Keyword"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_augmented_reality",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#Keyword"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_authoring",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#Keyword"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_base_classifiers",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#Keyword"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_bayes",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#Keyword"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_bayesian_smoothing",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_bayes"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_beach_photos",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_image"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_bias_detection",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#Keyword"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_bit-based_signatures",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#Keyword"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_browsing_models",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_web_engineering"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_burst_detection",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#Keyword"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_campaign_evaluation",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#Keyword"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_catch_up_tv",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_social_media"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_check-in_data",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_data"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_clickthrough_data",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_data"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_cloud_computing",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_network"
+  }, {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_web_engineering"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_cloudspeller",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#Keyword"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_clustering",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#Keyword"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_common-sense_knowledge",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#Keyword"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_communities",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_social_web"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_community_question_answer_archives",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_communities"
+  }, {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_question_answering"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_community_question_answering_sites",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_communities"
+  }, {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_question_answering"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_community_rating",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_communities"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_composition_patterns",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#Keyword"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_computational_advertising",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_advertising"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_confidentiality",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_security"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_constraint_programming",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#Keyword"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_content",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#Keyword"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_content-based_image_retrieval",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_image"
+  }, {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_information_retrieval"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_content_analysis",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_content"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_content_linkage",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_content"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_context",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#Keyword"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_context-aware_ranking",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_context_awareness"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_context_aware_query",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_context_awareness"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_context_awareness",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_context"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_contextual_advertising",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_advertising"
+  }, {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_context"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_conversational_vs._informational",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_conversations"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_conversations",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_natural_language_processing"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_critical_path",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#Keyword"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_ctr_prediction",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#Keyword"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_customer_credibility",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_e-commerce"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_data",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#Keyword"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_data_analysis",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_data"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_data_caches",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_data"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_data_fusion",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_data"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_data_integration",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_data"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_data_mining",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_data"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_discovery",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#Keyword"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_document_context",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#Keyword"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_domain-specific_mashups",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_mash-ups"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_downstream_engagement",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#Keyword"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_dynamic_temporal_map",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_temporal_dynamics"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_dynamical_information_retrieval",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_information_retrieval"
+  }, {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_temporal"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster97",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#Poster" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasKeyword" : [ {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_check-in_data"
+  }, {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_location-based_services"
+  }, {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_recommender_systems"
+  }, {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_route_recommendation"
+  }, {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_sequence_mining"
+  }, {
+    "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_trip_planning"
+  } ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasPDF" : [ {
+    "@type" : "http://www.w3.org/2001/XMLSchema#anyURI",
+    "@value" : "http://www2012.wwwconference.org/proceedings/companion/p529.pdf"
+  } ]
+} ]

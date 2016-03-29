@@ -80,7 +80,7 @@ ReasoningEngine = {
             do {
                 FiAdd = Logics.uniques(FiAdd, FiAddNew);
                 Rred = Logics.restrictRuleSet(R, FiDel);
-                FiAddNew = Solver.evaluateRuleSet(Rred, Logics.uniques(Logics.uniques(Fe, Fi), FiAdd));
+                FiAddNew = Solver.evaluateRuleSet(Rred, Logics.uniques(Logics.uniques(Fe, Fi), FiDel));
             } while(Logics.uniques(FiAdd, FiAddNew).length > FiAdd.length);
 
         }
