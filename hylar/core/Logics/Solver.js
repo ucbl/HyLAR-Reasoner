@@ -28,12 +28,14 @@ Solver = {
         }
 
         for (var i = 0; i < causesToMap.length; i++) {
-            var causedBy = [];
+            var causedBy = [],
+                consequenceGraphs = [];
             for (var k = 0; k < rule.causes.length; k++) {
                 causedBy.push(this.replaceMapping(causesToMap[i], rule.causes[k]).toString());
+                consequenceGraphs = Logics.uniques(consequenceGraphs, causesToMap[i].graphs);
             }
             for (var j = 0; j < rule.consequences.length; j++) {
-                consequences.push(this.replaceMapping(causesToMap[i], rule.consequences[j], causedBy));
+                consequences.push(this.replaceMapping(causesToMap[i], rule.consequences[j], causedBy, consequenceGraphs));
             }
         }
 
@@ -115,6 +117,12 @@ Solver = {
             localMapping[key] = mapping[key];
         }
 
+        if (localMapping.graphs) {
+            localMapping.graphs = Logics.uniques(localMapping.graphs, fact.graphs);
+        } else {
+            localMapping.graphs = [];
+        }
+
         return localMapping;
     },
 
@@ -127,7 +135,7 @@ Solver = {
         return elem;
     },
 
-    replaceMapping: function(mapping, unReplacedFact, causedBy) {
+    replaceMapping: function(mapping, unReplacedFact, causedBy, graphs) {
         var replacedFact = new Fact(),
             replacedCauses = [];
         if (mapping == {}) {
@@ -137,6 +145,10 @@ Solver = {
         if (causedBy) {
             replacedFact.causedBy = [causedBy];
             replacedFact.explicit = false;
+        }
+
+        if (graphs) {
+            replacedFact.graphs = graphs;
         }
 
         replacedFact.subject = this.replaceMappingOnElement(unReplacedFact.subject, mapping);

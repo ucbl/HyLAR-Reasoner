@@ -17,7 +17,7 @@ var Logics = require('../hylar/core/Logics/Logics');
 var Utils = require('../hylar/core/Utils');
 var ReasoningEngine = require('../hylar/core/ReasoningEngine');
 
-var owl, ontology, reasoner, filepath = '/ontologies/poster6.owl';
+var owl, ontology, reasoner, filepath = '/ontologies/fipa.owl';
 
 var before, after, bIns, ts;
 
