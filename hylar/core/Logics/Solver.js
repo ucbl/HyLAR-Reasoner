@@ -130,7 +130,7 @@ Solver = {
     replaceMapping: function(mapping, unReplacedFact, causedBy) {
         var replacedFact = new Fact(),
             replacedCauses = [];
-        if (!mapping) {
+        if (mapping == {}) {
             return unReplacedFact;
         }
 
@@ -145,97 +145,6 @@ Solver = {
 
         return replacedFact;
     }
-
-    /*evaluateRuleSetUsingConstruct: function (rs, facts) {
-        var newConsPromises = [],
-            cons = [];
-
-        for (var key in rs) {
-            newConsPromises.push(this.evaluateUsingConstruct(rs[key], facts));
-        }
-        return q.all(newConsPromises)
-            .then(function(resultsArray) {
-                for (var i = 0; i < resultsArray.length; i++) {
-                    cons = Logics.uniques(cons, resultsArray[i]);
-                }
-                return cons;
-            });
-    },
-
-    evaluateUsingConstruct: function (rule, facts) {
-
-        var turtleFacts = ParsingInterface.factsToTurtle(facts),
-            turtleRule = ParsingInterface.ruleToTurtle(rule),
-
-            deferred = q.defer();
-
-        rdfstore.create(function (err, store) {
-            store.execute('INSERT DATA { ' + turtleFacts + ' }',
-                function (err, results) {
-                    store.execute('CONSTRUCT { ' + turtleRule.consequences + ' } WHERE { ' + turtleRule.causes + ' }',
-                        function (err, results) {
-                            deferred.resolve(ParsingInterface.triplesToFacts(results.triples, false));
-                        });
-                });
-        });
-
-        return deferred.promise;
-
-    },*/
-
-    /*replaceMappings: function(mapping, rule, matchingFacts) {
-        var consequences = [],
-            consequence;
-        for (var i = 0; i < rule.consequences.length; i++) {
-            consequence = this.replaceMapping(mapping, rule.consequences[i]);
-            if(consequence) {
-                consequence.causedBy = [];
-                consequence.causedBy.push(matchingFacts);
-                consequence.explicit = false;
-                consequences.push(consequence);
-            }
-        }
-        return consequences;
-    },
-
-    replaceMapping: function(mapping, ruleFact) {
-        var consequence = new Fact();
-        if (!mapping) {
-            return false;
-        }
-
-        if(Logics.isVariable(ruleFact.subject)) {
-            if (mapping[ruleFact.subject] !== undefined) {
-                consequence.subject = mapping[ruleFact.subject]
-            } else {
-                return false;
-            }
-        }  else {
-            consequence.subject = ruleFact.subject;
-        }
-
-        if(Logics.isVariable(ruleFact.predicate)) {
-            if (mapping[ruleFact.predicate] !== undefined) {
-                consequence.predicate = mapping[ruleFact.predicate]
-            } else {
-                return false;
-            }
-        } else {
-            consequence.predicate = ruleFact.predicate;
-        }
-
-        if(Logics.isVariable(ruleFact.object)) {
-            if (mapping[ruleFact.object] !== undefined) {
-                consequence.object = mapping[ruleFact.object]
-            } else {
-                return false;
-            }
-        }  else {
-            consequence.object = ruleFact.object;
-        }
-
-        return consequence;
-    },*/
 };
 
 module.exports = Solver;
