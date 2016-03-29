@@ -134,6 +134,8 @@ ReasoningEngine = {
         }
 
         if(FeAdd.length > 0) {
+            //todo validation des faits connus en comparant avec le F total
+            // enlever ceux qui de FeAdd qui ont été validés puis continuer
             if(!Logics.containsFacts(Fe, FeAdd)) {
                 do {
                     FiAdd = Logics.mergeFactSets(FiAdd, FiAddNew);

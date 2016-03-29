@@ -1,0 +1,619 @@
+{
+  "@context": {
+    "asawoo": "http://localhost:3232/",
+    "asawooVocab": "http://localhost:3232/vocab#",
+    "asawooFunctionality": "http://localhost:3232/functionality/",
+    "asawooCapability": "http://localhost:3232/capability/",
+    "asawooAppliance": "http://localhost:3232/appliance/",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "@graph": [
+
+
+
+
+
+
+    {"_comment":"******** STRUCTURE ********"},
+    {
+      "@id": "asawooVocab:Functionality",
+      "@type": "owl:Class"
+    },
+    {
+      "@id": "asawooVocab:Capability",
+      "@type": "owl:Class"
+    },
+    {
+      "@id": "asawooVocab:Appliance",
+      "@type": "owl:Class"
+    },
+    {
+      "@id": "asawooVocab:Actuator",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": {
+        "@id": "asawooVocab:Capability"
+      }
+    },
+    {
+      "@id": "asawooVocab:Sensor",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": {
+        "@id": "asawooVocab:Capability"
+      }
+    },
+    {
+      "@id": "asawooVocab:Network",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": {
+        "@id": "asawooVocab:Capability"
+      }
+    },
+    {
+      "@id": "asawooVocab:Processor",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": {
+        "@id": "asawooVocab:Capability"
+      }
+    },
+    {
+      "@id": "asawooVocab:name",
+      "@type": [
+        "owl:ObjectProperty"
+      ],
+      "rdfs:domain": [
+        {
+          "@id": "asawooVocab:Capability"
+        },
+        {
+          "@id": "asawooVocab:Functionality"
+        }
+      ],
+      "rdfs:range": {
+        "@id": "xsd:String"
+      }
+    },
+    {
+      "@id": "asawooVocab:description",
+      "@type": [
+        "owl:ObjectProperty"
+      ],
+      "rdfs:domain": [
+        {
+          "@id": "asawooVocab:Capability"
+        },
+        {
+          "@id": "asawooVocab:Functionality"
+        }
+      ],
+      "rdfs:range": {
+        "@id": "xsd:String"
+      }
+    },
+    {
+      "@id": "asawooVocab:isImplementedBy",
+      "@type": [
+        "owl:ObjectProperty",
+        "owl:TransitiveProperty"
+      ],
+      "rdfs:domain": {
+        "@id": "asawooVocab:Functionality"
+      },
+      "rdfs:range": {
+        "@id": "asawooVocab:Capability"
+      }
+    },
+    {
+      "@id": "asawooVocab:isComposedOf",
+      "@type": [
+        "owl:ObjectProperty",
+        "owl:TransitiveProperty"
+      ],
+      "rdfs:domain": {
+        "@id": "asawooVocab:Functionality"
+      },
+      "rdfs:range": {
+        "@id": "asawooVocab:Functionality"
+      }
+    },
+    {
+      "@id": "asawooVocab:hasCapability",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": "Specify that an appliance has the given capability",
+      "rdfs:domain": {
+        "@id": "asawooVocab:Appliance"
+      },
+      "rdfs:range": {
+        "@id": "asawooVocab:Capability"
+      }
+    },
+
+
+
+
+
+
+    {"_comment":"******** LIST OF CAPABILITIES ********"},
+    {
+      "@id": "asawooCapability:call",
+      "@type": [
+        "owl:NamedIndividual",
+        "asawooVocab:Capability"
+      ],
+      "asawooVocab:name": "Call",
+      "asawooVocab:description": "Call someone"
+    },
+    {
+      "@id": "asawooCapability:download",
+      "@type": [
+        "owl:NamedIndividual",
+        "asawooVocab:Capability"
+      ],
+      "asawooVocab:name": "Download",
+      "asawooVocab:description": "Download an application"
+    },
+    {
+      "@id": "asawooCapability:photo",
+      "@type": [
+        "owl:NamedIndividual",
+        "asawooVocab:Capability"
+      ],
+      "asawooVocab:name": "Photo",
+      "asawooVocab:description": "Take a picture"
+    },
+    {
+      "@id": "asawooCapability:video",
+      "@type": [
+        "owl:NamedIndividual",
+        "asawooVocab:Capability"
+      ],
+      "asawooVocab:name": "Video",
+      "asawooVocab:description": "Register a video"
+    },
+    {
+      "@id": "asawooCapability:sms",
+      "@type": [
+        "owl:NamedIndividual",
+        "asawooVocab:Capability"
+      ],
+      "asawooVocab:name": "SMS",
+      "asawooVocab:description": "Send a SMS"
+    },
+    {
+      "@id": "asawooCapability:startApp",
+      "@type": [
+        "owl:NamedIndividual",
+        "asawooVocab:Capability"
+      ],
+      "asawooVocab:name": "Start App",
+      "asawooVocab:description": "Start an application"
+    },
+    {
+      "@id": "asawooCapability:stopApp",
+      "@type": [
+        "owl:NamedIndividual",
+        "asawooVocab:Capability"
+      ],
+      "asawooVocab:name": "Stop App",
+      "asawooVocab:description": "Stop an application"
+    },
+    {
+      "@id": "asawooCapability:gps",
+      "@type": [
+        "owl:NamedIndividual",
+        "asawooVocab:Capability"
+      ],
+      "asawooVocab:name": "GPS",
+      "asawooVocab:description": "Get the position using a GPS"
+    },
+    {
+      "@id": "asawooCapability:temperatureDecrease",
+      "@type": [
+        "owl:NamedIndividual",
+        "asawooVocab:Capability"
+      ],
+      "asawooVocab:name": "Temperature Decrease",
+      "asawooVocab:description": "Decrease the temperature"
+    },
+    {
+      "@id": "asawooCapability:temperatureIncrease",
+      "@type": [
+        "owl:NamedIndividual",
+        "asawooVocab:Capability"
+      ],
+      "asawooVocab:name": "Temperature Increase",
+      "asawooVocab:description": "Increase the temperature"
+    },
+    {
+      "@id": "asawooCapability:temperatureSense",
+      "@type": [
+        "owl:NamedIndividual",
+        "asawooVocab:Capability"
+      ],
+      "asawooVocab:name": "Temperature Sense",
+      "asawooVocab:description": "Sense the temperature"
+    },
+    {
+      "@id": "asawooCapability:openWindow",
+      "@type": [
+        "owl:NamedIndividual",
+        "asawooVocab:Capability"
+      ],
+      "asawooVocab:name": "Open window",
+      "asawooVocab:description": "Open a window"
+    },
+    {
+      "@id": "asawooCapability:closeWindow",
+      "@type": [
+        "owl:NamedIndividual",
+        "asawooVocab:Capability"
+      ],
+      "asawooVocab:name": "Close window",
+      "asawooVocab:description": "Close a window"
+    },
+    {
+      "@id": "asawooCapability:callWebService",
+      "@type": [
+        "owl:NamedIndividual",
+        "asawooVocab:Capability"
+      ],
+      "asawooVocab:name": "Call web service",
+      "asawooVocab:description": "Call a web service"
+    },
+    {
+      "@id": "asawooCapability:activateMotor",
+      "@type": [
+        "owl:NamedIndividual",
+        "asawooVocab:Capability"
+      ],
+      "asawooVocab:name": "Activate a motor",
+      "asawooVocab:description": "Activate a motor"
+    },
+    {
+      "@id": "asawooCapability:informationMotor",
+      "@type": [
+        "owl:NamedIndividual",
+        "asawooVocab:Capability"
+      ],
+      "asawooVocab:name": "Information of a motor",
+      "asawooVocab:description": "Information of a motor"
+    },
+
+
+
+
+
+
+    {"_comment":"******** LIST OF SIMPLE FUNCTIONALITIES ********"},
+    {
+      "@id": "asawooFunctionality:call",
+      "@type": [
+        "asawooVocab:Functionality",
+        "owl:NamedIndividual"
+      ],
+      "asawooVocab:name": "Call",
+      "asawooVocab:description": "Call someone",
+      "asawooVocab:isImplementedBy": {
+        "@id": "asawooCapability:call"
+      }
+    },
+    {
+      "@id": "asawooFunctionality:download",
+      "@type": [
+        "asawooVocab:Functionality",
+        "owl:NamedIndividual"
+      ],
+      "asawooVocab:name": "Download",
+      "asawooVocab:description": "Download an application",
+      "asawooVocab:isImplementedBy": {
+        "@id": "asawooCapability:download"
+      }
+    },
+    {
+      "@id": "asawooFunctionality:photo",
+      "@type": [
+        "asawooVocab:Functionality",
+        "owl:NamedIndividual"
+      ],
+      "asawooVocab:name": "Photo",
+      "asawooVocab:description": "Take a picture",
+      "asawooVocab:isImplementedBy": {
+        "@id": "asawooCapability:photo"
+      }
+    },
+    {
+      "@id": "asawooFunctionality:video",
+      "@type": [
+        "asawooVocab:Functionality",
+        "owl:NamedIndividual"
+      ],
+      "asawooVocab:name": "Video",
+      "asawooVocab:description": "Register a video",
+      "asawooVocab:isImplementedBy": {
+        "@id": "asawooCapability:video"
+      }
+    },
+    {
+      "@id": "asawooFunctionality:sms",
+      "@type": [
+        "asawooVocab:Functionality",
+        "owl:NamedIndividual"
+      ],
+      "asawooVocab:name": "SMS",
+      "asawooVocab:description": "Send a SMS",
+      "asawooVocab:isImplementedBy": {
+        "@id": "asawooCapability:sms"
+      }
+    },
+    {
+      "@id": "asawooFunctionality:startApp",
+      "@type": [
+        "asawooVocab:Functionality",
+        "owl:NamedIndividual"
+      ],
+      "asawooVocab:name": "Start App",
+      "asawooVocab:description": "Start an application",
+      "asawooVocab:isImplementedBy": {
+        "@id": "asawooCapability:startApp"
+      }
+    },
+    {
+      "@id": "asawooFunctionality:stopApp",
+      "@type": [
+        "asawooVocab:Functionality",
+        "owl:NamedIndividual"
+      ],
+      "asawooVocab:name": "Stop App",
+      "asawooVocab:description": "Stop an application",
+      "asawooVocab:isImplementedBy": {
+        "@id": "asawooCapability:stopApp"
+      }
+    },
+    {
+      "@id": "asawooFunctionality:gps",
+      "@type": [
+        "asawooVocab:Functionality",
+        "owl:NamedIndividual"
+      ],
+      "asawooVocab:name": "GPS",
+      "asawooVocab:description": "Get the position using a GPS",
+      "asawooVocab:isImplementedBy": {
+        "@id": "asawooCapability:gps"
+      }
+    },
+    {
+      "@id": "asawooFunctionality:temperatureDecrease",
+      "@type": [
+        "asawooVocab:Functionality",
+        "owl:NamedIndividual"
+      ],
+      "asawooVocab:name": "Temperature Decrease",
+      "asawooVocab:description": "Decrease the temperature",
+      "asawooVocab:isImplementedBy": {
+        "@id": "asawooCapability:temperatureDecrease"
+      }
+    },
+    {
+      "@id": "asawooFunctionality:temperatureIncrease",
+      "@type": [
+        "asawooVocab:Functionality",
+        "owl:NamedIndividual"
+      ],
+      "asawooVocab:name": "Temperature Increase",
+      "asawooVocab:description": "Increase the temperature",
+      "asawooVocab:isImplementedBy": {
+        "@id": "asawooCapability:temperatureIncrease"
+      }
+    },
+    {
+      "@id": "asawooFunctionality:temperatureSense",
+      "@type": [
+        "asawooVocab:Functionality",
+        "owl:NamedIndividual"
+      ],
+      "asawooVocab:name": "Temperature Sense",
+      "asawooVocab:description": "Sense the temperature",
+      "asawooVocab:isImplementedBy": {
+        "@id": "asawooCapability:temperatureSense"
+      }
+    },
+    {
+      "@id": "asawooFunctionality:openWindow",
+      "@type": [
+        "asawooVocab:Functionality",
+        "owl:NamedIndividual"
+      ],
+      "asawooVocab:name": "Open window",
+      "asawooVocab:description": "Open a window",
+      "asawooVocab:isImplementedBy": {
+        "@id": "asawooCapability:openWindow"
+      }
+    },
+    {
+      "@id": "asawooFunctionality:closeWindow",
+      "@type": [
+        "asawooVocab:Functionality",
+        "owl:NamedIndividual"
+      ],
+      "asawooVocab:name": "Close window",
+      "asawooVocab:description": "Close a window",
+      "asawooVocab:isImplementedBy": {
+        "@id": "asawooCapability:closeWindow"
+      }
+    },
+    {
+      "@id": "asawooFunctionality:callWebService",
+      "@type": [
+        "asawooVocab:Functionality",
+        "owl:NamedIndividual"
+      ],
+      "asawooVocab:name": "Call web service",
+      "asawooVocab:description": "Call a web service",
+      "asawooVocab:isImplementedBy": {
+        "@id": "asawooCapability:callWebService"
+      }
+    },
+    {
+      "@id": "asawooFunctionality:activateMotor",
+      "@type": [
+        "asawooVocab:Functionality",
+        "owl:NamedIndividual"
+      ],
+      "asawooVocab:name": "Activate a motor",
+      "asawooVocab:description": "Activate a motor",
+      "asawooVocab:isImplementedBy": {
+        "@id": "asawooCapability:activateMotor"
+      }
+    },
+    {
+      "@id": "asawooFunctionality:informationMotor",
+      "@type": [
+        "asawooVocab:Functionality",
+        "owl:NamedIndividual"
+      ],
+      "asawooVocab:name": "Information of a motor",
+      "asawooVocab:description": "Information of a motor",
+      "asawooVocab:isImplementedBy": {
+        "@id": "asawooCapability:informationMotor"
+      }
+    },
+
+
+
+
+
+    {"_comment":"******** LIST OF COMPOSED FUNCTIONALITIES ********"},
+    {
+      "@id": "asawooFunctionality:communicate",
+      "@type": [
+        "asawooVocab:Functionality",
+        "owl:NamedIndividual"
+      ],
+      "asawooVocab:name": "Communicate",
+      "asawooVocab:description": "Communicate with someone else",
+      "asawooVocab:isComposedOf": [
+        {
+          "@id": "asawooFunctionality:sms"
+        },
+        {
+          "@id": "asawooFunctionality:call"
+        }
+      ]
+    },
+    {
+      "@id": "asawooFunctionality:operateWindow",
+      "@type": [
+        "asawooVocab:Functionality",
+        "owl:NamedIndividual"
+      ],
+      "asawooVocab:name": "Operate a window",
+      "asawooVocab:description": "Operate a window using a phone application",
+      "asawooVocab:isComposedOf": [
+        {
+          "@id": "asawooFunctionality:openWindow"
+        },
+        {
+          "@id": "asawooFunctionality:closeWindow"
+        },
+        {
+          "@id": "asawooFunctionality:startApp"
+        },
+        {
+          "@id": "asawooFunctionality:stopApp"
+        }
+      ]
+    },
+    {
+      "@id": "asawooFunctionality:ventilateRoom",
+      "@type": [
+        "asawooVocab:Functionality",
+        "owl:NamedIndividual"
+      ],
+      "asawooVocab:name": "Ventilate a room",
+      "asawooVocab:description": "Ventilate a room depending on the temperature",
+      "asawooVocab:isComposedOf": [
+        {
+          "@id": "asawooFunctionality:operateWindow"
+        },
+        {
+          "@id": "asawooFunctionality:temperatureRegulation"
+        }
+      ]
+    },
+    {
+      "@id": "asawooFunctionality:temperatureChange",
+      "@type": [
+        "asawooVocab:Functionality",
+        "owl:NamedIndividual"
+      ],
+      "asawooVocab:name": "Temperature Change",
+      "asawooVocab:description": "Change the temperature of a place",
+      "asawooVocab:isComposedOf": [
+        {
+          "@id": "asawooFunctionality:temperatureIncrease"
+        },
+        {
+          "@id": "asawooFunctionality:temperatureDecrease"
+        }
+      ]
+    },
+    {
+      "@id": "asawooFunctionality:temperatureRegulation",
+      "@type": [
+        "asawooVocab:Functionality",
+        "owl:NamedIndividual"
+      ],
+      "asawooVocab:name": "Temperature Regulation",
+      "asawooVocab:description": "Regulate the temperature",
+      "asawooVocab:isComposedOf": [
+        {
+          "@id": "asawooFunctionality:temperatureSense"
+        },
+        {
+          "@id": "asawooFunctionality:temperatureChange"
+        }
+      ]
+    },
+    {
+      "@id": "asawooFunctionality:temperatureRegulationBySMS",
+      "@type": [
+        "asawooVocab:Functionality",
+        "owl:NamedIndividual"
+      ],
+      "asawooVocab:name": "Temperature Regulation by SMS",
+      "asawooVocab:description": "Regulate the temperature by SMS",
+      "asawooVocab:isComposedOf": [
+        {
+          "@id": "asawooFunctionality:temperatureRegulation"
+        },
+        {
+          "@id": "asawooFunctionality:sms"
+        }
+      ]
+    },
+    {
+      "@id": "asawooFunctionality:temperatureRegulationUsingWeatherService",
+      "@type": [
+        "asawooVocab:Functionality",
+        "owl:NamedIndividual"
+      ],
+      "asawooVocab:name": "Temperature Regulation using a Web Service",
+      "asawooVocab:description": "Regulate the temperature using a Web Service that calls some website to get the temperature of the place",
+      "asawooVocab:isComposedOf": [
+        {
+          "@id": "asawooFunctionality:temperatureRegulation"
+        },
+        {
+          "@id": "asawooFunctionality:gps"
+        },
+        {
+          "@id": "asawooFunctionality:callWebService"
+        }
+      ]
+    }
+
+    
+  ]
+}

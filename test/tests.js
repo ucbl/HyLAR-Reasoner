@@ -2,6 +2,7 @@
  * Created by Spadon on 19/08/2015.
  */
 
+var should = require('should');
 var fs = require('fs');
 var path = require('path');
 var mime = require('mime-types');
@@ -14,7 +15,7 @@ var owl, ontology, mimeType;
 
 var a, b, c;
 
-var reasoningMethod = process.env.rm, ontologyFilename = '/ontologies/IoT-O.rdf';
+var reasoningMethod = process.env.rm, ontologyFilename = '/ontologies/poster6.jsonld';
 
 describe('File access', function () {
     it('should access the file', function () {
