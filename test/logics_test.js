@@ -9,6 +9,7 @@ var rules = require('../hylar/core/OWL2RL').rules;
 var Solver = require('../hylar/core/Logics/Solver');
 var Fact = require('../hylar/core/Logics/Fact');
 var Prefixes = require('../hylar/core/Prefixes');
+var ReasoningEngine = require('../hylar/core/ReasoningEngine');
 
 describe('Rule tests', function () {
     it('should order the rule causes (most to least restrictive)', function () {
@@ -29,10 +30,8 @@ describe('Solver tests', function() {
             new Fact('http://www.w3.org/1999/02/22-rdf-syntax-ns#type', '#parentOf', 'http://www.w3.org/2002/07/owl#TransitiveProperty', [], true)
         ];
 
-        return Solver.evaluateRuleSetUsingConstruct(rules, facts)
-            .then(function(consequences) {
-                consequences.length.should.equal(2);
-            });
+        var consequences = ReasoningEngine.incremental(facts, [], [], rules);
+        consequences.additions.length.should.equal(7);
 
     });
     it('should return inference wrt. transitivity rule', function() {
@@ -41,9 +40,7 @@ describe('Solver tests', function() {
             new Fact('http://www.w3.org/1999/02/22-rdf-syntax-ns#type', '#lion', '#mammal', [], true)
         ];
 
-        return Solver.evaluateRuleSetUsingConstruct(rules, facts)
-            .then(function(consequences) {
-                consequences.length.should.equal(1);
-            });
+        var consequences = Solver.evaluateRuleSet(rules, facts)
+        consequences.length.should.equal(1);
     });
 });

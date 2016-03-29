@@ -127,28 +127,28 @@ ReasoningEngine = {
             Rins = [],
             Fe = Logics.getOnlyExplicitFacts(F),
             Fi = Logics.getOnlyImplicitFacts(F),
-            superSet;
+            superSet,
+            validationResults, validatedFacts = [];
 
         if(FeDel.length > 0) {
             FeDel = Logics.invalidate(Fe, FeDel);
         }
 
-        if(FeAdd.length > 0) {
-            //todo validation des faits connus en comparant avec le F total
-            // enlever ceux qui de FeAdd qui ont été validés puis continuer
-            if(!Logics.containsFacts(Fe, FeAdd)) {
-                do {
-                    FiAdd = Logics.mergeFactSets(FiAdd, FiAddNew);
-                    superSet = Logics.mergeFactSetsIn([Fe, Fi, FeAdd, FiAdd]);
-                    Rins = Logics.restrictRuleSet(R, superSet);
-                    FiAddNew = Solver.evaluateRuleSet(Rins, superSet);
+        validationResults = Logics.validateExistingFacts(F, FeAdd);
+        FeAdd = validationResults.unknownFacts;
+        validatedFacts = validationResults.validatedFacts;
 
-                } while (!Logics.containsFacts(FiAdd, FiAddNew));
-            }
+        if(FeAdd.length > 0) {
+            do {
+                FiAdd = Logics.mergeFactSets(FiAdd, FiAddNew);
+                superSet = Logics.mergeFactSetsIn([Fe, Fi, FeAdd, FiAdd]);
+                Rins = Logics.restrictRuleSet(R, superSet);
+                FiAddNew = Solver.evaluateRuleSet(Rins, superSet);
+            } while (!Logics.containsFacts(FiAdd, FiAddNew));
         }
 
         return {
-            additions: Logics.mergeFactSetsIn([FeDel, FeAdd, FiAdd]),
+            additions: Logics.mergeFactSetsIn([FeDel, FeAdd, validatedFacts, FiAdd]),
             deletions: []
         };
     }
