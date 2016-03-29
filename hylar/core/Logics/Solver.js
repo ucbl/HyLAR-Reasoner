@@ -28,8 +28,12 @@ Solver = {
         }
 
         for (var i = 0; i < causesToMap.length; i++) {
+            var causedBy = [];
+            for (var k = 0; k < rule.causes.length; k++) {
+                causedBy.push(this.replaceMapping(causesToMap[i], rule.causes[k]).toString());
+            }
             for (var j = 0; j < rule.consequences.length; j++) {
-                consequences.push(this.replaceMapping(causesToMap[i], rule.consequences[j]));
+                consequences.push(this.replaceMapping(causesToMap[i], rule.consequences[j], causedBy));
             }
         }
 
@@ -123,109 +127,24 @@ Solver = {
         return elem;
     },
 
-    replaceMapping: function(mapping, cause) {
-        var consequence = new Fact();
-        if (!mapping) {
-            return cause;
+    replaceMapping: function(mapping, unReplacedFact, causedBy) {
+        var replacedFact = new Fact(),
+            replacedCauses = [];
+        if (mapping == {}) {
+            return unReplacedFact;
         }
 
-        consequence.subject = this.replaceMappingOnElement(cause.subject, mapping);
-        consequence.predicate = this.replaceMappingOnElement(cause.predicate, mapping);
-        consequence.object = this.replaceMappingOnElement(cause.object, mapping);
+        if (causedBy) {
+            replacedFact.causedBy = [causedBy];
+            replacedFact.explicit = false;
+        }
 
-        return consequence;
+        replacedFact.subject = this.replaceMappingOnElement(unReplacedFact.subject, mapping);
+        replacedFact.predicate = this.replaceMappingOnElement(unReplacedFact.predicate, mapping);
+        replacedFact.object = this.replaceMappingOnElement(unReplacedFact.object, mapping);
+
+        return replacedFact;
     }
-
-    /*evaluateRuleSetUsingConstruct: function (rs, facts) {
-        var newConsPromises = [],
-            cons = [];
-
-        for (var key in rs) {
-            newConsPromises.push(this.evaluateUsingConstruct(rs[key], facts));
-        }
-        return q.all(newConsPromises)
-            .then(function(resultsArray) {
-                for (var i = 0; i < resultsArray.length; i++) {
-                    cons = Logics.uniques(cons, resultsArray[i]);
-                }
-                return cons;
-            });
-    },
-
-    evaluateUsingConstruct: function (rule, facts) {
-
-        var turtleFacts = ParsingInterface.factsToTurtle(facts),
-            turtleRule = ParsingInterface.ruleToTurtle(rule),
-
-            deferred = q.defer();
-
-        rdfstore.create(function (err, store) {
-            store.execute('INSERT DATA { ' + turtleFacts + ' }',
-                function (err, results) {
-                    store.execute('CONSTRUCT { ' + turtleRule.consequences + ' } WHERE { ' + turtleRule.causes + ' }',
-                        function (err, results) {
-                            deferred.resolve(ParsingInterface.triplesToFacts(results.triples, false));
-                        });
-                });
-        });
-
-        return deferred.promise;
-
-    },*/
-
-    /*replaceMappings: function(mapping, rule, matchingFacts) {
-        var consequences = [],
-            consequence;
-        for (var i = 0; i < rule.consequences.length; i++) {
-            consequence = this.replaceMapping(mapping, rule.consequences[i]);
-            if(consequence) {
-                consequence.causedBy = [];
-                consequence.causedBy.push(matchingFacts);
-                consequence.explicit = false;
-                consequences.push(consequence);
-            }
-        }
-        return consequences;
-    },
-
-    replaceMapping: function(mapping, ruleFact) {
-        var consequence = new Fact();
-        if (!mapping) {
-            return false;
-        }
-
-        if(Logics.isVariable(ruleFact.subject)) {
-            if (mapping[ruleFact.subject] !== undefined) {
-                consequence.subject = mapping[ruleFact.subject]
-            } else {
-                return false;
-            }
-        }  else {
-            consequence.subject = ruleFact.subject;
-        }
-
-        if(Logics.isVariable(ruleFact.predicate)) {
-            if (mapping[ruleFact.predicate] !== undefined) {
-                consequence.predicate = mapping[ruleFact.predicate]
-            } else {
-                return false;
-            }
-        } else {
-            consequence.predicate = ruleFact.predicate;
-        }
-
-        if(Logics.isVariable(ruleFact.object)) {
-            if (mapping[ruleFact.object] !== undefined) {
-                consequence.object = mapping[ruleFact.object]
-            } else {
-                return false;
-            }
-        }  else {
-            consequence.object = ruleFact.object;
-        }
-
-        return consequence;
-    },*/
 };
 
 module.exports = Solver;

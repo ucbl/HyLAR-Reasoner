@@ -17,7 +17,7 @@ var Logics = require('../hylar/core/Logics/Logics');
 var Utils = require('../hylar/core/Utils');
 var ReasoningEngine = require('../hylar/core/ReasoningEngine');
 
-var owl, ontology, reasoner, filepath = '/ontologies/asawoo.owl';
+var owl, ontology, reasoner, filepath = '/ontologies/poster6.owl';
 
 var before, after, bIns, ts;
 
@@ -269,38 +269,39 @@ describe('[I] Re-INSERT exact same query', function () {
         ts = new Date().getTime();
         query = JswSPARQL.sparql.parse('PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
         'INSERT DATA { ' +
-        '<#Inspiron> rdf:type <#Device> . ' +
-            //'<#nspiron> rdf:type <#Device> . ' +
-            //'<#spiron> rdf:type <#Device> . ' +
-            //'<#piron> rdf:type <#Device> . ' +
-            //'<#iron> rdf:type <#Device> . ' +
-            //'<#ron> rdf:type <#Device> . ' +
-            //'<#on> rdf:type <#Device> . ' +
-            //'<#n> rdf:type <#Device> . ' +
-        '<#Inspiron> <#hasConnection> <#Wifi> . ' +
-            //'<#nspiron> <#hasConnection> <#Ethernet100mbps> . ' +
-            //'<#ron> <#hasConnection> <#Bluetooth> . ' +
-        '<#Request1> rdf:type <#RequestDeviceInfo> . ' +
-            //'<#equest1> rdf:type <#RequestDeviceInfo> . ' +
-            //'<#quest1> rdf:type <#RequestDeviceInfo> . ' +
-            //'<#uest1> rdf:type <#RequestDeviceInfo> . ' +
-            //'<#est1> rdf:type <#RequestDeviceInfo> . ' +
-            //'<#st1> rdf:type <#RequestDeviceInfo> . ' +
-            //'<#t1> rdf:type <#RequestDeviceInfo> . ' +
-            //'<#1> rdf:type <#RequestDeviceInfo> . ' +
-            //'<#> rdf:type <#RequestDeviceInfo> . ' +
-        '<#Inspiron> <#hasName> "Dell Inspiron 15R" . ' +
-            //'<#nspiron> <#hasName> "Dell Inspiron 15" . ' +
-            //'<#spiron> <#hasName> "Dell Inspiron 1" . ' +
-            //'<#piron> <#hasName> "Dell Inspiron " . ' +
-            //'<#iron> <#hasName> "Dell Inspiron" . ' +
-            //'<#ron> <#hasName> "Dell Inspiro" . ' +
-            //'<#on> <#hasName> "Dell Inspir" . ' +
-            //'<#n> <#hasName> "Dell Inspi" . ' +
-        '<#Wifi> rdf:type <#ConnectionDescription> . ' +
-        '<#Bluetooth> rdf:type <#ConnectionDescription> . ' +
-        '<#Zigbee> rdf:type <#ConnectionDescription> . ' +
-        '<#Ethernet100mbps> rdf:type <#ConnectionDescription> . ' +
+            '<#Inspiron> rdf:type <#Device> . ' +
+                //'<#nspiron> rdf:type <#Device> . ' +
+                //'<#spiron> rdf:type <#Device> . ' +
+                //'<#piron> rdf:type <#Device> . ' +
+                //'<#iron> rdf:type <#Device> . ' +
+                //'<#ron> rdf:type <#Device> . ' +
+                //'<#on> rdf:type <#Device> . ' +
+                //'<#n> rdf:type <#Device> . ' +
+            '<#Inspiron> <#hasConnection> <#Wifi> . ' +
+                //'<#nspiron> <#hasConnection> <#Ethernet100mbps> . ' +
+                //'<#ron> <#hasConnection> <#Bluetooth> . ' +
+            '<#Request1> rdf:type <#RequestDeviceInfo> . ' +
+            '<#Request12> rdf:type <#RequestDeviceInfo> . ' +
+                //'<#equest1> rdf:type <#RequestDeviceInfo> . ' +
+                //'<#quest1> rdf:type <#RequestDeviceInfo> . ' +
+                //'<#uest1> rdf:type <#RequestDeviceInfo> . ' +
+                //'<#est1> rdf:type <#RequestDeviceInfo> . ' +
+                //'<#st1> rdf:type <#RequestDeviceInfo> . ' +
+                //'<#t1> rdf:type <#RequestDeviceInfo> . ' +
+                //'<#1> rdf:type <#RequestDeviceInfo> . ' +
+                //'<#> rdf:type <#RequestDeviceInfo> . ' +
+            '<#Inspiron> <#hasName> "Dell Inspiron 15R" . ' +
+                //'<#nspiron> <#hasName> "Dell Inspiron 15" . ' +
+                //'<#spiron> <#hasName> "Dell Inspiron 1" . ' +
+                //'<#piron> <#hasName> "Dell Inspiron " . ' +
+                //'<#iron> <#hasName> "Dell Inspiron" . ' +
+                //'<#ron> <#hasName> "Dell Inspiro" . ' +
+                //'<#on> <#hasName> "Dell Inspir" . ' +
+                //'<#n> <#hasName> "Dell Inspi" . ' +
+            '<#Wifi> rdf:type <#ConnectionDescription> . ' +
+            '<#Bluetooth> rdf:type <#ConnectionDescription> . ' +
+            '<#Zigbee> rdf:type <#ConnectionDescription> . ' +
+            '<#Ethernet100mbps> rdf:type <#ConnectionDescription> . ' +
         '}');
         query.should.exist;
         bIns = reasoner.aBox.convertAssertions().length;
@@ -316,38 +317,39 @@ describe('[I] DELETE query with subsumption', function () {
         ts = new Date().getTime();
         query = JswSPARQL.sparql.parse('PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
         'DELETE DATA { ' +
-        '<#Inspiron> rdf:type <#Device> . ' +
-            //'<#nspiron> rdf:type <#Device> . ' +
-            //'<#spiron> rdf:type <#Device> . ' +
-            //'<#piron> rdf:type <#Device> . ' +
-            //'<#iron> rdf:type <#Device> . ' +
-            //'<#ron> rdf:type <#Device> . ' +
-            //'<#on> rdf:type <#Device> . ' +
-            //'<#n> rdf:type <#Device> . ' +
-        '<#Inspiron> <#hasConnection> <#Wifi> . ' +
-            //'<#nspiron> <#hasConnection> <#Ethernet100mbps> . ' +
-            //'<#ron> <#hasConnection> <#Bluetooth> . ' +
-        '<#Request1> rdf:type <#RequestDeviceInfo> . ' +
-            //'<#equest1> rdf:type <#RequestDeviceInfo> . ' +
-            //'<#quest1> rdf:type <#RequestDeviceInfo> . ' +
-            //'<#uest1> rdf:type <#RequestDeviceInfo> . ' +
-            //'<#est1> rdf:type <#RequestDeviceInfo> . ' +
-            //'<#st1> rdf:type <#RequestDeviceInfo> . ' +
-            //'<#t1> rdf:type <#RequestDeviceInfo> . ' +
-            //'<#1> rdf:type <#RequestDeviceInfo> . ' +
-            //'<#> rdf:type <#RequestDeviceInfo> . ' +
-        '<#Inspiron> <#hasName> "Dell Inspiron 15R" . ' +
-            //'<#nspiron> <#hasName> "Dell Inspiron 15" . ' +
-            //'<#spiron> <#hasName> "Dell Inspiron 1" . ' +
-            //'<#piron> <#hasName> "Dell Inspiron " . ' +
-            //'<#iron> <#hasName> "Dell Inspiron" . ' +
-            //'<#ron> <#hasName> "Dell Inspiro" . ' +
-            //'<#on> <#hasName> "Dell Inspir" . ' +
-            //'<#n> <#hasName> "Dell Inspi" . ' +
-        '<#Wifi> rdf:type <#ConnectionDescription> . ' +
-        '<#Bluetooth> rdf:type <#ConnectionDescription> . ' +
-        '<#Zigbee> rdf:type <#ConnectionDescription> . ' +
-        '<#Ethernet100mbps> rdf:type <#ConnectionDescription> . ' +
+            '<#Inspiron> rdf:type <#Device> . ' +
+                //'<#nspiron> rdf:type <#Device> . ' +
+                //'<#spiron> rdf:type <#Device> . ' +
+                //'<#piron> rdf:type <#Device> . ' +
+                //'<#iron> rdf:type <#Device> . ' +
+                //'<#ron> rdf:type <#Device> . ' +
+                //'<#on> rdf:type <#Device> . ' +
+                //'<#n> rdf:type <#Device> . ' +
+            '<#Inspiron> <#hasConnection> <#Wifi> . ' +
+                //'<#nspiron> <#hasConnection> <#Ethernet100mbps> . ' +
+                //'<#ron> <#hasConnection> <#Bluetooth> . ' +
+            '<#Request1> rdf:type <#RequestDeviceInfo> . ' +
+            '<#Request12> rdf:type <#RequestDeviceInfo> . ' +
+                //'<#equest1> rdf:type <#RequestDeviceInfo> . ' +
+                //'<#quest1> rdf:type <#RequestDeviceInfo> . ' +
+                //'<#uest1> rdf:type <#RequestDeviceInfo> . ' +
+                //'<#est1> rdf:type <#RequestDeviceInfo> . ' +
+                //'<#st1> rdf:type <#RequestDeviceInfo> . ' +
+                //'<#t1> rdf:type <#RequestDeviceInfo> . ' +
+                //'<#1> rdf:type <#RequestDeviceInfo> . ' +
+                //'<#> rdf:type <#RequestDeviceInfo> . ' +
+            '<#Inspiron> <#hasName> "Dell Inspiron 15R" . ' +
+                //'<#nspiron> <#hasName> "Dell Inspiron 15" . ' +
+                //'<#spiron> <#hasName> "Dell Inspiron 1" . ' +
+                //'<#piron> <#hasName> "Dell Inspiron " . ' +
+                //'<#iron> <#hasName> "Dell Inspiron" . ' +
+                //'<#ron> <#hasName> "Dell Inspiro" . ' +
+                //'<#on> <#hasName> "Dell Inspir" . ' +
+                //'<#n> <#hasName> "Dell Inspi" . ' +
+            '<#Wifi> rdf:type <#ConnectionDescription> . ' +
+            '<#Bluetooth> rdf:type <#ConnectionDescription> . ' +
+            '<#Zigbee> rdf:type <#ConnectionDescription> . ' +
+            '<#Ethernet100mbps> rdf:type <#ConnectionDescription> . ' +
         '}');
         query.should.exist;
         results = reasoner.answerQuery(query, ReasoningEngine.incremental);

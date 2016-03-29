@@ -278,6 +278,25 @@ module.exports = {
         return invalidated;
     },
 
+    validateExistingFacts: function(originalSet, setToValidate) {
+        var validatedFacts = [],
+            unknownFacts = [];
+        for (var i = 0; i < setToValidate.length; i++) {
+            var factToValidate = setToValidate[i];
+            if(factToValidate.appearsIn(originalSet)) {
+                factToValidate.valid = true;
+                validatedFacts.push(factToValidate);
+            } else {
+                unknownFacts.push(factToValidate);
+            }
+        }
+
+        return {
+            validatedFacts: validatedFacts,
+            unknownFacts: unknownFacts
+        }
+    },
+
     /**
      * @deprecated Computes each conjunction given a set of facts, order-independently
      * @param facts
@@ -353,5 +372,5 @@ module.exports = {
         } catch(e) {
             return false;
         }
-    },
+    }
 };
