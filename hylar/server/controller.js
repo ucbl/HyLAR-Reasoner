@@ -169,6 +169,18 @@ module.exports = {
         });
     },
 
+    deleteFile: function(req, res) {
+        var filename = req.param('filename');
+
+        fs.unlink(ontoDir + filename, function(err, data) {
+            if(err) {
+                res.status(500).send({statusText: err.toString()});
+            } else {
+                res.status(200).send({filename: filename});
+            };
+        });
+    },
+
     list: function(req, res) {
         res.send(fs.readdirSync(ontoDir));
     },

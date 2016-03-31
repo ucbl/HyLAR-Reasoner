@@ -64,6 +64,9 @@ app.get('/query', OntologyController.processSPARQL);
 //File uploading
 app.post('/ontology', upload.single('file'), OntologyController.upload);
 
+//File deletion
+app.delete('/ontology/:filename', OntologyController.deleteFile);
+
 //Ontology listing
 app.get('/ontology', OntologyController.list);
 
