@@ -5,6 +5,7 @@
   "dependencies": {
     "body-parser": "^1.11.0",
     "browserify": "^2.3.0",
+    "colors": "^1.1.2",
     "express": "^4.11.1",
     "extend": "^3.0.0",
     "gulp-debug": "~2.1.2",

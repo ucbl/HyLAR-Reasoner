@@ -3,7 +3,8 @@
  */
 
 var fs = require('fs'),
-    path = require('path');
+    path = require('path'),
+    colors = require('colors');
 
 var Dictionary = require('./Dictionary'),
     ParsingInterface = require('./ParsingInterface'),
@@ -13,7 +14,8 @@ var Dictionary = require('./Dictionary'),
 var rMethod;
 
 console.notify = function(msg) {
-    console.log('[HyLAR] ' + msg);
+    console.log(colors.green('[HyLAR] ') + msg);
+    fs.appendFileSync('hylar.log', new Date().toString() + ' ' + msg + '\n');
 };
 
 
@@ -36,12 +38,14 @@ var treatUpdate = function(sparql) {
             for (var i = 0; i < sparql.updates.length; i++) {
                 update = sparql.updates[i];
                 if(update.insert) {
+                    console.notify('Starting insertion.');
                     for (var j = 0; j < update.insert.length; j++) {
                         insertion = update.insert[j];
                         iTriples = iTriples.concat(insertion.triples);
                     }
                 }
                 if(update.delete) {
+                    console.notify('Starting deletion.');
                     for (var j = 0; j < update.delete.length; j++) {
                         deletion = update.delete[j];
                         dTriples = iTriples.concat(deletion.triples);
@@ -83,6 +87,7 @@ var treatUpdate = function(sparql) {
                     if(turtle.insert != '') return StorageManager.insert(turtle.insert);
                     else return true;
                 });
+            console.notify('Update completed.');
         };
 
 /**
@@ -98,14 +103,17 @@ var treatSelectOrConstruct = function(query) {
         return StorageManager.query(query)
         .then(function(r) {
             if(queryType == 'SELECT') {
+                console.notify('Requesting query answering (select)...');
                 triples = ParsingInterface.constructTriplesFromResultBindings(parsedQuery, r)
             } else {
+                console.notify('Requesting query answering (construct)...');
                 triples = r.triples;
             }
 
             val = Dictionary.findValues(triples);
             facts = val.found;
             blanknodes = val.notfound;
+            console.notify(r.length + ' results (unfiltered)');
             return {
                 results: r,
                 filtered: Reasoner.engine.tagFilter(facts, Dictionary.values())
@@ -133,9 +141,12 @@ var treatSelectOrConstruct = function(query) {
  */
 var registerDerivations = function(derivations) {
     var facts = derivations.additions;
+    console.notify('Registering derivations to Dictionary...');
+
     for (var i = 0; i < facts.length; i++) {
         Dictionary.put(facts[i]);
     }
+    console.notify('Registered successfully.');
 };
 
 /**
@@ -144,6 +155,9 @@ var registerDerivations = function(derivations) {
  */
 var classify = function() {
     var t;
+
+    console.notify('Classification started.');
+
     return StorageManager.query('CONSTRUCT { ?a ?b ?c } WHERE { ?a ?b ?c }')
         .then(function(r) {
             var facts = [], triple;
@@ -171,6 +185,7 @@ var classify = function() {
             return ParsingInterface.factsToTurtle(r.additions);
         })
         .then(function(ttl) {
+            console.notify('Classification succeeded.');
             return StorageManager.insert(ttl.replace(/(\n|\r)/g, ''));
         });
 };
@@ -231,6 +246,7 @@ Hylar = {
                 case 'application/xml':
                     return StorageManager.loadRdfXml(ontologyTxt)
                         .then(function() {
+                            console.notify('Store initialized successfully.');
                             return classify();
                         });
                     break;
@@ -248,6 +264,7 @@ Hylar = {
                 default:
                     return StorageManager.load(ontologyTxt, mimeType)
                         .then(function() {
+                            1;
                             return classify();
                         }, function(error) {
                             console.error(error);

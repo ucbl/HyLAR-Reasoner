@@ -57,6 +57,7 @@ module.exports = {
         var deferred = q.defer();
 
         storage.load(format, data, function (err, r) {
+            console.notify(r + ' triples loaded.');
             if(err) {
                 deferred.reject(err);
             } else {

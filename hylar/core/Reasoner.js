@@ -9,9 +9,17 @@ var q = require('q');
 
 module.exports = {
     evaluate: function(fI, fD, F, alg) {
-        var deferred = q.defer();
+        var deferred = q.defer(),
+            evaluationResults;
         if (!alg) alg = ReasoningEngine.incremental;
-        deferred.resolve(alg(fI, fD, F, OWL2RL.rules));
+
+        evaluationResults = alg(fI, fD, F, OWL2RL.rules);
+
+        console.notify('Evaluation finished.');
+        console.notify(evaluationResults.additions.length + ' additions, ' + evaluationResults.deletions.length + ' deletions.');
+
+        deferred.resolve(evaluationResults);
+
         return deferred.promise;
     },
 

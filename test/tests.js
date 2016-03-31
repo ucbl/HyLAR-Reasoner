@@ -40,6 +40,9 @@ describe('File reading', function () {
 
 describe('Ontology Parsing and classification', function () {
     it('should parse and classify the ontology', function () {
+
+        console.notify('File: ' + ontologyFilename);
+
         return Hylar.load(owl, mimeType, reasoningMethod)
         .then(function() {
             return Hylar.query(
@@ -74,14 +77,14 @@ describe('INSERT query with derivations', function () {
 
 describe('SELECT query with derivations', function () {
     var query, results;
-    it('should find a class assertion', function () {
+    it('should find at least a class assertion', function () {
         // ClassAssertion Test
         return Hylar.query(
                 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
                 'PREFIX fipa: <http://sites.google.com/site/smartappliancesproject/ontologies/fipa#> ' +
                 'SELECT * { ?a rdf:type fipa:Device . } ')
             .then(function(r) {
-                r.length.should.equal(1);
+                r.length.should.be.above(0);
             });
     });
 
@@ -118,14 +121,16 @@ describe('SELECT query with derivations', function () {
             });
     });
 
-    it('should find two subsumed class assertions', function () {
+    it('should find at least two subsumed class assertions', function () {
         // Subsumption test
         return Hylar.query(
                 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
                 'PREFIX fipa: <http://sites.google.com/site/smartappliancesproject/ontologies/fipa#> ' +
                 'SELECT * { ?a rdf:type fipa:Function . } ')
             .then(function(r) {
-                r.length.should.equal(2);
+                if (ontologyFilename == 'fipa.ttl') {
+                    r.length.should.be.above(1);
+                }
             });
     });
 
@@ -224,14 +229,14 @@ describe('Re-INSERT exact same query', function () {
 
 describe('SELECT query with derivations', function () {
     var query, results;
-    it('should find a class assertion', function () {
+    it('should find at least a class assertion', function () {
         // ClassAssertion Test
         return Hylar.query(
                 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
                 'PREFIX fipa: <http://sites.google.com/site/smartappliancesproject/ontologies/fipa#> ' +
                 'SELECT * { ?a rdf:type fipa:Device . } ')
             .then(function(r) {
-                r.length.should.equal(1);
+                r.length.should.be.above(0);
             });
     });
 
@@ -268,14 +273,16 @@ describe('SELECT query with derivations', function () {
             });
     });
 
-    it('should find two subsumed class assertions', function () {
+    it('should find at least two subsumed class assertions', function () {
         // Subsumption test
         return Hylar.query(
                 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
                 'PREFIX fipa: <http://sites.google.com/site/smartappliancesproject/ontologies/fipa#> ' +
                 'SELECT * { ?a rdf:type fipa:Function . } ')
             .then(function(r) {
-                r.length.should.equal(2);
+                if (ontologyFilename == '/ontologies/fipa.ttl') {
+                    r.length.should.be.above(1);
+                }
             });
     });
 
