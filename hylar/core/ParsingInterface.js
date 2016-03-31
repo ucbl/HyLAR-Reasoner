@@ -52,20 +52,15 @@ module.exports = {
     },
 
     parseStrEntityToTurtle: function(entityStr) {
-        var literalPattern = /^("[\s\S]*")(\^\^<.+>)*$/i,
+        var literalPattern = /^("[\s\S]*")(@([a-zA-Z]+)|\^\^<?.+>?)?$/i,
             blankNodePattern = /^_:/i,
             variablePattern = /^\?/i,
             dblQuoteInStrPattern = /^(")([\s\S]*)(".*)$/i, dblQuoteMatch;
 
         if(entityStr.match(literalPattern)) {
             entityStr = entityStr.replace(literalPattern, '$1$2');
-            try {
-                dblQuoteMatch = entityStr.match(dblQuoteInStrPattern);
-                return dblQuoteMatch[1] + dblQuoteMatch[2].replace(/"/g, '\\"') + dblQuoteMatch[3];
-            } catch(e) {
-                1;
-            }
-
+            dblQuoteMatch = entityStr.match(dblQuoteInStrPattern);
+            return dblQuoteMatch[1] + dblQuoteMatch[2].replace(/"/g, '\\"') + dblQuoteMatch[3];
         } else if(entityStr.match(blankNodePattern) || entityStr.match(variablePattern)) {
             return entityStr
 
