@@ -24,6 +24,11 @@ var Class = Prefixes.OWL + 'Class',
     InverseOf = Prefixes.OWL + 'inverseOf',
     SameAs = Prefixes.OWL + 'sameAs';
 
+/**
+ * RDF/OWL entailment rules.
+ * @type {{rules: {classSubsumption: *[], propertySubsumption: *[], transitivity: *[], inverse: *[], equivalence: *[], equality: *[]}}}
+ */
+
 OWL2RL = {
     rules: {
         classSubsumption: [

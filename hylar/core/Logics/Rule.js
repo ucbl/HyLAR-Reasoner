@@ -27,6 +27,10 @@ Rule.prototype = {
         return factConj.substr(3) + ' -> ' + this.consequences.toString();
     },
 
+    /**
+     * Orders rule causes (inplace) from the most to the least restrictive.
+     * The least a cause have variables, the most it is restrictive.
+     */
     orderCausesByMostRestrictive: function() {
         var orderedCauses = [],
             totalConstantOccurences = [];

@@ -5,11 +5,15 @@
 var Logics = require('./Logics/Logics'),
     Solver = require('./Logics/Solver');
 
+/**
+ * Reasoning engine containing incremental algorithms
+ * and heuristics for KB view maintaining.
+ */
 
 ReasoningEngine = {
     /**
      * A naive reasoner that recalculates the entire knowledge base.
-     * Concat is preferred over merge for evaluation purposes.
+     * @deprecated
      * @param triplesIns
      * @param triplesDel
      * @param rules
@@ -108,6 +112,12 @@ ReasoningEngine = {
         };
     },
 
+    /**
+     * Returns valid facts using explicit facts' validity tags.
+     * @param F
+     * @param refs
+     * @returns {Array}
+     */
     tagFilter: function(F, refs) {
         var validSet = [], kb_fe = Logics.getOnlyExplicitFacts(refs), f;
         for (var i = 0; i < F.length; i++) {
@@ -121,6 +131,16 @@ ReasoningEngine = {
         return validSet;
     },
 
+    /**
+     * Tags newly inferred facts, and (un)validates updated ones.
+     * Explicit facts are 'validity'-tagged, while
+     * implicit ones are 'causedBy'-tagged.
+     * @param FeAdd
+     * @param FeDel
+     * @param F
+     * @param R
+     * @returns {{additions: *, deletions: Array}}
+     */
     tagging: function(FeAdd, FeDel, F, R) {
         var FiAddNew = [],
             FiAdd = [],

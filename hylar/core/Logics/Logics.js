@@ -15,6 +15,7 @@ module.exports = {
      * without removing the fact from fs2.
      * @param fs1
      * @param fs2
+     * @deprecated
      */
     substractFactSets: function(fs1, fs2) {
         var fact, result = [], t = [];
@@ -27,6 +28,12 @@ module.exports = {
         return result;
     },
 
+    /**
+     * @deprecated
+     * @param f1
+     * @param f2
+     * @returns {*}
+     */
     substractGraphSets: function(f1, f2) {
         var graphs = [];
         for(var key in f1.graphs) {
@@ -39,6 +46,12 @@ module.exports = {
         return f1;
     },
 
+    /**
+     * @deprecated
+     * @param fs
+     * @param gs
+     * @returns {*}
+     */
     restrictToGraphs: function(fs, gs) {
         var fr = [];
         if(!gs || gs.length == 0) return fs;
@@ -50,6 +63,12 @@ module.exports = {
         return fr;
     },
 
+    /**
+     * @deprecated
+     * @param gs1
+     * @param gs2
+     * @returns {boolean}
+     */
     shareSomeGraph: function(gs1, gs2) {
         if(gs1.length == 0 && gs2.length == 0) return true;
         for (var key in gs1) {
@@ -59,8 +78,8 @@ module.exports = {
     },
 
     /**
-     * True-like merge, which also merges
-     * identical facts obtainedFrom properties.
+     * True-like merge of two facts sets, which also merges
+     * identical facts causedBy properties.
      * @param fs1
      * @param fs2
      */
@@ -77,6 +96,11 @@ module.exports = {
         return fsMax;
     },
 
+    /**
+     * True-like merge of facts sets in the provided array,
+     * which also merges identical facts obtainedFrom properties.
+     * @param _set the set of facts sets.
+     */
     mergeFactSetsIn: function(_set) {
         var that = this, fs,
             finalSet = [];
@@ -87,6 +111,11 @@ module.exports = {
         return finalSet;
     },
 
+    /**
+     * Returns implicit facts from the set.
+     * @param fs
+     * @returns {Array}
+     */
     getOnlyImplicitFacts: function(fs) {
         var fR = [];
         for (var key in fs) {
@@ -98,6 +127,11 @@ module.exports = {
         return fR;
     },
 
+    /**
+     * Returns explicit facts from the set.
+     * @param fs
+     * @returns {Array}
+     */
     getOnlyExplicitFacts: function(fs) {
         var fR = [];
         for (var key in fs) {
@@ -109,25 +143,14 @@ module.exports = {
         return fR;
     },
 
-    restrictFactSet: function(rule, fs) {
-        var restriction = [];
-
-        for (var k = 0; k < fs.length; k++) {
-            var fact = fs[k];
-
-            for (var i = 0; i < rule.causes.length; i++) {
-                var cause = rule.causes[i];
-
-                if (this.causeMatchesFact(cause, fact)) {
-                    restriction.push(fact)
-                    break;
-                }
-            }
-        }
-
-        return restriction;
-    },
-
+    /**
+     * Returns a restricted rule set,
+     * in which at least one fact from the fact set
+     * matches all rules.
+     * @param rs
+     * @param fs
+     * @returns {Array}
+     */
     restrictRuleSet: function(rs, fs) {
         var restriction = [];
 
@@ -156,12 +179,26 @@ module.exports = {
         return restriction;
     },
 
+    /**
+     * Checks if a cause matches a fact, i.e. is the cause's pattern
+     * can be satisfied by the fact.
+     * @param cause
+     * @param fact
+     * @returns {*}
+     */
     causeMatchesFact: function(cause, fact) {
         return this.causeMemberMatchesFactMember(cause.subject, fact.subject)
             && this.causeMemberMatchesFactMember(cause.predicate, fact.predicate)
             && this.causeMemberMatchesFactMember(cause.object, fact.object);
     },
 
+    /**
+     * Return true if the cause and fact members (subjects, objects or predicates)
+     * are equal (if URI) or if both are variables. Returns false otherwise.
+     * @param causeMember
+     * @param factMember
+     * @returns {boolean}
+     */
     causeMemberMatchesFactMember: function(causeMember, factMember) {
         if (this.isVariable(causeMember)) {
             return true;
@@ -172,6 +209,11 @@ module.exports = {
         }
     },
 
+    /**
+     * @deprecated
+     * @param fs
+     * @returns {Array}
+     */
     mergeGraphs: function(fs) {
         var graphs = [];
         for(var key in fs) {
@@ -181,6 +223,11 @@ module.exports = {
         return graphs;
     },
 
+    /**
+     * @deprecated
+     * @param gs
+     * @returns {Array}
+     */
     graphsFrom: function(gs) {
         var graphs = [];
         for (var key in gs) {
@@ -190,6 +237,12 @@ module.exports = {
         return graphs;
     },
 
+    /**
+     * @deprecated
+     * @param fsRet
+     * @param fsSrc
+     * @returns {*}
+     */
     restrictToGraphsFrom: function(fsRet, fsSrc) {
         return this.restrictToGraphs(fsRet, this.graphsFrom(fsSrc));
     },
@@ -278,6 +331,13 @@ module.exports = {
         return invalidated;
     },
 
+    /**
+     * Validates facts from setToValidate which
+     * appear in the originalSet.
+     * @param originalSet
+     * @param setToValidate
+     * @returns {{validatedFacts: Array, unknownFacts: Array}}
+     */
     validateExistingFacts: function(originalSet, setToValidate) {
         var validatedFacts = [],
             unknownFacts = [];
@@ -295,34 +355,6 @@ module.exports = {
             validatedFacts: validatedFacts,
             unknownFacts: unknownFacts
         }
-    },
-
-    /**
-     * @deprecated Computes each conjunction given a set of facts, order-independently
-     * @param facts
-     * @param max
-     * @param imin
-     * @returns {*}
-     */
-    computeConjunctions: function(facts, max, imin) {
-        var conjs, others, combine;
-        if(imin === undefined) {
-            imin = 0;
-        }
-        if ((max == 0) || (imin == facts.length)) {
-            return [];
-        }
-        conjs = [[facts[imin]]];
-        others = this.computeConjunctions(facts, max, imin+1);
-
-        for (var j = 0; j < others.length; j++) {
-            if (others[j].length < max) {
-                combine = others[j].slice();
-                combine.push(facts[imin]);
-                conjs.push(combine);
-            }
-        }
-        return conjs.concat(others);
     },
 
     /**
@@ -347,6 +379,13 @@ module.exports = {
         return uniq;
     },
 
+    /**
+     * Substracts each set.
+     * Not to be used in tag-based reasoning.
+     * @param _set1
+     * @param _set2
+     * @returns {Array}
+     */
     minus: function(_set1, _set2) {
         var flagEquals,
             newSet = [];
@@ -366,6 +405,11 @@ module.exports = {
         return newSet;
     },
 
+    /**
+     * Checks if a string is a variable,
+     * @param str
+     * @returns {boolean}
+     */
     isVariable: function(str) {
         try {
             return (str.indexOf('?') === 0);

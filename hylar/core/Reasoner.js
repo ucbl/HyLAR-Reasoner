@@ -7,7 +7,21 @@ var OWL2RL = require('./OWL2RL'),
 
 var q = require('q');
 
+/**
+ * The core reasoner or HyLAR.
+ */
+
 module.exports = {
+
+    /**
+     * Evaluates knowledge base update using
+     * advanced reasoning algorithms (incremental, tag-based).
+     * @param fI The facts to insert
+     * @param fD The facts to delete
+     * @param F The KB
+     * @param alg The reasoning algorithm (function)
+     * @returns {*}
+     */
     evaluate: function(fI, fD, F, alg) {
         var deferred = q.defer(),
             evaluationResults;
@@ -23,8 +37,15 @@ module.exports = {
         return deferred.promise;
     },
 
+    /**
+     * Specifies the reasoning engine used.
+     */
     engine: ReasoningEngine,
 
+    /**
+     * Specifies the behavior of the reasoning engine
+     * (algorithm currently chosen).
+     */
     process: {
         it: {
             incrementally: ReasoningEngine.incremental,

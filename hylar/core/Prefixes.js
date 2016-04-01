@@ -2,6 +2,11 @@
  * Created by mt on 23/11/2015.
  */
 
+/**
+ * Main prefixes used in the store.
+ * @type {{OWL: string, RDF: string, RDFS: string, FIPA: string}}
+ */
+
 module.exports = {
     OWL: 'http://www.w3.org/2002/07/owl#',
     RDF: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',

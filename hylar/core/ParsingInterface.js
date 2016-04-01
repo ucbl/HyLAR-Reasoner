@@ -11,8 +11,18 @@ var rdfext = require('rdf-ext')(),
     SparqlParser = new sparqlJs.Parser(),
     RdfXmlParser = new rdfext.RdfXmlParser();
 
+/**
+ * The parsing interface, for transforming facts, triples, turtle or even results bindings
+ * into other representations.
+ */
+
 module.exports = {
 
+    /**
+     * Parses rdf/xml to turtle using rdf ext.
+     * @param data Raw rdf/xml data (str)
+     * @returns {*}
+     */
     rdfXmlToTurtle: function(data) {
         var deferred = q.defer(), triple;
         RdfXmlParser.parse(data, function(parsed, err) {
@@ -29,6 +39,12 @@ module.exports = {
         return deferred.promise;
     },
 
+    /**
+     * Transforms a triple into a fact.
+     * @param t The triple
+     * @param explicit True if the resulting fact is explicit, false otherwise (default: true)
+     * @returns the resulting fact
+     */
     tripleToFact: function(t, explicit) {
         if(explicit === undefined) {
             explicit = true;
@@ -51,6 +67,11 @@ module.exports = {
         return arr;
     },
 
+    /**
+     * Transforms a raw entity (URI or literal) into turtle.
+     * @param entityStr
+     * @returns {*}
+     */
     parseStrEntityToTurtle: function(entityStr) {
         var literalPattern = /^("[\s\S]*")(@([a-zA-Z]+)|\^\^<?.+>?)?$/i,
             blankNodePattern = /^_:/i,
@@ -69,6 +90,11 @@ module.exports = {
         }
     },
 
+    /**
+     * Transforms a fact into turtle.
+     * @param fact
+     * @returns {string}
+     */
     factToTurtle: function(fact) {
         var subject = this.parseStrEntityToTurtle(fact.subject),
             predicate = this.parseStrEntityToTurtle(fact.predicate),
@@ -77,6 +103,11 @@ module.exports = {
         return subject + ' ' + predicate + ' ' + object + ' . ';
     },
 
+    /**
+     * Transforms a set of facts into turtle.
+     * @param facts
+     * @returns {string}
+     */
     factsToTurtle: function(facts) {
         var ttl = '', fact,
             that = this;
@@ -87,6 +118,11 @@ module.exports = {
         return ttl;
     },
 
+    /**
+     * Trasnforms a rule into turtle.
+     * @param rule
+     * @returns {{causes: (*|string), consequences: (*|string)}}
+     */
     ruleToTurtle: function(rule) {
         var causesTurtle = this.factsToTurtle(rule.causes),
             consequencesTurtle = this.factsToTurtle(rule.consequences);
@@ -97,10 +133,22 @@ module.exports = {
         }
     },
 
+    /**
+     * Parses a SPARQL query.
+     * @param query
+     * @returns {*}
+     */
     parseSPARQL: function(query) {
         return SparqlParser.parse(query);
     },
 
+    /**
+     * Replace a variable from a result binding.
+     * @param elem Element to be replaced (subject, predicate or object)
+     * @param binding The result binding
+     * @param value The value to replace
+     * @returns The replaced element
+     */
     replaceVar: function(elem, binding, value) {
         var variableRegExpPattern = new RegExp('\\?'+value, 'g');
         if(elem.match(variableRegExpPattern)) {
@@ -113,6 +161,13 @@ module.exports = {
         return elem;
     },
 
+    /**
+     * Replaces variables in triples from results bindings.
+     * @param vars The variables to be replaced
+     * @param triples The triples to be replaced
+     * @param results The results bindings
+     * @returns {Array} The replaced triples.
+     */
     replaceVars: function(vars, triples, results) {
         var returned = [],
             triple, value, binding, subject, predicate, object,
@@ -134,6 +189,14 @@ module.exports = {
         return returned;
     },
 
+    /**
+     * Builds new triples from results bindings,
+     * given their original query. This function is
+     * used to tag-filter unfiltered store results.
+     * @param originalQuery Query originally launched against the store
+     * @param queryResults Results sent by the store
+     * @returns {Array} The newly build triples
+     */
     constructTriplesFromResultBindings: function(originalQuery, queryResults) {
         var that = this,
             t = [],
@@ -153,6 +216,14 @@ module.exports = {
         return t;
     },
 
+    /**
+     * Reforms results from a construct query,
+     * after tag-filtering.
+     * @param results
+     * @param ttl
+     * @param blanknodes
+     * @returns {*}
+     */
     reformConstructResults: function(results, ttl, blanknodes) {
         var triples = [], triple, m;
         for (var i = 0; i < results.triples.length; i++) {
@@ -166,6 +237,14 @@ module.exports = {
         return results;
     },
 
+    /**
+     * Returns bindings that have not been
+     * tag-filtered.
+     * @param results
+     * @param ttl
+     * @param blanknodes
+     * @returns {*}
+     */
     getValidBindings: function(bindings, triple, ttl) {
         var replaced, subject, predicate, object,
             validBindings = [];
@@ -182,6 +261,14 @@ module.exports = {
         return validBindings;
     },
 
+    /**
+     * Reforms results from a construct query,
+     * after tag-filtering.
+     * @param results
+     * @param ttl
+     * @param blanknodes
+     * @returns {*}
+     */
     reformSelectResults: function(parsedQuery, results, ttl) {
         var that = this, statement, wtriple, b,
             returning = [];

@@ -65,6 +65,15 @@ Fact.prototype = {
         return false;
     },
 
+    /**
+     * Checks the validity of an implicit fact
+     * by exploring its explicit causes' validity tags.
+     * An implicit fact is valid iff the disjunction of
+     * its explicit causes' validity tags is true, i.e.
+     * if at least one of its causes is valid.
+     * @param fe
+     * @returns {boolean}
+     */
     isValid: function(fe) {
         for (var key in this.causedBy) {
             var valid = true,
@@ -82,20 +91,6 @@ Fact.prototype = {
             }
         }
         return false;
-    },
-
-    setCauses: function(conjunction) {
-        this.causedBy = [[]];
-        this.explicit = false;
-        for (var i = 0; i < conjunction.length; i++) {
-            if(conjunction[i].causedBy.length > 0) {
-                for (var j = 0; j < conjunction[i].causedBy.length; j++) {
-                    this.causedBy[0] = this.causedBy[0].concat((conjunction[i].causedBy[j]));
-                }
-            } else {
-                this.causedBy[0].push(conjunction[i].toString());
-            }
-        }
     }
 };
 

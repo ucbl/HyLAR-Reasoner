@@ -10,8 +10,18 @@ var q = require('q');
 
 var storage;
 
+/**
+ * Interface used for triple storage.
+ * Relies on antonio garrote's rdfstore.js
+ */
+
 module.exports = {
 
+    /**
+     * Initializes the triplestore.
+     * Register owl, rdfs and rdfs prefixes.
+     * @returns {*}
+     */
     init: function() {
         var deferred = q.defer();
         rdfstore.create(function(err, store) {
@@ -28,6 +38,12 @@ module.exports = {
         return deferred.promise;
     },
 
+    /**
+     * Suitable function to load rdf/xml ontologies
+     * using rdf-ext parser.
+     * @param data
+     * @returns {*|Promise}
+     */
     loadRdfXml: function(data) {
         var that = this;
 
@@ -40,6 +56,11 @@ module.exports = {
         })
     },
 
+    /**
+     * Launches a query against the triplestore.
+     * @param query
+     * @returns {*}
+     */
     query: function(query) {
         var deferred = q.defer();
 
@@ -53,6 +74,12 @@ module.exports = {
         return deferred.promise;
     },
 
+    /**
+     * Loads an ontology in the store.
+     * @param data Raw ontology (str)
+     * @param format Ontology mimetype
+     * @returns {*}
+     */
     load: function(data, format) {
         var deferred = q.defer();
 
@@ -67,24 +94,49 @@ module.exports = {
         return deferred.promise;
     },
 
+    /**
+     * Empties the entire store.
+     * @returns {*}
+     */
     clear: function()  {
         return this.query('DELETE { ?a ?b ?c } WHERE { ?a ?b ?c }');
     },
 
+    /**
+     * Launches an insert query against
+     * the triplestore.
+     * @param ttl Triples to insert, in turtle.
+     * @returns {*}
+     */
     insert: function(ttl) {
         return this.query('INSERT DATA { ' + ttl + ' }');
     },
 
+    /**
+     * Launches a delete query against
+     * the triplestore.
+     * @param ttl Triples to insert, in turtle.
+     * @returns {*}
+     */
     delete: function(ttl) {
         return this.query('DELETE DATA { ' + ttl + ' }');
     },
 
-    // Storage import or export
-
+    /**
+     * Returns the content of the store,
+     * for export purposes.
+     * @returns {*}
+     */
     getContent: function() {
         return this.query('CONSTRUCT { ?a ?b ?c } WHERE { ?a ?b ?c }');
     },
 
+    /**
+     * Loads content in the store,
+     * for import purposes.
+     * @param ttl Triples to import, in turtle.
+     * @returns {*|Promise}
+     */
     createStoreWith: function(ttl) {
         return this.clear().then(function() {
             return this.insert(ttl)

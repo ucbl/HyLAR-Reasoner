@@ -5,8 +5,19 @@
 var Fact = require('./Fact');
 var Logics = require('./Logics');
 
+/**
+ * Core solver used to evaluate rules against facts
+ * using pattern matching mechanisms.
+ */
+
 Solver = {
 
+    /**
+     * Evaluates a set of rules over a set of facts.
+     * @param rs
+     * @param facts
+     * @returns Consequences of the evaluation.
+     */
     evaluateRuleSet: function(rs, facts) {
         var newCons, cons = [];
         for (var key in rs) {
@@ -16,6 +27,13 @@ Solver = {
         return cons;
     },
 
+    /**
+     * Evaluates a rule over a set of facts through
+     * restriction of the rule's causes.
+     * @param rule
+     * @param facts
+     * @returns {Array}
+     */
     evaluateThroughRestriction: function(rule, facts) {
         var causesToMap, i = 0,
             consequences = [];
@@ -42,6 +60,15 @@ Solver = {
         return consequences;
     },
 
+    /**
+     * Updates the mapping of the current cause
+     * given the next cause of a rule, over a
+     * set of facts.
+     * @param currentCauses
+     * @param nextCause
+     * @param facts
+     * @returns {Array}
+     */
     replaceNextCauses: function(currentCauses, nextCause, facts) {
         var replacedNextCauses = [],
             mappings = [];
@@ -74,6 +101,14 @@ Solver = {
         }
     },
 
+    /**
+     * Returns a new or updated mapping if a fact matches a cause,
+     * return false otherwise.
+     * @param fact
+     * @param cause
+     * @param mapping
+     * @returns {*}
+     */
     factMatchesCause: function(fact, cause, mapping) {
         var localMapping = {}; // Generates new mapping
 
@@ -126,6 +161,12 @@ Solver = {
         return localMapping;
     },
 
+    /**
+     * Replaces an element given the mapping.
+     * @param elem
+     * @param mapping
+     * @returns {*}
+     */
     replaceMappingOnElement: function(elem, mapping) {
         if(Logics.isVariable(elem)) {
             if (mapping[elem] !== undefined) {
@@ -135,6 +176,15 @@ Solver = {
         return elem;
     },
 
+    /**
+     * Replaces fact's variable members (sub, pred, obj)
+     * given the mapping.
+     * @param mapping
+     * @param unReplacedFact
+     * @param causedBy
+     * @param graphs
+     * @returns {*}
+     */
     replaceMapping: function(mapping, unReplacedFact, causedBy, graphs) {
         var replacedFact = new Fact(),
             replacedCauses = [];

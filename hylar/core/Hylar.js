@@ -18,7 +18,12 @@ console.notify = function(msg) {
     fs.appendFileSync('hylar.log', new Date().toString() + ' ' + msg + '\n');
 };
 
-
+/**
+ * HyLAR main module.
+ * @author Mehdi Terdjimi
+ * @organization LIRIS, Universite Lyon 1
+ * @email mehdi.terdjimi@univ-lyon1.fr
+ */
 
 /**
  * Private function to process updates queries.
@@ -103,17 +108,14 @@ var treatSelectOrConstruct = function(query) {
         return StorageManager.query(query)
         .then(function(r) {
             if(queryType == 'SELECT') {
-                console.notify('Requesting query answering (select)...');
                 triples = ParsingInterface.constructTriplesFromResultBindings(parsedQuery, r)
             } else {
-                console.notify('Requesting query answering (construct)...');
                 triples = r.triples;
             }
 
             val = Dictionary.findValues(triples);
             facts = val.found;
             blanknodes = val.notfound;
-            console.notify(r.length + ' results (unfiltered)');
             return {
                 results: r,
                 filtered: Reasoner.engine.tagFilter(facts, Dictionary.values())
@@ -135,7 +137,7 @@ var treatSelectOrConstruct = function(query) {
 };
 
 /**
- * Private function to register newly inferred derivation
+ * Private function to register newly inferred derivations
  * in the Dictionary.
  * @param derivations The derivations to be registered.
  */
@@ -150,7 +152,8 @@ var registerDerivations = function(derivations) {
 };
 
 /**
- * Private function to classify the ontology already loaded in the triplestore.
+ * Private function to classify the ontology
+ * already loaded in the triplestore.
  * @returns {*}
  */
 var classify = function() {
