@@ -8,6 +8,7 @@ HyLAR-Reasoner is an OWL 2 RL reasoner that uses JSW and OWLReasoner as a triple
 The framework implementation of HyLAR can be tested online at http://dataconf.liris.cnrs.fr/hylar/
 
 NB: Performances have been drastically improved since v. 1.5
+NB: Since version 1.6, HyLAR must be instantiated. Please see section II from 'Use HyLAR's reasoner module locally'.
 
 ## Getting started ##
 
@@ -23,11 +24,13 @@ NB: Performances have been drastically improved since v. 1.5
 
 ```
 var Hylar = require('hylar');
+var hylarInstance = new Hylar();
+
 var classifiedOntology, queryResults;
 
-classifiedOntology = Hylar.classify('./fipa.owl'));
+classifiedOntology = hylarInstance.classify('./fipa.owl'));
 
-queryResults = Hylar.query('PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
+queryResults = hylarInstance.query('PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
                             'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ' +
                             'SELECT ?a ?b { ?a rdfs:subClassOf ?b }');
 ```
