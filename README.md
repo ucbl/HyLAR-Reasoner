@@ -8,6 +8,7 @@ HyLAR-Reasoner is an OWL 2 RL reasoner that uses JSW and OWLReasoner as a triple
 The framework implementation of HyLAR can be tested online at http://dataconf.liris.cnrs.fr/hylar/
 
 NB: Performances have been drastically improved since v. 1.5
+
 NB: Since version 1.6, HyLAR must be instantiated. Please see section II from 'Use HyLAR's reasoner module locally'.
 
 ## Getting started ##
