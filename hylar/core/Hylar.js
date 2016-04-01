@@ -77,7 +77,9 @@ var treatUpdate = function(sparql) {
             return Reasoner.evaluate(FeIns, FeDel, F, rMethod)
         })
         .then(function(derivations) {
-            registerDerivations(derivations);
+            if (rMethod == Reasoner.process.it.tagBased) {
+                registerDerivations(derivations);
+            }
             return {
                 insert: ParsingInterface.factsToTurtle(derivations.additions),
                 delete: ParsingInterface.factsToTurtle(derivations.deletions)
@@ -184,7 +186,9 @@ var classify = function() {
             return Reasoner.evaluate(facts, [], [], rMethod);
         })
         .then(function(r) {
-            registerDerivations(r);
+            if (rMethod == Reasoner.process.it.tagBased) {
+                registerDerivations(r);
+            }
             return ParsingInterface.factsToTurtle(r.additions);
         })
         .then(function(ttl) {

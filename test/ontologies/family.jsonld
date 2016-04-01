@@ -1,0 +1,1898 @@
+[ {
+  "@id" : "_:genid1",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2002/07/owl#intersectionOf" : [ {
+    "@list" : [ {
+      "@id" : "http://a.com/ontology#Woman"
+    }, {
+      "@id" : "_:genid3"
+    } ]
+  } ]
+}, {
+  "@id" : "_:genid105",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#IndividualPropertyAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#argument2" : [ {
+    "@id" : "http://a.com/ontology#y"
+  } ],
+  "http://www.w3.org/2003/11/swrl#propertyPredicate" : [ {
+    "@id" : "http://a.com/ontology#hasFather"
+  } ]
+}, {
+  "@id" : "_:genid106",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#Imp" ],
+  "http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled" : [ {
+    "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
+    "@value" : "true"
+  } ],
+  "http://www.w3.org/2003/11/swrl#body" : [ {
+    "@list" : [ {
+      "@id" : "_:genid235"
+    }, {
+      "@id" : "_:genid244"
+    }, {
+      "@id" : "_:genid231"
+    } ]
+  } ],
+  "http://www.w3.org/2003/11/swrl#head" : [ {
+    "@list" : [ {
+      "@id" : "_:genid112"
+    } ]
+  } ]
+}, {
+  "@id" : "_:genid112",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#IndividualPropertyAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#argument2" : [ {
+    "@id" : "http://a.com/ontology#y"
+  } ],
+  "http://www.w3.org/2003/11/swrl#propertyPredicate" : [ {
+    "@id" : "http://a.com/ontology#hasBrother"
+  } ]
+}, {
+  "@id" : "_:genid113",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#Imp" ],
+  "http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled" : [ {
+    "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
+    "@value" : "true"
+  } ],
+  "http://www.w3.org/2003/11/swrl#body" : [ {
+    "@list" : [ {
+      "@id" : "_:genid239"
+    }, {
+      "@id" : "_:genid228"
+    }, {
+      "@id" : "_:genid253"
+    } ]
+  } ],
+  "http://www.w3.org/2003/11/swrl#head" : [ {
+    "@list" : [ {
+      "@id" : "_:genid119"
+    } ]
+  } ]
+}, {
+  "@id" : "_:genid119",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#IndividualPropertyAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#argument2" : [ {
+    "@id" : "http://a.com/ontology#y"
+  } ],
+  "http://www.w3.org/2003/11/swrl#propertyPredicate" : [ {
+    "@id" : "http://a.com/ontology#hasDaughter"
+  } ]
+}, {
+  "@id" : "_:genid12",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2002/07/owl#intersectionOf" : [ {
+    "@list" : [ {
+      "@id" : "http://a.com/ontology#Person"
+    }, {
+      "@id" : "_:genid14"
+    } ]
+  } ]
+}, {
+  "@id" : "_:genid120",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#Imp" ],
+  "http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled" : [ {
+    "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
+    "@value" : "true"
+  } ],
+  "http://www.w3.org/2003/11/swrl#body" : [ {
+    "@list" : [ {
+      "@id" : "_:genid241"
+    }, {
+      "@id" : "_:genid249"
+    }, {
+      "@id" : "_:genid252"
+    } ]
+  } ],
+  "http://www.w3.org/2003/11/swrl#head" : [ {
+    "@list" : [ {
+      "@id" : "_:genid125"
+    } ]
+  } ]
+}, {
+  "@id" : "_:genid125",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#IndividualPropertyAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#argument2" : [ {
+    "@id" : "http://a.com/ontology#y"
+  } ],
+  "http://www.w3.org/2003/11/swrl#propertyPredicate" : [ {
+    "@id" : "http://a.com/ontology#hasMother"
+  } ]
+}, {
+  "@id" : "_:genid126",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#Imp" ],
+  "http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled" : [ {
+    "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
+    "@value" : "true"
+  } ],
+  "http://www.w3.org/2003/11/swrl#body" : [ {
+    "@list" : [ {
+      "@id" : "_:genid234"
+    }, {
+      "@id" : "_:genid242"
+    }, {
+      "@id" : "_:genid251"
+    } ]
+  } ],
+  "http://www.w3.org/2003/11/swrl#head" : [ {
+    "@list" : [ {
+      "@id" : "_:genid131"
+    } ]
+  } ]
+}, {
+  "@id" : "_:genid131",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#IndividualPropertyAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#argument2" : [ {
+    "@id" : "http://a.com/ontology#y"
+  } ],
+  "http://www.w3.org/2003/11/swrl#propertyPredicate" : [ {
+    "@id" : "http://a.com/ontology#hasSister"
+  } ]
+}, {
+  "@id" : "_:genid132",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#Imp" ],
+  "http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled" : [ {
+    "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
+    "@value" : "true"
+  } ],
+  "http://www.w3.org/2003/11/swrl#body" : [ {
+    "@list" : [ {
+      "@id" : "_:genid233"
+    }, {
+      "@id" : "_:genid247"
+    }, {
+      "@id" : "_:genid134"
+    } ]
+  } ],
+  "http://www.w3.org/2003/11/swrl#head" : [ {
+    "@list" : [ {
+      "@id" : "_:genid138"
+    } ]
+  } ]
+}, {
+  "@id" : "_:genid134",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#IndividualPropertyAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#y"
+  } ],
+  "http://www.w3.org/2003/11/swrl#argument2" : [ {
+    "@id" : "http://a.com/ontology#z"
+  } ],
+  "http://www.w3.org/2003/11/swrl#propertyPredicate" : [ {
+    "@id" : "http://a.com/ontology#hasBrother"
+  } ]
+}, {
+  "@id" : "_:genid138",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#IndividualPropertyAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#argument2" : [ {
+    "@id" : "http://a.com/ontology#z"
+  } ],
+  "http://www.w3.org/2003/11/swrl#propertyPredicate" : [ {
+    "@id" : "http://a.com/ontology#hasUncle"
+  } ]
+}, {
+  "@id" : "_:genid139",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#Imp" ],
+  "http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled" : [ {
+    "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
+    "@value" : "true"
+  } ],
+  "http://www.w3.org/2003/11/swrl#body" : [ {
+    "@list" : [ {
+      "@id" : "_:genid232"
+    }, {
+      "@id" : "_:genid243"
+    }, {
+      "@id" : "_:genid141"
+    } ]
+  } ],
+  "http://www.w3.org/2003/11/swrl#head" : [ {
+    "@list" : [ {
+      "@id" : "_:genid145"
+    } ]
+  } ]
+}, {
+  "@id" : "_:genid14",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Restriction" ],
+  "http://www.w3.org/2002/07/owl#minCardinality" : [ {
+    "@type" : "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+    "@value" : "1"
+  } ],
+  "http://www.w3.org/2002/07/owl#onProperty" : [ {
+    "@id" : "http://a.com/ontology#hasParent"
+  } ]
+}, {
+  "@id" : "_:genid141",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#IndividualPropertyAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#y"
+  } ],
+  "http://www.w3.org/2003/11/swrl#argument2" : [ {
+    "@id" : "http://a.com/ontology#z"
+  } ],
+  "http://www.w3.org/2003/11/swrl#propertyPredicate" : [ {
+    "@id" : "http://a.com/ontology#hasDaughter"
+  } ]
+}, {
+  "@id" : "_:genid145",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#IndividualPropertyAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#argument2" : [ {
+    "@id" : "http://a.com/ontology#z"
+  } ],
+  "http://www.w3.org/2003/11/swrl#propertyPredicate" : [ {
+    "@id" : "http://a.com/ontology#hasNiece"
+  } ]
+}, {
+  "@id" : "_:genid146",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#Imp" ],
+  "http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled" : [ {
+    "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
+    "@value" : "true"
+  } ],
+  "http://www.w3.org/2003/11/swrl#body" : [ {
+    "@list" : [ {
+      "@id" : "_:genid237"
+    }, {
+      "@id" : "_:genid248"
+    }, {
+      "@id" : "_:genid148"
+    } ]
+  } ],
+  "http://www.w3.org/2003/11/swrl#head" : [ {
+    "@list" : [ {
+      "@id" : "_:genid152"
+    } ]
+  } ]
+}, {
+  "@id" : "_:genid148",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#IndividualPropertyAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#y"
+  } ],
+  "http://www.w3.org/2003/11/swrl#argument2" : [ {
+    "@id" : "http://a.com/ontology#z"
+  } ],
+  "http://www.w3.org/2003/11/swrl#propertyPredicate" : [ {
+    "@id" : "http://a.com/ontology#hasSister"
+  } ]
+}, {
+  "@id" : "_:genid152",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#IndividualPropertyAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#argument2" : [ {
+    "@id" : "http://a.com/ontology#z"
+  } ],
+  "http://www.w3.org/2003/11/swrl#propertyPredicate" : [ {
+    "@id" : "http://a.com/ontology#hasAunt"
+  } ]
+}, {
+  "@id" : "_:genid153",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#Imp" ],
+  "http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled" : [ {
+    "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
+    "@value" : "true"
+  } ],
+  "http://www.w3.org/2003/11/swrl#body" : [ {
+    "@list" : [ {
+      "@id" : "_:genid240"
+    }, {
+      "@id" : "_:genid245"
+    }, {
+      "@id" : "_:genid155"
+    } ]
+  } ],
+  "http://www.w3.org/2003/11/swrl#head" : [ {
+    "@list" : [ {
+      "@id" : "_:genid159"
+    } ]
+  } ]
+}, {
+  "@id" : "_:genid155",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#IndividualPropertyAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#y"
+  } ],
+  "http://www.w3.org/2003/11/swrl#argument2" : [ {
+    "@id" : "http://a.com/ontology#z"
+  } ],
+  "http://www.w3.org/2003/11/swrl#propertyPredicate" : [ {
+    "@id" : "http://a.com/ontology#hasSon"
+  } ]
+}, {
+  "@id" : "_:genid159",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#IndividualPropertyAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#argument2" : [ {
+    "@id" : "http://a.com/ontology#z"
+  } ],
+  "http://www.w3.org/2003/11/swrl#propertyPredicate" : [ {
+    "@id" : "http://a.com/ontology#hasNephew"
+  } ]
+}, {
+  "@id" : "_:genid16",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2002/07/owl#intersectionOf" : [ {
+    "@list" : [ {
+      "@id" : "http://a.com/ontology#Child"
+    }, {
+      "@id" : "http://a.com/ontology#Woman"
+    } ]
+  } ]
+}, {
+  "@id" : "_:genid160",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#Imp" ],
+  "http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled" : [ {
+    "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
+    "@value" : "true"
+  } ],
+  "http://www.w3.org/2003/11/swrl#body" : [ {
+    "@list" : [ {
+      "@id" : "_:genid254"
+    }, {
+      "@id" : "_:genid166"
+    }, {
+      "@id" : "_:genid164"
+    }, {
+      "@id" : "_:genid162"
+    } ]
+  } ],
+  "http://www.w3.org/2003/11/swrl#head" : [ {
+    "@list" : [ {
+      "@id" : "_:genid170"
+    } ]
+  } ]
+}, {
+  "@id" : "_:genid162",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#DifferentIndividualsAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#argument2" : [ {
+    "@id" : "http://a.com/ontology#z"
+  } ]
+}, {
+  "@id" : "_:genid164",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#IndividualPropertyAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#y"
+  } ],
+  "http://www.w3.org/2003/11/swrl#argument2" : [ {
+    "@id" : "http://a.com/ontology#z"
+  } ],
+  "http://www.w3.org/2003/11/swrl#propertyPredicate" : [ {
+    "@id" : "http://a.com/ontology#hasChild"
+  } ]
+}, {
+  "@id" : "_:genid166",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#IndividualPropertyAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#y"
+  } ],
+  "http://www.w3.org/2003/11/swrl#argument2" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#propertyPredicate" : [ {
+    "@id" : "http://a.com/ontology#hasChild"
+  } ]
+}, {
+  "@id" : "_:genid170",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#IndividualPropertyAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#argument2" : [ {
+    "@id" : "http://a.com/ontology#z"
+  } ],
+  "http://www.w3.org/2003/11/swrl#propertyPredicate" : [ {
+    "@id" : "http://a.com/ontology#hasSibling"
+  } ]
+}, {
+  "@id" : "_:genid171",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#Imp" ],
+  "http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled" : [ {
+    "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
+    "@value" : "true"
+  } ],
+  "http://www.w3.org/2003/11/swrl#body" : [ {
+    "@list" : [ {
+      "@id" : "_:genid255"
+    }, {
+      "@id" : "_:genid174"
+    }, {
+      "@id" : "_:genid250"
+    } ]
+  } ],
+  "http://www.w3.org/2003/11/swrl#head" : [ {
+    "@list" : [ {
+      "@id" : "_:genid177"
+    } ]
+  } ]
+}, {
+  "@id" : "_:genid174",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#IndividualPropertyAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#y"
+  } ],
+  "http://www.w3.org/2003/11/swrl#argument2" : [ {
+    "@id" : "http://a.com/ontology#z"
+  } ],
+  "http://www.w3.org/2003/11/swrl#propertyPredicate" : [ {
+    "@id" : "http://a.com/ontology#hasConsort"
+  } ]
+}, {
+  "@id" : "_:genid177",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#IndividualPropertyAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#argument2" : [ {
+    "@id" : "http://a.com/ontology#z"
+  } ],
+  "http://www.w3.org/2003/11/swrl#propertyPredicate" : [ {
+    "@id" : "http://a.com/ontology#hasParent"
+  } ]
+}, {
+  "@id" : "_:genid178",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#Imp" ],
+  "http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled" : [ {
+    "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
+    "@value" : "true"
+  } ],
+  "http://www.w3.org/2003/11/swrl#body" : [ {
+    "@list" : [ {
+      "@id" : "_:genid226"
+    } ]
+  } ],
+  "http://www.w3.org/2003/11/swrl#head" : [ {
+    "@list" : [ {
+      "@id" : "_:genid188"
+    }, {
+      "@id" : "_:genid185"
+    }, {
+      "@id" : "_:genid182"
+    } ]
+  } ]
+}, {
+  "@id" : "_:genid182",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#BuiltinAtom" ],
+  "http://www.w3.org/2003/11/swrl#arguments" : [ {
+    "@list" : [ {
+      "@id" : "http://a.com/ontology#z"
+    } ]
+  } ],
+  "http://www.w3.org/2003/11/swrl#builtin" : [ {
+    "@id" : "http://swrl.stanford.edu/ontologies/built-ins/3.3/query.owl#orderByDescending"
+  } ]
+}, {
+  "@id" : "_:genid185",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#BuiltinAtom" ],
+  "http://www.w3.org/2003/11/swrl#arguments" : [ {
+    "@list" : [ {
+      "@id" : "http://a.com/ontology#z"
+    } ]
+  } ],
+  "http://www.w3.org/2003/11/swrl#builtin" : [ {
+    "@id" : "http://swrl.stanford.edu/ontologies/built-ins/3.3/query.owl#count"
+  } ]
+}, {
+  "@id" : "_:genid188",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#BuiltinAtom" ],
+  "http://www.w3.org/2003/11/swrl#arguments" : [ {
+    "@list" : [ {
+      "@id" : "http://a.com/ontology#x"
+    } ]
+  } ],
+  "http://www.w3.org/2003/11/swrl#builtin" : [ {
+    "@id" : "http://swrl.stanford.edu/ontologies/built-ins/3.3/query.owl#select"
+  } ]
+}, {
+  "@id" : "_:genid19",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2002/07/owl#intersectionOf" : [ {
+    "@list" : [ {
+      "@id" : "http://a.com/ontology#Man"
+    }, {
+      "@id" : "http://a.com/ontology#Parent"
+    } ]
+  } ]
+}, {
+  "@id" : "_:genid190",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#Imp" ],
+  "http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled" : [ {
+    "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
+    "@value" : "true"
+  } ],
+  "http://www.w3.org/2003/11/swrl#body" : [ {
+    "@list" : [ {
+      "@id" : "_:genid225"
+    } ]
+  } ],
+  "http://www.w3.org/2003/11/swrl#head" : [ {
+    "@list" : [ {
+      "@id" : "_:genid193"
+    } ]
+  } ]
+}, {
+  "@id" : "_:genid193",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#BuiltinAtom" ],
+  "http://www.w3.org/2003/11/swrl#arguments" : [ {
+    "@list" : [ {
+      "@id" : "http://a.com/ontology#x"
+    }, {
+      "@id" : "http://a.com/ontology#z"
+    } ]
+  } ],
+  "http://www.w3.org/2003/11/swrl#builtin" : [ {
+    "@id" : "http://swrl.stanford.edu/ontologies/built-ins/3.3/query.owl#select"
+  } ]
+}, {
+  "@id" : "_:genid22",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2002/07/owl#oneOf" : [ {
+    "@list" : [ {
+      "@id" : "http://a.com/ontology#Female"
+    }, {
+      "@id" : "http://a.com/ontology#Male"
+    } ]
+  } ]
+}, {
+  "@id" : "_:genid225",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#IndividualPropertyAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#argument2" : [ {
+    "@id" : "http://a.com/ontology#z"
+  } ],
+  "http://www.w3.org/2003/11/swrl#propertyPredicate" : [ {
+    "@id" : "http://a.com/ontology#hasSon"
+  } ]
+}, {
+  "@id" : "_:genid226",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#IndividualPropertyAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#argument2" : [ {
+    "@id" : "http://a.com/ontology#z"
+  } ],
+  "http://www.w3.org/2003/11/swrl#propertyPredicate" : [ {
+    "@id" : "http://a.com/ontology#hasSon"
+  } ]
+}, {
+  "@id" : "_:genid227",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#IndividualPropertyAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#argument2" : [ {
+    "@id" : "http://a.com/ontology#y"
+  } ],
+  "http://www.w3.org/2003/11/swrl#propertyPredicate" : [ {
+    "@id" : "http://a.com/ontology#hasChild"
+  } ]
+}, {
+  "@id" : "_:genid228",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#IndividualPropertyAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#argument2" : [ {
+    "@id" : "http://a.com/ontology#y"
+  } ],
+  "http://www.w3.org/2003/11/swrl#propertyPredicate" : [ {
+    "@id" : "http://a.com/ontology#hasChild"
+  } ]
+}, {
+  "@id" : "_:genid229",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#ClassAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#y"
+  } ],
+  "http://www.w3.org/2003/11/swrl#classPredicate" : [ {
+    "@id" : "http://a.com/ontology#Man"
+  } ]
+}, {
+  "@id" : "_:genid230",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#ClassAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#y"
+  } ],
+  "http://www.w3.org/2003/11/swrl#classPredicate" : [ {
+    "@id" : "http://a.com/ontology#Man"
+  } ]
+}, {
+  "@id" : "_:genid231",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#ClassAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#y"
+  } ],
+  "http://www.w3.org/2003/11/swrl#classPredicate" : [ {
+    "@id" : "http://a.com/ontology#Man"
+  } ]
+}, {
+  "@id" : "_:genid232",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#ClassAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#classPredicate" : [ {
+    "@id" : "http://a.com/ontology#Person"
+  } ]
+}, {
+  "@id" : "_:genid233",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#ClassAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#classPredicate" : [ {
+    "@id" : "http://a.com/ontology#Person"
+  } ]
+}, {
+  "@id" : "_:genid234",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#ClassAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#classPredicate" : [ {
+    "@id" : "http://a.com/ontology#Person"
+  } ]
+}, {
+  "@id" : "_:genid235",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#ClassAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#classPredicate" : [ {
+    "@id" : "http://a.com/ontology#Person"
+  } ]
+}, {
+  "@id" : "_:genid236",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#ClassAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#classPredicate" : [ {
+    "@id" : "http://a.com/ontology#Person"
+  } ]
+}, {
+  "@id" : "_:genid237",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#ClassAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#classPredicate" : [ {
+    "@id" : "http://a.com/ontology#Person"
+  } ]
+}, {
+  "@id" : "_:genid238",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#ClassAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#classPredicate" : [ {
+    "@id" : "http://a.com/ontology#Person"
+  } ]
+}, {
+  "@id" : "_:genid239",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#ClassAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#classPredicate" : [ {
+    "@id" : "http://a.com/ontology#Person"
+  } ]
+}, {
+  "@id" : "_:genid240",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#ClassAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#classPredicate" : [ {
+    "@id" : "http://a.com/ontology#Person"
+  } ]
+}, {
+  "@id" : "_:genid241",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#ClassAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#classPredicate" : [ {
+    "@id" : "http://a.com/ontology#Person"
+  } ]
+}, {
+  "@id" : "_:genid242",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#IndividualPropertyAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#argument2" : [ {
+    "@id" : "http://a.com/ontology#y"
+  } ],
+  "http://www.w3.org/2003/11/swrl#propertyPredicate" : [ {
+    "@id" : "http://a.com/ontology#hasSibling"
+  } ]
+}, {
+  "@id" : "_:genid243",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#IndividualPropertyAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#argument2" : [ {
+    "@id" : "http://a.com/ontology#y"
+  } ],
+  "http://www.w3.org/2003/11/swrl#propertyPredicate" : [ {
+    "@id" : "http://a.com/ontology#hasSibling"
+  } ]
+}, {
+  "@id" : "_:genid244",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#IndividualPropertyAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#argument2" : [ {
+    "@id" : "http://a.com/ontology#y"
+  } ],
+  "http://www.w3.org/2003/11/swrl#propertyPredicate" : [ {
+    "@id" : "http://a.com/ontology#hasSibling"
+  } ]
+}, {
+  "@id" : "_:genid245",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#IndividualPropertyAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#argument2" : [ {
+    "@id" : "http://a.com/ontology#y"
+  } ],
+  "http://www.w3.org/2003/11/swrl#propertyPredicate" : [ {
+    "@id" : "http://a.com/ontology#hasSibling"
+  } ]
+}, {
+  "@id" : "_:genid246",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#IndividualPropertyAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#argument2" : [ {
+    "@id" : "http://a.com/ontology#y"
+  } ],
+  "http://www.w3.org/2003/11/swrl#propertyPredicate" : [ {
+    "@id" : "http://a.com/ontology#hasParent"
+  } ]
+}, {
+  "@id" : "_:genid247",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#IndividualPropertyAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#argument2" : [ {
+    "@id" : "http://a.com/ontology#y"
+  } ],
+  "http://www.w3.org/2003/11/swrl#propertyPredicate" : [ {
+    "@id" : "http://a.com/ontology#hasParent"
+  } ]
+}, {
+  "@id" : "_:genid248",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#IndividualPropertyAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#argument2" : [ {
+    "@id" : "http://a.com/ontology#y"
+  } ],
+  "http://www.w3.org/2003/11/swrl#propertyPredicate" : [ {
+    "@id" : "http://a.com/ontology#hasParent"
+  } ]
+}, {
+  "@id" : "_:genid249",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#IndividualPropertyAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#argument2" : [ {
+    "@id" : "http://a.com/ontology#y"
+  } ],
+  "http://www.w3.org/2003/11/swrl#propertyPredicate" : [ {
+    "@id" : "http://a.com/ontology#hasParent"
+  } ]
+}, {
+  "@id" : "_:genid25",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2002/07/owl#intersectionOf" : [ {
+    "@list" : [ {
+      "@id" : "http://a.com/ontology#Person"
+    }, {
+      "@id" : "_:genid27"
+    } ]
+  } ]
+}, {
+  "@id" : "_:genid250",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#IndividualPropertyAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#argument2" : [ {
+    "@id" : "http://a.com/ontology#y"
+  } ],
+  "http://www.w3.org/2003/11/swrl#propertyPredicate" : [ {
+    "@id" : "http://a.com/ontology#hasParent"
+  } ]
+}, {
+  "@id" : "_:genid251",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#ClassAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#y"
+  } ],
+  "http://www.w3.org/2003/11/swrl#classPredicate" : [ {
+    "@id" : "http://a.com/ontology#Woman"
+  } ]
+}, {
+  "@id" : "_:genid252",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#ClassAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#y"
+  } ],
+  "http://www.w3.org/2003/11/swrl#classPredicate" : [ {
+    "@id" : "http://a.com/ontology#Woman"
+  } ]
+}, {
+  "@id" : "_:genid253",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#ClassAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#y"
+  } ],
+  "http://www.w3.org/2003/11/swrl#classPredicate" : [ {
+    "@id" : "http://a.com/ontology#Woman"
+  } ]
+}, {
+  "@id" : "_:genid254",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#ClassAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#y"
+  } ],
+  "http://www.w3.org/2003/11/swrl#classPredicate" : [ {
+    "@id" : "http://a.com/ontology#Person"
+  } ]
+}, {
+  "@id" : "_:genid255",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#ClassAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#y"
+  } ],
+  "http://www.w3.org/2003/11/swrl#classPredicate" : [ {
+    "@id" : "http://a.com/ontology#Person"
+  } ]
+}, {
+  "@id" : "_:genid27",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Restriction" ],
+  "http://www.w3.org/2002/07/owl#hasValue" : [ {
+    "@id" : "http://a.com/ontology#Male"
+  } ],
+  "http://www.w3.org/2002/07/owl#onProperty" : [ {
+    "@id" : "http://a.com/ontology#hasSex"
+  } ]
+}, {
+  "@id" : "_:genid29",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2002/07/owl#intersectionOf" : [ {
+    "@list" : [ {
+      "@id" : "http://a.com/ontology#Parent"
+    }, {
+      "@id" : "http://a.com/ontology#Woman"
+    } ]
+  } ]
+}, {
+  "@id" : "_:genid3",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2002/07/owl#unionOf" : [ {
+    "@list" : [ {
+      "@id" : "_:genid7"
+    }, {
+      "@id" : "_:genid5"
+    } ]
+  } ]
+}, {
+  "@id" : "_:genid32",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2002/07/owl#intersectionOf" : [ {
+    "@list" : [ {
+      "@id" : "http://a.com/ontology#Man"
+    }, {
+      "@id" : "_:genid34"
+    } ]
+  } ]
+}, {
+  "@id" : "_:genid34",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2002/07/owl#unionOf" : [ {
+    "@list" : [ {
+      "@id" : "_:genid38"
+    }, {
+      "@id" : "_:genid36"
+    } ]
+  } ]
+}, {
+  "@id" : "_:genid36",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Restriction" ],
+  "http://www.w3.org/2002/07/owl#minCardinality" : [ {
+    "@type" : "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+    "@value" : "1"
+  } ],
+  "http://www.w3.org/2002/07/owl#onProperty" : [ {
+    "@id" : "http://a.com/ontology#hasUncle"
+  } ]
+}, {
+  "@id" : "_:genid38",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Restriction" ],
+  "http://www.w3.org/2002/07/owl#minCardinality" : [ {
+    "@type" : "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+    "@value" : "1"
+  } ],
+  "http://www.w3.org/2002/07/owl#onProperty" : [ {
+    "@id" : "http://a.com/ontology#hasAunt"
+  } ]
+}, {
+  "@id" : "_:genid40",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Restriction" ],
+  "http://www.w3.org/2002/07/owl#hasValue" : [ {
+    "@id" : "http://a.com/ontology#Male"
+  } ],
+  "http://www.w3.org/2002/07/owl#onProperty" : [ {
+    "@id" : "http://a.com/ontology#hasSex"
+  } ]
+}, {
+  "@id" : "_:genid41",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2002/07/owl#intersectionOf" : [ {
+    "@list" : [ {
+      "@id" : "http://a.com/ontology#Woman"
+    }, {
+      "@id" : "_:genid43"
+    } ]
+  } ]
+}, {
+  "@id" : "_:genid43",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2002/07/owl#unionOf" : [ {
+    "@list" : [ {
+      "@id" : "_:genid47"
+    }, {
+      "@id" : "_:genid45"
+    } ]
+  } ]
+}, {
+  "@id" : "_:genid45",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Restriction" ],
+  "http://www.w3.org/2002/07/owl#minCardinality" : [ {
+    "@type" : "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+    "@value" : "1"
+  } ],
+  "http://www.w3.org/2002/07/owl#onProperty" : [ {
+    "@id" : "http://a.com/ontology#hasUncle"
+  } ]
+}, {
+  "@id" : "_:genid47",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Restriction" ],
+  "http://www.w3.org/2002/07/owl#minCardinality" : [ {
+    "@type" : "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+    "@value" : "1"
+  } ],
+  "http://www.w3.org/2002/07/owl#onProperty" : [ {
+    "@id" : "http://a.com/ontology#hasAunt"
+  } ]
+}, {
+  "@id" : "_:genid49",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Restriction" ],
+  "http://www.w3.org/2002/07/owl#hasValue" : [ {
+    "@id" : "http://a.com/ontology#Female"
+  } ],
+  "http://www.w3.org/2002/07/owl#onProperty" : [ {
+    "@id" : "http://a.com/ontology#hasSex"
+  } ]
+}, {
+  "@id" : "_:genid5",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Restriction" ],
+  "http://www.w3.org/2002/07/owl#minCardinality" : [ {
+    "@type" : "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+    "@value" : "1"
+  } ],
+  "http://www.w3.org/2002/07/owl#onProperty" : [ {
+    "@id" : "http://a.com/ontology#hasNiece"
+  } ]
+}, {
+  "@id" : "_:genid50",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2002/07/owl#intersectionOf" : [ {
+    "@list" : [ {
+      "@id" : "http://a.com/ontology#Person"
+    }, {
+      "@id" : "_:genid52"
+    } ]
+  } ]
+}, {
+  "@id" : "_:genid52",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Restriction" ],
+  "http://www.w3.org/2002/07/owl#minCardinality" : [ {
+    "@type" : "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+    "@value" : "1"
+  } ],
+  "http://www.w3.org/2002/07/owl#onProperty" : [ {
+    "@id" : "http://a.com/ontology#hasChild"
+  } ]
+}, {
+  "@id" : "_:genid54",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2002/07/owl#unionOf" : [ {
+    "@list" : [ {
+      "@id" : "http://a.com/ontology#Man"
+    }, {
+      "@id" : "http://a.com/ontology#Woman"
+    } ]
+  } ]
+}, {
+  "@id" : "_:genid57",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2002/07/owl#unionOf" : [ {
+    "@list" : [ {
+      "@id" : "http://a.com/ontology#Aunt"
+    }, {
+      "@id" : "http://a.com/ontology#Child"
+    }, {
+      "@id" : "http://a.com/ontology#Nephew"
+    }, {
+      "@id" : "http://a.com/ontology#Niece"
+    }, {
+      "@id" : "http://a.com/ontology#Parent"
+    }, {
+      "@id" : "http://a.com/ontology#Sibling"
+    }, {
+      "@id" : "http://a.com/ontology#Uncle"
+    } ]
+  } ]
+}, {
+  "@id" : "_:genid65",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2002/07/owl#intersectionOf" : [ {
+    "@list" : [ {
+      "@id" : "http://a.com/ontology#Person"
+    }, {
+      "@id" : "_:genid67"
+    } ]
+  } ]
+}, {
+  "@id" : "_:genid67",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Restriction" ],
+  "http://www.w3.org/2002/07/owl#minCardinality" : [ {
+    "@type" : "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+    "@value" : "1"
+  } ],
+  "http://www.w3.org/2002/07/owl#onProperty" : [ {
+    "@id" : "http://a.com/ontology#hasSibling"
+  } ]
+}, {
+  "@id" : "_:genid69",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2002/07/owl#intersectionOf" : [ {
+    "@list" : [ {
+      "@id" : "http://a.com/ontology#Sibling"
+    }, {
+      "@id" : "http://a.com/ontology#Woman"
+    } ]
+  } ]
+}, {
+  "@id" : "_:genid7",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Restriction" ],
+  "http://www.w3.org/2002/07/owl#minCardinality" : [ {
+    "@type" : "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+    "@value" : "1"
+  } ],
+  "http://www.w3.org/2002/07/owl#onProperty" : [ {
+    "@id" : "http://a.com/ontology#hasNephew"
+  } ]
+}, {
+  "@id" : "_:genid72",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2002/07/owl#intersectionOf" : [ {
+    "@list" : [ {
+      "@id" : "http://a.com/ontology#Child"
+    }, {
+      "@id" : "http://a.com/ontology#Man"
+    } ]
+  } ]
+}, {
+  "@id" : "_:genid75",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2002/07/owl#intersectionOf" : [ {
+    "@list" : [ {
+      "@id" : "http://a.com/ontology#Man"
+    }, {
+      "@id" : "_:genid77"
+    } ]
+  } ]
+}, {
+  "@id" : "_:genid77",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2002/07/owl#unionOf" : [ {
+    "@list" : [ {
+      "@id" : "_:genid81"
+    }, {
+      "@id" : "_:genid79"
+    } ]
+  } ]
+}, {
+  "@id" : "_:genid79",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Restriction" ],
+  "http://www.w3.org/2002/07/owl#minCardinality" : [ {
+    "@type" : "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+    "@value" : "1"
+  } ],
+  "http://www.w3.org/2002/07/owl#onProperty" : [ {
+    "@id" : "http://a.com/ontology#hasNiece"
+  } ]
+}, {
+  "@id" : "_:genid81",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Restriction" ],
+  "http://www.w3.org/2002/07/owl#minCardinality" : [ {
+    "@type" : "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
+    "@value" : "1"
+  } ],
+  "http://www.w3.org/2002/07/owl#onProperty" : [ {
+    "@id" : "http://a.com/ontology#hasNephew"
+  } ]
+}, {
+  "@id" : "_:genid83",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Restriction" ],
+  "http://www.w3.org/2002/07/owl#hasValue" : [ {
+    "@id" : "http://a.com/ontology#Male"
+  } ],
+  "http://www.w3.org/2002/07/owl#onProperty" : [ {
+    "@id" : "http://a.com/ontology#hasSex"
+  } ]
+}, {
+  "@id" : "_:genid84",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2002/07/owl#intersectionOf" : [ {
+    "@list" : [ {
+      "@id" : "http://a.com/ontology#Person"
+    }, {
+      "@id" : "_:genid86"
+    } ]
+  } ]
+}, {
+  "@id" : "_:genid86",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Restriction" ],
+  "http://www.w3.org/2002/07/owl#hasValue" : [ {
+    "@id" : "http://a.com/ontology#Female"
+  } ],
+  "http://www.w3.org/2002/07/owl#onProperty" : [ {
+    "@id" : "http://a.com/ontology#hasSex"
+  } ]
+}, {
+  "@id" : "_:genid88",
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#y"
+  } ],
+  "http://www.w3.org/2003/11/swrl#propertyPredicate" : [ {
+    "@id" : "http://a.com/ontology#hasSister"
+  } ]
+}, {
+  "@id" : "_:genid89",
+  "http://www.w3.org/2003/11/swrl#argument2" : [ {
+    "@id" : "http://a.com/ontology#z"
+  } ]
+}, {
+  "@id" : "_:genid9",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2002/07/owl#intersectionOf" : [ {
+    "@list" : [ {
+      "@id" : "http://a.com/ontology#Man"
+    }, {
+      "@id" : "http://a.com/ontology#Sibling"
+    } ]
+  } ]
+}, {
+  "@id" : "_:genid90",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#Imp" ],
+  "http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled" : [ {
+    "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
+    "@value" : "true"
+  } ],
+  "http://www.w3.org/2003/11/swrl#body" : [ {
+    "@list" : [ {
+      "@id" : "_:genid238"
+    }, {
+      "@id" : "_:genid227"
+    }, {
+      "@id" : "_:genid230"
+    } ]
+  } ],
+  "http://www.w3.org/2003/11/swrl#head" : [ {
+    "@list" : [ {
+      "@id" : "_:genid98"
+    } ]
+  } ]
+}, {
+  "@id" : "_:genid98",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#IndividualPropertyAtom" ],
+  "http://www.w3.org/2003/11/swrl#argument1" : [ {
+    "@id" : "http://a.com/ontology#x"
+  } ],
+  "http://www.w3.org/2003/11/swrl#argument2" : [ {
+    "@id" : "http://a.com/ontology#y"
+  } ],
+  "http://www.w3.org/2003/11/swrl#propertyPredicate" : [ {
+    "@id" : "http://a.com/ontology#hasSon"
+  } ]
+}, {
+  "@id" : "_:genid99",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#Imp" ],
+  "http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled" : [ {
+    "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
+    "@value" : "true"
+  } ],
+  "http://www.w3.org/2003/11/swrl#body" : [ {
+    "@list" : [ {
+      "@id" : "_:genid236"
+    }, {
+      "@id" : "_:genid246"
+    }, {
+      "@id" : "_:genid229"
+    } ]
+  } ],
+  "http://www.w3.org/2003/11/swrl#head" : [ {
+    "@list" : [ {
+      "@id" : "_:genid105"
+    } ]
+  } ]
+}, {
+  "@id" : "http://a.com/ontology",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Ontology" ],
+  "http://www.w3.org/2002/07/owl#imports" : [ {
+    "@id" : "http://swrl.stanford.edu/ontologies/built-ins/3.3/temporal.owl"
+  }, {
+    "@id" : "http://swrl.stanford.edu/ontologies/built-ins/3.3/abox.owl"
+  }, {
+    "@id" : "http://www.w3.org/2003/11/swrl"
+  }, {
+    "@id" : "http://swrl.stanford.edu/ontologies/built-ins/3.3/swrlx.owl"
+  }, {
+    "@id" : "http://swrl.stanford.edu/ontologies/built-ins/3.3/tbox.owl"
+  }, {
+    "@id" : "http://www.w3.org/2003/11/swrlb"
+  }, {
+    "@id" : "http://swrl.stanford.edu/ontologies/3.3/swrla.owl"
+  }, {
+    "@id" : "http://swrl.stanford.edu/ontologies/built-ins/3.3/query.owl"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#Aunt",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://a.com/ontology#Relative"
+  } ],
+  "http://www.w3.org/2002/07/owl#disjointWith" : [ {
+    "@id" : "http://a.com/ontology#Uncle"
+  } ],
+  "http://www.w3.org/2002/07/owl#equivalentClass" : [ {
+    "@id" : "_:genid1"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#Brother",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2002/07/owl#disjointWith" : [ {
+    "@id" : "http://a.com/ontology#Sister"
+  } ],
+  "http://www.w3.org/2002/07/owl#equivalentClass" : [ {
+    "@id" : "_:genid9"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#Child",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2002/07/owl#equivalentClass" : [ {
+    "@id" : "_:genid12"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#Daugther",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2002/07/owl#disjointWith" : [ {
+    "@id" : "http://a.com/ontology#Son"
+  } ],
+  "http://www.w3.org/2002/07/owl#equivalentClass" : [ {
+    "@id" : "_:genid16"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#F01",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://a.com/ontology#Woman" ],
+  "http://a.com/ontology#hasChild" : [ {
+    "@id" : "http://a.com/ontology#F03"
+  } ],
+  "http://a.com/ontology#hasSex" : [ {
+    "@id" : "http://a.com/ontology#Female"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#F02",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://a.com/ontology#Woman" ],
+  "http://a.com/ontology#hasMother" : [ {
+    "@id" : "http://a.com/ontology#F01"
+  } ],
+  "http://a.com/ontology#hasParent" : [ {
+    "@id" : "http://a.com/ontology#M01"
+  } ],
+  "http://a.com/ontology#hasSex" : [ {
+    "@id" : "http://a.com/ontology#Female"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#F03",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://a.com/ontology#Woman" ],
+  "http://a.com/ontology#hasChild" : [ {
+    "@id" : "http://a.com/ontology#F06"
+  }, {
+    "@id" : "http://a.com/ontology#M06"
+  } ],
+  "http://a.com/ontology#hasParent" : [ {
+    "@id" : "http://a.com/ontology#F01"
+  }, {
+    "@id" : "http://a.com/ontology#M01"
+  } ],
+  "http://a.com/ontology#hasSex" : [ {
+    "@id" : "http://a.com/ontology#Female"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#F04",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://a.com/ontology#Woman" ],
+  "http://a.com/ontology#hasChild" : [ {
+    "@id" : "http://a.com/ontology#F05"
+  }, {
+    "@id" : "http://a.com/ontology#M05"
+  } ],
+  "http://a.com/ontology#hasSex" : [ {
+    "@id" : "http://a.com/ontology#Female"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#F05",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://a.com/ontology#Woman" ],
+  "http://a.com/ontology#hasParent" : [ {
+    "@id" : "http://a.com/ontology#F04"
+  }, {
+    "@id" : "http://a.com/ontology#M02"
+  } ],
+  "http://a.com/ontology#hasSex" : [ {
+    "@id" : "http://a.com/ontology#Female"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#F06",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://a.com/ontology#Woman" ],
+  "http://a.com/ontology#hasParent" : [ {
+    "@id" : "http://a.com/ontology#F03"
+  }, {
+    "@id" : "http://a.com/ontology#M04"
+  } ],
+  "http://a.com/ontology#hasSex" : [ {
+    "@id" : "http://a.com/ontology#Female"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#F07",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://a.com/ontology#Woman" ],
+  "http://a.com/ontology#hasSex" : [ {
+    "@id" : "http://a.com/ontology#Female"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#F08",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://a.com/ontology#Woman" ],
+  "http://a.com/ontology#hasChild" : [ {
+    "@id" : "http://a.com/ontology#F09"
+  } ],
+  "http://a.com/ontology#hasSex" : [ {
+    "@id" : "http://a.com/ontology#Female"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#F09",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://a.com/ontology#Woman" ],
+  "http://a.com/ontology#hasParent" : [ {
+    "@id" : "http://a.com/ontology#F08"
+  }, {
+    "@id" : "http://a.com/ontology#M03"
+  } ],
+  "http://a.com/ontology#hasSex" : [ {
+    "@id" : "http://a.com/ontology#Female"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#F10",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://a.com/ontology#Woman" ],
+  "http://a.com/ontology#hasChild" : [ {
+    "@id" : "http://a.com/ontology#M09"
+  } ],
+  "http://a.com/ontology#hasSex" : [ {
+    "@id" : "http://a.com/ontology#Female"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#Father",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2002/07/owl#equivalentClass" : [ {
+    "@id" : "_:genid19"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#Female",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://a.com/ontology#Gender" ]
+}, {
+  "@id" : "http://a.com/ontology#Gender",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2002/07/owl#equivalentClass" : [ {
+    "@id" : "_:genid22"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#M01",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://a.com/ontology#Man" ],
+  "http://a.com/ontology#hasChild" : [ {
+    "@id" : "http://a.com/ontology#F02"
+  }, {
+    "@id" : "http://a.com/ontology#F03"
+  }, {
+    "@id" : "http://a.com/ontology#M02"
+  } ],
+  "http://a.com/ontology#hasConsort" : [ {
+    "@id" : "http://a.com/ontology#F01"
+  } ],
+  "http://a.com/ontology#hasSex" : [ {
+    "@id" : "http://a.com/ontology#Male"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#M02",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://a.com/ontology#Man" ],
+  "http://a.com/ontology#hasChild" : [ {
+    "@id" : "http://a.com/ontology#F05"
+  }, {
+    "@id" : "http://a.com/ontology#M03"
+  }, {
+    "@id" : "http://a.com/ontology#M05"
+  } ],
+  "http://a.com/ontology#hasConsort" : [ {
+    "@id" : "http://a.com/ontology#F04"
+  } ],
+  "http://a.com/ontology#hasMother" : [ {
+    "@id" : "http://a.com/ontology#F01"
+  } ],
+  "http://a.com/ontology#hasParent" : [ {
+    "@id" : "http://a.com/ontology#M01"
+  } ],
+  "http://a.com/ontology#hasSex" : [ {
+    "@id" : "http://a.com/ontology#Male"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#M03",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://a.com/ontology#Man" ],
+  "http://a.com/ontology#hasChild" : [ {
+    "@id" : "http://a.com/ontology#F09"
+  } ],
+  "http://a.com/ontology#hasConsort" : [ {
+    "@id" : "http://a.com/ontology#F08"
+  } ],
+  "http://a.com/ontology#hasMother" : [ {
+    "@id" : "http://a.com/ontology#F04"
+  } ],
+  "http://a.com/ontology#hasParent" : [ {
+    "@id" : "http://a.com/ontology#M02"
+  } ],
+  "http://a.com/ontology#hasSex" : [ {
+    "@id" : "http://a.com/ontology#Male"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#M04",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://a.com/ontology#Man" ],
+  "http://a.com/ontology#hasChild" : [ {
+    "@id" : "http://a.com/ontology#F06"
+  }, {
+    "@id" : "http://a.com/ontology#M06"
+  } ],
+  "http://a.com/ontology#hasConsort" : [ {
+    "@id" : "http://a.com/ontology#F03"
+  } ],
+  "http://a.com/ontology#hasMother" : [ {
+    "@id" : "http://a.com/ontology#F07"
+  } ],
+  "http://a.com/ontology#hasParent" : [ {
+    "@id" : "http://a.com/ontology#M07"
+  } ],
+  "http://a.com/ontology#hasSex" : [ {
+    "@id" : "http://a.com/ontology#Male"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#M05",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://a.com/ontology#Man" ],
+  "http://a.com/ontology#hasParent" : [ {
+    "@id" : "http://a.com/ontology#F04"
+  }, {
+    "@id" : "http://a.com/ontology#M02"
+  } ],
+  "http://a.com/ontology#hasSex" : [ {
+    "@id" : "http://a.com/ontology#Male"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#M06",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://a.com/ontology#Man" ],
+  "http://a.com/ontology#hasChild" : [ {
+    "@id" : "http://a.com/ontology#M09"
+  } ],
+  "http://a.com/ontology#hasConsort" : [ {
+    "@id" : "http://a.com/ontology#F10"
+  } ],
+  "http://a.com/ontology#hasParent" : [ {
+    "@id" : "http://a.com/ontology#F03"
+  }, {
+    "@id" : "http://a.com/ontology#M04"
+  } ],
+  "http://a.com/ontology#hasSex" : [ {
+    "@id" : "http://a.com/ontology#Male"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#M07",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://a.com/ontology#Man" ],
+  "http://a.com/ontology#hasChild" : [ {
+    "@id" : "http://a.com/ontology#M04"
+  } ],
+  "http://a.com/ontology#hasConsort" : [ {
+    "@id" : "http://a.com/ontology#F07"
+  } ],
+  "http://a.com/ontology#hasSex" : [ {
+    "@id" : "http://a.com/ontology#Male"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#M08",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://a.com/ontology#Man" ],
+  "http://a.com/ontology#hasChild" : [ {
+    "@id" : "http://a.com/ontology#M10"
+  } ],
+  "http://a.com/ontology#hasConsort" : [ {
+    "@id" : "http://a.com/ontology#F06"
+  } ],
+  "http://a.com/ontology#hasSex" : [ {
+    "@id" : "http://a.com/ontology#Male"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#M09",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://a.com/ontology#Man" ],
+  "http://a.com/ontology#hasParent" : [ {
+    "@id" : "http://a.com/ontology#F10"
+  }, {
+    "@id" : "http://a.com/ontology#M06"
+  } ],
+  "http://a.com/ontology#hasSex" : [ {
+    "@id" : "http://a.com/ontology#Male"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#M10",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://a.com/ontology#Man" ],
+  "http://a.com/ontology#hasMother" : [ {
+    "@id" : "http://a.com/ontology#F06"
+  } ],
+  "http://a.com/ontology#hasParent" : [ {
+    "@id" : "http://a.com/ontology#M08"
+  } ],
+  "http://a.com/ontology#hasSex" : [ {
+    "@id" : "http://a.com/ontology#Male"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#Male",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://a.com/ontology#Gender" ]
+}, {
+  "@id" : "http://a.com/ontology#Man",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2002/07/owl#equivalentClass" : [ {
+    "@id" : "_:genid25"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#Mother",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2002/07/owl#equivalentClass" : [ {
+    "@id" : "_:genid29"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#Nephew",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://a.com/ontology#Relative"
+  }, {
+    "@id" : "_:genid40"
+  } ],
+  "http://www.w3.org/2002/07/owl#disjointWith" : [ {
+    "@id" : "http://a.com/ontology#Niece"
+  } ],
+  "http://www.w3.org/2002/07/owl#equivalentClass" : [ {
+    "@id" : "_:genid32"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#Niece",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://a.com/ontology#Relative"
+  }, {
+    "@id" : "_:genid49"
+  } ],
+  "http://www.w3.org/2002/07/owl#equivalentClass" : [ {
+    "@id" : "_:genid41"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#Parent",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2002/07/owl#equivalentClass" : [ {
+    "@id" : "_:genid50"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#Person",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2002/07/owl#equivalentClass" : [ {
+    "@id" : "_:genid54"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#Relative",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://a.com/ontology#Person"
+  } ],
+  "http://www.w3.org/2002/07/owl#equivalentClass" : [ {
+    "@id" : "_:genid57"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#Sibling",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2002/07/owl#equivalentClass" : [ {
+    "@id" : "_:genid65"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#Sister",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2002/07/owl#equivalentClass" : [ {
+    "@id" : "_:genid69"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#Son",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2002/07/owl#equivalentClass" : [ {
+    "@id" : "_:genid72"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#Uncle",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://a.com/ontology#Relative"
+  }, {
+    "@id" : "_:genid83"
+  } ],
+  "http://www.w3.org/2002/07/owl#equivalentClass" : [ {
+    "@id" : "_:genid75"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#Woman",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2002/07/owl#equivalentClass" : [ {
+    "@id" : "_:genid84"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#hasAunt",
+  "@type" : [ "http://www.w3.org/2002/07/owl#ObjectProperty" ],
+  "http://www.w3.org/2000/01/rdf-schema#domain" : [ {
+    "@id" : "http://a.com/ontology#Person"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#range" : [ {
+    "@id" : "http://a.com/ontology#Woman"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#hasBrother",
+  "@type" : [ "http://www.w3.org/2002/07/owl#ObjectProperty" ],
+  "http://www.w3.org/2000/01/rdf-schema#domain" : [ {
+    "@id" : "http://a.com/ontology#Person"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#range" : [ {
+    "@id" : "http://a.com/ontology#Man"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#subPropertyOf" : [ {
+    "@id" : "http://a.com/ontology#hasSibling"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#hasChild",
+  "@type" : [ "http://www.w3.org/2002/07/owl#ObjectProperty" ],
+  "http://www.w3.org/2000/01/rdf-schema#domain" : [ {
+    "@id" : "http://a.com/ontology#Person"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#range" : [ {
+    "@id" : "http://a.com/ontology#Person"
+  } ],
+  "http://www.w3.org/2002/07/owl#inverseOf" : [ {
+    "@id" : "http://a.com/ontology#hasParent"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#hasConsort",
+  "@type" : [ "http://www.w3.org/2002/07/owl#ObjectProperty", "http://www.w3.org/2002/07/owl#FunctionalProperty", "http://www.w3.org/2002/07/owl#SymmetricProperty" ],
+  "http://www.w3.org/2000/01/rdf-schema#domain" : [ {
+    "@id" : "http://a.com/ontology#Person"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#range" : [ {
+    "@id" : "http://a.com/ontology#Person"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#hasDaughter",
+  "@type" : [ "http://www.w3.org/2002/07/owl#ObjectProperty" ],
+  "http://www.w3.org/2000/01/rdf-schema#domain" : [ {
+    "@id" : "http://a.com/ontology#Person"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#range" : [ {
+    "@id" : "http://a.com/ontology#Woman"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#subPropertyOf" : [ {
+    "@id" : "http://a.com/ontology#hasChild"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#hasFather",
+  "@type" : [ "http://www.w3.org/2002/07/owl#ObjectProperty", "http://www.w3.org/2002/07/owl#FunctionalProperty" ],
+  "http://www.w3.org/2000/01/rdf-schema#domain" : [ {
+    "@id" : "http://a.com/ontology#Person"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#range" : [ {
+    "@id" : "http://a.com/ontology#Man"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#subPropertyOf" : [ {
+    "@id" : "http://a.com/ontology#hasParent"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#hasMother",
+  "@type" : [ "http://www.w3.org/2002/07/owl#ObjectProperty", "http://www.w3.org/2002/07/owl#FunctionalProperty" ],
+  "http://www.w3.org/2000/01/rdf-schema#domain" : [ {
+    "@id" : "http://a.com/ontology#Person"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#range" : [ {
+    "@id" : "http://a.com/ontology#Woman"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#subPropertyOf" : [ {
+    "@id" : "http://a.com/ontology#hasParent"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#hasNephew",
+  "@type" : [ "http://www.w3.org/2002/07/owl#ObjectProperty" ],
+  "http://www.w3.org/2000/01/rdf-schema#domain" : [ {
+    "@id" : "http://a.com/ontology#Person"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#range" : [ {
+    "@id" : "http://a.com/ontology#Man"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#hasNiece",
+  "@type" : [ "http://www.w3.org/2002/07/owl#ObjectProperty" ],
+  "http://www.w3.org/2000/01/rdf-schema#domain" : [ {
+    "@id" : "http://a.com/ontology#Person"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#range" : [ {
+    "@id" : "http://a.com/ontology#Woman"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#hasParent",
+  "@type" : [ "http://www.w3.org/2002/07/owl#ObjectProperty" ],
+  "http://www.w3.org/2000/01/rdf-schema#domain" : [ {
+    "@id" : "http://a.com/ontology#Person"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#range" : [ {
+    "@id" : "http://a.com/ontology#Person"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#hasSex",
+  "@type" : [ "http://www.w3.org/2002/07/owl#ObjectProperty", "http://www.w3.org/2002/07/owl#FunctionalProperty" ],
+  "http://www.w3.org/2000/01/rdf-schema#domain" : [ {
+    "@id" : "http://a.com/ontology#Person"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#range" : [ {
+    "@id" : "http://a.com/ontology#Gender"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#hasSibling",
+  "@type" : [ "http://www.w3.org/2002/07/owl#ObjectProperty", "http://www.w3.org/2002/07/owl#SymmetricProperty" ],
+  "http://www.w3.org/2000/01/rdf-schema#domain" : [ {
+    "@id" : "http://a.com/ontology#Person"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#range" : [ {
+    "@id" : "http://a.com/ontology#Person"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#hasSister",
+  "@type" : [ "http://www.w3.org/2002/07/owl#ObjectProperty" ],
+  "http://www.w3.org/2000/01/rdf-schema#domain" : [ {
+    "@id" : "http://a.com/ontology#Person"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#range" : [ {
+    "@id" : "http://a.com/ontology#Woman"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#subPropertyOf" : [ {
+    "@id" : "http://a.com/ontology#hasSibling"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#hasSon",
+  "@type" : [ "http://www.w3.org/2002/07/owl#ObjectProperty" ],
+  "http://www.w3.org/2000/01/rdf-schema#domain" : [ {
+    "@id" : "http://a.com/ontology#Person"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#range" : [ {
+    "@id" : "http://a.com/ontology#Man"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#subPropertyOf" : [ {
+    "@id" : "http://a.com/ontology#hasChild"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#hasUncle",
+  "@type" : [ "http://www.w3.org/2002/07/owl#ObjectProperty" ],
+  "http://www.w3.org/2000/01/rdf-schema#domain" : [ {
+    "@id" : "http://a.com/ontology#Person"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#range" : [ {
+    "@id" : "http://a.com/ontology#Man"
+  } ]
+}, {
+  "@id" : "http://a.com/ontology#x",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#Variable" ]
+}, {
+  "@id" : "http://a.com/ontology#y",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#Variable" ]
+}, {
+  "@id" : "http://a.com/ontology#z",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual" ]
+}, {
+  "@id" : "http://swrl.stanford.edu/ontologies/built-ins/3.3/query.owl#count",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#Builtin" ]
+}, {
+  "@id" : "http://swrl.stanford.edu/ontologies/built-ins/3.3/query.owl#orderByDescending",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#Builtin" ]
+}, {
+  "@id" : "http://swrl.stanford.edu/ontologies/built-ins/3.3/query.owl#select",
+  "@type" : [ "http://www.w3.org/2003/11/swrl#Builtin" ]
+}, {
+  "@id" : "http://www.w3.org/2003/11/swrl#argument1",
+  "@type" : [ "http://www.w3.org/2002/07/owl#AnnotationProperty" ]
+}, {
+  "@id" : "http://www.w3.org/2003/11/swrl#argument2",
+  "@type" : [ "http://www.w3.org/2002/07/owl#ObjectProperty" ]
+}, {
+  "@id" : "http://www.w3.org/2003/11/swrl#propertyPredicate",
+  "@type" : [ "http://www.w3.org/2002/07/owl#AnnotationProperty" ]
+} ]

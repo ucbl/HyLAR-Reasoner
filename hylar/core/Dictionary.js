@@ -35,13 +35,6 @@ module.exports = {
      * @returns {*}
      */
     put: function(fact) {
-        for (var key in dict) {
-            var value = dict[key];
-            if(fact.equivalentTo(value)) {
-                dict[key] = Logics.mergeFacts(fact, value);
-                return true;
-            }
-        }
         try {
             dict[ParsingInterface.factToTurtle(fact)] = fact;
             return true;
