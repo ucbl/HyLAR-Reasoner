@@ -107,6 +107,7 @@ var treatSelectOrConstruct = function(query) {
         var val, blanknodes, facts, triples,
             parsedQuery = ParsingInterface.parseSPARQL(query),
             queryType = parsedQuery.queryType;
+
         return StorageManager.query(query)
         .then(function(r) {
             if(queryType == 'SELECT') {

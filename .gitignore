@@ -5,3 +5,4 @@ hylar/server/db/*
 hylar/test.js
 hylar/server/*.log
 .idea/*
+hylar.log

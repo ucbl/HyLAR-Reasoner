@@ -3998,6 +3998,742 @@
     "@value" : "Pattern recommendation"
   } ]
 }, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_performance",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_performance" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Performance"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_phonemic_spreading",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_phonemic_spreading" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Phonemic spreading"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_photo_collections",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_photo_collections" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "photo collections"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_photo_tagging",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_photo_tagging" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Photo tagging"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_point_of_interest",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_point_of_interest" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Point of interest"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_policy",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_policy" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Policy"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_political_bias",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_political_bias" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Political Bias"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_portfolio_theory",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_portfolio_theory" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "portfolio theory"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_positive-only_learning",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_positive-only_learning" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Positive-only Learning"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_prediction_algorithms",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_prediction_algorithms" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Prediction algorithms"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_privacy",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_privacy" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Privacy"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_probabilistic_factor_model",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_probabilistic_factor_model" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "probabilistic factor model"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_probabilistic_retrieval",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_probabilistic_retrieval" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Probabilistic Retrieval"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_provenance",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_provenance" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Provenance"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_proximity",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_proximity" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "proximity"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_qos",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_qos" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "QoS"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_quality",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_quality" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Quality"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_query_evaluation",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_query_evaluation" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Query evaluation"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_query_history",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_query_history" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "query history"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_query_log_analysis",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_query_log_analysis" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Query log analysis"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_query_spelling_correction",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_query_spelling_correction" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Query Spelling Correction"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_query_suggestions",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_query_suggestions" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Query suggestions"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_question_answering",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_question_answering" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Question answering"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_question_retrieval",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_question_retrieval" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Question Retrieval"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_ranking",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_ranking" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "ranking"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_rating_function",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_rating_function" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Rating function"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_rdf",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_rdf" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "RDF"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_rdf_fragments",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_rdf_fragments" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "RDF fragments"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_rdf_query_reformulation",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_rdf_query_reformulation" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "RDF query reformulation"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_rdf_saturation",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_rdf_saturation" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "RDF saturation"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_read-write_linked_data",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_read-write_linked_data" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Read-Write Linked Data"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_recommender_systems",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_recommender_systems" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Recommender Systems"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_regional_focus",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_regional_focus" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "regional focus"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_regional_subgraph",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_regional_subgraph" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "regional subgraph"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_relational-to-rdf_mapping",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_relational-to-rdf_mapping" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Relational-to-RDF mapping"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_relevance",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_relevance" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Relevance"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_research_evaluation",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_research_evaluation" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Research evaluation"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_restrained_and_rapid_dissemination",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_restrained_and_rapid_dissemination" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Restrained and Rapid Dissemination"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_revenue_sharing",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_revenue_sharing" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Revenue Sharing"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_review_inconsistency",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_review_inconsistency" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Review inconsistency"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_review_quality",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_review_quality" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Review Quality"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_review_spam",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_review_spam" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Review spam"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_reviewer_trustfulness",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_reviewer_trustfulness" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Reviewer Trustfulness"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_risk_management",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_risk_management" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Risk Management"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_route_recommendation",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_route_recommendation" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "route recommendation"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_sales_forecasting",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_sales_forecasting" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Sales Forecasting"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_scalability",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_scalability" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "scalability"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_search_log_mining",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_search_log_mining" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Search Log Mining"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_search_result_abandonments",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_search_result_abandonments" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "search result abandonments"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_security",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_security" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Security"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_semantic_feedback",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_semantic_feedback" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Semantic feedback"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_semantic_relatedness",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_semantic_relatedness" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Semantic Relatedness"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_semantic_web",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_semantic_web" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Semantic Web"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_sentiment_analysis",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_sentiment_analysis" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Sentiment Analysis"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_sentiment_classification",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_sentiment_classification" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "sentiment classification"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_sentiment_context",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_sentiment_context" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "sentiment context"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_sequence_mining",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_sequence_mining" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "sequence mining"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_sequential_patterns",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_sequential_patterns" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "sequential patterns"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_service",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_service" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "service"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_service_composition",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_service_composition" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "service composition"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_short_documents",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_short_documents" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "short documents"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_short_text_classification",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_short_text_classification" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Short Text Classification"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_side_information",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_side_information" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Side Information"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_smoothing",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_smoothing" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Smoothing"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_social_behaviors",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_social_behaviors" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Social Behaviors"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_social_media",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_social_media" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Social media"
+  }, {
+    "@value" : "social media"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_social_network_analysis",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_social_network_analysis" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Social network analysis"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_social_networks",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_social_networks" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Social Networks"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_social_role_analysis",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_social_role_analysis" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Social Role Analysis"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_social_search",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_social_search" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Social search"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_social_semantic_web",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_social_semantic_web" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Social Semantic Web"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_social_status_analysis",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_social_status_analysis" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Social Status Analysis"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_social_tagging_system",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_social_tagging_system" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Social Tagging System"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_social_web",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_social_web" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Social Web"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_sparql",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_sparql" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "SPARQL"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_sparse_linear_methods",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_sparse_linear_methods" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Sparse Linear Methods"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_speech_based_information_retrieval",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_speech_based_information_retrieval" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Speech based information retrieval"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_spreaders",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_spreaders" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "spreaders"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_stream_reasoning",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_stream_reasoning" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "stream reasoning"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_string_kernel",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_string_kernel" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "string kernel"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_structural_matching",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_structural_matching" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Structural matching"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_structure",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_structure" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Structure"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_structured_data",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_structured_data" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "structured data"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_subdocument-level_indexing",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_subdocument-level_indexing" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Subdocument-level indexing"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_successor_nodes",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_successor_nodes" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "successor nodes"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_svm",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_svm" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "SVM"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_syntactic_tree",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_syntactic_tree" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Syntactic Tree"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_tagging",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_tagging" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Tagging"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_tags",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_tags" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Tags"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_target_selection",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_target_selection" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Target Selection"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_task_difficulty",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_task_difficulty" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Task difficulty"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_temporal_dynamics",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_temporal_dynamics" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Temporal dynamics"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_temporal_pattern_mining",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_temporal_pattern_mining" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Temporal pattern mining"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_temporal_subgraph_pattern_mining",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_temporal_subgraph_pattern_mining" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Temporal subgraph pattern mining"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_text_classification",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_text_classification" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Text Classification"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_time_series",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_time_series" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Time Series"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_time_series_analysis",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_time_series_analysis" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Time Series Analysis"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_toolbar",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_toolbar" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Toolbar"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_topic_association",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_topic_association" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Topic association"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_topic_models",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_topic_models" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Topic Models"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_trajectory_analysis",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_trajectory_analysis" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Trajectory analysis"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_translation_model",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_translation_model" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Translation Model"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_translation_model_for_retrieval",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_translation_model_for_retrieval" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Translation Model for retrieval"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_trip_planning",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_trip_planning" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "trip planning"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_twitter",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_twitter" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Twitter"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_understandability",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_understandability" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "understandability"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_unstructured_data",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_unstructured_data" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "unstructured data"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_unstructured_p2p_network",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_unstructured_p2p_network" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Unstructured P2P Network"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_url",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_url" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "URL"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_url_classification",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_url_classification" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "URL Classification"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_url_patterns",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_url_patterns" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "URL Patterns"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_usability",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_usability" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Usability"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_user_behavior",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_user_behavior" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "User behavior"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_user_comments",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_user_comments" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "User comments"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_user_communities",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_user_communities" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "user communities"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_user_interfaces",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_user_interfaces" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "User Interfaces"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_user_models",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_user_models" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "user models"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_user_study",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_user_study" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "user study"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_view_maintenance",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_view_maintenance" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "View Maintenance"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_wand",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_wand" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "WAND"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_weaving",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_weaving" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Weaving"
+  } ]
+}, {
+  "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_web_accessibility",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#KeywordClass_web_accessibility" ],
+  "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasLabel" : [ {
+    "@value" : "Web Accessibility"
+  }, {
+    "@value" : "Web accessibility"
+  } ]
+}, {
   "@id" : "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#poster97",
   "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#Poster" ],
   "http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#hasKeyword" : [ {

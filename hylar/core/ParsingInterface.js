@@ -149,14 +149,17 @@ module.exports = {
      * @param value The value to replace
      * @returns The replaced element
      */
-    replaceVar: function(elem, binding, value) {
-        var variableRegExpPattern = new RegExp('\\?'+value, 'g');
-        if(elem.match(variableRegExpPattern)) {
-            elem = elem.replace(variableRegExpPattern, binding[value].value);
-            if(binding[value].token == 'literal') elem = '"' + elem + '"';
-            else elem = '<' + elem + '>';
-        } else if(!elem.match(/^"(.+)"/g)) {
-            elem = '<' + elem + '>';
+    replaceVar: function(elem, binding, vars) {
+        for (var key in vars) {
+            var variable = vars[key],
+                variableRegExpPattern = new RegExp('\\?'+variable, 'g');;
+            if (elem.match(variableRegExpPattern)) {
+                elem = elem.replace(variableRegExpPattern, binding[variable].value);
+                if (binding[variable].token == 'literal') elem = '"' + elem + '"';
+                else elem = '<' + elem + '>';
+            } else if (!elem.match(/^"(.+)"/g) && !elem.match(/^<.+>$/g)) {
+                elem = '<' + elem + '>';
+            }
         }
         return elem;
     },
@@ -175,16 +178,14 @@ module.exports = {
 
         for (var i = 0; i < triples.length; i++) {
             triple = triples[i];
-            for (var j = 0; j < vars.length; j++) {
-                value = vars[j];
-                for (var k = 0; k < results.length; k++) {
-                    binding = results[k];
-                    subject = that.replaceVar(triple.subject, binding, value);
-                    object = that.replaceVar(triple.object, binding, value);
-                    predicate = that.replaceVar(triple.predicate, binding, value);
-                    returned.push(subject + ' ' + predicate + ' ' + object + ' .  \n');
-                }
+            for (var k = 0; k < results.length; k++) {
+                binding = results[k];
+                subject = that.replaceVar(triple.subject, binding, vars);
+                object = that.replaceVar(triple.object, binding, vars);
+                predicate = that.replaceVar(triple.predicate, binding, vars);
+                returned.push(subject + ' ' + predicate + ' ' + object + ' .  \n');
             }
+
         }
         return returned;
     },
@@ -225,6 +226,7 @@ module.exports = {
      * @returns {*}
      */
     reformConstructResults: function(results, ttl, blanknodes) {
+        console.notify('Started construct results reform.');
         var triples = [], triple, m;
         for (var i = 0; i < results.triples.length; i++) {
             triple = results.triples[i];
@@ -234,6 +236,7 @@ module.exports = {
         triples = triples.concat(blanknodes);
         results.triples = triples;
         results.length = triples.length;
+        console.notify('Finished construct results reform.');
         return results;
     },
 

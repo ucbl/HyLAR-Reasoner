@@ -15,7 +15,7 @@ var owl, ontology, mimeType;
 
 var a, b, c;
 
-var reasoningMethod = process.env.rm, ontologyFilename = '/ontologies/poster6-light.jsonld';
+var reasoningMethod = process.env.rm, ontologyFilename = '/ontologies/fipa.ttl';
 
 describe('File access', function () {
     it('should access the file', function () {
@@ -41,12 +41,13 @@ describe('File reading', function () {
 describe('Ontology Parsing and classification', function () {
     it('should parse and classify the ontology', function () {
 
+        console.notify('\nSTARTING TESTS -----------------------------------------\n')
         console.notify('File: ' + ontologyFilename);
 
         return Hylar.load(owl, mimeType, reasoningMethod)
         .then(function() {
             return Hylar.query(
-                'CONSTRUCT { ?a ?b ?c } WHERE { ?a ?b ?c }');
+                'SELECT ?a ?b ?c WHERE { ?a ?b ?c }');
         })
         .then(function(r) {
             before = r.length;
@@ -65,7 +66,7 @@ describe('INSERT query with derivations', function () {
             .then(function(i) {
                 i.should.be.true;
                 return Hylar.query(
-                    'CONSTRUCT { ?a ?b ?c } WHERE { ?a ?b ?c }');
+                    'SELECT ?a ?b ?c WHERE { ?a ?b ?c }');
             })
             .then(function(r) {
                 r.length.should.be.above(before);
@@ -144,7 +145,7 @@ describe('DELETE query with subsumption', function () {
             .then(function(i) {
                 i.should.be.true;
                 return Hylar.query(
-                    'CONSTRUCT { ?a ?b ?c } WHERE { ?a ?b ?c }');
+                    'SELECT ?a ?b ?c WHERE { ?a ?b ?c }');
             })
             .then(function(r) {
                 r.length.should.be.exactly(before);
@@ -219,7 +220,7 @@ describe('Re-INSERT exact same query', function () {
             .then(function(i) {
                 i.should.be.true;
                 return Hylar.query(
-                    'CONSTRUCT { ?a ?b ?c } WHERE { ?a ?b ?c }');
+                    'SELECT ?a ?b ?c WHERE { ?a ?b ?c }');
             })
             .then(function(r) {
                 r.length.should.be.exactly(bIns);
