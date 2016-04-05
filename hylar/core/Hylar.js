@@ -127,8 +127,8 @@ var treatSelectOrConstruct = function(query) {
         .then(function(r) {
             var ttl = Dictionary.findKeys(r.filtered).found;
             if(queryType == 'SELECT') {
-                var reformedResults = ParsingInterface.reformSelectResults(parsedQuery, r.results, ttl);
-                return reformedResults.concat(blanknodes);
+                var reformedResults = ParsingInterface.reformSelectResults(parsedQuery, r.results, ttl.concat(blanknodes));
+                return reformedResults;
             } else {
                 return ParsingInterface.reformConstructResults(r.results, ttl, blanknodes);
             }

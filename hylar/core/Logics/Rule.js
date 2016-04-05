@@ -63,6 +63,16 @@ Rule.prototype = {
         }
 
         this.causes = orderedCauses;
+    },
+
+    // @todo
+    getIdbPredicates: function() {
+
+    },
+
+    // @todo
+    getEdbPredicates: function() {
+
     }
 };
 

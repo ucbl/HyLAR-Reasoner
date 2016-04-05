@@ -76,13 +76,14 @@ module.exports = {
         var literalPattern = /^("[\s\S]*")(@([a-zA-Z]+)|\^\^<?.+>?)?$/i,
             blankNodePattern = /^_:/i,
             variablePattern = /^\?/i,
+            betweenBracketsPattern = /^<.+>$/i,
             dblQuoteInStrPattern = /^(")([\s\S]*)(".*)$/i, dblQuoteMatch;
 
         if(entityStr.match(literalPattern)) {
             entityStr = entityStr.replace(literalPattern, '$1$2');
             dblQuoteMatch = entityStr.match(dblQuoteInStrPattern);
             return dblQuoteMatch[1] + dblQuoteMatch[2].replace(/"/g, '\\"') + dblQuoteMatch[3];
-        } else if(entityStr.match(blankNodePattern) || entityStr.match(variablePattern)) {
+        } else if(entityStr.match(blankNodePattern) || entityStr.match(variablePattern) || entityStr.match(betweenBracketsPattern)) {
             return entityStr
 
         } else {
@@ -152,13 +153,16 @@ module.exports = {
     replaceVar: function(elem, binding, vars) {
         for (var key in vars) {
             var variable = vars[key],
-                variableRegExpPattern = new RegExp('\\?'+variable, 'g');;
+                variableRegExpPattern = new RegExp('\\?'+variable, 'g');
             if (elem.match(variableRegExpPattern)) {
                 elem = elem.replace(variableRegExpPattern, binding[variable].value);
-                if (binding[variable].token == 'literal') elem = '"' + elem + '"';
-                else elem = '<' + elem + '>';
-            } else if (!elem.match(/^"(.+)"/g) && !elem.match(/^<.+>$/g)) {
-                elem = '<' + elem + '>';
+                if (binding[variable].token == 'literal') {
+                    elem = '"' + elem + '"';
+                } else {
+                    elem = '<' + elem + '>';
+                }
+            } else {
+                elem = this.parseStrEntityToTurtle(elem);
             }
         }
         return elem;
@@ -173,19 +177,23 @@ module.exports = {
      */
     replaceVars: function(vars, triples, results) {
         var returned = [],
-            triple, value, binding, subject, predicate, object,
+            triple, binding,
             that = this;
 
         for (var i = 0; i < triples.length; i++) {
             triple = triples[i];
+
             for (var k = 0; k < results.length; k++) {
+                var subject = triple.subject,
+                    predicate = triple.predicate,
+                    object = triple.object;
+
                 binding = results[k];
-                subject = that.replaceVar(triple.subject, binding, vars);
-                object = that.replaceVar(triple.object, binding, vars);
-                predicate = that.replaceVar(triple.predicate, binding, vars);
+                subject = that.replaceVar(subject, binding, vars);
+                object = that.replaceVar(object, binding, vars);
+                predicate = that.replaceVar(predicate, binding, vars);
                 returned.push(subject + ' ' + predicate + ' ' + object + ' .  \n');
             }
-
         }
         return returned;
     },
@@ -249,18 +257,22 @@ module.exports = {
      * @returns {*}
      */
     getValidBindings: function(bindings, triple, ttl) {
-        var replaced, subject, predicate, object,
-            validBindings = [];
-        for (var key in bindings) {
-            subject = this.replaceVar(triple.subject, bindings, key);
-            object = this.replaceVar(triple.object, bindings, key);
-            predicate = this.replaceVar(triple.predicate, bindings, key);
-            replaced = subject + ' ' + predicate + ' ' + object + ' . ';
+        var replaced,
+            subject = triple.subject,
+            predicate = triple.predicate,
+            object = triple.object,
+            validBindings = [],
+            vars = Object.keys(bindings);
 
-            if(replaced && ttl.toString().indexOf(replaced) !== -1) {
-                validBindings.push(bindings);
-            }
+        subject = this.replaceVar(subject, bindings, vars);
+        object = this.replaceVar(object, bindings, vars);
+        predicate = this.replaceVar(predicate, bindings, vars);
+
+        replaced = subject + ' ' + predicate + ' ' + object + ' . ';
+        if(replaced && ttl.toString().indexOf(replaced) !== -1) {
+            validBindings.push(bindings);
         }
+
         return validBindings;
     },
 
