@@ -11,7 +11,7 @@ var Dictionary = require('./Dictionary'),
     StorageManager = require('./StorageManager'),
     Reasoner = require('./Reasoner');
 
-var rMethod;
+var rMethod, dict = new Dictionary();
 
 console.notify = function(msg) {
     console.log(colors.green('[HyLAR] ') + msg);
@@ -65,7 +65,7 @@ var treatUpdate = function(sparql) {
                         kbT.predicate.interfaceName == "BlankNode" ||
                         kbT.object.interfaceName == "BlankNode"
                     )) {
-                    var f = Dictionary.get(kbT.toString().slice(0,-2));
+                    var f = dict.get(kbT.toString().slice(0,-2));
                     if(!f) f = ParsingInterface.tripleToFact(kbT);
                     F.push(f);
                 }
@@ -116,16 +116,16 @@ var treatSelectOrConstruct = function(query) {
                 triples = r.triples;
             }
 
-            val = Dictionary.findValues(triples);
+            val = dict.findValues(triples);
             facts = val.found;
             blanknodes = val.notfound;
             return {
                 results: r,
-                filtered: Reasoner.engine.tagFilter(facts, Dictionary.values())
+                filtered: Reasoner.engine.tagFilter(facts, dict.values())
             }
         })
         .then(function(r) {
-            var ttl = Dictionary.findKeys(r.filtered).found;
+            var ttl = dict.findKeys(r.filtered).found;
             if(queryType == 'SELECT') {
                 var reformedResults = ParsingInterface.reformSelectResults(parsedQuery, r.results, ttl.concat(blanknodes));
                 return reformedResults;
@@ -146,10 +146,10 @@ var treatSelectOrConstruct = function(query) {
  */
 var registerDerivations = function(derivations) {
     var facts = derivations.additions;
-    console.notify('Registering derivations to Dictionary...');
+    console.notify('Registering derivations to dict...');
 
     for (var i = 0; i < facts.length; i++) {
-        Dictionary.put(facts[i]);
+        dict.put(facts[i]);
     }
     console.notify('Registered successfully.');
 };
@@ -175,10 +175,10 @@ var classify = function() {
                     triple.predicate.interfaceName == "BlankNode" ||
                     triple.object.interfaceName == "BlankNode"
                 )) {
-                    var f = Dictionary.get(triple);
+                    var f = dict.get(triple);
                     if(!f) {
                         f = ParsingInterface.tripleToFact(triple);
-                        Dictionary.put(f);
+                        dict.put(f);
                     }
                     facts.push(f);
                 }
@@ -198,145 +198,146 @@ var classify = function() {
         });
 };
 
-Hylar = {
+function Hylar() {
+    //
+}
 
-    /**
-     * Puts on incremental reasoning
-     */
-    setIncremental: function() {
-        rMethod = Reasoner.process.it.incrementally;
-        console.notify('Reasoner set as incremental.');
-    },
+/**
+ * Puts on incremental reasoning
+ */
+Hylar.prototype.setIncremental = function() {
+    rMethod = Reasoner.process.it.incrementally;
+    console.notify('Reasoner set as incremental.');
+};
 
-    /**
-     * Puts on tag-based reasoning
-     */
-    setTagBased: function() {
-        rMethod = Reasoner.process.it.tagBased;
-        console.notify('Reasoner set as tag-based.');
-    },
+/**
+ * Puts on tag-based reasoning
+ */
+Hylar.prototype.setTagBased = function() {
+    rMethod = Reasoner.process.it.tagBased;
+    console.notify('Reasoner set as tag-based.');
+};
 
-    /**
-     * Switches HyLAR's reasoning method
-     * @param method Name of the method ('incremental' or 'tagBased')
-     */
-    updateReasoningMethod: function(method) {
-        switch(method) {
-            case 'tagBased':
-                this.setTagBased();
-                break;
-            case 'incremental':
+/**
+ * Switches HyLAR's reasoning method
+ * @param method Name of the method ('incremental' or 'tagBased')
+ */
+Hylar.prototype.updateReasoningMethod = function(method) {
+    switch(method) {
+        case 'tagBased':
+            this.setTagBased();
+            break;
+        case 'incremental':
+            this.setIncremental();
+            break;
+        default:
+            if (!rMethod) {
                 this.setIncremental();
-                break;
-            default:
-                if (!rMethod) {
-                    this.setIncremental();
-                }
-                break;
-        }
-    },
-
-    /**
-     * Intializes the triple store, loads/classifies an ontology and register its
-     * entities into the Dictionary.
-     * @param ontologyTxt The raw ontology text
-     * @param mimeType The specified mime type
-     * @param reasoningMethod The desired reasoning method for the classification
-     * @returns {*}
-     */
-    load: function(ontologyTxt, mimeType, reasoningMethod) {
-
-        this.updateReasoningMethod(reasoningMethod);
-        Dictionary.setContent({});
-
-        return StorageManager.init().then(function() {
-            switch(mimeType) {
-                case 'application/xml':
-                    return StorageManager.loadRdfXml(ontologyTxt)
-                        .then(function() {
-                            console.notify('Store initialized successfully.');
-                            return classify();
-                        });
-                    break;
-                case 'application/rdf+xml':
-                    return StorageManager.loadRdfXml(ontologyTxt)
-                        .then(function() {
-                            return classify();
-                        });
-                    break;
-                case false:
-                    console.error('Unrecognized or unsupported mimetype. ' +
-                        'Supported formats are rdf/xml, jsonld, turtle, n3');
-                    return false;
-                    break;
-                default:
-                    return StorageManager.load(ontologyTxt, mimeType)
-                        .then(function() {
-                            1;
-                            return classify();
-                        }, function(error) {
-                            console.error(error);
-                            throw error;
-                        });
             }
-        });
-    },
+            break;
+    }
+};
 
-    /**
-     * Launches a SPARQL query against the triplestore.
-     * @param query The SPARQL query text
-     * @param reasoningMethod The desired reasoning method if inserting/deleting
-     */
-    query: function(query, reasoningMethod) {
-        var sparql = ParsingInterface.parseSPARQL(query);
+/**
+ * Intializes the triple store, loads/classifies an ontology and register its
+ * entities into the Dictionary.
+ * @param ontologyTxt The raw ontology text
+ * @param mimeType The specified mime type
+ * @param reasoningMethod The desired reasoning method for the classification
+ * @returns {*}
+ */
+Hylar.prototype.load = function(ontologyTxt, mimeType, reasoningMethod) {
 
-        this.updateReasoningMethod(reasoningMethod);
+    this.updateReasoningMethod(reasoningMethod);
+    dict.setContent({});
 
-        switch(sparql.type) {
-            case 'update':
-                return treatUpdate(sparql);
+    return StorageManager.init().then(function() {
+        switch(mimeType) {
+            case 'application/xml':
+                return StorageManager.loadRdfXml(ontologyTxt)
+                    .then(function() {
+                        console.notify('Store initialized successfully.');
+                        return classify();
+                    });
+                break;
+            case 'application/rdf+xml':
+                return StorageManager.loadRdfXml(ontologyTxt)
+                    .then(function() {
+                        return classify();
+                    });
+                break;
+            case false:
+                console.error('Unrecognized or unsupported mimetype. ' +
+                    'Supported formats are rdf/xml, jsonld, turtle, n3');
+                return false;
                 break;
             default:
-                return treatSelectOrConstruct(query);
+                return StorageManager.load(ontologyTxt, mimeType)
+                    .then(function() {
+                        1;
+                        return classify();
+                    }, function(error) {
+                        console.error(error);
+                        throw error;
+                    });
         }
-    },
+    });
+};
 
-    /**
-     * Returns the content of the triplestore as turtle.
-     * @returns {String}
-     */
-    getStorage: function() {
-        return StorageManager.getContent()
-            .then(function(content) {
-                return content.triples.toString();
-            });
-    },
+/**
+ * Launches a SPARQL query against the triplestore.
+ * @param query The SPARQL query text
+ * @param reasoningMethod The desired reasoning method if inserting/deleting
+ */
+Hylar.prototype.query = function(query, reasoningMethod) {
+    var sparql = ParsingInterface.parseSPARQL(query);
 
-    /**
-     * Empties and recreate the triplestore with elements
-     * indicated in turtle/n3.
-     * @param ttl The turtle/n3 triples to be added.
-     * @returns {*}
-     */
-    setStorage: function(ttl) {
-        return StorageManager.createStoreWith(ttl);
-    },
+    this.updateReasoningMethod(reasoningMethod);
 
-    /**
-     * Returns the Dictionary content.
-     * @returns {Object}
-     */
-    getDictionary: function() {
-        return Dictionary.content();
-    },
-
-    /**
-     * Empties and recreate the content of the dictionary.
-     * @param dict The content of the dictionary.
-     */
-    setDictionaryContent: function(dict) {
-        Dictionary.setContent(dict);
+    switch(sparql.type) {
+        case 'update':
+            return treatUpdate(sparql);
+            break;
+        default:
+            return treatSelectOrConstruct(query);
     }
+};
+
+/**
+ * Returns the content of the triplestore as turtle.
+ * @returns {String}
+ */
+Hylar.prototype.getStorage = function() {
+    return StorageManager.getContent()
+        .then(function(content) {
+            return content.triples.toString();
+        });
+};
+
+/**
+ * Empties and recreate the triplestore with elements
+ * indicated in turtle/n3.
+ * @param ttl The turtle/n3 triples to be added.
+ * @returns {*}
+ */
+Hylar.prototype.setStorage = function(ttl) {
+    return StorageManager.createStoreWith(ttl);
+};
+
+/**
+ * Returns the dictionary content.
+ * @returns {Object}
+ */
+Hylar.prototype.getDictionary = function() {
+    return dict.content();
+};
+
+/**
+ * Empties and recreate the content of the dictionary.
+ * @param dict The content of the dictionary.
+ */
+Hylar.prototype.setDictionaryContent = function(dict) {
+    dict.setContent(dict);
 };
 
 module.exports = Hylar;

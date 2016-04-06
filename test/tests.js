@@ -9,13 +9,13 @@ var mime = require('mime-types');
 
 var Logics = require('../hylar/core/Logics/Logics');
 
-var Hylar = require('../hylar/core/Hylar');
+var H = require('../hylar/core/Hylar');
 var queries = require('./query-examples-200t');
-var owl, ontology, mimeType;
+var owl, ontology, mimeType, Hylar = new H();
 
 var a, b, c;
 
-var reasoningMethod = process.env.rm, ontologyFilename = '/ontologies/poster6-2300.jsonld';
+var reasoningMethod = process.env.rm, ontologyFilename = '/ontologies/fipa.ttl';
 
 describe('File access', function () {
     it('should access the file', function () {
