@@ -154,11 +154,7 @@ ReasoningEngine = {
             FeDel = Logics.invalidate(Fe, FeDel);
         }
 
-        validationResults = Logics.validateExistingFacts(F, FeAdd);
-        FeAdd = validationResults.unknownFacts;
-        validatedFacts = validationResults.validatedFacts;
-
-        if(FeAdd.length > 0) {
+        if(Logics.validateExistingFacts(F, FeAdd).unknownFacts.length > 0) {
             do {
                 FiAdd = Logics.mergeFactSets(FiAdd, FiAddNew);
                 superSet = Logics.mergeFactSetsIn([Fe, Fi, FeAdd, FiAdd]);

@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY terms "http://purl.org/dc/terms/" >
+    <!ENTITY foaf "http://xmlns.com/foaf/0.1/" >
+    <!ENTITY vann "http://purl.org/vocab/vann/" >
+    <!ENTITY voaf "http://purl.org/vocommons/voaf#" >
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY hrests "http://www.wsmo.org/ns/hrests#" >
+    <!ENTITY cc "http://creativecommons.org/ns#" >
+    <!ENTITY swrl "http://www.w3.org/2003/11/swrl#" >
+    <!ENTITY swrlb "http://www.w3.org/2003/11/swrlb#" >
+    <!ENTITY swrlx "http://www.w3.org/2003/11/swrlx#" >
+    <!ENTITY dc "http://purl.org/dc/elements/1.1/" >
+    <!ENTITY ruleml "http://www.w3.org/2003/11/ruleml" >
+    <!ENTITY wsmo-lite "http://www.wsmo.org/ns/wsmo-lite#" >
+    <!ENTITY owlx "http://www.w3.org/2003/05/owl-xml" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY ssn "http://purl.oclc.org/NET/ssnx/ssn#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY DUL "http://www.loa-cnr.it/ontologies/DUL.owl#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY SAN "http://www.irit.fr/recherches/MELODI/ontologies/SAN#" >
+    <!ENTITY IoT-O "http://www.irit.fr/recherches/MELODI/ontologies/IoT-O#" >
+    <!ENTITY msm "http://iserve.kmi.open.ac.uk/ns/msm/msm-2014-09-03.rdf" >
+]>
+
+
+<rdf:RDF xmlns="http://www.w3.org/2002/07/owl#"
+     xml:base="http://www.w3.org/2002/07/owl"
+     xmlns:owlx="http://www.w3.org/2003/05/owl-xml"
+     xmlns:cc="http://creativecommons.org/ns#"
+     xmlns:SAN="http://www.irit.fr/recherches/MELODI/ontologies/SAN#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:msm="http://iserve.kmi.open.ac.uk/ns/msm/msm-2014-09-03.rdf"
+     xmlns:swrlb="http://www.w3.org/2003/11/swrlb#"
+     xmlns:swrl="http://www.w3.org/2003/11/swrl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:IoT-O="http://www.irit.fr/recherches/MELODI/ontologies/IoT-O#"
+     xmlns:wsmo-lite="http://www.wsmo.org/ns/wsmo-lite#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:ssn="http://purl.oclc.org/NET/ssnx/ssn#"
+     xmlns:ruleml="http://www.w3.org/2003/11/ruleml"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:terms="http://purl.org/dc/terms/"
+     xmlns:swrlx="http://www.w3.org/2003/11/swrlx#"
+     xmlns:hrests="http://www.wsmo.org/ns/hrests#"
+     xmlns:DUL="http://www.loa-cnr.it/ontologies/DUL.owl#"
+     xmlns:vann="http://purl.org/vocab/vann/"
+     xmlns:voaf="http://purl.org/vocommons/voaf#"
+     xmlns:foaf="http://xmlns.com/foaf/0.1/"
+     xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <Ontology rdf:about="http://www.irit.fr/recherches/MELODI/ontologies/IoT-O">
+        <dc:creator>Nicolas Seydoux, Mahdi Ben Alaya, Khalil Drira, Nathalie Hernandez, Thierry Monteil</dc:creator>
+        <dc:creator rdf:resource="http://www.irit.fr/recherches/MELODI/ontologies/contributors#seydoux"/>
+        <dc:creator rdf:resource="http://www.irit.fr/recherches/MELODI/ontologies/contributors#drira"/>
+        <dc:creator rdf:resource="http://www.irit.fr/recherches/MELODI/ontologies/contributors#ben_alaya"/>
+        <dc:creator rdf:resource="http://www.irit.fr/recherches/MELODI/ontologies/contributors#hernandez"/>
+        <dc:creator rdf:resource="http://www.irit.fr/recherches/MELODI/ontologies/contributors#monteil"/>
+        <dc:description>IoT-O is a core domain Internet of Things ontology. It is intended to model horizontal knowledge about IoT systems and applications, and to be extended with vertical, application specific knowledge.
+It is constituted of different modules : 
+ - A sensing module, based on W3C&apos;s SSN (http://purl.oclc.org/NET/ssnx/ssn)
+ - An acting module, based on SAN (http://www.irit.fr/recherches/MELODI/ontologies/SAN)
+ - A service module, based on MSM (http://iserve.kmi.open.ac.uk/ns/msm/msm-2014-09-03.rdf) and hRest (http://www.wsmo.org/ns/hrests)
+ - A lifecycle module, based on a lifecycle vocabulary (http://vocab.org/lifecycle/schema-20080603.rdf) and an iot-specific extension (http://www.irit.fr/recherches/MELODI/ontologies/IoT-Lifecycle)
+ - An energy module, based on powerOnt (ttp://elite.polito.it/ontologies/poweront.owl)
+
+IoT-O developping team also contributes to the oneM2M IoT interoperability standard.</dc:description>
+        <vann:preferredNamespacePrefix>iot-o</vann:preferredNamespacePrefix>
+        <vann:preferredNamespaceURI>http://www.irit.fr/recherches/MELODI/ontologies/IoT-O</vann:preferredNamespaceURI>
+        <terms:issued>2015-02-20</terms:issued>
+        <versionInfo>2.0</versionInfo>
+        <foaf:primaryTopic>IoT</foaf:primaryTopic>
+        <terms:modified>2016-02-26</terms:modified>
+        <dc:title>IoT-O</dc:title>
+        <dc:publisher>IRIT (https://www.irit.fr/)</dc:publisher>
+        <dc:publisher>LAAS-CNRS (https://www.laas.fr)</dc:publisher>
+        <voaf:extends rdf:resource="http://www.irit.fr/recherches/MELODI/ontologies/SAN"/>
+        <voaf:extends rdf:resource="http://purl.oclc.org/NET/ssnx/ssn"/>
+        <voaf:extends rdf:resource="http://iserve.kmi.open.ac.uk/ns/msm/msm-2014-09-03.rdf"/>
+        <voaf:extends rdf:resource="http://www.irit.fr/recherches/MELODI/ontologies/IoT-Lifecycle"/>
+        <voaf:extends rdf:resource="http://elite.polito.it/ontologies/poweront.owl"/>
+        <rdf:type rdf:resource="http://purl.org/vocommons/voaf#Vocabulary"/>
+        <cc:license rdf:resource="http://creativecommons.org/licenses/by/4.0/"/>
+        <imports rdf:resource="http://elite.polito.it/ontologies/poweront.owl"/>
+        <imports rdf:resource="http://www.irit.fr/recherches/MELODI/ontologies/IoT-Lifecycle"/>
+        <imports rdf:resource="http://www.irit.fr/recherches/MELODI/ontologies/SAN"/>
+        <imports rdf:resource="http://iserve.kmi.open.ac.uk/ns/msm/msm-2014-09-03.rdf"/>
+        <imports rdf:resource="http://purl.oclc.org/NET/ssnx/ssn"/>
+    </Ontology>

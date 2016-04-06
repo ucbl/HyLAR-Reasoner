@@ -129,7 +129,7 @@ describe('SELECT query with derivations', function () {
                 'PREFIX fipa: <http://sites.google.com/site/smartappliancesproject/ontologies/fipa#> ' +
                 'SELECT * { ?a rdf:type fipa:Function . } ')
             .then(function(r) {
-                if (ontologyFilename == 'fipa.ttl') {
+                if (ontologyFilename == '/ontologies/fipa.ttl') {
                     r.length.should.be.above(1);
                 }
             });
@@ -257,7 +257,7 @@ describe('SELECT query with derivations', function () {
         return Hylar.query(
                 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
                 'PREFIX fipa: <http://sites.google.com/site/smartappliancesproject/ontologies/fipa#> ' +
-                'SELECT * { ?a fipa:hasConnection fipa:Wifi . } ')
+                'SELECT * { ?a fipa:hasConnection fipa:Wifi . }')
             .then(function(r) {
                 r.length.should.equal(1);
             });
@@ -268,7 +268,7 @@ describe('SELECT query with derivations', function () {
         return Hylar.query(
                 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
                 'PREFIX fipa: <http://sites.google.com/site/smartappliancesproject/ontologies/fipa#> ' +
-                'SELECT * { fipa:Inspiron fipa:hasName ?a . } ')
+                'SELECT * { fipa:Inspiron fipa:hasName ?a } ')
             .then(function(r) {
                 r.length.should.equal(1);
             });
