@@ -10,8 +10,8 @@ var mime = require('mime-types');
 var H = require('../hylar/core/Hylar');
 var Hylar = new H();
 
-describe('RDFSTORE FILTER', function () {
-    it('should filter', function () {
+describe('Asawoo incomplete functionalities', function () {
+    it('should return incomplete functionalities', function () {
         var data = fs.readFileSync(path.resolve(__dirname + '/ontologies/modified_functionalities2.jsonld')),
             extension = path.extname(path.resolve(__dirname + '/ontologies/modified_functionalities2.jsonld')),
             owl, query =
