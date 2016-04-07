@@ -219,7 +219,9 @@ module.exports = {
 
         for (var i = 0; i < originalQuery.where.length; i++) {
             statement = originalQuery.where[i];
-            t = t.concat(that.replaceVars(vars, statement.triples, queryResults));
+            if(statement.type == 'bgp') {
+                t = t.concat(that.replaceVars(vars, statement.triples, queryResults));
+            }
         }
 
         return t;
@@ -290,11 +292,13 @@ module.exports = {
 
         for (var i = 0; i < parsedQuery.where.length; i++) {
             statement = parsedQuery.where[i];
-            for (var j = 0; j < statement.triples.length; j++) {
-                wtriple = statement.triples[j];
-                for (var k = 0; k < results.length; k++) {
-                    b = results[k];
-                    returning = returning.concat(that.getValidBindings(b, wtriple, ttl));
+            if (statement.type == 'bgp') {
+                for (var j = 0; j < statement.triples.length; j++) {
+                    wtriple = statement.triples[j];
+                    for (var k = 0; k < results.length; k++) {
+                        b = results[k];
+                        returning = returning.concat(that.getValidBindings(b, wtriple, ttl));
+                    }
                 }
             }
         }
