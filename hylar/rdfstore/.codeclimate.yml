@@ -1,0 +1,8 @@
+languages:
+   JavaScript: true
+exclude_paths:
+  - dist/*
+  - spec/*
+  - pegjs/*
+  - frontend/*
+  - src/perftest/*

@@ -1,0 +1,109 @@
+{
+  "_args": [
+    [
+      "rdfstore@0.9.7",
+      "/home/aifb/Prototypes/HyLAR-Reasoner"
+    ]
+  ],
+  "_from": "rdfstore@0.9.7",
+  "_id": "rdfstore@0.9.7",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/rdfstore",
+  "_nodeVersion": "0.12.2",
+  "_npmUser": {
+    "email": "antoniogarrote@gmail.com",
+    "name": "antoniogarrote"
+  },
+  "_npmVersion": "2.7.5",
+  "_phantomChildren": {},
+  "_requested": {
+    "name": "rdfstore",
+    "raw": "rdfstore@0.9.7",
+    "rawSpec": "0.9.7",
+    "scope": null,
+    "spec": "0.9.7",
+    "type": "version"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/rdfstore/-/rdfstore-0.9.7.tgz",
+  "_shasum": "ae34bced213f3b9811fd31952b76ced600034f72",
+  "_shrinkwrap": null,
+  "_spec": "rdfstore@0.9.7",
+  "_where": "/home/aifb/Prototypes/HyLAR-Reasoner",
+  "author": {
+    "email": "<antoniogarrote@gmail.com",
+    "name": "Antonio Garrote"
+  },
+  "bugs": {
+    "url": "https://github.com/antoniogarrote/rdfstore-js/issues"
+  },
+  "dependencies": {
+    "indexeddb-js": "0.0.14",
+    "jsonld": "^0.3.22",
+    "n3": "^0.4.2",
+    "sqlite3": "^3.0.5"
+  },
+  "description": "RDF graph store supporting the SPARQL query language",
+  "devDependencies": {
+    "acorn": "^1.0.1",
+    "async": "^0.9.0",
+    "bower-resolve": "^2.2.1",
+    "browserify": "7.0.0",
+    "closure-compiler": "^0.2.6",
+    "debowerify": "^1.2.0",
+    "escodegen": "^1.6.1",
+    "glob": "^5.0.3",
+    "gulp": "3.8.11",
+    "gulp-browserify": "^0.5.1",
+    "gulp-clean": "^0.3.1",
+    "gulp-closure-compiler": "^0.2.17",
+    "gulp-jasmine": "^1.0.1",
+    "gulp-rename": "^1.2.0",
+    "lodash": "^2.4.1",
+    "minimatch": "^2.0.4",
+    "moment": "^2.9.0",
+    "pegjs": "^0.8.0",
+    "vinyl-source-stream": "^1.0.0"
+  },
+  "directories": {},
+  "dist": {
+    "shasum": "ae34bced213f3b9811fd31952b76ced600034f72",
+    "tarball": "http://registry.npmjs.org/rdfstore/-/rdfstore-0.9.7.tgz"
+  },
+  "engines": {
+    "node": ">=0.6.1"
+  },
+  "gitHead": "c7f6990974b93acc5161eed6475cc30675dc280c",
+  "homepage": "https://github.com/antoniogarrote/rdfstore-js",
+  "keywords": [
+    "RDF",
+    "SPARQL",
+    "graph",
+    "store"
+  ],
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://opensource.org/licenses/MIT"
+    }
+  ],
+  "main": "src/store",
+  "maintainers": [
+    {
+      "name": "antoniogarrote",
+      "email": "antoniogarrote@gmail.com"
+    }
+  ],
+  "name": "rdfstore",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/antoniogarrote/rdfstore-js.git"
+  },
+  "scripts": {},
+  "version": "0.9.7"
+}

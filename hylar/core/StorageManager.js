@@ -5,7 +5,7 @@
 var ParsingInterface = require('./ParsingInterface');
 var Prefixes = require('./Prefixes');
 
-var rdfstore = require('rdfstore');
+var rdfstore = require('../rdfstore');
 var q = require('q');
 
 var storage;
