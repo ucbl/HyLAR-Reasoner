@@ -1,69 +1,34 @@
-Available terminal functionalities
-----
-
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX owl: <http://www.w3.org/2002/07/owl#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX asawoo: <http://liris.cnrs.fr/asawoo/vocab#>
-SELECT ?fun
-WHERE {
-	?fun asawoo:isImplementedBy ?cap .
-	?appliance asawoo:hasCapability ?cap
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT ?fun WHERE {
+    ?fun asawoo:isComposedOf ?funComp .
+    ?fun asawoo:isComposedOf ?funComp2 .
+    ?funComp2 rdf:type asawoo:Functionality .
+    FILTER NOT EXISTS {
+        ?funComp rdf:type asawoo:Functionality .
+    }
 }
 
-Unavailable terminal functionalities
-----
-
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX owl: <http://www.w3.org/2002/07/owl#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX asawoo: <http://liris.cnrs.fr/asawoo/vocab#>
-SELECT ?fun
-WHERE {
-	?fun asawoo:isImplementedBy ?cap .
-	FILTER NOT EXISTS {
-			?appliance asawoo:hasCapability ?cap
-	}
-}
-
-Complete functionalities
-----
-
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-PREFIX asawoo: <http://liris.cnrs.fr/asawoo/vocab#>
-SELECT DISTINCT ?fun
-WHERE {
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+SELECT DISTINCT ?functType WHERE {
+	<http://liris.cnrs.fr/asawoo#WindowMotor> asawoo:hasCapability ?capInstance .
+	?capInstance rdf:type ?capType .
+	?capType rdf:type owl:Class .
 	{
-		?fun asawoo:isComposedOf ?funComposite .
-		?funComposite asawoo:isImplementedBy ?cap .
-		?appliance asawoo:hasCapability ?cap .
+		?functType asawoo:isImplementedBy ?capType .
 	} UNION {
-		?fun asawoo:isImplementedBy ?cap .
-		?appliance asawoo:hasCapability ?cap .
+		?primaryFunctType asawoo:isImplementedBy ?capType .
+		?functType asawoo:isComposedOf* ?primaryFunctType .
 	}
-}
-
-Incomplete functionalities
----
-
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX asawoo: <http://liris.cnrs.fr/asawoo/vocab#>
-PREFIX asawooFunct: <http://liris.cnrs.fr/asawoo/functionality#>
-SELECT DISTINCT ?fun
-WHERE {
-	{
-		?fun rdf:type asawoo:Functionality
-	} MINUS {
-			?fun asawoo:isComposedOf ?funComposite .
-			?funComposite asawoo:isImplementedBy ?cap .
-			?appliance asawoo:hasCapability ?cap .
-	} MINUS {
-			?fun asawoo:isImplementedBy ?cap .
-			?appliance asawoo:hasCapability ?cap .
+	FILTER NOT EXISTS {
+		?functType asawoo:isComposedOf* ?unavailableFunctType .
+		?unavailableFunctType asawoo:isImplementedBy ?unavailableCapType .
+		FILTER NOT EXISTS {
+			?unexistingCapInstance rdf:type ?unavailableCapType .
+			<http://liris.cnrs.fr/asawoo#WindowMotor> asawoo:hasCapability ?unexistingCapInstance .
+		}
 	}
 }

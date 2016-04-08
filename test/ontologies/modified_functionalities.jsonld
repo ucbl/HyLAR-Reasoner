@@ -1,95 +1,125 @@
 [ {
-  "@id" : "_:genid1086105322",
+  "@id" : "_:genid1980684548",
   "@type" : [ "http://www.w3.org/2002/07/owl#Ontology" ]
 }, {
   "@id" : "http://liris.cnrs.fr/asawoo#WindowMotor",
   "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://liris.cnrs.fr/asawoo/vocab#Appliance" ],
   "http://liris.cnrs.fr/asawoo/vocab#hasCapability" : [ {
-    "@id" : "http://liris.cnrs.fr/asawoo/capability/closeWindowCap"
+    "@id" : "http://liris.cnrs.fr/asawoo#windowCloser1"
   }, {
-    "@id" : "http://liris.cnrs.fr/asawoo/capability/openWindowCap"
+    "@id" : "http://liris.cnrs.fr/asawoo#windowOpener1"
   } ]
 }, {
-  "@id" : "http://liris.cnrs.fr/asawoo/capability/callCap",
-  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://liris.cnrs.fr/asawoo/vocab#Capability" ],
+  "@id" : "http://liris.cnrs.fr/asawoo#windowCloser1",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://liris.cnrs.fr/asawoo/capability/closeWindow" ]
+}, {
+  "@id" : "http://liris.cnrs.fr/asawoo#windowOpener1",
+  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://liris.cnrs.fr/asawoo/capability/openWindow" ]
+}, {
+  "@id" : "http://liris.cnrs.fr/asawoo/capability/call",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class", "http://www.w3.org/2002/07/owl#NamedIndividual" ],
   "http://liris.cnrs.fr/asawoo/vocab#description" : [ {
     "@value" : "Call someone"
   } ],
   "http://liris.cnrs.fr/asawoo/vocab#name" : [ {
     "@value" : "Call"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://liris.cnrs.fr/asawoo/vocab#Capability"
   } ]
 }, {
-  "@id" : "http://liris.cnrs.fr/asawoo/capability/closeWindowCap",
-  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://liris.cnrs.fr/asawoo/vocab#Capability" ],
+  "@id" : "http://liris.cnrs.fr/asawoo/capability/closeWindow",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class", "http://www.w3.org/2002/07/owl#NamedIndividual" ],
   "http://liris.cnrs.fr/asawoo/vocab#description" : [ {
     "@value" : "Close a window"
   } ],
   "http://liris.cnrs.fr/asawoo/vocab#name" : [ {
     "@value" : "Close window"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://liris.cnrs.fr/asawoo/vocab#Capability"
   } ]
 }, {
-  "@id" : "http://liris.cnrs.fr/asawoo/capability/gpsCap",
-  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://liris.cnrs.fr/asawoo/vocab#Capability" ],
+  "@id" : "http://liris.cnrs.fr/asawoo/capability/gps",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class", "http://www.w3.org/2002/07/owl#NamedIndividual" ],
   "http://liris.cnrs.fr/asawoo/vocab#description" : [ {
     "@value" : "Get the position using a GPS"
   } ],
   "http://liris.cnrs.fr/asawoo/vocab#name" : [ {
     "@value" : "GPS"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://liris.cnrs.fr/asawoo/vocab#Capability"
   } ]
 }, {
-  "@id" : "http://liris.cnrs.fr/asawoo/capability/openWindowCap",
-  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://liris.cnrs.fr/asawoo/vocab#Capability" ],
+  "@id" : "http://liris.cnrs.fr/asawoo/capability/openWindow",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class", "http://www.w3.org/2002/07/owl#NamedIndividual" ],
   "http://liris.cnrs.fr/asawoo/vocab#description" : [ {
     "@value" : "Open a window"
   } ],
   "http://liris.cnrs.fr/asawoo/vocab#name" : [ {
     "@value" : "Open window"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://liris.cnrs.fr/asawoo/vocab#Capability"
   } ]
 }, {
-  "@id" : "http://liris.cnrs.fr/asawoo/capability/smsCap",
-  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://liris.cnrs.fr/asawoo/vocab#Capability" ],
+  "@id" : "http://liris.cnrs.fr/asawoo/capability/sms",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class", "http://www.w3.org/2002/07/owl#NamedIndividual" ],
   "http://liris.cnrs.fr/asawoo/vocab#description" : [ {
     "@value" : "Send a SMS"
   } ],
   "http://liris.cnrs.fr/asawoo/vocab#name" : [ {
     "@value" : "SMS"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://liris.cnrs.fr/asawoo/vocab#Capability"
   } ]
 }, {
-  "@id" : "http://liris.cnrs.fr/asawoo/capability/temperatureSensorCap",
-  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://liris.cnrs.fr/asawoo/vocab#Capability" ],
+  "@id" : "http://liris.cnrs.fr/asawoo/capability/temperatureSensor",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class", "http://www.w3.org/2002/07/owl#NamedIndividual" ],
   "http://liris.cnrs.fr/asawoo/vocab#description" : [ {
     "@value" : "Sense the temperature"
   } ],
   "http://liris.cnrs.fr/asawoo/vocab#name" : [ {
     "@value" : "Temperature Sense"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://liris.cnrs.fr/asawoo/vocab#Capability"
   } ]
 }, {
   "@id" : "http://liris.cnrs.fr/asawoo/functionality/call",
-  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://liris.cnrs.fr/asawoo/vocab#Functionality" ],
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class", "http://www.w3.org/2002/07/owl#NamedIndividual" ],
   "http://liris.cnrs.fr/asawoo/vocab#description" : [ {
     "@value" : "Call someone"
   } ],
   "http://liris.cnrs.fr/asawoo/vocab#isImplementedBy" : [ {
-    "@id" : "http://liris.cnrs.fr/asawoo/capability/callCap"
+    "@id" : "http://liris.cnrs.fr/asawoo/capability/call"
   } ],
   "http://liris.cnrs.fr/asawoo/vocab#name" : [ {
     "@value" : "Call"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://liris.cnrs.fr/asawoo/vocab#Functionality"
   } ]
 }, {
   "@id" : "http://liris.cnrs.fr/asawoo/functionality/closeWindow",
-  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://liris.cnrs.fr/asawoo/vocab#Functionality" ],
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class", "http://www.w3.org/2002/07/owl#NamedIndividual" ],
   "http://liris.cnrs.fr/asawoo/vocab#description" : [ {
     "@value" : "Close a window"
   } ],
   "http://liris.cnrs.fr/asawoo/vocab#isImplementedBy" : [ {
-    "@id" : "http://liris.cnrs.fr/asawoo/capability/closeWindowCap"
+    "@id" : "http://liris.cnrs.fr/asawoo/capability/closeWindow"
   } ],
   "http://liris.cnrs.fr/asawoo/vocab#name" : [ {
     "@value" : "Close window"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://liris.cnrs.fr/asawoo/vocab#Functionality"
   } ]
 }, {
   "@id" : "http://liris.cnrs.fr/asawoo/functionality/communicate",
-  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://liris.cnrs.fr/asawoo/vocab#Functionality" ],
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class", "http://www.w3.org/2002/07/owl#NamedIndividual" ],
   "http://liris.cnrs.fr/asawoo/vocab#description" : [ {
     "@value" : "Communicate with someone else"
   } ],
@@ -100,34 +130,43 @@
   } ],
   "http://liris.cnrs.fr/asawoo/vocab#name" : [ {
     "@value" : "Communicate"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://liris.cnrs.fr/asawoo/vocab#Functionality"
   } ]
 }, {
   "@id" : "http://liris.cnrs.fr/asawoo/functionality/gps",
-  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://liris.cnrs.fr/asawoo/vocab#Functionality" ],
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class", "http://www.w3.org/2002/07/owl#NamedIndividual" ],
   "http://liris.cnrs.fr/asawoo/vocab#description" : [ {
     "@value" : "Get the position using a GPS"
   } ],
   "http://liris.cnrs.fr/asawoo/vocab#isImplementedBy" : [ {
-    "@id" : "http://liris.cnrs.fr/asawoo/capability/gpsCap"
+    "@id" : "http://liris.cnrs.fr/asawoo/capability/gps"
   } ],
   "http://liris.cnrs.fr/asawoo/vocab#name" : [ {
     "@value" : "GPS"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://liris.cnrs.fr/asawoo/vocab#Functionality"
   } ]
 }, {
   "@id" : "http://liris.cnrs.fr/asawoo/functionality/openWindow",
-  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://liris.cnrs.fr/asawoo/vocab#Functionality" ],
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class", "http://www.w3.org/2002/07/owl#NamedIndividual" ],
   "http://liris.cnrs.fr/asawoo/vocab#description" : [ {
     "@value" : "Open a window"
   } ],
   "http://liris.cnrs.fr/asawoo/vocab#isImplementedBy" : [ {
-    "@id" : "http://liris.cnrs.fr/asawoo/capability/openWindowCap"
+    "@id" : "http://liris.cnrs.fr/asawoo/capability/openWindow"
   } ],
   "http://liris.cnrs.fr/asawoo/vocab#name" : [ {
     "@value" : "Open window"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://liris.cnrs.fr/asawoo/vocab#Functionality"
   } ]
 }, {
   "@id" : "http://liris.cnrs.fr/asawoo/functionality/operateWindow",
-  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://liris.cnrs.fr/asawoo/vocab#Functionality" ],
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class", "http://www.w3.org/2002/07/owl#NamedIndividual" ],
   "http://liris.cnrs.fr/asawoo/vocab#description" : [ {
     "@value" : "Operate a window using a phone application"
   } ],
@@ -138,22 +177,28 @@
   } ],
   "http://liris.cnrs.fr/asawoo/vocab#name" : [ {
     "@value" : "Operate a window"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://liris.cnrs.fr/asawoo/vocab#Functionality"
   } ]
 }, {
   "@id" : "http://liris.cnrs.fr/asawoo/functionality/sms",
-  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://liris.cnrs.fr/asawoo/vocab#Functionality" ],
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class", "http://www.w3.org/2002/07/owl#NamedIndividual" ],
   "http://liris.cnrs.fr/asawoo/vocab#description" : [ {
     "@value" : "Send a SMS"
   } ],
   "http://liris.cnrs.fr/asawoo/vocab#isImplementedBy" : [ {
-    "@id" : "http://liris.cnrs.fr/asawoo/capability/smsCap"
+    "@id" : "http://liris.cnrs.fr/asawoo/capability/sms"
   } ],
   "http://liris.cnrs.fr/asawoo/vocab#name" : [ {
     "@value" : "SMS"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://liris.cnrs.fr/asawoo/vocab#Functionality"
   } ]
 }, {
   "@id" : "http://liris.cnrs.fr/asawoo/functionality/temperatureRegulation",
-  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://liris.cnrs.fr/asawoo/vocab#Functionality" ],
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class", "http://www.w3.org/2002/07/owl#NamedIndividual" ],
   "http://liris.cnrs.fr/asawoo/vocab#description" : [ {
     "@value" : "Regulate the temperature"
   } ],
@@ -166,10 +211,13 @@
   } ],
   "http://liris.cnrs.fr/asawoo/vocab#name" : [ {
     "@value" : "Temperature Regulation"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://liris.cnrs.fr/asawoo/vocab#Functionality"
   } ]
 }, {
   "@id" : "http://liris.cnrs.fr/asawoo/functionality/temperatureRegulationBySMS",
-  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://liris.cnrs.fr/asawoo/vocab#Functionality" ],
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class", "http://www.w3.org/2002/07/owl#NamedIndividual" ],
   "http://liris.cnrs.fr/asawoo/vocab#description" : [ {
     "@value" : "Regulate the temperature by SMS"
   } ],
@@ -180,18 +228,24 @@
   } ],
   "http://liris.cnrs.fr/asawoo/vocab#name" : [ {
     "@value" : "Temperature Regulation by SMS"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://liris.cnrs.fr/asawoo/vocab#Functionality"
   } ]
 }, {
   "@id" : "http://liris.cnrs.fr/asawoo/functionality/temperatureSensor",
-  "@type" : [ "http://www.w3.org/2002/07/owl#NamedIndividual", "http://liris.cnrs.fr/asawoo/vocab#Functionality" ],
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class", "http://www.w3.org/2002/07/owl#NamedIndividual" ],
   "http://liris.cnrs.fr/asawoo/vocab#description" : [ {
     "@value" : "Sense the temperature"
   } ],
   "http://liris.cnrs.fr/asawoo/vocab#isImplementedBy" : [ {
-    "@id" : "http://liris.cnrs.fr/asawoo/capability/temperatureSensorCap"
+    "@id" : "http://liris.cnrs.fr/asawoo/capability/temperatureSensor"
   } ],
   "http://liris.cnrs.fr/asawoo/vocab#name" : [ {
     "@value" : "Temperature Sensor"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#subClassOf" : [ {
+    "@id" : "http://liris.cnrs.fr/asawoo/vocab#Functionality"
   } ]
 }, {
   "@id" : "http://liris.cnrs.fr/asawoo/vocab#Actuator",

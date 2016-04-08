@@ -1,0 +1,110 @@
+<http://liris.cnrs.fr/asawoo/capability/call> <http://liris.cnrs.fr/asawoo/vocab#description> "Call someone" .
+<http://liris.cnrs.fr/asawoo/capability/call> <http://liris.cnrs.fr/asawoo/vocab#name> "Call" .
+<http://liris.cnrs.fr/asawoo/capability/call> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<http://liris.cnrs.fr/asawoo/capability/call> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .
+<http://liris.cnrs.fr/asawoo/capability/closeWindow> <http://liris.cnrs.fr/asawoo/vocab#description> "Close a window" .
+<http://liris.cnrs.fr/asawoo/capability/closeWindow> <http://liris.cnrs.fr/asawoo/vocab#name> "Close window" .
+<http://liris.cnrs.fr/asawoo/capability/closeWindow> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<http://liris.cnrs.fr/asawoo/capability/closeWindow> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .
+<http://liris.cnrs.fr/asawoo/capability/gps> <http://liris.cnrs.fr/asawoo/vocab#description> "Get the position using a GPS" .
+<http://liris.cnrs.fr/asawoo/capability/gps> <http://liris.cnrs.fr/asawoo/vocab#name> "GPS" .
+<http://liris.cnrs.fr/asawoo/capability/gps> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<http://liris.cnrs.fr/asawoo/capability/gps> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .
+<http://liris.cnrs.fr/asawoo/capability/openWindow> <http://liris.cnrs.fr/asawoo/vocab#description> "Open a window" .
+<http://liris.cnrs.fr/asawoo/capability/openWindow> <http://liris.cnrs.fr/asawoo/vocab#name> "Open window" .
+<http://liris.cnrs.fr/asawoo/capability/openWindow> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<http://liris.cnrs.fr/asawoo/capability/openWindow> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .
+<http://liris.cnrs.fr/asawoo/capability/sms> <http://liris.cnrs.fr/asawoo/vocab#description> "Send a SMS" .
+<http://liris.cnrs.fr/asawoo/capability/sms> <http://liris.cnrs.fr/asawoo/vocab#name> "SMS" .
+<http://liris.cnrs.fr/asawoo/capability/sms> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<http://liris.cnrs.fr/asawoo/capability/sms> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .
+<http://liris.cnrs.fr/asawoo/capability/temperatureSensor> <http://liris.cnrs.fr/asawoo/vocab#description> "Sense the temperature" .
+<http://liris.cnrs.fr/asawoo/capability/temperatureSensor> <http://liris.cnrs.fr/asawoo/vocab#name> "Temperature Sense" .
+<http://liris.cnrs.fr/asawoo/capability/temperatureSensor> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<http://liris.cnrs.fr/asawoo/capability/temperatureSensor> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .
+<http://liris.cnrs.fr/asawoo/functionality/call> <http://liris.cnrs.fr/asawoo/vocab#description> "Call someone" .
+<http://liris.cnrs.fr/asawoo/functionality/call> <http://liris.cnrs.fr/asawoo/vocab#isImplementedBy> <http://liris.cnrs.fr/asawoo/capability/call> .
+<http://liris.cnrs.fr/asawoo/functionality/call> <http://liris.cnrs.fr/asawoo/vocab#name> "Call" .
+<http://liris.cnrs.fr/asawoo/functionality/call> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<http://liris.cnrs.fr/asawoo/functionality/call> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .
+<http://liris.cnrs.fr/asawoo/functionality/closeWindow> <http://liris.cnrs.fr/asawoo/vocab#description> "Close a window" .
+<http://liris.cnrs.fr/asawoo/functionality/closeWindow> <http://liris.cnrs.fr/asawoo/vocab#isImplementedBy> <http://liris.cnrs.fr/asawoo/capability/closeWindow> .
+<http://liris.cnrs.fr/asawoo/functionality/closeWindow> <http://liris.cnrs.fr/asawoo/vocab#name> "Close window" .
+<http://liris.cnrs.fr/asawoo/functionality/closeWindow> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<http://liris.cnrs.fr/asawoo/functionality/closeWindow> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .
+<http://liris.cnrs.fr/asawoo/functionality/communicate> <http://liris.cnrs.fr/asawoo/vocab#description> "Communicate with someone else" .
+<http://liris.cnrs.fr/asawoo/functionality/communicate> <http://liris.cnrs.fr/asawoo/vocab#isComposedOf> <http://liris.cnrs.fr/asawoo/functionality/call> .
+<http://liris.cnrs.fr/asawoo/functionality/communicate> <http://liris.cnrs.fr/asawoo/vocab#isComposedOf> <http://liris.cnrs.fr/asawoo/functionality/sms> .
+<http://liris.cnrs.fr/asawoo/functionality/communicate> <http://liris.cnrs.fr/asawoo/vocab#name> "Communicate" .
+<http://liris.cnrs.fr/asawoo/functionality/communicate> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<http://liris.cnrs.fr/asawoo/functionality/communicate> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .
+<http://liris.cnrs.fr/asawoo/functionality/gps> <http://liris.cnrs.fr/asawoo/vocab#description> "Get the position using a GPS" .
+<http://liris.cnrs.fr/asawoo/functionality/gps> <http://liris.cnrs.fr/asawoo/vocab#isImplementedBy> <http://liris.cnrs.fr/asawoo/capability/gps> .
+<http://liris.cnrs.fr/asawoo/functionality/gps> <http://liris.cnrs.fr/asawoo/vocab#name> "GPS" .
+<http://liris.cnrs.fr/asawoo/functionality/gps> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<http://liris.cnrs.fr/asawoo/functionality/gps> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .
+<http://liris.cnrs.fr/asawoo/functionality/openWindow> <http://liris.cnrs.fr/asawoo/vocab#description> "Open a window" .
+<http://liris.cnrs.fr/asawoo/functionality/openWindow> <http://liris.cnrs.fr/asawoo/vocab#isImplementedBy> <http://liris.cnrs.fr/asawoo/capability/openWindow> .
+<http://liris.cnrs.fr/asawoo/functionality/openWindow> <http://liris.cnrs.fr/asawoo/vocab#name> "Open window" .
+<http://liris.cnrs.fr/asawoo/functionality/openWindow> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<http://liris.cnrs.fr/asawoo/functionality/openWindow> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .
+<http://liris.cnrs.fr/asawoo/functionality/operateWindow> <http://liris.cnrs.fr/asawoo/vocab#description> "Operate a window using a phone application" .
+<http://liris.cnrs.fr/asawoo/functionality/operateWindow> <http://liris.cnrs.fr/asawoo/vocab#isComposedOf> <http://liris.cnrs.fr/asawoo/functionality/closeWindow> .
+<http://liris.cnrs.fr/asawoo/functionality/operateWindow> <http://liris.cnrs.fr/asawoo/vocab#isComposedOf> <http://liris.cnrs.fr/asawoo/functionality/openWindow> .
+<http://liris.cnrs.fr/asawoo/functionality/operateWindow> <http://liris.cnrs.fr/asawoo/vocab#name> "Operate a window" .
+<http://liris.cnrs.fr/asawoo/functionality/operateWindow> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<http://liris.cnrs.fr/asawoo/functionality/operateWindow> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .
+<http://liris.cnrs.fr/asawoo/functionality/sms> <http://liris.cnrs.fr/asawoo/vocab#description> "Send a SMS" .
+<http://liris.cnrs.fr/asawoo/functionality/sms> <http://liris.cnrs.fr/asawoo/vocab#isImplementedBy> <http://liris.cnrs.fr/asawoo/capability/sms> .
+<http://liris.cnrs.fr/asawoo/functionality/sms> <http://liris.cnrs.fr/asawoo/vocab#name> "SMS" .
+<http://liris.cnrs.fr/asawoo/functionality/sms> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<http://liris.cnrs.fr/asawoo/functionality/sms> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .
+<http://liris.cnrs.fr/asawoo/functionality/temperatureRegulation> <http://liris.cnrs.fr/asawoo/vocab#description> "Regulate the temperature" .
+<http://liris.cnrs.fr/asawoo/functionality/temperatureRegulation> <http://liris.cnrs.fr/asawoo/vocab#isComposedOf> <http://liris.cnrs.fr/asawoo/functionality/closeWindow> .
+<http://liris.cnrs.fr/asawoo/functionality/temperatureRegulation> <http://liris.cnrs.fr/asawoo/vocab#isComposedOf> <http://liris.cnrs.fr/asawoo/functionality/openWindow> .
+<http://liris.cnrs.fr/asawoo/functionality/temperatureRegulation> <http://liris.cnrs.fr/asawoo/vocab#isComposedOf> <http://liris.cnrs.fr/asawoo/functionality/temperatureSensor> .
+<http://liris.cnrs.fr/asawoo/functionality/temperatureRegulation> <http://liris.cnrs.fr/asawoo/vocab#name> "Temperature Regulation" .
+<http://liris.cnrs.fr/asawoo/functionality/temperatureRegulation> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<http://liris.cnrs.fr/asawoo/functionality/temperatureRegulation> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .
+<http://liris.cnrs.fr/asawoo/functionality/temperatureRegulationBySMS> <http://liris.cnrs.fr/asawoo/vocab#description> "Regulate the temperature by SMS" .
+<http://liris.cnrs.fr/asawoo/functionality/temperatureRegulationBySMS> <http://liris.cnrs.fr/asawoo/vocab#isComposedOf> <http://liris.cnrs.fr/asawoo/functionality/sms> .
+<http://liris.cnrs.fr/asawoo/functionality/temperatureRegulationBySMS> <http://liris.cnrs.fr/asawoo/vocab#isComposedOf> <http://liris.cnrs.fr/asawoo/functionality/temperatureRegulation> .
+<http://liris.cnrs.fr/asawoo/functionality/temperatureRegulationBySMS> <http://liris.cnrs.fr/asawoo/vocab#name> "Temperature Regulation by SMS" .
+<http://liris.cnrs.fr/asawoo/functionality/temperatureRegulationBySMS> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<http://liris.cnrs.fr/asawoo/functionality/temperatureRegulationBySMS> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .
+<http://liris.cnrs.fr/asawoo/functionality/temperatureSensor> <http://liris.cnrs.fr/asawoo/vocab#description> "Sense the temperature" .
+<http://liris.cnrs.fr/asawoo/functionality/temperatureSensor> <http://liris.cnrs.fr/asawoo/vocab#isImplementedBy> <http://liris.cnrs.fr/asawoo/capability/temperatureSensor> .
+<http://liris.cnrs.fr/asawoo/functionality/temperatureSensor> <http://liris.cnrs.fr/asawoo/vocab#name> "Temperature Sensor" .
+<http://liris.cnrs.fr/asawoo/functionality/temperatureSensor> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<http://liris.cnrs.fr/asawoo/functionality/temperatureSensor> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .
+<http://liris.cnrs.fr/asawoo/vocab#Actuator> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<http://liris.cnrs.fr/asawoo/vocab#Actuator> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://liris.cnrs.fr/asawoo/vocab#Capability> .
+<http://liris.cnrs.fr/asawoo/vocab#Appliance> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<http://liris.cnrs.fr/asawoo/vocab#Capability> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<http://liris.cnrs.fr/asawoo/vocab#Functionality> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<http://liris.cnrs.fr/asawoo/vocab#Network> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<http://liris.cnrs.fr/asawoo/vocab#Network> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://liris.cnrs.fr/asawoo/vocab#Capability> .
+<http://liris.cnrs.fr/asawoo/vocab#Processor> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<http://liris.cnrs.fr/asawoo/vocab#Processor> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://liris.cnrs.fr/asawoo/vocab#Capability> .
+<http://liris.cnrs.fr/asawoo/vocab#Sensor> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+<http://liris.cnrs.fr/asawoo/vocab#Sensor> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://liris.cnrs.fr/asawoo/vocab#Capability> .
+<http://liris.cnrs.fr/asawoo/vocab#description> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .
+<http://liris.cnrs.fr/asawoo/vocab#description> <http://www.w3.org/2000/01/rdf-schema#domain> <http://liris.cnrs.fr/asawoo/vocab#Capability> .
+<http://liris.cnrs.fr/asawoo/vocab#description> <http://www.w3.org/2000/01/rdf-schema#domain> <http://liris.cnrs.fr/asawoo/vocab#Functionality> .
+<http://liris.cnrs.fr/asawoo/vocab#description> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2001/XMLSchema#String> .
+<http://liris.cnrs.fr/asawoo/vocab#hasCapability> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .
+<http://liris.cnrs.fr/asawoo/vocab#hasCapability> <http://www.w3.org/2000/01/rdf-schema#comment> "Specify that an appliance has the given capability" .
+<http://liris.cnrs.fr/asawoo/vocab#hasCapability> <http://www.w3.org/2000/01/rdf-schema#domain> <http://liris.cnrs.fr/asawoo/vocab#Appliance> .
+<http://liris.cnrs.fr/asawoo/vocab#hasCapability> <http://www.w3.org/2000/01/rdf-schema#range> <http://liris.cnrs.fr/asawoo/vocab#Capability> .
+<http://liris.cnrs.fr/asawoo/vocab#isComposedOf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .
+<http://liris.cnrs.fr/asawoo/vocab#isComposedOf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#TransitiveProperty> .
+<http://liris.cnrs.fr/asawoo/vocab#isComposedOf> <http://www.w3.org/2000/01/rdf-schema#domain> <http://liris.cnrs.fr/asawoo/vocab#Functionality> .
+<http://liris.cnrs.fr/asawoo/vocab#isComposedOf> <http://www.w3.org/2000/01/rdf-schema#range> <http://liris.cnrs.fr/asawoo/vocab#Functionality> .
+<http://liris.cnrs.fr/asawoo/vocab#isImplementedBy> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .
+<http://liris.cnrs.fr/asawoo/vocab#isImplementedBy> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#TransitiveProperty> .
+<http://liris.cnrs.fr/asawoo/vocab#isImplementedBy> <http://www.w3.org/2000/01/rdf-schema#domain> <http://liris.cnrs.fr/asawoo/vocab#Functionality> .
+<http://liris.cnrs.fr/asawoo/vocab#isImplementedBy> <http://www.w3.org/2000/01/rdf-schema#range> <http://liris.cnrs.fr/asawoo/vocab#Capability> .
+<http://liris.cnrs.fr/asawoo/vocab#name> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .
+<http://liris.cnrs.fr/asawoo/vocab#name> <http://www.w3.org/2000/01/rdf-schema#domain> <http://liris.cnrs.fr/asawoo/vocab#Capability> .
+<http://liris.cnrs.fr/asawoo/vocab#name> <http://www.w3.org/2000/01/rdf-schema#domain> <http://liris.cnrs.fr/asawoo/vocab#Functionality> .
+<http://liris.cnrs.fr/asawoo/vocab#name> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2001/XMLSchema#String> .

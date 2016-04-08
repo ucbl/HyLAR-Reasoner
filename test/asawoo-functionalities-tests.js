@@ -19,7 +19,7 @@ describe('Asawoo incomplete functionalities', function () {
             extensionOwlFunctCompositions = path.extname(path.resolve(__dirname + '/ontologies/functionality_compositions.jsonld')),
 
             triplesToBeInsertedQuery =
-            'PREFIX asawoo: <http://liris.cnrs.fr/asawoo/vocab#> PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> CONSTRUCT { ?fun rdf:type asawoo:Functionality } WHERE { <http://liris.cnrs.fr/asawoo#WindowMotor> asawoo:hasCapability ?cap . { ?fun asawoo:isImplementedBy ?cap . } UNION { ?fun asawoo:isComposedOf* ?funComp . ?funComp asawoo:isImplementedBy ?cap . } }',
+            'PREFIX asawoo: <http://liris.cnrs.fr/asawoo/vocab#> PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> PREFIX owl: <http://www.w3.org/2002/07/owl#> SELECT DISTINCT ?functType WHERE { <http://liris.cnrs.fr/asawoo#WindowMotor> asawoo:hasCapability ?capInstance . ?capInstance rdf:type ?capType . ?capType rdf:type owl:Class . { ?functType asawoo:isImplementedBy ?capType . } UNION { ?primaryFunctType asawoo:isImplementedBy ?capType . ?functType asawoo:isComposedOf* ?primaryFunctType . } FILTER NOT EXISTS { ?functType asawoo:isComposedOf* ?unavailableFunctType . ?unavailableFunctType asawoo:isImplementedBy ?unavailableCapType . FILTER NOT EXISTS { ?unexistingCapInstance rdf:type ?unavailableCapType . <http://liris.cnrs.fr/asawoo#WindowMotor> asawoo:hasCapability ?unexistingCapInstance . } } }',
 
             insertQuery = 'INSERT DATA { ',
 
@@ -43,10 +43,13 @@ describe('Asawoo incomplete functionalities', function () {
                     mimeType = mimeType.replace(/;.*/g, '');
                 }
                 owlFunctCompositions = owlFunctCompositions.toString().replace(/(&)([a-z0-9]+)(;)/gi, '$2:');
-                return localfunctionalities.load(owlFunctCompositions, mimeType);
+                return repository.load(owlFunctCompositions, mimeType);
             })
             .then(function(r) {
                 return localfunctionalities.query(insertQuery);
+            })
+            .then(function(r) {
+                return localfunctionalities.query(localFunctionalitiesQuery);
             })
             .then(function(r) {
                 return localfunctionalities.query(incompleteFunctionalitiesQuery);
