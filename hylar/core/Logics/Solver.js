@@ -60,6 +60,56 @@ Solver = {
         return consequences;
     },
 
+    checkProvability: function(fact, R, C, Fe, Y, P, V, undeterminedImplicitFacts) {
+        var matchedRules, consequences;
+
+        if (Logics.addToFactSet(C, fact)) {
+            return;
+        }
+
+        this.saturate(R, C, Fe, Y, P, V);
+
+        if (Logics.uniques(P, [fact]).length == P.length) {
+            return;
+        }
+
+        matchedRules = Logics.restrictRuleSet(R, [fact]);
+        consequences = this.evaluateRuleSet(matchedRules, undeterminedImplicitFacts);
+
+        for (var i = 0; i < consequences.length; i++) {
+            this.checkProvability(consequences[i]);
+            if (Logics.uniques(C, [fact]).length == C.length) {
+                return;
+            }
+        }
+    },
+
+    saturate: function(R, C, Fe, Y, P, V) {
+        var consequences;
+
+        for (var i = 0; i < C.length; i++) {
+            if ((Logics.uniques([C[i]], Fe).length == Fe.length) ||
+                (Logics.uniques([C[i]], Y).length == Y.length)) {
+                P = Logics.uniques(P, [C[i]]);
+            }
+        }
+
+        for (var i = 0; i < P.length; i++) {
+            if (Logics.addToFactSet(V, P[i])) {
+                consequences = this.evaluateRuleSet(R, P[i]);
+
+                for (var j = 0; j < consequences.length; j++) {
+                    if (Logics.uniques([consequences[i]], C)) {
+                        Logics.addToFactSet(P, consequences[j]);
+                    } else {
+                        Logics.addToFactSet(Y, consequences[j])
+                    }
+                }
+            }
+        }
+        return;
+    },
+
     /**
      * Updates the mapping of the current cause
      * given the next cause of a rule, over a

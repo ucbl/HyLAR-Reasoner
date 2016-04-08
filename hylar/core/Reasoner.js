@@ -49,6 +49,7 @@ module.exports = {
     process: {
         it: {
             incrementally: ReasoningEngine.incremental,
+            incrementallyBf: ReasoningEngine.incrementalBf,
             naively: ReasoningEngine.naive,
             tagBased: ReasoningEngine.tagging
         }

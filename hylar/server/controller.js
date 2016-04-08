@@ -7,7 +7,7 @@ var fs = require('fs'),
     request = require('request'),
     mime = require('mime-types');
 
-var Hylar = require('../core/Hylar');
+var Hylar = require('../Hylar');
 
 var appDir = path.dirname(require.main.filename),
     ontoDir = appDir + '/ontologies',

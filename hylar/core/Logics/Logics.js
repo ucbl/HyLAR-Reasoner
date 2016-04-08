@@ -416,5 +416,15 @@ module.exports = {
         } catch(e) {
             return false;
         }
+    },
+
+    addToFactSet: function(factSet, fact) {
+        var originalFactSetLength = factSet.length;
+        factSet = this.uniques(factSet, [fact]);
+        if (factSet.length > originalFactSetLength) {
+            return true;
+        } else {
+            return false;
+        }
     }
 };

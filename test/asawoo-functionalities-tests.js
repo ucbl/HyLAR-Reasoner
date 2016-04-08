@@ -7,7 +7,7 @@ var fs = require('fs');
 var path = require('path');
 var mime = require('mime-types');
 
-var H = require('../hylar/core/Hylar');
+var H = require('../hylar/hylar');
 var repository = new H(),
     localfunctionalities = new H();
 

@@ -112,6 +112,80 @@ ReasoningEngine = {
         };
     },
 
+    incrementalBf: function (FeAdd, FeDel, F, R) {
+        var backwardForwardDelete = function(Fe, Fi, FeDel, R) {
+            var C = [], D = [], P = [],
+                Y = [], O = [], S = [],
+                V = [], matchedRules,
+                CWithoutP, FiWithoutO, DWithoutP;
+
+            for (var i = 0; i < FeDel.length; i++) {
+                Fe = Logics.minus(Fe, [FeDel[i]]);
+                D = Logics.uniques(D, [FeDel[i]]);
+            }
+
+            for (var i = 0; i < D.length; i++) {
+                Solver.checkProvability(D[i], R, C, Fe, Y, P, V, Logics.minus(Fi, S));
+                CWithoutP = Logics.minus(C, P);
+
+                for (var j = 0; j < CWithoutP.length; j++) {
+                    Logics.addToFactSet(S, CWithoutP[j]);
+                }
+
+                if (Logics.minus(P, [D[i]]).length == P.length) {
+                    matchedRules = Logics.restrictRuleSet(R, D[i]);
+                    FiWithoutO = Logics.minus(Fi, O);
+
+                    D = Logics.uniques(D, Solver.evaluateRuleSet(matchedRules, FiWithoutO));
+                    Logics.uniques(O, [D[i]]);
+                }
+            }
+
+            DWithoutP = Logics.minus(D, P);
+
+            for (var i = 0; i < DWithoutP.length; i++) {
+                Fi = Logics.minus(Fi, [DWithoutP[i]]);
+            }
+        };
+
+        var Rins = [],
+            FiDel = [], FiAdd = [],
+            FiAddNew = [], superSet = [],
+
+            additions, deletions,
+
+            Fe = Logics.getOnlyExplicitFacts(F),
+            Fi = Logics.getOnlyImplicitFacts(F),
+            FiAfterBf = Fi;
+
+        if(FeDel && FeDel.length) {
+            backwardForwardDelete(Fe, FiAfterBf, FeDel, R);
+            FiAdd = Logics.minus(FiAfterBf, Fi);
+        }
+
+        // Insertion
+        if(FeAdd && FeAdd.length) {
+            do {
+                FiAdd = Logics.uniques(FiAdd, FiAddNew);
+                superSet = Logics.uniques(Logics.uniques(Logics.uniques(Fe, FiAdd), FeAdd), FiAdd);
+                Rins = Logics.restrictRuleSet(R, superSet);
+                FiAddNew = Solver.evaluateRuleSet(Rins, superSet);
+            } while (Logics.uniques(FiAdd, FiAddNew).length > FiAdd.length);
+        }
+
+        additions = Logics.uniques(FeAdd, FiAdd);
+        deletions = Logics.uniques(FeDel, FiDel);
+
+        F = Logics.uniques(F, additions);
+        F = Logics.minus(F, deletions);
+
+        return {
+            additions: additions,
+            deletions: deletions,
+            updatedF: F
+        };
+    },
+
     /**
      * Returns valid facts using explicit facts' validity tags.
      * @param F
@@ -172,6 +246,7 @@ ReasoningEngine = {
 
 module.exports = {
     naive: ReasoningEngine.naive,
+    incrementalBf: ReasoningEngine.incrementalBf,
     incremental: ReasoningEngine.incremental,
     tagging: ReasoningEngine.tagging,
     tagFilter: ReasoningEngine.tagFilter
