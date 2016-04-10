@@ -1,34 +1,35 @@
+# Complete and incomplete functionalities
 PREFIX asawoo: <http://liris.cnrs.fr/asawoo/vocab#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-SELECT ?fun WHERE {
-    ?fun asawoo:isComposedOf ?funComp .
-    ?fun asawoo:isComposedOf ?funComp2 .
-    ?funComp2 rdf:type asawoo:Functionality .
-    FILTER NOT EXISTS {
-        ?funComp rdf:type asawoo:Functionality .
-    }
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+CONSTRUCT { ?functType rdf:type ?functType }
+WHERE {
+    <http://liris.cnrs.fr/asawoo#WindowMotor> asawoo:hasCapability ?capInstance .
+    ?capInstance rdf:type ?capType . ?capType rdfs:subClassOf asawoo:Capability .
+    { ?functType asawoo:isImplementedBy ?capType . }
+    UNION { ?primaryFunctType asawoo:isImplementedBy ?capType . ?functType asawoo:isComposedOf* ?primaryFunctType . }
 }
 
+# Incomplete functionalities
 PREFIX asawoo: <http://liris.cnrs.fr/asawoo/vocab#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
-SELECT DISTINCT ?functType WHERE {
-	<http://liris.cnrs.fr/asawoo#WindowMotor> asawoo:hasCapability ?capInstance .
-	?capInstance rdf:type ?capType .
-	?capType rdf:type owl:Class .
-	{
-		?functType asawoo:isImplementedBy ?capType .
-	} UNION {
-		?primaryFunctType asawoo:isImplementedBy ?capType .
+CONSTRUCT { ?functType rdf:type ?functType } WHERE {
 		?functType asawoo:isComposedOf* ?primaryFunctType .
-	}
-	FILTER NOT EXISTS {
-		?functType asawoo:isComposedOf* ?unavailableFunctType .
-		?unavailableFunctType asawoo:isImplementedBy ?unavailableCapType .
+		?primaryFunctType asawoo:isImplementedBy ?capType .
 		FILTER NOT EXISTS {
-			?unexistingCapInstance rdf:type ?unavailableCapType .
-			<http://liris.cnrs.fr/asawoo#WindowMotor> asawoo:hasCapability ?unexistingCapInstance .
+			?cap rdf:type ?capType .
 		}
-	}
+}
+
+# Local functionalities partially available
+
+PREFIX asawoo: <http://liris.cnrs.fr/asawoo/vocab#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?functType WHERE {
+	?functType asawoo:isComposedOf* ?functCompType .
+	?functType asawoo:isComposedOf* ?functCompType2 .
+	?functInstance2 rdf:type ?functCompType2 .
+	FILTER NOT EXISTS { ?functInstance rdf:type ?functCompType . }
 }
