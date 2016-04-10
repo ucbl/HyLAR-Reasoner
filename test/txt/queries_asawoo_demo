@@ -24,7 +24,6 @@ CONSTRUCT { ?functType rdf:type ?functType } WHERE {
 }
 
 # Local functionalities partially available
-
 PREFIX asawoo: <http://liris.cnrs.fr/asawoo/vocab#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 SELECT DISTINCT ?functType WHERE {
