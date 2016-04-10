@@ -13,22 +13,19 @@ var repository = new H(),
 
 describe('Asawoo incomplete functionalities', function () {
     it('should return incomplete functionalities', function () {
-        var owlRepository = fs.readFileSync(path.resolve(__dirname + '/ontologies/modified_functionalities.jsonld')),
-            extensionOwlRepository = path.extname(path.resolve(__dirname + '/ontologies/modified_functionalities.jsonld')),
-            owlFunctCompositions = fs.readFileSync(path.resolve(__dirname + '/ontologies/functionality_compositions.jsonld')),
-            extensionOwlFunctCompositions = path.extname(path.resolve(__dirname + '/ontologies/functionality_compositions.jsonld')),
-
+        var owlRepository = fs.readFileSync(path.resolve(__dirname + '/ontologies/asawoo.jsonld')),
+            extensionOwlRepository = path.extname(path.resolve(__dirname + '/ontologies/asawoo.jsonld')),
             completeIncompleteFuncts, incompleteFuncts,
 
             completeIncompleteFunctsQuery =
-            'PREFIX asawoo: <http://liris.cnrs.fr/asawoo/vocab#> PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> CONSTRUCT { ?functType rdf:type ?functType } WHERE { <http://liris.cnrs.fr/asawoo#WindowMotor> asawoo:hasCapability ?capInstance . ?capInstance rdf:type ?capType . ?capType rdfs:subClassOf asawoo:Capability . { ?functType asawoo:isImplementedBy ?capType . } UNION { ?primaryFunctType asawoo:isImplementedBy ?capType . ?functType asawoo:isComposedOf* ?primaryFunctType . } }',
+            'PREFIX asawoo: <http://liris.cnrs.fr/asawoo/vocab#> PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> CONSTRUCT { ?functType rdf:type ?functType } WHERE { <http://liris.cnrs.fr/asawoo#WindowMotor> asawoo:hasCapability ?capInstance . ?capInstance rdf:type ?capType . ?capType rdfs:subClassOf asawoo:Capability . { ?functType asawoo:isImplementedBy ?capType . } UNION { ?primaryFunctType asawoo:isImplementedBy ?capType . ?functType asawoo:isComposedOf ?primaryFunctType . } }',
 
             incompleteFunctsQuery =
             'PREFIX asawoo: <http://liris.cnrs.fr/asawoo/vocab#> PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> PREFIX owl: <http://www.w3.org/2002/07/owl#> CONSTRUCT { ?functType rdf:type ?functType } WHERE { ?functType asawoo:isComposedOf* ?primaryFunctType . ?primaryFunctType asawoo:isImplementedBy ?capType . FILTER NOT EXISTS { ?cap rdf:type ?capType . } }',
 
             insertLocalFunctionalitiesQuery,
 
-            incompleteLocalFunctionalitiesQuery = 'PREFIX asawoo: <http://liris.cnrs.fr/asawoo/vocab#> PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> SELECT DISTINCT ?functType WHERE { ?functType asawoo:isComposedOf* ?functCompType . ?functType asawoo:isComposedOf* ?functCompType2 . ?functInstance2 rdf:type ?functCompType2 . FILTER NOT EXISTS { ?functInstance rdf:type ?functCompType . } }',
+            incompleteLocalFunctionalitiesQuery = 'PREFIX asawoo: <http://liris.cnrs.fr/asawoo/vocab#> PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> SELECT DISTINCT ?functType WHERE { ?functType asawoo:isComposedOf ?functCompType . ?functType asawoo:isComposedOf ?functCompType2 . ?functInstance2 rdf:type ?functCompType2 . FILTER NOT EXISTS { ?functInstance rdf:type ?functCompType . } }',
 
             mimeType = mime.contentType(extensionOwlRepository);
 
@@ -84,9 +81,9 @@ describe('Asawoo incomplete functionalities', function () {
                 return localfunctionalities.query(incompleteLocalFunctionalitiesQuery)
             })
             .then(function(r) {
-                r.length.should.equal(2)
-                r[0]['fun']['value'].should.equal('http://liris.cnrs.fr/asawoo/functionality/temperatureRegulation')
-                r[1]['fun']['value'].should.equal('http://liris.cnrs.fr/asawoo/functionality/temperatureRegulationBySMS')
+                r.length.should.equal(2);
+                r[0]['functType']['value'].should.equal('http://liris.cnrs.fr/asawoo/functionality/temperatureRegulation')
+                r[1]['functType']['value'].should.equal('http://liris.cnrs.fr/asawoo/functionality/temperatureRegulationBySMS')
             })
     });
 });
