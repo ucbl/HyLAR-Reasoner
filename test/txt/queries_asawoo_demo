@@ -1,34 +1,43 @@
 # Complete and incomplete functionalities
-PREFIX asawoo: <http://liris.cnrs.fr/asawoo/vocab#>
+PREFIX asawoo: <http://liris.cnrs.fr/asawoo/vocab/>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 CONSTRUCT { ?functType rdf:type ?functType }
 WHERE {
-    <http://liris.cnrs.fr/asawoo#WindowMotor> asawoo:hasCapability ?capInstance .
-    ?capInstance rdf:type ?capType . ?capType rdfs:subClassOf asawoo:Capability .
-    { ?functType asawoo:isImplementedBy ?capType . }
-    UNION { ?primaryFunctType asawoo:isImplementedBy ?capType . ?functType asawoo:isComposedOf* ?primaryFunctType . }
+	?capInstance rdf:type ?capType .
+	?capType rdfs:subClassOf asawoo:Capability .
+	{
+		?functType asawoo:isImplementedBy ?capType .
+	} UNION {
+		?primaryFunctType asawoo:isImplementedBy ?capType . ?functType asawoo:isComposedOf* ?primaryFunctType .
+	}
+
 }
 
 # Incomplete functionalities
-PREFIX asawoo: <http://liris.cnrs.fr/asawoo/vocab#>
+PREFIX asawoo: <http://liris.cnrs.fr/asawoo/vocab/>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
-CONSTRUCT { ?functType rdf:type ?functType } WHERE {
-		?functType asawoo:isComposedOf* ?primaryFunctType .
+CONSTRUCT { ?functType rdf:type ?functType }
+WHERE {
+		?functType asawoo:isComposedOf ?primaryFunctType .
+		?functType asawoo:isComposedOf ?primaryFunctType2 .
 		?primaryFunctType asawoo:isImplementedBy ?capType .
+		?primaryFunctType2 asawoo:isImplementedBy ?capType2 .
+		?cap2 rdf:type ?capType2 .
 		FILTER NOT EXISTS {
 			?cap rdf:type ?capType .
 		}
 }
 
-# Local functionalities partially available
-PREFIX asawoo: <http://liris.cnrs.fr/asawoo/vocab#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-SELECT DISTINCT ?functType WHERE {
-	?functType asawoo:isComposedOf* ?functCompType .
-	?functType asawoo:isComposedOf* ?functCompType2 .
-	?functInstance2 rdf:type ?functCompType2 .
-	FILTER NOT EXISTS { ?functInstance rdf:type ?functCompType . }
-}
+# Local functionalities partially available and their missing sub-functionalities
+PREFIX asawoo: <http://liris.cnrs.fr/asawoo/vocab/>
+ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+ SELECT DISTINCT ?incompleteFunctType ?missingFunctType WHERE {
+     ?incompleteFunctType asawoo:isComposedOf* ?missingFunctType .
+     ?incompleteFunctType asawoo:isComposedOf* ?functCompType2 .
+     ?functInstance2 rdf:type ?functCompType2 .
+     FILTER NOT EXISTS { ?functInstance rdf:type ?missingFunctType . }
+     FILTER (str(?incompleteFunctType) != str(?missingFunctType))
+ }

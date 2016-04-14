@@ -16,7 +16,7 @@ Solver = {
      * Evaluates a set of rules over a set of facts.
      * @param rs
      * @param facts
-     * @returns Consequences of the evaluation.
+     * @returns Array of the evaluation.
      */
     evaluateRuleSet: function(rs, facts) {
         var newCons, cons = [];
@@ -236,8 +236,8 @@ Solver = {
      * @returns {*}
      */
     replaceMapping: function(mapping, unReplacedFact, causedBy, graphs) {
-        var replacedFact = new Fact(),
-            replacedCauses = [];
+        var replacedFact = new Fact();
+
         if (mapping == {}) {
             return unReplacedFact;
         }

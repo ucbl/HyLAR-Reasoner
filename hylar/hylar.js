@@ -25,6 +25,7 @@ console.notify = function(msg) {
 
 function Hylar() {
     this.dict = new Dictionary();
+    this.sm = new StorageManager();
 }
 
 /**
@@ -87,17 +88,17 @@ Hylar.prototype.load = function(ontologyTxt, mimeType, reasoningMethod) {
     this.updateReasoningMethod(reasoningMethod);
     this.dict.setContent({});
 
-    return StorageManager.init().then(function() {
+    return this.sm.init().then(function() {
         switch(mimeType) {
             case 'application/xml':
-                return StorageManager.loadRdfXml(ontologyTxt)
+                return that.sm.loadRdfXml(ontologyTxt)
                     .then(function() {
                         console.notify('Store initialized successfully.');
                         return that.classify();
                     });
                 break;
             case 'application/rdf+xml':
-                return StorageManager.loadRdfXml(ontologyTxt)
+                return that.sm.loadRdfXml(ontologyTxt)
                     .then(function() {
                         return that.classify();
                     });
@@ -108,7 +109,7 @@ Hylar.prototype.load = function(ontologyTxt, mimeType, reasoningMethod) {
                 return false;
                 break;
             default:
-                return StorageManager.load(ontologyTxt, mimeType)
+                return that.sm.load(ontologyTxt, mimeType)
                     .then(function() {
                         return that.classify();
                     }, function(error) {
@@ -143,7 +144,7 @@ Hylar.prototype.query = function(query, reasoningMethod) {
  * @returns {String}
  */
 Hylar.prototype.getStorage = function() {
-    return StorageManager.getContent()
+    return this.sm.getContent()
         .then(function(content) {
             return content.triples.toString();
         });
@@ -156,7 +157,7 @@ Hylar.prototype.getStorage = function() {
  * @returns {*}
  */
 Hylar.prototype.setStorage = function(ttl) {
-    return StorageManager.createStoreWith(ttl);
+    return this.sm.createStoreWith(ttl);
 };
 
 /**
@@ -187,7 +188,7 @@ Hylar.prototype.treatUpdate = function(sparql) {
         FeIns, FeDel, F = [],
         turtle, update, insertion, deletion, kbT;
 
-    return StorageManager.query(
+    return this.sm.query(
             'CONSTRUCT { ?a ?b ?c } ' +
             'WHERE { ?a ?b ?c . }')
         .then(function(r) {
@@ -236,11 +237,11 @@ Hylar.prototype.treatUpdate = function(sparql) {
         })
         .then(function(obj) {
             turtle = obj;
-            if(turtle.delete != '') return StorageManager.delete(turtle.delete);
+            if(turtle.delete != '') return that.sm.delete(turtle.delete);
             else return true;
         })
         .then(function(d) {
-            if(turtle.insert != '') return StorageManager.insert(turtle.insert);
+            if(turtle.insert != '') return that.sm.insert(turtle.insert);
             else return true;
         });
     console.notify('Update completed.');
@@ -258,7 +259,7 @@ Hylar.prototype.treatSelectOrConstruct = function(query) {
             parsedQuery = ParsingInterface.parseSPARQL(query),
             queryType = parsedQuery.queryType;
 
-        return StorageManager.query(query)
+        return this.sm.query(query)
             .then(function(r) {
                 if(queryType == 'SELECT') {
                     triples = ParsingInterface.constructTriplesFromResultBindings(parsedQuery, r)
@@ -285,7 +286,7 @@ Hylar.prototype.treatSelectOrConstruct = function(query) {
             });
 
     } else {
-        return StorageManager.query(query);
+        return this.sm.query(query);
     }
 };
 
@@ -313,7 +314,7 @@ Hylar.prototype.classify = function() {
     var that = this;
     console.notify('Classification started.');
 
-    return StorageManager.query('CONSTRUCT { ?a ?b ?c } WHERE { ?a ?b ?c }')
+    return this.sm.query('CONSTRUCT { ?a ?b ?c } WHERE { ?a ?b ?c }')
         .then(function(r) {
             var facts = [], triple;
 
@@ -341,7 +342,7 @@ Hylar.prototype.classify = function() {
         })
         .then(function(ttl) {
             console.notify('Classification succeeded.');
-            return StorageManager.insert(ttl.replace(/(\n|\r)/g, ''));
+            return that.sm.insert(ttl.replace(/(\n|\r)/g, ''));
         });
 };
 

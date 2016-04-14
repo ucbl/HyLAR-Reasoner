@@ -221,8 +221,7 @@ ReasoningEngine = {
             Rins = [],
             Fe = Logics.getOnlyExplicitFacts(F),
             Fi = Logics.getOnlyImplicitFacts(F),
-            superSet,
-            validationResults, validatedFacts = [];
+            superSet, validatedFacts = [];
 
         if(FeDel.length > 0) {
             FeDel = Logics.invalidate(Fe, FeDel);
