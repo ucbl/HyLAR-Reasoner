@@ -36,28 +36,188 @@ Solver = {
      */
     evaluateThroughRestriction: function(rule, facts) {
         var causesToMap, i = 0,
-            consequences = [];
+            consequences = [],
+            mappingList = [];
+
         rule.orderCausesByMostRestrictive();
-        causesToMap = [rule.causes[i]];
+        causesToMap = [rule.causes[i]]; // Init with first cause
 
         while (i < rule.causes.length) {
-            causesToMap = this.replaceNextCauses(causesToMap, rule.causes[i+1], facts);
+            causesToMap = this.substituteNextCauses(causesToMap, rule.causes[i+1], facts);
             i++;
         }
 
-        for (var i = 0; i < causesToMap.length; i++) {
+        // The loop is over, all mappings have been returned
+        mappingList = causesToMap;
+
+        for (var i = 0; i < mappingList.length; i++) {
             var causedBy = [],
                 consequenceGraphs = [];
+            // Replace mappings on all causes
             for (var k = 0; k < rule.causes.length; k++) {
-                causedBy.push(this.replaceMapping(causesToMap[i], rule.causes[k]).toString());
-                consequenceGraphs = Logics.uniques(consequenceGraphs, causesToMap[i].graphs);
+                causedBy.push(this.substituteFactVariablesWithMapping(mappingList[i], rule.causes[k]).toString());
+                consequenceGraphs = Logics.uniques(consequenceGraphs, mappingList[i].graphs);
             }
+            // Replace mappings on all consequences
             for (var j = 0; j < rule.consequences.length; j++) {
-                consequences.push(this.replaceMapping(causesToMap[i], rule.consequences[j], causedBy, consequenceGraphs));
+                consequences.push(this.substituteFactVariablesWithMapping(mappingList[i], rule.consequences[j], causedBy, consequenceGraphs));
             }
         }
 
         return consequences;
+    },
+
+    /**
+     * Updates the mapping of the current cause
+     * given the next cause of a rule, over a
+     * set of facts.
+     * @param currentCauses
+     * @param nextCause
+     * @param facts
+     * @returns {Array}
+     */
+    substituteNextCauses: function(currentCauses, nextCause, facts) {
+        var substitutedNextCauses = [],
+            mappings = [];
+
+        for (var i = 0; i < currentCauses.length; i++) {
+
+            for (var j = 0; j < facts.length; j++) {
+
+                // Get the mapping of the current cause ...
+                var mapping = currentCauses[i].mapping,
+                    substitutedNextCause,
+                    newMapping;
+                // ... or build a fresh one if it does not exist
+                if (mapping === undefined) {
+                    mapping = {};
+                }
+
+                // Update the mapping using pattern matching
+                newMapping = this.factMatchesCause(facts[j], currentCauses[i], mapping);
+
+                // If the current fact matches the current cause ...
+                if (newMapping) {
+                    // If there are other causes to be checked...
+                    if (nextCause) {
+                        // Substitute the next cause's variable with the new mapping
+                        substitutedNextCause = this.substituteFactVariablesWithMapping(newMapping, nextCause);
+                        substitutedNextCause.mapping = newMapping;
+                        substitutedNextCauses.push(substitutedNextCause);
+                    } else {
+                        // Otherwise, add the new mapping to the global mapping array
+                        mappings.push(newMapping);
+                    }
+                }
+            }
+        }
+
+        if(nextCause) {
+            return substitutedNextCauses;
+        } else {
+            return mappings;
+        }
+    },
+
+    /**
+     * Returns a new or updated mapping if a fact matches a cause,
+     * return false otherwise.
+     * @param fact
+     * @param cause
+     * @param mapping
+     * @returns {*}
+     */
+    factMatchesCause: function(fact, cause, mapping) {
+        var localMapping = {};
+
+        // Checks and update localMapping if matches
+        if (!this.factElemMatchesCauseElem(fact.subject, cause.subject, mapping, localMapping)) {
+            return false;
+        }
+        if (!this.factElemMatchesCauseElem(fact.predicate, cause.predicate, mapping, localMapping)) {
+            return false;
+        }
+        if (!this.factElemMatchesCauseElem(fact.object, cause.object, mapping, localMapping)) {
+            return false;
+        }
+
+        // Merges local and global mapping
+        for (var key in mapping) {
+            localMapping[key] = mapping[key];
+        }
+
+        // Updates graph references
+        if (localMapping.graphs) {
+            localMapping.graphs = Logics.uniques(localMapping.graphs, fact.graphs);
+        } else {
+            localMapping.graphs = [];
+        }
+
+        // The new mapping is updated
+        return localMapping;
+    },
+
+    factElemMatchesCauseElem: function(factElem, causeElem, globalMapping, localMapping) {
+        if (Logics.isVariable(causeElem)) {
+            if (globalMapping[causeElem] && (globalMapping[causeElem] != factElem)) {
+                return false;
+            } else {
+                localMapping[causeElem] = factElem;
+            }
+        } else {
+            if (factElem != causeElem) {
+                return false;
+            }
+        }
+
+        return true;
+    },
+
+    /**
+     * Substitutes an element given the mapping.
+     * @param elem
+     * @param mapping
+     * @returns {*}
+     */
+    substituteElementVariablesWithMapping: function(elem, mapping) {
+        if(Logics.isVariable(elem)) {
+            if (mapping[elem] !== undefined) {
+                return mapping[elem]
+            }
+        }
+        return elem;
+    },
+
+    /**
+     * Substitutes fact's variable members (sub, pred, obj)
+     * given the mapping.
+     * @param mapping
+     * @param notYetSubstitutedFact
+     * @param causedBy
+     * @param graphs
+     * @returns {*}
+     */
+    substituteFactVariablesWithMapping: function(mapping, notYetSubstitutedFact, causedBy, graphs) {
+        var substitutedFact = new Fact();
+
+        if (mapping == {}) {
+            return notYetSubstitutedFact;
+        }
+
+        if (causedBy) {
+            substitutedFact.causedBy = [causedBy];
+            substitutedFact.explicit = false;
+        }
+
+        if (graphs) {
+            substitutedFact.graphs = graphs;
+        }
+
+        substitutedFact.subject = this.substituteElementVariablesWithMapping(notYetSubstitutedFact.subject, mapping);
+        substitutedFact.predicate = this.substituteElementVariablesWithMapping(notYetSubstitutedFact.predicate, mapping);
+        substitutedFact.object = this.substituteElementVariablesWithMapping(notYetSubstitutedFact.object, mapping);
+
+        return substitutedFact;
     },
 
     checkProvability: function(fact, R, C, Fe, Y, P, V, undeterminedImplicitFacts) {
@@ -108,154 +268,6 @@ Solver = {
             }
         }
         return;
-    },
-
-    /**
-     * Updates the mapping of the current cause
-     * given the next cause of a rule, over a
-     * set of facts.
-     * @param currentCauses
-     * @param nextCause
-     * @param facts
-     * @returns {Array}
-     */
-    replaceNextCauses: function(currentCauses, nextCause, facts) {
-        var replacedNextCauses = [],
-            mappings = [];
-        for (var i = 0; i < currentCauses.length; i++) {
-            for (var j = 0; j < facts.length; j++) {
-                var mapping = currentCauses[i].mapping,
-                    replacedNextCause,
-                    newMapping;
-                if (mapping === undefined) {
-                    mapping = {};
-                }
-
-                newMapping = this.factMatchesCause(facts[j], currentCauses[i], mapping);
-                if (newMapping) {
-                    if (nextCause) {
-                        replacedNextCause = this.replaceMapping(newMapping, nextCause);
-                        replacedNextCause.mapping = newMapping;
-                        replacedNextCauses.push(replacedNextCause);
-                    } else {
-                        mappings.push(newMapping);
-                    }
-                }
-            }
-        }
-
-        if(nextCause) {
-            return replacedNextCauses;
-        } else {
-            return mappings;
-        }
-    },
-
-    /**
-     * Returns a new or updated mapping if a fact matches a cause,
-     * return false otherwise.
-     * @param fact
-     * @param cause
-     * @param mapping
-     * @returns {*}
-     */
-    factMatchesCause: function(fact, cause, mapping) {
-        var localMapping = {}; // Generates new mapping
-
-        if (Logics.isVariable(cause.subject)) {
-            if (mapping[cause.subject] && (mapping[cause.subject] != fact.subject)) {
-                return false;
-            } else {
-                localMapping[cause.subject] = fact.subject;
-            }
-        } else {
-            if (fact.subject != cause.subject) {
-                return false;
-            }
-        }
-
-        if (Logics.isVariable(cause.predicate)) {
-            if (mapping[cause.predicate] && (mapping[cause.predicate] != fact.predicate)) {
-                return false;
-            } else {
-                localMapping[cause.predicate] = fact.predicate;
-            }
-        } else {
-            if (fact.predicate != cause.predicate) {
-                return false;
-            }
-        }
-
-        if (Logics.isVariable(cause.object)) {
-            if (mapping[cause.object] && (mapping[cause.object] != fact.object)) {
-                return false;
-            } else {
-                localMapping[cause.object] = fact.object;
-            }
-        } else {
-            if (fact.object != cause.object) {
-                return false;
-            }
-        }
-
-        for (var key in mapping) {
-            localMapping[key] = mapping[key];
-        }
-
-        if (localMapping.graphs) {
-            localMapping.graphs = Logics.uniques(localMapping.graphs, fact.graphs);
-        } else {
-            localMapping.graphs = [];
-        }
-
-        return localMapping;
-    },
-
-    /**
-     * Replaces an element given the mapping.
-     * @param elem
-     * @param mapping
-     * @returns {*}
-     */
-    replaceMappingOnElement: function(elem, mapping) {
-        if(Logics.isVariable(elem)) {
-            if (mapping[elem] !== undefined) {
-                return mapping[elem]
-            }
-        }
-        return elem;
-    },
-
-    /**
-     * Replaces fact's variable members (sub, pred, obj)
-     * given the mapping.
-     * @param mapping
-     * @param unReplacedFact
-     * @param causedBy
-     * @param graphs
-     * @returns {*}
-     */
-    replaceMapping: function(mapping, unReplacedFact, causedBy, graphs) {
-        var replacedFact = new Fact();
-
-        if (mapping == {}) {
-            return unReplacedFact;
-        }
-
-        if (causedBy) {
-            replacedFact.causedBy = [causedBy];
-            replacedFact.explicit = false;
-        }
-
-        if (graphs) {
-            replacedFact.graphs = graphs;
-        }
-
-        replacedFact.subject = this.replaceMappingOnElement(unReplacedFact.subject, mapping);
-        replacedFact.predicate = this.replaceMappingOnElement(unReplacedFact.predicate, mapping);
-        replacedFact.object = this.replaceMappingOnElement(unReplacedFact.object, mapping);
-
-        return replacedFact;
     }
 };
 
