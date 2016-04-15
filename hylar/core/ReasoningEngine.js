@@ -113,6 +113,7 @@ ReasoningEngine = {
     },
 
     incrementalBf: function (FeAdd, FeDel, F, R) {
+
         var backwardForwardDelete = function(Fe, Fi, FeDel, R) {
             var C = [], D = [], P = [],
                 Y = [], O = [], S = [],
@@ -137,7 +138,7 @@ ReasoningEngine = {
                     FiWithoutO = Logics.minus(Fi, O);
 
                     D = Logics.uniques(D, Solver.evaluateRuleSet(matchedRules, FiWithoutO));
-                    Logics.uniques(O, [D[i]]);
+                    Logics.addToFactSet(O, D[i]);
                 }
             }
 
@@ -146,6 +147,8 @@ ReasoningEngine = {
             for (var i = 0; i < DWithoutP.length; i++) {
                 Fi = Logics.minus(Fi, [DWithoutP[i]]);
             }
+
+            return Fi;
         };
 
         var Rins = [],
@@ -159,7 +162,7 @@ ReasoningEngine = {
             FiAfterBf = Fi;
 
         if(FeDel && FeDel.length) {
-            backwardForwardDelete(Fe, FiAfterBf, FeDel, R);
+            FiAfterBf = backwardForwardDelete(Fe, FiAfterBf, FeDel, R);
             FiAdd = Logics.minus(FiAfterBf, Fi);
         }
 

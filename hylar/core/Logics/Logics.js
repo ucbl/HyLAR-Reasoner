@@ -420,8 +420,8 @@ module.exports = {
 
     addToFactSet: function(factSet, fact) {
         var originalFactSetLength = factSet.length;
-        factSet = this.uniques(factSet, [fact]);
-        if (factSet.length > originalFactSetLength) {
+        if (this.uniques(factSet, [fact]).length > originalFactSetLength) {
+            factSet.push(fact);
             return true;
         } else {
             return false;

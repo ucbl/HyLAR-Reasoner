@@ -54,8 +54,8 @@ Solver = {
             var causedBy = [],
                 consequenceGraphs = [];
             // Replace mappings on all causes
-            for (var k = 0; k < rule.causes.length; k++) {
-                causedBy.push(this.substituteFactVariablesWithMapping(mappingList[i], rule.causes[k]).toString());
+            for (var j = 0; j < rule.causes.length; j++) {
+                causedBy.push(this.substituteFactVariablesWithMapping(mappingList[i], rule.causes[j]).toString());
                 consequenceGraphs = Logics.uniques(consequenceGraphs, mappingList[i].graphs);
             }
             // Replace mappings on all consequences
@@ -223,7 +223,7 @@ Solver = {
     checkProvability: function(fact, R, C, Fe, Y, P, V, undeterminedImplicitFacts) {
         var matchedRules, consequences;
 
-        if (Logics.addToFactSet(C, fact)) {
+        if (!Logics.addToFactSet(C, fact)) {
             return;
         }
 
@@ -242,6 +242,7 @@ Solver = {
                 return;
             }
         }
+        return;
     },
 
     saturate: function(R, C, Fe, Y, P, V) {
@@ -250,7 +251,7 @@ Solver = {
         for (var i = 0; i < C.length; i++) {
             if ((Logics.uniques([C[i]], Fe).length == Fe.length) ||
                 (Logics.uniques([C[i]], Y).length == Y.length)) {
-                P = Logics.uniques(P, [C[i]]);
+                Logics.addToFactSet(P, C[i]);
             }
         }
 
