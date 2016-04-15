@@ -4,6 +4,7 @@
 
 var Fact = require('./Fact');
 var Logics = require('./Logics');
+var AnnotatedQuery = require('./AnnotatedQuery');
 
 /**
  * Core solver used to evaluate rules against facts
@@ -55,12 +56,12 @@ Solver = {
                 consequenceGraphs = [];
             // Replace mappings on all causes
             for (var j = 0; j < rule.causes.length; j++) {
-                causedBy.push(this.substituteFactVariablesWithMapping(mappingList[i], rule.causes[j]).toString());
+                causedBy.push(this.substituteFactVariables(mappingList[i], rule.causes[j]).toString());
                 consequenceGraphs = Logics.uniques(consequenceGraphs, mappingList[i].graphs);
             }
             // Replace mappings on all consequences
             for (var j = 0; j < rule.consequences.length; j++) {
-                consequences.push(this.substituteFactVariablesWithMapping(mappingList[i], rule.consequences[j], causedBy, consequenceGraphs));
+                consequences.push(this.substituteFactVariables(mappingList[i], rule.consequences[j], causedBy, consequenceGraphs));
             }
         }
 
@@ -101,7 +102,7 @@ Solver = {
                     // If there are other causes to be checked...
                     if (nextCause) {
                         // Substitute the next cause's variable with the new mapping
-                        substitutedNextCause = this.substituteFactVariablesWithMapping(newMapping, nextCause);
+                        substitutedNextCause = this.substituteFactVariables(newMapping, nextCause);
                         substitutedNextCause.mapping = newMapping;
                         substitutedNextCauses.push(substitutedNextCause);
                     } else {
@@ -197,7 +198,7 @@ Solver = {
      * @param graphs
      * @returns {*}
      */
-    substituteFactVariablesWithMapping: function(mapping, notYetSubstitutedFact, causedBy, graphs) {
+    substituteFactVariables: function(mapping, notYetSubstitutedFact, causedBy, graphs) {
         var substitutedFact = new Fact();
 
         if (mapping == {}) {
@@ -220,8 +221,9 @@ Solver = {
         return substitutedFact;
     },
 
-    checkProvability: function(fact, R, C, Fe, Y, P, V, undeterminedImplicitFacts) {
-        var matchedRules, consequences;
+    checkProvability: function(fact, R, C, Fe, Y, P, V, IWithoutS) {
+        var matchedRules, consequences,
+            tuples, evalRes;
 
         if (!Logics.addToFactSet(C, fact)) {
             return;
@@ -233,20 +235,24 @@ Solver = {
             return;
         }
 
-        matchedRules = Logics.restrictRuleSet(R, [fact]);
-        consequences = this.evaluateRuleSet(matchedRules, undeterminedImplicitFacts);
+        tuples = this.matchHead(R, fact);
 
-        for (var i = 0; i < consequences.length; i++) {
-            this.checkProvability(consequences[i]);
-            if (Logics.uniques(C, [fact]).length == C.length) {
-                return;
+        for (var i = 0; i < tuples.length; i++) {
+            evalRes = this.eval(IWithoutS, tuples[i].annotatedQuery, [], tuples[i].mapping);
+            for (var j = 0; j < evalRes.length; j++) {
+                for (var k = 0; k < tuples[i].rule.cause.length; k++) {
+                    this.checkProvability(evalRes[j], R, C, Fe, Y, P, V, IWithoutS);
+                }
+                if (Logics.uniques(P, fact).lenght == P.length) {
+                    return;
+                }
             }
         }
-        return;
     },
 
     saturate: function(R, C, Fe, Y, P, V) {
-        var consequences;
+        var consequences,
+            tuplesMatchBody;
 
         for (var i = 0; i < C.length; i++) {
             if ((Logics.uniques([C[i]], Fe).length == Fe.length) ||
@@ -257,6 +263,7 @@ Solver = {
 
         for (var i = 0; i < P.length; i++) {
             if (Logics.addToFactSet(V, P[i])) {
+                tuplesMatchBody = this.matchBody(R, P[i]);
                 consequences = this.evaluateRuleSet(R, P[i]);
 
                 for (var j = 0; j < consequences.length; j++) {
@@ -269,6 +276,60 @@ Solver = {
             }
         }
         return;
+    },
+
+    matchHead: function(ruleSet, fact) {
+        var tuples = [],
+            atom;
+        for (var i = 0; i < ruleSet.length; i++) {
+            var mapping = {},
+                annotatedQuery = new AnnotatedQuery();
+
+            for (var j = 0; j < ruleSet[i].consequences.length; j++) {
+                mapping = this.factMatchesCause(fact, ruleSet[i].causes[j], mapping);
+                atom = new AnnotatedQuery.atom(this.substituteFactVariables(mapping, ruleSet[i].consequences[j]));
+                annotatedQuery.addAtom(atom);
+            }
+            tuples.push({
+                mapping: (mapping || {}),
+                rule: ruleSet[i],
+                annotatedQuery: annotatedQuery
+            });
+        }
+        return tuples;
+    },
+
+    matchBody: function(ruleSet, fact) {
+        var tuples = [],
+            atom;
+        for (var i = 0; i < ruleSet.length; i++) {
+            var mapping = {},
+                annotatedQuery = new AnnotatedQuery();
+
+            for (var j = 0; j < ruleSet[i].causes.length; j++) {
+                mapping = this.factMatchesCause(fact, ruleSet[i].causes[j], mapping);
+                atom = new AnnotatedQuery.atom(this.substituteFactVariables(mapping, ruleSet[i].causes[j]));
+                annotatedQuery.addAtom(atom);
+            }
+            tuples.push({
+                mapping: mapping,
+                rule: ruleSet[i],
+                annotatedQuery: annotatedQuery
+            });
+        }
+        return tuples;
+    },
+
+    eval: function(factSetToEval, annotatedQuery, factSet, mapping) {
+        var mappings = [],
+            atom,
+            factSetRestriction = Logics.minus(factSetToEval, factSet);
+
+        for (var i = 0; i < annotatedQuery.atomsLen(); i++) {
+            if (annotatedQuery.getAtom(i).annotation == 'EMPTY') {
+                // todo
+            }
+        }
     }
 };
 
