@@ -294,8 +294,11 @@ Solver = {
             mapping = this.factMatches(fact, head, mapping);
 
             if (mapping) {
-                atom = new AnnotatedQuery.atom(head);
-                annotatedQuery.addAtom(atom);
+                for (var j = 0; j < ruleSet[i].causes.length; j++) {
+                    atom = new AnnotatedQuery.atom(ruleSet[i].causes[j]);
+                    annotatedQuery.addAtom(atom);
+                }
+
                 tuples.push({
                     mapping: mapping,
                     rule: ruleSet[i],
