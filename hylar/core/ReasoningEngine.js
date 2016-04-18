@@ -114,6 +114,8 @@ ReasoningEngine = {
 
     incrementalBf: function (FeAdd, FeDel, F, R) {
 
+        R = Logics.decomposeRuleHeadsIntoSeveralRules(R);
+
         var backwardForwardDelete = function(Fe, Fi, FeDel, R) {
             var C = [], D = [], P = [],
                 Y = [], O = [], S = [],

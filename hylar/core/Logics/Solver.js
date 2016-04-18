@@ -95,7 +95,7 @@ Solver = {
                 }
 
                 // Update the mapping using pattern matching
-                newMapping = this.factMatchesCause(facts[j], currentCauses[i], mapping);
+                newMapping = this.factMatches(facts[j], currentCauses[i], mapping);
 
                 // If the current fact matches the current cause ...
                 if (newMapping) {
@@ -121,24 +121,24 @@ Solver = {
     },
 
     /**
-     * Returns a new or updated mapping if a fact matches a cause,
+     * Returns a new or updated mapping if a fact matches a rule cause or consequence,
      * return false otherwise.
      * @param fact
-     * @param cause
+     * @param ruleFact
      * @param mapping
      * @returns {*}
      */
-    factMatchesCause: function(fact, cause, mapping) {
+    factMatches: function(fact, ruleFact, mapping) {
         var localMapping = {};
 
         // Checks and update localMapping if matches
-        if (!this.factElemMatchesCauseElem(fact.subject, cause.subject, mapping, localMapping)) {
+        if (!this.factElemMatches(fact.subject, ruleFact.subject, mapping, localMapping)) {
             return false;
         }
-        if (!this.factElemMatchesCauseElem(fact.predicate, cause.predicate, mapping, localMapping)) {
+        if (!this.factElemMatches(fact.predicate, ruleFact.predicate, mapping, localMapping)) {
             return false;
         }
-        if (!this.factElemMatchesCauseElem(fact.object, cause.object, mapping, localMapping)) {
+        if (!this.factElemMatches(fact.object, ruleFact.object, mapping, localMapping)) {
             return false;
         }
 
@@ -158,7 +158,7 @@ Solver = {
         return localMapping;
     },
 
-    factElemMatchesCauseElem: function(factElem, causeElem, globalMapping, localMapping) {
+    factElemMatches: function(factElem, causeElem, globalMapping, localMapping) {
         if (Logics.isVariable(causeElem)) {
             if (globalMapping[causeElem] && (globalMapping[causeElem] != factElem)) {
                 return false;
@@ -240,10 +240,10 @@ Solver = {
         for (var i = 0; i < tuples.length; i++) {
             evalRes = this.eval(IWithoutS, tuples[i].annotatedQuery, [], tuples[i].mapping);
             for (var j = 0; j < evalRes.length; j++) {
-                for (var k = 0; k < tuples[i].rule.cause.length; k++) {
+                for (var k = 0; k < tuples[i].rule.causes.length; k++) {
                     this.checkProvability(evalRes[j], R, C, Fe, Y, P, V, IWithoutS);
                 }
-                if (Logics.uniques(P, fact).lenght == P.length) {
+                if (Logics.uniques(P, fact).length == P.length) {
                     return;
                 }
             }
@@ -264,7 +264,7 @@ Solver = {
         for (var i = 0; i < P.length; i++) {
             if (Logics.addToFactSet(V, P[i])) {
                 tuplesMatchBody = this.matchBody(R, P[i]);
-                consequences = this.evaluateRuleSet(R, P[i]);
+                //consequences = this.evaluateRuleSet(R, P[i]);
 
                 for (var j = 0; j < consequences.length; j++) {
                     if (Logics.uniques([consequences[i]], C)) {
@@ -281,55 +281,86 @@ Solver = {
     matchHead: function(ruleSet, fact) {
         var tuples = [],
             atom;
+
         for (var i = 0; i < ruleSet.length; i++) {
             var mapping = {},
-                annotatedQuery = new AnnotatedQuery();
+                annotatedQuery = new AnnotatedQuery(),
+                head = ruleSet[i].consequences[0];
 
-            for (var j = 0; j < ruleSet[i].consequences.length; j++) {
-                mapping = this.factMatchesCause(fact, ruleSet[i].causes[j], mapping);
-                atom = new AnnotatedQuery.atom(this.substituteFactVariables(mapping, ruleSet[i].consequences[j]));
-                annotatedQuery.addAtom(atom);
+            if (ruleSet[i].consequences.length > 1) {
+                throw 'B/F algorithm expects unique consequences (HEAD)!';
             }
-            tuples.push({
-                mapping: (mapping || {}),
-                rule: ruleSet[i],
-                annotatedQuery: annotatedQuery
-            });
+
+            mapping = this.factMatches(fact, head, mapping);
+
+            if (mapping) {
+                atom = new AnnotatedQuery.atom(head);
+                annotatedQuery.addAtom(atom);
+                tuples.push({
+                    mapping: mapping,
+                    rule: ruleSet[i],
+                    annotatedQuery: annotatedQuery
+                });
+            }
         }
+
         return tuples;
     },
 
     matchBody: function(ruleSet, fact) {
-        var tuples = [],
-            atom;
+        var tuples = [];
+
         for (var i = 0; i < ruleSet.length; i++) {
-            var mapping = {},
+            var mapping = {}, allAtomsAreGround,
                 annotatedQuery = new AnnotatedQuery();
 
             for (var j = 0; j < ruleSet[i].causes.length; j++) {
-                mapping = this.factMatchesCause(fact, ruleSet[i].causes[j], mapping);
+                mapping = this.factMatches(fact, ruleSet[i].causes[j], mapping);
                 atom = new AnnotatedQuery.atom(this.substituteFactVariables(mapping, ruleSet[i].causes[j]));
                 annotatedQuery.addAtom(atom);
             }
-            tuples.push({
-                mapping: mapping,
-                rule: ruleSet[i],
-                annotatedQuery: annotatedQuery
-            });
+            allAtomsAreGround = true;
+            for (var j = 0; j < annotatedQuery.atomsLen(); j++) {
+                if (!annotatedQuery.getAtom(j).value.isGroundWith(mapping)) {
+                    allAtomsAreGround = false;
+                    break;
+                }
+            }
+            if (allAtomsAreGround) {
+                tuples.push({
+                    mapping: (mapping || {}),
+                    rule: ruleSet[i],
+                    annotatedQuery: annotatedQuery
+                });
+            }
         }
         return tuples;
     },
 
     eval: function(factSetToEval, annotatedQuery, factSet, mapping) {
-        var mappings = [],
-            atom,
-            factSetRestriction = Logics.minus(factSetToEval, factSet);
+        var mappings = [], currentNewMapping;
+        factSetToEval = Logics.minus(factSetToEval, factSet);
 
         for (var i = 0; i < annotatedQuery.atomsLen(); i++) {
-            if (annotatedQuery.getAtom(i).annotation == 'EMPTY') {
-                // todo
+            if (annotatedQuery.getAtom(i).annotation == 'DIFF') {
+                for (var j = 0; j < factSetToEval.length; j++) {
+                    currentNewMapping = this.factMatches(factSetToEval[j], annotatedQuery.getAtom(i).value, this.cloneMapping(mapping));
+                    if (currentNewMapping) {
+                        mappings.push(currentNewMapping);
+                    }
+                }
             }
         }
+
+        return mappings;
+    },
+
+    cloneMapping: function(mapping) {
+        var clone = {};
+        for (var key in mapping) {
+            clone[key] = mapping[key];
+        }
+        return clone;
     }
 };
 

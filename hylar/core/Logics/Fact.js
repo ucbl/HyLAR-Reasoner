@@ -4,20 +4,21 @@
 
 /**
  * Fact in the form subClassOf(a, b)
- * @param name fact's/axiom name (e.g. subClassOf)
- * @param li left individual
- * @param ri right individual
+ * @param pred fact's/axiom name (e.g. subClassOf)
+ * @param sub left individual
+ * @param obj right individual
  * @param originFacts array of facts causing this
  * @constructor
  */
-Fact = function(name, li, ri, originConjs, expl, graphs) {
+Fact = function(pred, sub, obj, originConjs, expl, graphs) {
     if(originConjs === undefined) originConjs = [];
     if(graphs === undefined) graphs = [];
     if(expl === undefined) expl = true;
 
-    this.predicate = name;
-    this.subject = li;
-    this.object = ri;
+    this.predicate = pred;
+    this.subject = sub;
+    this.object = obj;
+
     this.causedBy = originConjs;
     this.explicit = expl;
     this.graphs = graphs;
@@ -34,6 +35,19 @@ Fact.prototype = {
         var e;
         this.explicit ? e = 'E' : e = 'I';
         return e + '(' + this.subject + ', ' + this.predicate + ', ' + this.object + ')';
+    },
+
+    isGroundWith: function(mapping) {
+        if (mapping[this.subject] === undefined) {
+            return false;
+        }
+        if (mapping[this.predicate] === undefined) {
+            return false;
+        }
+        if (mapping[this.object] === undefined) {
+            return false;
+        }
+        return true;
     },
 
     /**

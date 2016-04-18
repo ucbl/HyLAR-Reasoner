@@ -3,6 +3,8 @@
  * Logics module
  */
 
+var Rule = require('./Rule');
+
 /**
  * All necessary stuff around the Logics module
  * @type {{substractFactSets: Function, mergeFactSets: Function}}
@@ -426,5 +428,15 @@ module.exports = {
         } else {
             return false;
         }
+    },
+
+    decomposeRuleHeadsIntoSeveralRules: function(ruleSet) {
+        var newRuleSet = [];
+        for (var i = 0; i < ruleSet.length; i++) {
+            for (var j = 0; j < ruleSet[i].consequences.length; j++) {
+                newRuleSet.push(new Rule(ruleSet[i].causes, [ruleSet[i].consequences[j]]));
+            }
+        }
+        return newRuleSet;
     }
 };

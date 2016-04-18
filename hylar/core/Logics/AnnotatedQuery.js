@@ -10,9 +10,9 @@ AnnotatedQuery = function() {
 
 AnnotatedQuery.atom = function(val) {
     if (Logics.isVariable(val.subject) || Logics.isVariable(val.predicate) || Logics.isVariable(val.object)) {
-        this.annotation = 'DIFF'
-    } else {
         this.annotation = 'EMPTY'
+    } else {
+        this.annotation = 'DIFF'
     }
     this.value = val;
 };
