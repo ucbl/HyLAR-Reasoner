@@ -120,27 +120,28 @@ ReasoningEngine = {
             var C = [], D = [], P = [],
                 Y = [], O = [], S = [],
                 V = [], matchedRules,
-                CWithoutP, FiWithoutO, DWithoutP;
+                CWithoutP, FiWithoutO, DWithoutP,
+                fact;
 
             for (var i = 0; i < FeDel.length; i++) {
                 Fe = Logics.minus(Fe, [FeDel[i]]);
                 D = Logics.uniques(D, [FeDel[i]]);
             }
 
-            for (var i = 0; i < D.length; i++) {
-                Solver.checkProvability(D[i], R, C, Fe, Y, P, V, Logics.minus(Fi, S));
+            while (fact = D.pop()) {
+                Solver.checkProvability(fact, R, C, Fe, Y, P, V, Logics.minus(Fi, S)); // Lag ici
                 CWithoutP = Logics.minus(C, P);
 
                 for (var j = 0; j < CWithoutP.length; j++) {
                     Logics.addToFactSet(S, CWithoutP[j]);
                 }
 
-                if (Logics.minus(P, [D[i]]).length == P.length) {
-                    matchedRules = Logics.restrictRuleSet(R, D[i]);
+                if (Logics.minus(P, [fact]).length == P.length) {
+                    matchedRules = Logics.restrictRuleSet(R, fact);
                     FiWithoutO = Logics.minus(Fi, O);
 
                     D = Logics.uniques(D, Solver.evaluateRuleSet(matchedRules, FiWithoutO));
-                    Logics.addToFactSet(O, D[i]);
+                    Logics.addToFactSet(O, fact);
                 }
             }
 

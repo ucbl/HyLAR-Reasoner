@@ -222,8 +222,7 @@ Solver = {
     },
 
     checkProvability: function(fact, R, C, Fe, Y, P, V, IWithoutS) {
-        var matchedRules, consequences,
-            tuples, evalRes;
+        var tuples, smallestSubstitutions, substitutedRuleFact;
 
         if (!Logics.addToFactSet(C, fact)) {
             return;
@@ -238,41 +237,33 @@ Solver = {
         tuples = this.matchHead(R, fact);
 
         for (var i = 0; i < tuples.length; i++) {
-            evalRes = this.eval(IWithoutS, tuples[i].annotatedQuery, [], tuples[i].mapping);
-            for (var j = 0; j < evalRes.length; j++) {
-                for (var k = 0; k < tuples[i].rule.causes.length; k++) {
-                    this.checkProvability(evalRes[j], R, C, Fe, Y, P, V, IWithoutS);
+            smallestSubstitutions = this.eval(IWithoutS, tuples[i].annotatedQuery, [], tuples[i].mapping);
+            for (var j = 0; j < tuples[i].rule.causes.length; j++) {
+                substitutedRuleFact = this.substituteFactVariables(tuples[i].mapping, tuples[i].rule.causes[j]);
+                if(substitutedRuleFact.isGroundWith(tuples[i].mapping)) {
+                    this.checkProvability(substitutedRuleFact, R, C, Fe, Y, P, V,IWithoutS);
                 }
-                if (Logics.uniques(P, fact).length == P.length) {
-                    return;
-                }
+            }
+            if (Logics.uniques(P, [fact]).length == P.length) {
+                return;
             }
         }
     },
 
     saturate: function(R, C, Fe, Y, P, V) {
-        var consequences,
-            tuplesMatchBody;
+        var tuplesMatchBody, fact;
 
-        for (var i = 0; i < C.length; i++) {
-            if ((Logics.uniques([C[i]], Fe).length == Fe.length) ||
-                (Logics.uniques([C[i]], Y).length == Y.length)) {
-                Logics.addToFactSet(P, C[i]);
+        while (fact = C.pop()) {
+            if ((Logics.uniques([fact], Fe).length == Fe.length) ||
+                (Logics.uniques([fact], Y).length == Y.length)) {
+                Logics.addToFactSet(P, fact);
             }
         }
 
-        for (var i = 0; i < P.length; i++) {
+        while (fact = P.pop()) {
             if (Logics.addToFactSet(V, P[i])) {
                 tuplesMatchBody = this.matchBody(R, P[i]);
-                //consequences = this.evaluateRuleSet(R, P[i]);
-
-                for (var j = 0; j < consequences.length; j++) {
-                    if (Logics.uniques([consequences[i]], C)) {
-                        Logics.addToFactSet(P, consequences[j]);
-                    } else {
-                        Logics.addToFactSet(Y, consequences[j])
-                    }
-                }
+                // todo
             }
         }
         return;
@@ -314,22 +305,20 @@ Solver = {
         var tuples = [];
 
         for (var i = 0; i < ruleSet.length; i++) {
-            var mapping = {}, allAtomsAreGround,
+            var mapping = {}, atom,
                 annotatedQuery = new AnnotatedQuery();
 
             for (var j = 0; j < ruleSet[i].causes.length; j++) {
-                mapping = this.factMatches(fact, ruleSet[i].causes[j], mapping);
+                // Updates mapping
+                var currentMapping = this.factMatches(fact, ruleSet[i].causes[j], mapping);
+                if (!currentMapping) {
+                    currentMapping = mapping; // if not match, take the former mapping
+                }
                 atom = new AnnotatedQuery.atom(this.substituteFactVariables(mapping, ruleSet[i].causes[j]));
                 annotatedQuery.addAtom(atom);
             }
-            allAtomsAreGround = true;
-            for (var j = 0; j < annotatedQuery.atomsLen(); j++) {
-                if (!annotatedQuery.getAtom(j).value.isGroundWith(mapping)) {
-                    allAtomsAreGround = false;
-                    break;
-                }
-            }
-            if (allAtomsAreGround) {
+
+            if (mapping) {
                 tuples.push({
                     mapping: (mapping || {}),
                     rule: ruleSet[i],
@@ -341,21 +330,21 @@ Solver = {
     },
 
     eval: function(factSetToEval, annotatedQuery, factSet, mapping) {
-        var mappings = [], currentNewMapping;
+        var mappings = [], currentMapping, atom,
         factSetToEval = Logics.minus(factSetToEval, factSet);
 
-        for (var i = 0; i < annotatedQuery.atomsLen(); i++) {
-            if (annotatedQuery.getAtom(i).annotation == 'DIFF') {
-                for (var j = 0; j < factSetToEval.length; j++) {
-                    currentNewMapping = this.factMatches(factSetToEval[j], annotatedQuery.getAtom(i).value, this.cloneMapping(mapping));
-                    if (currentNewMapping) {
-                        mappings.push(currentNewMapping);
-                    }
+        for (var i = 0; i < factSetToEval.length; i++) {
+            for (var j = 0; j < annotatedQuery.atomsLen(); j++) {
+                currentMapping = this.factMatches(factSetToEval[i], annotatedQuery.getAtom(j).value, mapping);
+                if (!currentMapping) {
+                    currentMapping = mapping; // if not match, take the former mapping
                 }
+                j++;
             }
+            mappings.push(mapping);
         }
 
-        return mappings;
+        return Logics.uniques([], mappings);
     },
 
     cloneMapping: function(mapping) {
