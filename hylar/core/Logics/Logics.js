@@ -423,7 +423,7 @@ module.exports = {
     addToFactSet: function(factSet, fact) {
         var originalFactSetLength = factSet.length;
         if (this.uniques(factSet, [fact]).length > originalFactSetLength) {
-            factSet.push(fact);
+            factSet.unshift(fact);
             return true;
         } else {
             return false;

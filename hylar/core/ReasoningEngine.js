@@ -116,31 +116,32 @@ ReasoningEngine = {
 
         R = Logics.decomposeRuleHeadsIntoSeveralRules(R);
 
-        var backwardForwardDelete = function(Fe, Fi, FeDel, R) {
+        var backwardForwardDelete = function(E, I, FeDel, R) {
             var C = [], D = [], P = [],
                 Y = [], O = [], S = [],
-                V = [], matchedRules,
-                CWithoutP, FiWithoutO, DWithoutP,
-                fact;
+                V = [],
+                CWithoutP, IWithoutO, DWithoutP,
+                fact, tuples, evalRes;
 
             for (var i = 0; i < FeDel.length; i++) {
-                Fe = Logics.minus(Fe, [FeDel[i]]);
+                E = Logics.minus(E, [FeDel[i]]);
                 D = Logics.uniques(D, [FeDel[i]]);
             }
 
             while (fact = D.pop()) {
-                Solver.checkProvability(fact, R, C, Fe, Y, P, V, Logics.minus(Fi, S)); // Lag ici
+                Solver.checkProvability(fact, R, C, E, Y, P, V, Logics.minus(I, S));
                 CWithoutP = Logics.minus(C, P);
 
                 for (var j = 0; j < CWithoutP.length; j++) {
                     Logics.addToFactSet(S, CWithoutP[j]);
                 }
 
-                if (Logics.minus(P, [fact]).length == P.length) {
-                    matchedRules = Logics.restrictRuleSet(R, fact);
-                    FiWithoutO = Logics.minus(Fi, O);
-
-                    D = Logics.uniques(D, Solver.evaluateRuleSet(matchedRules, FiWithoutO));
+                if (!fact.appearsIn(P)) {
+                    tuples = Solver.matchBody(fact, R);
+                    for (var i = 0; i < tuples.length; i++) {
+                        evalRes = Solver.eval(IWithoutO, tuples[i].annotatedQuery, [fact], tuples[i].mapping);
+                        Logics.addToFactSet(D, Solver.substituteFactVariables(evalRes, tuples[i].rule.consequences[0]));
+                    }
                     Logics.addToFactSet(O, fact);
                 }
             }
@@ -148,10 +149,10 @@ ReasoningEngine = {
             DWithoutP = Logics.minus(D, P);
 
             for (var i = 0; i < DWithoutP.length; i++) {
-                Fi = Logics.minus(Fi, [DWithoutP[i]]);
+                I = Logics.minus(I, [DWithoutP[i]]);
             }
 
-            return Fi;
+            return I;
         };
 
         var Rins = [],
