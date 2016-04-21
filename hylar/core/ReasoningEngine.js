@@ -167,17 +167,15 @@ ReasoningEngine = {
                 while (fact = P.next()) {
                     if (Logics.addToFactSet(V, fact)) {
                         tuplesMatchBody = Solver.matchBody(R, fact);
-                        1;
+                        //todo
                     }
                 }
 
                 return;
             };
 
-            for (var i = 0; i < FeDel.length; i++) {
-                E = Logics.minus(E, [FeDel[i]]);
-                D.add(FeDel[i]);
-            }
+            E = Logics.minus(E, FeDel);
+            D.add(FeDel);
 
             while (fact = D.next()) {
                 checkProvability(fact);
@@ -205,6 +203,7 @@ ReasoningEngine = {
             }
 
             return I;
+            1;
         };
 
         var Rins = [],

@@ -18,6 +18,7 @@ IterableStructure = function(content) {
         this.arr = content;
     }
     this.currentIndex = -1;
+    return this;
 };
 
 IterableStructure.prototype.next = function() {
@@ -30,16 +31,17 @@ IterableStructure.prototype.next = function() {
 
 IterableStructure.prototype.add = function(elem) {
     if (isArray(elem)) {
-        for (var i = 0; i < elem; i++) {
+        for (var i = 0; i < elem.length; i++) {
             this.add(elem[i])
         }
     } else {
-        for (var i = 0; i < this.arr; i++) {
+        for (var i = 0; i < this.arr.length; i++) {
             if (this.arr[i].toString() == elem.toString()) {
                 return false;
             }
         }
         this.arr.push(elem);
+        return true;
     }
 };
 
