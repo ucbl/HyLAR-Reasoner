@@ -28,25 +28,41 @@ AnnotatedQuery.prototype.setAtom = function(index) {
     return this.atoms[index];
 };
 
+AnnotatedQuery.prototype.toString = function() {
+    var atomConj = '';
+    for(var key in this.atoms) {
+        atomConj += ' ^ ' + this.getAtom(key).toString();
+    }
+    return atomConj.substr(3);
+};
+
 /**
  * Atom prototype
  * @param val
  */
-AnnotatedQuery.atom = function(val) {
-    if (Logics.isVariable(val.subject) || Logics.isVariable(val.predicate) || Logics.isVariable(val.object)) {
+AnnotatedQuery.atom = function(val, annotateDiff) {
+    if (annotateDiff === true) {
         this.annotation = 'DIFF'
     } else {
-        this.annotation = 'EMPTY'
+        this.annotation = ''
     }
     this.value = val;
 };
 
-AnnotatedQuery.atom.isEmpty = function() {
-  return (this.annotation == 'EMPTY');
+AnnotatedQuery.atom.prototype.isEmpty = function() {
+  return (this.annotation == '');
 };
 
-AnnotatedQuery.atom.isDiff = function() {
+AnnotatedQuery.atom.prototype.isDiff = function() {
     return (this.annotation == 'DIFF');
+};
+
+AnnotatedQuery.atom.prototype.toString = function() {
+    var annotationIndicator = this.annotation;
+    if (this.isDiff()) {
+        annotationIndicator = '[' + this.annotation + ']';
+    }
+    return this.value.toString() + annotationIndicator;
 };
 
 module.exports = AnnotatedQuery;

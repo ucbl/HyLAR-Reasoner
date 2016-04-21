@@ -2,6 +2,8 @@
  * Created by mt on 21/12/2015.
  */
 
+var Utils = require('../Utils');
+
 /**
  * Rule in the form subClassOf(a, b) ^ subClassOf(b, c) -> subClassOf(a, c)
  * i.e. conjunction of facts
@@ -12,6 +14,13 @@
 Rule = function(slf, srf) {
     this.causes = slf;
     this.consequences = srf;
+    this.constants = [];
+    for (var i = 0; i < slf.length; i++) {
+        this.constants = Utils.uniques(this.constants, slf[i].constants);
+    }
+    for (var i = 0; i < srf.length; i++) {
+        this.constants = Utils.uniques(this.constants, srf[i].constants);
+    }
 };
 
 Rule.prototype = {

@@ -132,13 +132,6 @@ OWL2RL = {
                     new Fact(SameAs, '?x', '?y', [], true),
                     new Fact(SameAs, '?y', '?z', [], true)],
                 [new Fact(SameAs, '?x', '?z', [], true)])
-        ],
-
-        asawoo: [
-            new Rule([
-                new Fact()
-            ],
-            [])
         ]
 
     }

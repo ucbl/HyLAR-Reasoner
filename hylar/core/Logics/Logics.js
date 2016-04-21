@@ -4,6 +4,7 @@
  */
 
 var Rule = require('./Rule');
+var Utils = require('../Utils');
 
 /**
  * All necessary stuff around the Logics module
@@ -220,7 +221,7 @@ module.exports = {
         var graphs = [];
         for(var key in fs) {
             var f = fs[key];
-            graphs = this.uniques(graphs, f.graphs);
+            graphs = Utils.uniques(graphs, f.graphs);
         }
         return graphs;
     },
@@ -234,7 +235,7 @@ module.exports = {
         var graphs = [];
         for (var key in gs) {
             var currGraphs = gs[key].graphs;
-            graphs = this.uniques(graphs, currGraphs);
+            graphs = Utils.uniques(graphs, currGraphs);
         }
         return graphs;
     },
@@ -257,8 +258,8 @@ module.exports = {
         if(!(f1.equivalentTo(f2))) {
             return false;
         } else {
-            f1.causedBy = this.uniques(f1.causedBy, f2.causedBy);
-            f1.graphs = this.uniques(f1.graphs, f2.graphs);
+            f1.causedBy = Utils.uniques(f1.causedBy, f2.causedBy);
+            f1.graphs = Utils.uniques(f1.graphs, f2.graphs);
             return f1;
         }
     },
@@ -360,28 +361,6 @@ module.exports = {
     },
 
     /**
-     * Returns a set of elements
-     * with distinct string representation.
-     * @warning does not merge facts
-     * @param _set1
-     * @param _set2
-     * @returns {Array}
-     */
-    uniques: function(_set1, _set2) {
-        var hash = {}, uniq = [],
-            fullSet = _set1.concat(_set2);
-
-        for (var i = 0; i < fullSet.length; i++) {
-            hash[fullSet[i].toString()] = fullSet[i];
-        }
-
-        for (var key in hash) {
-            uniq.push(hash[key]);
-        }
-        return uniq;
-    },
-
-    /**
      * Substracts each set.
      * Not to be used in tag-based reasoning.
      * @param _set1
@@ -422,7 +401,7 @@ module.exports = {
 
     addToFactSet: function(factSet, fact) {
         var originalFactSetLength = factSet.length;
-        if (this.uniques(factSet, [fact]).length > originalFactSetLength) {
+        if (Utils.uniques(factSet, [fact]).length > originalFactSetLength) {
             factSet.unshift(fact);
             return true;
         } else {
@@ -438,5 +417,9 @@ module.exports = {
             }
         }
         return newRuleSet;
+    },
+
+    factIsGround: function(fact) {
+        return !this.isVariable(fact.subject) && !this.isVariable(fact.predicate) && !this.isVariable(fact.object)
     }
 };

@@ -4,6 +4,7 @@
 
 var Fact = require('./Fact');
 var Logics = require('./Logics');
+var Utils = require('../Utils');
 var AnnotatedQuery = require('./AnnotatedQuery');
 
 /**
@@ -23,7 +24,7 @@ Solver = {
         var newCons, cons = [];
         for (var key in rs) {
             newCons = this.evaluateThroughRestriction(rs[key], facts);
-            cons = Logics.uniques(cons, newCons);
+            cons = Utils.uniques(cons, newCons);
         }
         return cons;
     },
@@ -44,7 +45,7 @@ Solver = {
         causesToMap = [rule.causes[i]]; // Init with first cause
 
         while (i < rule.causes.length) {
-            causesToMap = this.substituteNextCauses(causesToMap, rule.causes[i+1], facts);
+            causesToMap = this.substituteNextCauses(causesToMap, rule.causes[i+1], facts, rule.constants);
             i++;
         }
 
@@ -57,7 +58,7 @@ Solver = {
             // Replace mappings on all causes
             for (var j = 0; j < rule.causes.length; j++) {
                 causedBy.push(this.substituteFactVariables(mappingList[i], rule.causes[j]).toString());
-                consequenceGraphs = Logics.uniques(consequenceGraphs, mappingList[i].graphs);
+                consequenceGraphs = Utils.uniques(consequenceGraphs, mappingList[i].graphs);
             }
             // Replace mappings on all consequences
             for (var j = 0; j < rule.consequences.length; j++) {
@@ -77,7 +78,7 @@ Solver = {
      * @param facts
      * @returns {Array}
      */
-    substituteNextCauses: function(currentCauses, nextCause, facts) {
+    substituteNextCauses: function(currentCauses, nextCause, facts, constants) {
         var substitutedNextCauses = [],
             mappings = [];
 
@@ -95,7 +96,7 @@ Solver = {
                 }
 
                 // Update the mapping using pattern matching
-                newMapping = this.factMatches(facts[j], currentCauses[i], mapping);
+                newMapping = this.factMatches(facts[j], currentCauses[i], mapping, constants);
 
                 // If the current fact matches the current cause ...
                 if (newMapping) {
@@ -128,7 +129,7 @@ Solver = {
      * @param mapping
      * @returns {*}
      */
-    factMatches: function(fact, ruleFact, mapping) {
+    factMatches: function(fact, ruleFact, mapping, constants) {
         var localMapping = {};
 
         // Checks and update localMapping if matches
@@ -142,6 +143,13 @@ Solver = {
             return false;
         }
 
+        // If an already existing uri has been mapped...
+        for (var key in localMapping) {
+            if(constants.indexOf(localMapping[key]) !== -1) {
+                return false;
+            }
+        }
+
         // Merges local and global mapping
         for (var key in mapping) {
             localMapping[key] = mapping[key];
@@ -149,7 +157,7 @@ Solver = {
 
         // Updates graph references
         if (localMapping.graphs) {
-            localMapping.graphs = Logics.uniques(localMapping.graphs, fact.graphs);
+            localMapping.graphs = Utils.uniques(localMapping.graphs, fact.graphs);
         } else {
             localMapping.graphs = [];
         }
@@ -158,7 +166,7 @@ Solver = {
         return localMapping;
     },
 
-    factElemMatches: function(factElem, causeElem, globalMapping, localMapping) {
+    factElemMatches: function(factElem, causeElem, globalMapping, localMapping, localUris) {
         if (Logics.isVariable(causeElem)) {
             if (globalMapping[causeElem] && (globalMapping[causeElem] != factElem)) {
                 return false;
@@ -199,11 +207,17 @@ Solver = {
      * @returns {*}
      */
     substituteFactVariables: function(mapping, notYetSubstitutedFact, causedBy, graphs) {
-        var substitutedFact = new Fact();
+        var subject, predicate, object, substitutedFact;
 
         if (mapping == {}) {
             return notYetSubstitutedFact;
         }
+
+        subject = this.substituteElementVariablesWithMapping(notYetSubstitutedFact.subject, mapping);
+        predicate = this.substituteElementVariablesWithMapping(notYetSubstitutedFact.predicate, mapping);
+        object = this.substituteElementVariablesWithMapping(notYetSubstitutedFact.object, mapping);
+
+        substitutedFact = new Fact(predicate, subject, object);
 
         if (causedBy) {
             substitutedFact.causedBy = [causedBy];
@@ -214,15 +228,25 @@ Solver = {
             substitutedFact.graphs = graphs;
         }
 
-        substitutedFact.subject = this.substituteElementVariablesWithMapping(notYetSubstitutedFact.subject, mapping);
-        substitutedFact.predicate = this.substituteElementVariablesWithMapping(notYetSubstitutedFact.predicate, mapping);
-        substitutedFact.object = this.substituteElementVariablesWithMapping(notYetSubstitutedFact.object, mapping);
-
         return substitutedFact;
     },
 
+    substitute: function(atom, mappings, causedBy, graphs) {
+        var substitutedFacts = [],
+            substitutedFact;
+
+        for (var i = 0; i < mappings.length; i++) {
+            substitutedFact = this.substituteFactVariables(mappings[i], atom, causedBy, graphs);
+            if(substitutedFact && Logics.factIsGround(substitutedFact)) {
+                substitutedFacts.push(substitutedFact);
+            }
+        }
+
+        return substitutedFacts;
+    },
+
     checkProvability: function(fact, R, C, E, Y, P, V, IWithoutS) {
-        var tuples, smallestSubstitutions, substitutedRuleFact;
+        var tuples, smallestSubstitutions, substitutedRuleFacts;
 
         if (!Logics.addToFactSet(C, fact)) {
             return;
@@ -237,17 +261,19 @@ Solver = {
         tuples = this.matchHead(R, fact);
 
         for (var i = 0; i < tuples.length; i++) {
-            smallestSubstitutions = this.eval(IWithoutS, tuples[i].annotatedQuery, [], tuples[i].mapping);
+            smallestSubstitutions = this.eval(IWithoutS, tuples[i].annotatedQuery, [], tuples[i].mapping, tuples[i].rule.constants);
             for (var j = 0; j < tuples[i].rule.causes.length; j++) {
-                substitutedRuleFact = this.substituteFactVariables(smallestSubstitutions, tuples[i].rule.causes[j]);
-                if(substitutedRuleFact.isGroundWith(smallestSubstitutions)) {
-                    this.checkProvability(substitutedRuleFact, R, C, E, Y, P, V,IWithoutS);
+                substitutedRuleFacts = this.substitute(tuples[i].rule.causes[j], smallestSubstitutions);
+                for (var k = 0; k < substitutedRuleFacts.length; k++) {
+                    this.checkProvability(substitutedRuleFacts[k], R, C, E, Y, P, V, IWithoutS);
                 }
             }
             if (fact.appearsIn(P)) {
                 return;
             }
         }
+
+        return;
     },
 
     saturate: function(R, C, E, Y, P, V) {
@@ -265,6 +291,7 @@ Solver = {
                 // todo
             }
         }
+
         return;
     },
 
@@ -275,13 +302,14 @@ Solver = {
         for (var i = 0; i < ruleSet.length; i++) {
             var mapping = {},
                 annotatedQuery = new AnnotatedQuery(),
-                head = ruleSet[i].consequences[0];
+                head = ruleSet[i].consequences[0],
+                ruleConstants = ruleSet[i].constants;
 
             if (ruleSet[i].consequences.length > 1) {
-                throw 'B/F algorithm expects unique consequences (HEAD)!';
+                throw 'B/F algorithm expects an unique consequence (HEAD)!';
             }
 
-            mapping = this.factMatches(fact, head, mapping);
+            mapping = this.factMatches(fact, head, mapping, ruleConstants);
 
             if (mapping) {
                 for (var j = 0; j < ruleSet[i].causes.length; j++) {
@@ -313,7 +341,7 @@ Solver = {
                 if (!currentMapping) {
                     currentMapping = mapping; // if not match, take the former mapping
                 }
-                atom = new AnnotatedQuery.atom(this.substituteFactVariables(mapping, ruleSet[i].causes[j]));
+                atom = new AnnotatedQuery.atom(ruleSet[i].causes[j]);
                 annotatedQuery.addAtom(atom);
             }
 
@@ -327,13 +355,21 @@ Solver = {
         return tuples;
     },
 
-    eval: function(X, annotatedQuery, Y, mapping) {
-        var mappings = [], currentMapping, atom,
+    eval: function(X, annotatedQuery, Y, mapping, constants) {
+        var mappings = [], currentMapping,
             XWithoutY = Logics.minus(X, Y);
 
+            for (var i = 0; i < X.length; i++) {
+                for (var j = 0; j < annotatedQuery.atomsLen(); j++) {
+                    currentMapping = this.factMatches(X[i], annotatedQuery.getAtom(j).value, mapping, constants);
+                    if (currentMapping) {
+                        mapping = currentMapping;
+                    }
+                }
+                mappings.push(mapping);
+            }
 
-
-        return Logics.uniques([], mappings);
+        return Utils.uniques([], mappings);
     },
 
     cloneMapping: function(mapping) {

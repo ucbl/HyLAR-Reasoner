@@ -2,6 +2,8 @@
  * Created by mt on 21/12/2015.
  */
 
+var Logics = require('./Logics');
+
 /**
  * Fact in the form subClassOf(a, b)
  * @param pred fact's/axiom name (e.g. subClassOf)
@@ -23,6 +25,17 @@ Fact = function(pred, sub, obj, originConjs, expl, graphs) {
     this.explicit = expl;
     this.graphs = graphs;
     this.valid = true;
+
+    this.constants = [];
+    if (!Logics.isVariable(this.subject)) {
+        this.constants.push(this.subject);
+    }
+    if (!Logics.isVariable(this.predicate)) {
+        this.constants.push(this.predicate);
+    }
+    if (!Logics.isVariable(this.object)) {
+        this.constants.push(this.object);
+    }
 };
 
 Fact.prototype = {
@@ -35,19 +48,6 @@ Fact.prototype = {
         var e;
         this.explicit ? e = 'E' : e = 'I';
         return e + '(' + this.subject + ', ' + this.predicate + ', ' + this.object + ')';
-    },
-
-    isGroundWith: function(mapping) {
-        if (mapping[this.subject] === undefined) {
-            return false;
-        }
-        if (mapping[this.predicate] === undefined) {
-            return false;
-        }
-        if (mapping[this.object] === undefined) {
-            return false;
-        }
-        return true;
     },
 
     /**

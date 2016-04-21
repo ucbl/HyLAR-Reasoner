@@ -3,7 +3,8 @@
  */
 
 var Logics = require('./Logics/Logics'),
-    Solver = require('./Logics/Solver');
+    Solver = require('./Logics/Solver'),
+    Utils = require('./Utils');
 
 /**
  * Reasoning engine containing incremental algorithms
@@ -30,19 +31,19 @@ ReasoningEngine = {
 
         // Insertion
         if(FeAdd && FeAdd.length) {
-            Fe = Logics.uniques(Fe, FeAdd);
+            Fe = Utils.uniques(Fe, FeAdd);
         }
 
         // Recalculation
         do {
-            FiAdd = Logics.uniques(FiAdd, FiAddNew);
-            FiAddNew = Solver.evaluateRuleSet(R, Logics.uniques(Fe, FiAdd));
+            FiAdd = Utils.uniques(FiAdd, FiAddNew);
+            FiAddNew = Solver.evaluateRuleSet(R, Utils.uniques(Fe, FiAdd));
         } while (!Logics.containsFacts(FiAdd, FiAddNew));
 
-        additions = Logics.uniques(FeAdd, FiAdd);
-        deletions = Logics.minus(F, Logics.uniques(Fe, FiAdd));
+        additions = Utils.uniques(FeAdd, FiAdd);
+        deletions = Logics.minus(F, Utils.uniques(Fe, FiAdd));
 
-        F = Logics.uniques(Fe, FiAdd);
+        F = Utils.uniques(Fe, FiAdd);
 
         return {
             additions: additions,
@@ -73,36 +74,36 @@ ReasoningEngine = {
         if(FeDel && FeDel.length) {
             // Overdeletion
             do {
-                FiDel = Logics.uniques(FiDel, FiDelNew);
-                Rdel = Logics.restrictRuleSet(R, Logics.uniques(FeDel, FiDel));
-                FiDelNew = Solver.evaluateRuleSet(Rdel, Logics.uniques(Logics.uniques(Fi, Fe), FeDel));
-            } while (Logics.uniques(FiDel, FiDelNew).length > FiDel.length);
+                FiDel = Utils.uniques(FiDel, FiDelNew);
+                Rdel = Logics.restrictRuleSet(R, Utils.uniques(FeDel, FiDel));
+                FiDelNew = Solver.evaluateRuleSet(Rdel, Utils.uniques(Utils.uniques(Fi, Fe), FeDel));
+            } while (Utils.uniques(FiDel, FiDelNew).length > FiDel.length);
             Fe = Logics.minus(Fe, FeDel);
             Fi = Logics.minus(Fi, FiDel);
 
             // Rederivation
             do {
-                FiAdd = Logics.uniques(FiAdd, FiAddNew);
+                FiAdd = Utils.uniques(FiAdd, FiAddNew);
                 Rred = Logics.restrictRuleSet(R, FiDel);
-                FiAddNew = Solver.evaluateRuleSet(Rred, Logics.uniques(Logics.uniques(Fe, Fi), FiDel));
-            } while(Logics.uniques(FiAdd, FiAddNew).length > FiAdd.length);
+                FiAddNew = Solver.evaluateRuleSet(Rred, Utils.uniques(Utils.uniques(Fe, Fi), FiDel));
+            } while(Utils.uniques(FiAdd, FiAddNew).length > FiAdd.length);
 
         }
 
         // Insertion
         if(FeAdd && FeAdd.length) {
             do {
-                FiAdd = Logics.uniques(FiAdd, FiAddNew);
-                superSet = Logics.uniques(Logics.uniques(Logics.uniques(Fe, Fi), FeAdd), FiAdd);
+                FiAdd = Utils.uniques(FiAdd, FiAddNew);
+                superSet = Utils.uniques(Utils.uniques(Utils.uniques(Fe, Fi), FeAdd), FiAdd);
                 Rins = Logics.restrictRuleSet(R, superSet);
                 FiAddNew = Solver.evaluateRuleSet(Rins, superSet);
-            } while (Logics.uniques(FiAdd, FiAddNew).length > FiAdd.length);
+            } while (Utils.uniques(FiAdd, FiAddNew).length > FiAdd.length);
         }
 
-        additions = Logics.uniques(FeAdd, FiAdd);
-        deletions = Logics.uniques(FeDel, FiDel);
+        additions = Utils.uniques(FeAdd, FiAdd);
+        deletions = Utils.uniques(FeDel, FiDel);
 
-        F = Logics.uniques(F, additions);
+        F = Utils.uniques(F, additions);
         F = Logics.minus(F, deletions);
 
         return {
@@ -125,7 +126,7 @@ ReasoningEngine = {
 
             for (var i = 0; i < FeDel.length; i++) {
                 E = Logics.minus(E, [FeDel[i]]);
-                D = Logics.uniques(D, [FeDel[i]]);
+                D = Utils.uniques(D, [FeDel[i]]);
             }
 
             while (fact = D.pop()) {
@@ -173,17 +174,17 @@ ReasoningEngine = {
         // Insertion
         if(FeAdd && FeAdd.length) {
             do {
-                FiAdd = Logics.uniques(FiAdd, FiAddNew);
-                superSet = Logics.uniques(Logics.uniques(Logics.uniques(Fe, FiAdd), FeAdd), FiAdd);
+                FiAdd = Utils.uniques(FiAdd, FiAddNew);
+                superSet = Utils.uniques(Utils.uniques(Utils.uniques(Fe, FiAdd), FeAdd), FiAdd);
                 Rins = Logics.restrictRuleSet(R, superSet);
                 FiAddNew = Solver.evaluateRuleSet(Rins, superSet);
-            } while (Logics.uniques(FiAdd, FiAddNew).length > FiAdd.length);
+            } while (Utils.uniques(FiAdd, FiAddNew).length > FiAdd.length);
         }
 
-        additions = Logics.uniques(FeAdd, FiAdd);
-        deletions = Logics.uniques(FeDel, FiDel);
+        additions = Utils.uniques(FeAdd, FiAdd);
+        deletions = Utils.uniques(FeDel, FiDel);
 
-        F = Logics.uniques(F, additions);
+        F = Utils.uniques(F, additions);
         F = Logics.minus(F, deletions);
 
         return {
