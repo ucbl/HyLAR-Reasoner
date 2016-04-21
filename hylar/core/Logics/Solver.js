@@ -245,56 +245,6 @@ Solver = {
         return substitutedFacts;
     },
 
-    checkProvability: function(fact, R, C, E, Y, P, V, IWithoutS) {
-        var tuples, smallestSubstitutions, substitutedRuleFacts;
-
-        if (!Logics.addToFactSet(C, fact)) {
-            return;
-        }
-
-        this.saturate(R, C, E, Y, P, V);
-
-        if (fact.appearsIn(P)) {
-            return;
-        }
-
-        tuples = this.matchHead(R, fact);
-
-        for (var i = 0; i < tuples.length; i++) {
-            smallestSubstitutions = this.eval(IWithoutS, tuples[i].annotatedQuery, [], tuples[i].mapping, tuples[i].rule.constants);
-            for (var j = 0; j < tuples[i].rule.causes.length; j++) {
-                substitutedRuleFacts = this.substitute(tuples[i].rule.causes[j], smallestSubstitutions);
-                for (var k = 0; k < substitutedRuleFacts.length; k++) {
-                    this.checkProvability(substitutedRuleFacts[k], R, C, E, Y, P, V, IWithoutS);
-                }
-            }
-            if (fact.appearsIn(P)) {
-                return;
-            }
-        }
-
-        return;
-    },
-
-    saturate: function(R, C, E, Y, P, V) {
-        var tuplesMatchBody, fact;
-
-        while (fact = C.pop()) {
-            if (fact.appearsIn(E) || fact.appearsIn(Y)) {
-                Logics.addToFactSet(P, fact);
-            }
-        }
-
-        while (fact = P.pop()) {
-            if (Logics.addToFactSet(V, fact)) {
-                tuplesMatchBody = this.matchBody(R, fact);
-                // todo
-            }
-        }
-
-        return;
-    },
-
     matchHead: function(ruleSet, fact) {
         var tuples = [],
             atom;
@@ -332,24 +282,26 @@ Solver = {
         var tuples = [];
 
         for (var i = 0; i < ruleSet.length; i++) {
-            var mapping = {}, atom,
+            var mapping = {}, annotateDiff = true,
+                currentMapping, atom,
                 annotatedQuery = new AnnotatedQuery();
 
             for (var j = 0; j < ruleSet[i].causes.length; j++) {
-                // Updates mapping
-                var currentMapping = this.factMatches(fact, ruleSet[i].causes[j], mapping);
-                if (!currentMapping) {
-                    currentMapping = mapping; // if not match, take the former mapping
+                currentMapping = this.factMatches(fact, ruleSet[i].causes[j], mapping, ruleSet[i].constants);
+                if (currentMapping) {
+                    annotateDiff = false;
+                    mapping = currentMapping
                 }
-                atom = new AnnotatedQuery.atom(ruleSet[i].causes[j]);
-                annotatedQuery.addAtom(atom);
+                annotatedQuery.addAtom(new AnnotatedQuery.atom(ruleSet[i].causes[j], annotateDiff));
             }
 
-            tuples.push({
-                mapping: (mapping || {}),
-                rule: ruleSet[i],
-                annotatedQuery: annotatedQuery
-            });
+            if (!Utils.emptyObject(mapping)) {
+                tuples.push({
+                    mapping: (mapping || {}),
+                    rule: ruleSet[i],
+                    annotatedQuery: annotatedQuery
+                });
+            }
 
         }
         return tuples;

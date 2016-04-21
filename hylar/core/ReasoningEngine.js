@@ -118,36 +118,87 @@ ReasoningEngine = {
         R = Logics.decomposeRuleHeadsIntoSeveralRules(R);
 
         var backwardForwardDelete = function(E, I, FeDel, R) {
-            var C = [], D = [], P = [],
+            var C = new Utils.IterableStructure(), D = new Utils.IterableStructure(), P = new Utils.IterableStructure(),
                 Y = [], O = [], S = [],
                 V = [],
                 CWithoutP, IWithoutO, DWithoutP,
                 fact, tuples, evalRes;
 
+            var checkProvability = function(fact) {
+                var tuples, smallestSubstitutions, substitutedRuleFacts;
+
+                if (!C.add(fact)) {
+                    return;
+                }
+
+                saturate();
+
+                if (fact.appearsIn(P)) {
+                    return;
+                }
+
+                tuples = Solver.matchHead(R, fact);
+
+                for (var i = 0; i < tuples.length; i++) {
+                    smallestSubstitutions = Solver.eval(Logics.minus(I, S), tuples[i].annotatedQuery, [], tuples[i].mapping, tuples[i].rule.constants);
+                    for (var j = 0; j < tuples[i].rule.causes.length; j++) {
+                        substitutedRuleFacts = Solver.substitute(tuples[i].rule.causes[j], smallestSubstitutions);
+                        for (var k = 0; k < substitutedRuleFacts.length; k++) {
+                            checkProvability(substitutedRuleFacts[k]);
+                        }
+                    }
+                    if (fact.appearsIn(P)) {
+                        return;
+                    }
+                }
+
+                return;
+            };
+
+            var saturate = function() {
+                var tuplesMatchBody, fact;
+
+                while (fact = C.next()) {
+                    if (fact.appearsIn(E) || fact.appearsIn(Y)) {
+                        Logics.addToFactSet(P, fact);
+                    }
+                }
+
+                while (fact = P.next()) {
+                    if (Logics.addToFactSet(V, fact)) {
+                        tuplesMatchBody = Solver.matchBody(R, fact);
+                        1;
+                    }
+                }
+
+                return;
+            };
+
             for (var i = 0; i < FeDel.length; i++) {
                 E = Logics.minus(E, [FeDel[i]]);
-                D = Utils.uniques(D, [FeDel[i]]);
+                D.add(FeDel[i]);
             }
 
-            while (fact = D.pop()) {
-                Solver.checkProvability(fact, R, C, E, Y, P, V, Logics.minus(I, S));
-                CWithoutP = Logics.minus(C, P);
+            while (fact = D.next()) {
+                checkProvability(fact);
+                CWithoutP = Logics.minus(C.toArray(), P.toArray());
+                IWithoutO = Logics.minus(I, O);
 
                 for (var j = 0; j < CWithoutP.length; j++) {
                     Logics.addToFactSet(S, CWithoutP[j]);
                 }
 
                 if (!fact.appearsIn(P)) {
-                    tuples = Solver.matchBody(fact, R);
+                    tuples = Solver.matchBody(R, fact);
                     for (var i = 0; i < tuples.length; i++) {
-                        evalRes = Solver.eval(IWithoutO, tuples[i].annotatedQuery, [fact], tuples[i].mapping);
-                        Logics.addToFactSet(D, Solver.substituteFactVariables(evalRes, tuples[i].rule.consequences[0]));
+                        evalRes = Solver.eval(IWithoutO, tuples[i].annotatedQuery, [fact], tuples[i].mapping, tuples[i].rule.constants);
+                        D.add(Solver.substitute(tuples[i].rule.consequences[0], evalRes));
                     }
                     Logics.addToFactSet(O, fact);
                 }
             }
 
-            DWithoutP = Logics.minus(D, P);
+            DWithoutP = Logics.minus(D.toArray(), P);
 
             for (var i = 0; i < DWithoutP.length; i++) {
                 I = Logics.minus(I, [DWithoutP[i]]);

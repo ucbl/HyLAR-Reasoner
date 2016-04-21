@@ -8,7 +8,48 @@
 
 var q = require('q');
 
+var isArray = function(arr) {
+    return (Object.prototype.toString.call(arr) === '[object Array]');
+};
+
+IterableStructure = function(content) {
+    this.arr = [];
+    if (content !== undefined) {
+        this.arr = content;
+    }
+    this.currentIndex = -1;
+};
+
+IterableStructure.prototype.next = function() {
+    this.currentIndex++;
+    if (this.currentIndex < this.arr.length) {
+        return this.arr[this.currentIndex]
+    }
+    return false;
+};
+
+IterableStructure.prototype.add = function(elem) {
+    if (isArray(elem)) {
+        for (var i = 0; i < elem; i++) {
+            this.add(elem[i])
+        }
+    } else {
+        for (var i = 0; i < this.arr; i++) {
+            if (this.arr[i].toString() == elem.toString()) {
+                return false;
+            }
+        }
+        this.arr.push(elem);
+    }
+};
+
+IterableStructure.prototype.toArray = function() {
+    return this.arr;
+};
+
 module.exports = {
+
+    IterableStructure: IterableStructure,
 
     /**
      * Get the key referring to a value in a JSON object.
@@ -45,5 +86,9 @@ module.exports = {
             uniq.push(hash[key]);
         }
         return uniq;
+    },
+
+    emptyObject: function(obj) {
+        return (Object.keys(obj).length == 0)
     }
 };

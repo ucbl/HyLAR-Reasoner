@@ -401,7 +401,7 @@ module.exports = {
 
     addToFactSet: function(factSet, fact) {
         var originalFactSetLength = factSet.length;
-        if (Utils.uniques(factSet, [fact]).length > originalFactSetLength) {
+        if (!fact.appearsIn(factSet)) {
             factSet.unshift(fact);
             return true;
         } else {
