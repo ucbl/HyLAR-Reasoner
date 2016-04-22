@@ -10,6 +10,7 @@ var Dictionary = require('./core/Dictionary'),
     ParsingInterface = require('./core/ParsingInterface'),
     StorageManager = require('./core/StorageManager'),
     Reasoner = require('./core/Reasoner');
+    OWL2RL = require('./core/OWL2RL');
 
 console.notify = function(msg) {
     console.log(colors.green('[HyLAR] ') + msg);
@@ -26,6 +27,7 @@ console.notify = function(msg) {
 function Hylar() {
     this.dict = new Dictionary();
     this.sm = new StorageManager();
+    this.rules = OWL2RL.rules;
 }
 
 /**
@@ -50,6 +52,10 @@ Hylar.prototype.setTagBased = function() {
 Hylar.prototype.setIncrementalBf = function() {
     this.rMethod = Reasoner.process.it.incrementallyBf;
     console.notify('Reasoner set as incremental b/f.');
+};
+
+Hylar.prototype.setRules = function(rules) {
+    this.rules = rules;
 };
 
 /**
@@ -226,7 +232,7 @@ Hylar.prototype.treatUpdate = function(sparql) {
             FeIns = ParsingInterface.triplesToFacts(iTriples);
             FeDel = ParsingInterface.triplesToFacts(dTriples);
 
-            return Reasoner.evaluate(FeIns, FeDel, F, that.rMethod)
+            return Reasoner.evaluate(FeIns, FeDel, F, that.rMethod, that.rules)
         })
         .then(function(derivations) {
             that.registerDerivations(derivations);
@@ -334,7 +340,7 @@ Hylar.prototype.classify = function() {
                 }
 
             }
-            return Reasoner.evaluate(facts, [], [], that.rMethod);
+            return Reasoner.evaluate(facts, [], [], that.rMethod, that.rules);
         })
         .then(function(r) {
             that.registerDerivations(r);

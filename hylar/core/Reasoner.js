@@ -2,8 +2,7 @@
 * Created by Spadon on 17/10/2014.
 */
 
-var OWL2RL = require('./OWL2RL'),
-    ReasoningEngine = require('./ReasoningEngine');
+var ReasoningEngine = require('./ReasoningEngine');
 
 var q = require('q');
 
@@ -22,12 +21,12 @@ module.exports = {
      * @param alg The reasoning algorithm (function)
      * @returns {*}
      */
-    evaluate: function(fI, fD, F, alg) {
+    evaluate: function(fI, fD, F, alg, rules) {
         var deferred = q.defer(),
             evaluationResults;
         if (!alg) alg = ReasoningEngine.incremental;
 
-        evaluationResults = alg(fI, fD, F, OWL2RL.rules);
+        evaluationResults = alg(fI, fD, F, rules);
 
         console.notify('Evaluation finished.');
         console.notify(evaluationResults.additions.length + ' additions, ' + evaluationResults.deletions.length + ' deletions.');
