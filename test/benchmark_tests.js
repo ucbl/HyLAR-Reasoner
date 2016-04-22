@@ -8,12 +8,10 @@ var path = require('path');
 var mime = require('mime-types');
 
 var Logics = require('../hylar/core/Logics/Logics');
+var OWL2RL = require('../hylar/core/OWL2RL');
 
 var H = require('../hylar/hylar');
-var queries = require('./query-examples-200t');
-var owl, ontology, mimeType, Hylar = new H();
-
-var a, b, c;
+var owl, ontology, Hylar = new H();
 
 var reasoningMethod = process.env.rm;
 var triples = fs.readFileSync(path.resolve(__dirname + '/ontologies/University0_14.nt')).toString();
@@ -23,6 +21,12 @@ var univ1 = baseOntoTxt + fs.readFileSync(path.resolve(__dirname + '/ontologies/
 var univ2 = baseOntoTxt + fs.readFileSync(path.resolve(__dirname + '/ontologies/University0_5.ttl')).toString();
 var univ3 = baseOntoTxt + fs.readFileSync(path.resolve(__dirname + '/ontologies/University0_14.ttl')).toString();
 
+//Hylar.setRules(OWL2RL.equality);
+//Hylar.setRules(OWL2RL.equality);
+//Hylar.setRules(OWL2RL.equivalence);
+//Hylar.setRules(OWL2RL.subsumption);
+//Hylar.setRules(OWL2RL.transitivity);
+//Hylar.setRules(OWL2RL.inverse);
 
 describe('CLASSIFICATION UNIV 1', function () {
     it('should parse and classify the ontology', function () {
@@ -94,6 +98,13 @@ describe('REINSERT UNIV 2', function () {
     });
 });
 
+describe('SELECT', function () {
+    var queryText = 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX ub: <http://www.lehigh.edu/~zhp2/2004/0401/univ-bench.owl#> SELECT ?X ?Y ?Z WHERE {?X rdf:type ub:GraduateStudent . ?Y rdf:type ub:University . ?Z rdf:type ub:Department . ?X ub:memberOf ?Z . ?Z ub:subOrganizationOf ?Y . ?X ub:undergraduateDegreeFrom ?Y}';
+    it('insert data and derivations', function () {
+        return Hylar.query(queryText);
+    });
+});
+
 // ------------------------------------------------------------------------
 
 describe('CLASSIFICATION UNIV 3', function () {
@@ -123,6 +134,13 @@ describe('REINSERT UNIV 3', function () {
     var query, results;
     it('insert data and derivations', function () {
         var queryText = 'INSERT DATA { ' + triples + ' }';
+        return Hylar.query(queryText);
+    });
+});
+
+describe('SELECT', function () {
+    var queryText = 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX ub: <http://www.lehigh.edu/~zhp2/2004/0401/univ-bench.owl#> SELECT ?X ?Y ?Z WHERE {?X rdf:type ub:GraduateStudent . ?Y rdf:type ub:University . ?Z rdf:type ub:Department . ?X ub:memberOf ?Z . ?Z ub:subOrganizationOf ?Y . ?X ub:undergraduateDegreeFrom ?Y}';
+    it('insert data and derivations', function () {
         return Hylar.query(queryText);
     });
 });

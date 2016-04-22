@@ -191,10 +191,7 @@ ReasoningEngine = {
             }
 
             DWithoutP = Logics.minus(D.toArray(), P);
-
-            for (var i = 0; i < DWithoutP.length; i++) {
-                I = Logics.minus(I, [DWithoutP[i]]);
-            }
+            I = Logics.minus(I, DWithoutP[i]);
 
             return I;
         };
