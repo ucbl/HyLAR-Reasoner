@@ -120,8 +120,7 @@ ReasoningEngine = {
         var backwardForwardDelete = function(E, I, FeDel, R) {
             var C = new Utils.IterableStructure(), D = new Utils.IterableStructure(), P = new Utils.IterableStructure(),
                 Y = [], O = [], S = [],
-                V = [],
-                CWithoutP, IWithoutO, DWithoutP,
+                V = [], IWithoutO, DWithoutP,
                 fact, tuples, evalRes;
 
             var checkProvability = function(fact) {
@@ -144,14 +143,13 @@ ReasoningEngine = {
                     for (var j = 0; j < tuples[i].rule.causes.length; j++) {
                         substitutedRuleFacts = Solver.substitute(tuples[i].rule.causes[j], smallestSubstitutions);
                         for (var k = 0; k < substitutedRuleFacts.length; k++) {
-                            checkProvability(substitutedRuleFacts[k]);
+                            return checkProvability(substitutedRuleFacts[k]);
                         }
                     }
                     if (fact.appearsIn(P)) {
                         return;
                     }
                 }
-
                 return;
             };
 
@@ -179,14 +177,10 @@ ReasoningEngine = {
 
             while (fact = D.next()) {
                 checkProvability(fact);
-                CWithoutP = Logics.minus(C.toArray(), P.toArray());
-                IWithoutO = Logics.minus(I, O);
-
-                for (var j = 0; j < CWithoutP.length; j++) {
-                    Logics.addToFactSet(S, CWithoutP[j]);
-                }
+                S = Logics.minus(C.toArray(), P.toArray());
 
                 if (!fact.appearsIn(P)) {
+                    IWithoutO = Logics.minus(I, O);
                     tuples = Solver.matchBody(R, fact);
                     for (var i = 0; i < tuples.length; i++) {
                         evalRes = Solver.eval(IWithoutO, tuples[i].annotatedQuery, [fact], tuples[i].mapping, tuples[i].rule.constants);
@@ -203,7 +197,6 @@ ReasoningEngine = {
             }
 
             return I;
-            1;
         };
 
         var Rins = [],
@@ -287,11 +280,11 @@ ReasoningEngine = {
 
         if(Logics.validateExistingFacts(F, FeAdd).unknownFacts.length > 0) {
             do {
-                FiAdd = Logics.mergeFactSets(FiAdd, FiAddNew);
-                superSet = Logics.mergeFactSetsIn([Fe, Fi, FeAdd, FiAdd]);
+                FiAdd = Utils.uniques(FiAdd, FiAddNew);
+                superSet = Utils.uniques(Utils.uniques(Utils.uniques(Fe, FiAdd), FeAdd), FiAdd);
                 Rins = Logics.restrictRuleSet(R, superSet);
                 FiAddNew = Solver.evaluateRuleSet(Rins, superSet);
-            } while (!Logics.containsFacts(FiAdd, FiAddNew));
+            } while (Utils.uniques(FiAdd, FiAddNew).length > FiAdd.length);
         }
 
         return {

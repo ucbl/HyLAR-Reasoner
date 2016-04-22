@@ -12,13 +12,12 @@ var isArray = function(arr) {
     return (Object.prototype.toString.call(arr) === '[object Array]');
 };
 
-IterableStructure = function(content) {
+var IterableStructure = function(content) {
     this.arr = [];
     if (content !== undefined) {
         this.arr = content;
     }
     this.currentIndex = -1;
-    return this;
 };
 
 IterableStructure.prototype.next = function() {

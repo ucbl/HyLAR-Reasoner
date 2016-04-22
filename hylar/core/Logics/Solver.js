@@ -3,6 +3,7 @@
  */
 
 var Fact = require('./Fact');
+var Rule = require('./Rule');
 var Logics = require('./Logics');
 var Utils = require('../Utils');
 var AnnotatedQuery = require('./AnnotatedQuery');
@@ -148,6 +149,13 @@ Solver = {
             if(constants.indexOf(localMapping[key]) !== -1) {
                 return false;
             }
+            for (var mapKey in mapping) {
+                if (mapping[mapKey] == localMapping[key]) {
+                    if (mapKey != key) {
+                        return false;
+                    }
+                }
+            }
         }
 
         // Merges local and global mapping
@@ -290,7 +298,7 @@ Solver = {
                 currentMapping = this.factMatches(fact, ruleSet[i].causes[j], mapping, ruleSet[i].constants);
                 if (currentMapping) {
                     annotateDiff = false;
-                    mapping = currentMapping
+                    mapping = currentMapping;
                 }
                 annotatedQuery.addAtom(new AnnotatedQuery.atom(ruleSet[i].causes[j], annotateDiff));
             }

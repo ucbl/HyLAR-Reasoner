@@ -148,11 +148,11 @@ module.exports = {
     subsumption: OWL2RL.rules.classSubsumption
         .concat(OWL2RL.rules.propertySubsumption),
 
-    subsumptionTransitivity: OWL2RL.rules.classSubsumption
-        .concat(OWL2RL.rules.propertySubsumption)
-        .concat(OWL2RL.rules.transitivity),
+    transitivity: OWL2RL.rules.transitivity,
 
-    subsumptionInverse: OWL2RL.rules.classSubsumption
-        .concat(OWL2RL.rules.propertySubsumption)
-        .concat(OWL2RL.rules.transitivity)
+    inverse: OWL2RL.rules.inverse,
+
+    equivalence: OWL2RL.rules.equivalence,
+
+    equality: OWL2RL.rules.equality
 };

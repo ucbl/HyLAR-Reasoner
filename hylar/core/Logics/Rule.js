@@ -74,6 +74,21 @@ Rule.prototype = {
         this.causes = orderedCauses;
     },
 
+    addCause: function(cause) {
+        var newRule = new Rule(this.causes.concat([cause]), this.consequences);
+        this.causes = newRule.causes;
+        this.consequences = newRule.consequences;
+        this.constants = newRule.constants;
+    },
+
+    addConsequence: function(cons) {
+        var newRule = new Rule(this.causes, this.consequences.concat([cons]));
+        this.causes = newRule.causes;
+        this.consequences = newRule.consequences;
+        this.constants = newRule.constants;
+    },
+
+
     // @todo
     getIdbPredicates: function() {
 
