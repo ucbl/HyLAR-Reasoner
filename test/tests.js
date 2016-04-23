@@ -11,10 +11,10 @@ var Logics = require('../hylar/core/Logics/Logics');
 var Logics = require('../hylar/core/OWL2RL');
 
 var H = require('../hylar/hylar');
-var queries = require('./query-examples');
+var queries = require('./query-examples-200t');
 var owl, ontology, mimeType, Hylar = new H();
 
-Hylar.setRules(OWL2RL.subsumption)
+Hylar.setRules(OWL2RL.classSubsumption);
 
 var a, b, c;
 

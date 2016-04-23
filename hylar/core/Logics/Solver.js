@@ -302,6 +302,7 @@ Solver = {
                 }
                 annotatedQuery.addAtom(new AnnotatedQuery.atom(ruleSet[i].causes[j], annotateDiff));
             }
+            annotatedQuery.addAtom(new AnnotatedQuery.atom(ruleSet[i].consequences[0], annotateDiff));
 
             if (!Utils.emptyObject(mapping)) {
                 tuples.push({

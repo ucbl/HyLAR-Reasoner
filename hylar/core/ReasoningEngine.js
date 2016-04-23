@@ -154,7 +154,7 @@ ReasoningEngine = {
             };
 
             var saturate = function() {
-                var tuplesMatchBody, fact;
+                var tuplesMatchBody, fact, evalRes, H;
 
                 while (fact = C.next()) {
                     if (fact.appearsIn(E) || fact.appearsIn(Y)) {
@@ -165,7 +165,17 @@ ReasoningEngine = {
                 while (fact = P.next()) {
                     if (Logics.addToFactSet(V, fact)) {
                         tuplesMatchBody = Solver.matchBody(R, fact);
-                        //todo
+                        for (var i = 0; i < tuplesMatchBody.length; i++) {
+                            evalRes = Solver.eval(V, tuplesMatchBody[i].annotatedQuery, [fact], tuplesMatchBody[i].mapping);
+                            H = Solver.substitute(tuplesMatchBody[i].rule.consequences[0], evalRes);
+                            for (var j = 0; j < H.length; j++) {
+                                if(H[j].appearsIn(C)) {
+                                    P.add(H);
+                                } else {
+                                    Y.add(H);
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -203,12 +213,10 @@ ReasoningEngine = {
             additions, deletions,
 
             Fe = Logics.getOnlyExplicitFacts(F),
-            Fi = Logics.getOnlyImplicitFacts(F),
-            FiAfterBf = Fi;
+            Fi = Logics.getOnlyImplicitFacts(F);
 
         if(FeDel && FeDel.length) {
-            FiAfterBf = backwardForwardDelete(Fe, FiAfterBf, FeDel, R);
-            FiAdd = Logics.minus(FiAfterBf, Fi);
+            FiDel = backwardForwardDelete(Fe, Fi, FeDel, R);
         }
 
         // Insertion
@@ -268,7 +276,6 @@ ReasoningEngine = {
             FiAdd = [],
             Rins = [],
             Fe = Logics.getOnlyExplicitFacts(F),
-            Fi = Logics.getOnlyImplicitFacts(F),
             superSet, validatedFacts = [];
 
         if(FeDel.length > 0) {

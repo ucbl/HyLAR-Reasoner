@@ -145,6 +145,8 @@ module.exports = {
         .concat(OWL2RL.rules.equivalence)
         .concat(OWL2RL.rules.equality),
 
+    classSubsumption: OWL2RL.rules.classSubsumption,
+
     subsumption: OWL2RL.rules.classSubsumption
         .concat(OWL2RL.rules.propertySubsumption),
 
