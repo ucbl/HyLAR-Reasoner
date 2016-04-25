@@ -8,13 +8,13 @@ var path = require('path');
 var mime = require('mime-types');
 
 var Logics = require('../hylar/core/Logics/Logics');
-var Logics = require('../hylar/core/OWL2RL');
+var OWL2RL = require('../hylar/core/OWL2RL');
 
 var H = require('../hylar/hylar');
 var queries = require('./query-examples-200t');
 var owl, ontology, mimeType, Hylar = new H();
 
-Hylar.setRules(OWL2RL.classSubsumption);
+//Hylar.setRules(OWL2RL.classSubsumption);
 
 var a, b, c;
 

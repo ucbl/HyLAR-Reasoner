@@ -119,8 +119,8 @@ ReasoningEngine = {
 
         var backwardForwardDelete = function(E, I, FeDel, R) {
             var C = new Utils.IterableStructure(), D = new Utils.IterableStructure(), P = new Utils.IterableStructure(),
-                Y = [], O = [], S = [],
-                V = [], IWithoutO, DWithoutP,
+                Y = [], O = new Utils.IterableStructure(), S = [],
+                V = new Utils.IterableStructure(), IWithoutO, DWithoutP, IWithoutS,
                 fact, tuples, evalRes;
 
             var checkProvability = function(fact) {
@@ -132,25 +132,24 @@ ReasoningEngine = {
 
                 saturate();
 
-                if (fact.appearsIn(P)) {
+                if (P.contains(fact)) {
                     return;
                 }
 
                 tuples = Solver.matchHead(R, fact);
 
                 for (var i = 0; i < tuples.length; i++) {
-                    smallestSubstitutions = Solver.eval(Logics.minus(I, S), tuples[i].annotatedQuery, [], tuples[i].mapping, tuples[i].rule.constants);
+                    smallestSubstitutions = Solver.eval(IWithoutS, tuples[i].annotatedQuery, [], tuples[i].mapping, tuples[i].rule.constants);
                     for (var j = 0; j < tuples[i].rule.causes.length; j++) {
                         substitutedRuleFacts = Solver.substitute(tuples[i].rule.causes[j], smallestSubstitutions);
                         for (var k = 0; k < substitutedRuleFacts.length; k++) {
-                            return checkProvability(substitutedRuleFacts[k]);
+                            checkProvability(substitutedRuleFacts[k]);
                         }
                     }
                     if (fact.appearsIn(P)) {
                         return;
                     }
                 }
-                return;
             };
 
             var saturate = function() {
@@ -158,18 +157,18 @@ ReasoningEngine = {
 
                 while (fact = C.next()) {
                     if (fact.appearsIn(E) || fact.appearsIn(Y)) {
-                        Logics.addToFactSet(P, fact);
+                        P.add(fact);
                     }
                 }
 
                 while (fact = P.next()) {
-                    if (Logics.addToFactSet(V, fact)) {
+                    if (V.add(fact)) {
                         tuplesMatchBody = Solver.matchBody(R, fact);
                         for (var i = 0; i < tuplesMatchBody.length; i++) {
-                            evalRes = Solver.eval(V, tuplesMatchBody[i].annotatedQuery, [fact], tuplesMatchBody[i].mapping);
+                            evalRes = Solver.eval(V.toArray(), tuplesMatchBody[i].annotatedQuery, [fact], tuplesMatchBody[i].mapping);
                             H = Solver.substitute(tuplesMatchBody[i].rule.consequences[0], evalRes);
                             for (var j = 0; j < H.length; j++) {
-                                if(H[j].appearsIn(C)) {
+                                if(C.contains(H[j])) {
                                     P.add(H);
                                 } else {
                                     Y.add(H);
@@ -186,21 +185,22 @@ ReasoningEngine = {
             D.add(FeDel);
 
             while (fact = D.next()) {
+                IWithoutS = Logics.minus(I, S);
                 checkProvability(fact);
                 S = Logics.minus(C.toArray(), P.toArray());
 
-                if (!fact.appearsIn(P)) {
-                    IWithoutO = Logics.minus(I, O);
+                if (!P.contains(fact)) {
+                    IWithoutO = Logics.minus(I, O.toArray());
                     tuples = Solver.matchBody(R, fact);
                     for (var i = 0; i < tuples.length; i++) {
                         evalRes = Solver.eval(IWithoutO, tuples[i].annotatedQuery, [fact], tuples[i].mapping, tuples[i].rule.constants);
                         D.add(Solver.substitute(tuples[i].rule.consequences[0], evalRes));
                     }
-                    Logics.addToFactSet(O, fact);
+                    O.add(fact);
                 }
             }
 
-            DWithoutP = Logics.minus(D.toArray(), P);
+            DWithoutP = Logics.minus(D.toArray(), P.toArray());
             I = Logics.minus(I, DWithoutP[i]);
 
             return I;

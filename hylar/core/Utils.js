@@ -6,8 +6,6 @@
  * Utility functions.
  */
 
-var q = require('q');
-
 var isArray = function(arr) {
     return (Object.prototype.toString.call(arr) === '[object Array]');
 };
@@ -28,19 +26,27 @@ IterableStructure.prototype.next = function() {
     return false;
 };
 
+IterableStructure.prototype.contains = function(elem) {
+    for (var i = 0; i < this.arr.length; i++) {
+        if (this.arr[i].toString() == elem.toString()) {
+            return true;
+        }
+    }
+    return false;
+};
+
 IterableStructure.prototype.add = function(elem) {
     if (isArray(elem)) {
         for (var i = 0; i < elem.length; i++) {
             this.add(elem[i])
         }
     } else {
-        for (var i = 0; i < this.arr.length; i++) {
-            if (this.arr[i].toString() == elem.toString()) {
-                return false;
-            }
+        if (this.contains(elem)) {
+            return false;
+        } else {
+            this.arr.push(elem);
+            return true;
         }
-        this.arr.push(elem);
-        return true;
     }
 };
 
@@ -91,5 +97,7 @@ module.exports = {
 
     emptyObject: function(obj) {
         return (Object.keys(obj).length == 0)
-    }
+    },
+
+    isArray: isArray
 };

@@ -317,20 +317,21 @@ Solver = {
     },
 
     eval: function(X, annotatedQuery, Y, mapping, constants) {
-        var mappings = [], currentMapping,
+        var mappings = [mapping], currentMapping,
             XWithoutY = Logics.minus(X, Y);
 
             for (var i = 0; i < X.length; i++) {
                 for (var j = 0; j < annotatedQuery.atomsLen(); j++) {
                     currentMapping = this.factMatches(X[i], annotatedQuery.getAtom(j).value, mapping, constants);
-                    if (currentMapping) {
+                    if(currentMapping) {
                         mapping = currentMapping;
+                        mappings.push(mapping);
                     }
                 }
-                mappings.push(mapping);
+
             }
 
-        return Utils.uniques([], mappings);
+        return mappings;
     },
 
     cloneMapping: function(mapping) {
