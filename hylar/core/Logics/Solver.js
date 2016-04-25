@@ -3,7 +3,6 @@
  */
 
 var Fact = require('./Fact');
-var Rule = require('./Rule');
 var Logics = require('./Logics');
 var Utils = require('../Utils');
 var AnnotatedQuery = require('./AnnotatedQuery');
@@ -134,13 +133,13 @@ Solver = {
         var localMapping = {};
 
         // Checks and update localMapping if matches
-        if (!this.factElemMatches(fact.subject, ruleFact.subject, mapping, localMapping)) {
+        if (!this.factElemMatches(fact.subject, ruleFact.subject, mapping, localMapping, constants)) {
             return false;
         }
-        if (!this.factElemMatches(fact.predicate, ruleFact.predicate, mapping, localMapping)) {
+        if (!this.factElemMatches(fact.predicate, ruleFact.predicate, mapping, localMapping, constants)) {
             return false;
         }
-        if (!this.factElemMatches(fact.object, ruleFact.object, mapping, localMapping)) {
+        if (!this.factElemMatches(fact.object, ruleFact.object, mapping, localMapping, constants)) {
             return false;
         }
 
@@ -149,18 +148,18 @@ Solver = {
             if(constants.indexOf(localMapping[key]) !== -1) {
                 return false;
             }
-            for (var mapKey in mapping) {
+        }
+
+        // Merges local and global mapping
+        for (var mapKey in mapping) {
+            for (var key in localMapping) {
                 if (mapping[mapKey] == localMapping[key]) {
                     if (mapKey != key) {
                         return false;
                     }
                 }
             }
-        }
-
-        // Merges local and global mapping
-        for (var key in mapping) {
-            localMapping[key] = mapping[key];
+            localMapping[mapKey] = mapping[mapKey];
         }
 
         // Updates graph references
@@ -174,7 +173,7 @@ Solver = {
         return localMapping;
     },
 
-    factElemMatches: function(factElem, causeElem, globalMapping, localMapping, localUris) {
+    factElemMatches: function(factElem, causeElem, globalMapping, localMapping, constants) {
         if (Logics.isVariable(causeElem)) {
             if (globalMapping[causeElem] && (globalMapping[causeElem] != factElem)) {
                 return false;
@@ -323,7 +322,7 @@ Solver = {
             for (var i = 0; i < X.length; i++) {
                 for (var j = 0; j < annotatedQuery.atomsLen(); j++) {
                     currentMapping = this.factMatches(X[i], annotatedQuery.getAtom(j).value, mapping, constants);
-                    if(currentMapping) {
+                    if (currentMapping) {
                         mapping = currentMapping;
                         mappings.push(mapping);
                     }
