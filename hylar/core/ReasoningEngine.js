@@ -223,7 +223,7 @@ ReasoningEngine = {
         if(FeAdd && FeAdd.length) {
             do {
                 FiAdd = Utils.uniques(FiAdd, FiAddNew);
-                superSet = Utils.uniques(Utils.uniques(Utils.uniques(Fe, FiAdd), FeAdd), FiAdd);
+                superSet = Utils.uniques(Utils.uniques(Utils.uniques(Fe, Fi), FeAdd), FiAdd);
                 Rins = Logics.restrictRuleSet(R, superSet);
                 FiAddNew = Solver.evaluateRuleSet(Rins, superSet);
             } while (Utils.uniques(FiAdd, FiAddNew).length > FiAdd.length);
@@ -272,11 +272,11 @@ ReasoningEngine = {
      * @returns {{additions: *, deletions: Array}}
      */
     tagging: function(FeAdd, FeDel, F, R) {
-        var FiAddNew = [],
-            FiAdd = [],
+        var FiAdd = [],
             Rins = [],
             Fe = Logics.getOnlyExplicitFacts(F),
-            superSet, validatedFacts = [];
+            Fi = Logics.getOnlyImplicitFacts(F),
+            superSet;
 
         if(FeDel.length > 0) {
             FeDel = Logics.invalidate(Fe, FeDel);
@@ -284,15 +284,15 @@ ReasoningEngine = {
 
         if(Logics.validateExistingFacts(F, FeAdd).unknownFacts.length > 0) {
             do {
-                FiAdd = Utils.uniques(FiAdd, FiAddNew);
-                superSet = Utils.uniques(Utils.uniques(Utils.uniques(Fe, FiAdd), FeAdd), FiAdd);
+                Fi = Utils.uniques(Fi, FiAdd);
+                superSet = Utils.uniques(Utils.uniques(Fe, Fi), FeAdd);
                 Rins = Logics.restrictRuleSet(R, superSet);
-                FiAddNew = Solver.evaluateRuleSet(Rins, superSet);
-            } while (Utils.uniques(FiAdd, FiAddNew).length > FiAdd.length);
+                FiAdd = Solver.evaluateRuleSet(Rins, superSet);
+            } while (!Utils.containsSubset(Fi, FiAdd));
         }
 
         return {
-            additions: Logics.mergeFactSetsIn([FeDel, FeAdd, validatedFacts, FiAdd]),
+            additions: Logics.mergeFactSetsIn([FeDel, FeAdd, Fi]),
             deletions: []
         };
     }

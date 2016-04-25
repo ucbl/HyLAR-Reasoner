@@ -99,5 +99,9 @@ module.exports = {
         return (Object.keys(obj).length == 0)
     },
 
+    containsSubset: function(_set1, _set2) {
+        return this.uniques(_set1, _set2).length == _set1.length
+    },
+
     isArray: isArray
 };

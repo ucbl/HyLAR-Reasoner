@@ -73,7 +73,7 @@ Fact.prototype = {
         var that = this;
         for (var key in factSet) {
             if(that.equivalentTo(factSet[key])){
-                return that;
+                return key;
             }
         }
         return false;
