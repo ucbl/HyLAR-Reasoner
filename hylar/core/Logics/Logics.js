@@ -86,7 +86,7 @@ module.exports = {
      * @param fs1
      * @param fs2
      */
-    mergeFactSets: function(fs1, fs2) {
+    combine: function(fs1, fs2) {
         var fact,
             maxMin = this.maxMin(fs1, fs2),
             fsMax = maxMin.max,
@@ -104,12 +104,12 @@ module.exports = {
      * which also merges identical facts obtainedFrom properties.
      * @param _set the set of facts sets.
      */
-    mergeFactSetsIn: function(_set) {
+    combineAll: function(_set) {
         var that = this, fs,
             finalSet = [];
         for (var i = 0; i < _set.length; i++) {
             fs = _set[i];
-            finalSet = that.mergeFactSets(fs, finalSet);
+            finalSet = that.combine(fs, finalSet);
         }
         return finalSet;
     },

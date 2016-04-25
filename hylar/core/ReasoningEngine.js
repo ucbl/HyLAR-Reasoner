@@ -283,16 +283,17 @@ ReasoningEngine = {
         }
 
         if(Logics.validateExistingFacts(F, FeAdd).unknownFacts.length > 0) {
+            Fe = Fe.concat(FeAdd);
             do {
-                Fi = Utils.uniques(Fi, FiAdd);
-                superSet = Utils.uniques(Utils.uniques(Fe, Fi), FeAdd);
+                Fi = Logics.combine(Fi, FiAdd);
+                superSet = Fe.concat(Fi);
                 Rins = Logics.restrictRuleSet(R, superSet);
                 FiAdd = Solver.evaluateRuleSet(Rins, superSet);
             } while (!Utils.containsSubset(Fi, FiAdd));
         }
 
         return {
-            additions: Logics.mergeFactSetsIn([FeDel, FeAdd, Fi]),
+            additions: Logics.combineAll([FeDel, FeAdd, Fi]),
             deletions: []
         };
     }

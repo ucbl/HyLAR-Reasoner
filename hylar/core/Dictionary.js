@@ -4,7 +4,7 @@
 
 /**
  * Dictionary used to index triples (in turtle) and their fact representation.
- * @type {{substractFactSets: Function, mergeFactSets: Function}|exports|module.exports}
+ * @type {{substractFactSets: Function, combine: Function}|exports|module.exports}
  */
 
 var Utils = require('./Utils');
