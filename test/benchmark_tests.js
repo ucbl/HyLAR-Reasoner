@@ -28,7 +28,7 @@ var univ3 = baseOntoTxt + fs.readFileSync(path.resolve(__dirname + '/ontologies/
 //Hylar.setRules(OWL2RL.transitivity);
 //Hylar.setRules(OWL2RL.inverse);
 
-/*describe('CLASSIFICATION UNIV 1', function () {
+describe('CLASSIFICATION UNIV 1', function () {
     it('should parse and classify the ontology', function () {
         return Hylar.load(univ1, 'text/turtle', reasoningMethod)
     });
@@ -103,7 +103,7 @@ describe('SELECT', function () {
     it('insert data and derivations', function () {
         return Hylar.query(queryText);
     });
-});*/
+});
 
 // ------------------------------------------------------------------------
 

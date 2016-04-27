@@ -282,11 +282,11 @@ ReasoningEngine = {
             FeDel = Logics.invalidate(Fe, FeDel);
         }
 
-        if(Logics.validateExistingFacts(F, FeAdd).unknownFacts.length > 0) {
+        if(Logics.validateExistingFacts(Fe, FeAdd).unknownFacts.length > 0) {
             Fe = Fe.concat(FeAdd);
             do {
                 Fi = Logics.combine(Fi, FiAdd);
-                superSet = Fe.concat(Fi);
+                superSet = Utils.uniques(Fe, Fi);
                 Rins = Logics.restrictRuleSet(R, superSet);
                 FiAdd = Solver.evaluateRuleSet(Rins, superSet);
             } while (!Utils.containsSubset(Fi, FiAdd));
