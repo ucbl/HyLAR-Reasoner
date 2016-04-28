@@ -22,11 +22,9 @@ var univ2 = baseOntoTxt + fs.readFileSync(path.resolve(__dirname + '/ontologies/
 var univ3 = baseOntoTxt + fs.readFileSync(path.resolve(__dirname + '/ontologies/University0_14.ttl')).toString();
 
 //Hylar.setRules(OWL2RL.equality);
-//Hylar.setRules(OWL2RL.equality);
 //Hylar.setRules(OWL2RL.equivalence);
 //Hylar.setRules(OWL2RL.subsumption);
-//Hylar.setRules(OWL2RL.transitivity);
-//Hylar.setRules(OWL2RL.inverse);
+//Hylar.setRules(OWL2RL.transitivityInverse);
 
 describe('CLASSIFICATION UNIV 1', function () {
     it('should parse and classify the ontology', function () {

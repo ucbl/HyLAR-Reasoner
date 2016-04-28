@@ -342,22 +342,17 @@ module.exports = {
      * @returns {{validatedFacts: Array, unknownFacts: Array}}
      */
     validateExistingFacts: function(originalSet, setToValidate) {
-        var validatedFacts = [],
-            unknownFacts = [];
+        var containsUnknownFacts = false;
         for (var i = 0; i < setToValidate.length; i++) {
             var factToValidate = setToValidate[i];
             if(factToValidate.appearsIn(originalSet)) {
                 factToValidate.valid = true;
-                validatedFacts.push(factToValidate);
             } else {
-                unknownFacts.push(factToValidate);
+                containsUnknownFacts = true;
             }
         }
 
-        return {
-            validatedFacts: validatedFacts,
-            unknownFacts: unknownFacts
-        }
+        return containsUnknownFacts;
     },
 
     /**

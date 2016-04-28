@@ -152,6 +152,9 @@ module.exports = {
 
     transitivity: OWL2RL.rules.transitivity,
 
+    transitivityInverse: OWL2RL.rules.transitivity
+        .concat(OWL2RL.rules.inverse),
+
     inverse: OWL2RL.rules.inverse,
 
     equivalence: OWL2RL.rules.equivalence,

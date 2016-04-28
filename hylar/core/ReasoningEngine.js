@@ -282,7 +282,7 @@ ReasoningEngine = {
             FeDel = Logics.invalidate(Fe, FeDel);
         }
 
-        if(Logics.validateExistingFacts(Fe, FeAdd).unknownFacts.length > 0) {
+        if(FeAdd.length > 0 && Logics.validateExistingFacts(Fe, FeAdd)) {
             Fe = Fe.concat(FeAdd);
             do {
                 Fi = Logics.combine(Fi, FiAdd);
