@@ -56,7 +56,8 @@ Fact.prototype = {
      * @returns {boolean}
      */
     equivalentTo: function(fact) {
-        if ((this.subject != fact.subject) ||
+        if ((this.explicit != fact.explicit) ||
+            (this.subject != fact.subject) ||
             (this.predicate != fact.predicate) ||
             (this.object != fact.object)) {
             return false;

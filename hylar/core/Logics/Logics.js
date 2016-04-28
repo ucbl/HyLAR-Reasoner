@@ -317,26 +317,23 @@ module.exports = {
     },
 
     /**
-     * Invalidates a fact.
+     * Invalidates a fact set.
+     * @deprecated Not used anymore
      * @param fs1
      * @param fs2
      * @returns {Array}
      */
-    invalidate: function(fs1, fs2) {
-        var invalidated = [], f2;
-        for (var i = 0; i < fs2.length; i++) {
-            f2 = fs2[i];
-            if(f2.appearsIn(fs1)) {
-                f2.valid = false;
-                invalidated.push(f2);
-            }
+    invalidate: function(fs1) {
+        for (var i = 0; i < fs1.length; i++) {
+            fs1[i].valid = false;
         }
-        return invalidated;
+        return fs1;
     },
 
     /**
      * Validates facts from setToValidate which
      * appear in the originalSet.
+     * @deprecated Not used anymore
      * @param originalSet
      * @param setToValidate
      * @returns {{validatedFacts: Array, unknownFacts: Array}}

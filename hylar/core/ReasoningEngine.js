@@ -279,14 +279,13 @@ ReasoningEngine = {
             superSet;
 
         if(FeDel.length > 0) {
-            FeDel = Logics.invalidate(Fe, FeDel);
+            FeDel = Logics.invalidate(FeDel);
         }
 
-        if(FeAdd.length > 0 && Logics.validateExistingFacts(Fe, FeAdd)) {
-            Fe = Fe.concat(FeAdd);
+        if(FeAdd.length > 0) {
             do {
                 Fi = Logics.combine(Fi, FiAdd);
-                superSet = Utils.uniques(Fe, Fi);
+                superSet = Utils.uniques(Utils.uniques(Fe, FeAdd), Fi);
                 Rins = Logics.restrictRuleSet(R, superSet);
                 FiAdd = Solver.evaluateRuleSet(Rins, superSet);
             } while (!Utils.containsSubset(Fi, FiAdd));

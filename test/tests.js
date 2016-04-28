@@ -11,7 +11,7 @@ var Logics = require('../hylar/core/Logics/Logics');
 var OWL2RL = require('../hylar/core/OWL2RL');
 
 var H = require('../hylar/hylar');
-var queries = require('./query-examples-200t');
+var queries = require('./query-examples');
 var owl, ontology, mimeType, Hylar = new H();
 
 //Hylar.setRules(OWL2RL.classSubsumption);
@@ -120,6 +120,158 @@ describe('SELECT query with derivations', function () {
                 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
                 'PREFIX fipa: <http://sites.google.com/site/smartappliancesproject/ontologies/fipa#> ' +
                 'SELECT * { fipa:Inspiron fipa:hasName ?a . } ')
+            .then(function(r) {
+                r.length.should.equal(1);
+            });
+    });
+
+    it('should find at least two subsumed class assertions', function () {
+        // Subsumption test
+        return Hylar.query(
+                'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
+                'PREFIX fipa: <http://sites.google.com/site/smartappliancesproject/ontologies/fipa#> ' +
+                'SELECT * { ?a rdf:type fipa:Function . } ')
+            .then(function(r) {
+                if (ontologyFilename == '/ontologies/fipa.ttl') {
+                    r.length.should.be.above(1);
+                }
+            });
+    });
+
+});
+
+describe('DELETE query with subsumption', function () {
+    var query;
+    it('should delete including derivations', function () {
+        var queryText = queries.fipaDelete;
+        return Hylar.query(queryText)
+            .then(function(i) {
+                i.should.be.true;
+                return Hylar.query(
+                    'SELECT ?a ?b ?c WHERE { ?a ?b ?c }');
+            })
+            .then(function(r) {
+                r.length.should.be.exactly(before);
+            });
+    });
+});
+
+describe('DELETIONS checking', function () {
+    var query, results;
+    it('should find nothing', function () {
+        // ClassAssertion Test
+        return Hylar.query(
+                'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
+                'PREFIX fipa: <http://sites.google.com/site/smartappliancesproject/ontologies/fipa#> ' +
+                'SELECT * WHERE { ?a rdf:type fipa:Device . } ')
+            .then(function(r) {
+                r.length.should.equal(0);
+            });
+    });
+
+    it('should find nothing', function () {
+        // Multiple ClassAssertion Test
+        return Hylar.query(
+                'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
+                'PREFIX fipa: <http://sites.google.com/site/smartappliancesproject/ontologies/fipa#> ' +
+                'SELECT * { ?a rdf:type fipa:ConnectionDescription . } ')
+            .then(function(r) {
+                r.length.should.equal(0);
+            });
+    });
+
+    it('should find nothing', function () {
+        // ObjectProperty Test
+        return Hylar.query(
+                'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
+                'PREFIX fipa: <http://sites.google.com/site/smartappliancesproject/ontologies/fipa#> ' +
+                'SELECT * { ?a fipa:hasConnection fipa:Wifi . } ')
+            .then(function(r) {
+                r.length.should.equal(0);
+            });
+    });
+
+    it('should find nothing', function () {
+        // DataProperty Test
+        return Hylar.query(
+                'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
+                'PREFIX fipa: <http://sites.google.com/site/smartappliancesproject/ontologies/fipa#> ' +
+                'SELECT * { fipa:Inspiron fipa:hasName ?a . } ')
+            .then(function(r) {
+                r.length.should.equal(0);
+            });
+    });
+
+    it('should find nothing', function () {
+        // Subsumption test
+        return Hylar.query(
+                'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
+                'PREFIX fipa: <http://sites.google.com/site/smartappliancesproject/ontologies/fipa#> ' +
+                'SELECT ?a { ?a rdf:type fipa:Function . }')
+            .then(function(r) {
+                r.length.should.equal(0);
+            });
+    });
+
+});
+
+describe('Re-INSERT exact same query', function () {
+    var query;
+    it('should not change anything (insert)', function () {
+        var queryText = queries.fipaInsert;
+        return Hylar.query(queryText)
+            .then(function(i) {
+                i.should.be.true;
+                return Hylar.query(
+                    'SELECT ?a ?b ?c WHERE { ?a ?b ?c }');
+            })
+            .then(function(r) {
+                r.length.should.be.exactly(bIns);
+            });
+    });
+});
+
+describe('SELECT query with derivations', function () {
+    var query, results;
+    it('should find at least a class assertion', function () {
+        // ClassAssertion Test
+        return Hylar.query(
+                'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
+                'PREFIX fipa: <http://sites.google.com/site/smartappliancesproject/ontologies/fipa#> ' +
+                'SELECT * { ?a rdf:type fipa:Device . } ')
+            .then(function(r) {
+                r.length.should.be.above(0);
+            });
+    });
+
+    it('should find another class assertion', function () {
+        // Multiple ClassAssertion Test
+        return Hylar.query(
+                'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
+                'PREFIX fipa: <http://sites.google.com/site/smartappliancesproject/ontologies/fipa#> ' +
+                'SELECT * { ?a rdf:type fipa:ConnectionDescription . } ')
+            .then(function(r) {
+                r.length.should.equal(4);
+            });
+    });
+
+    it('should find an objectProperty assertion', function () {
+        // ObjectProperty Test
+        return Hylar.query(
+                'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
+                'PREFIX fipa: <http://sites.google.com/site/smartappliancesproject/ontologies/fipa#> ' +
+                'SELECT * { ?a fipa:hasConnection fipa:Wifi . }')
+            .then(function(r) {
+                r.length.should.equal(1);
+            });
+    });
+
+    it('should find a dataProperty assertion', function () {
+        // DataProperty Test
+        return Hylar.query(
+                'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' +
+                'PREFIX fipa: <http://sites.google.com/site/smartappliancesproject/ontologies/fipa#> ' +
+                'SELECT * { fipa:Inspiron fipa:hasName ?a } ')
             .then(function(r) {
                 r.length.should.equal(1);
             });
