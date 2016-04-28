@@ -318,7 +318,6 @@ module.exports = {
 
     /**
      * Invalidates a fact set.
-     * @deprecated Not used anymore
      * @param fs1
      * @param fs2
      * @returns {Array}
