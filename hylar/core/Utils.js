@@ -86,7 +86,7 @@ module.exports = {
             fullSet = _set1.concat(_set2);
 
         for (var i = 0; i < fullSet.length; i++) {
-            hash[fullSet[i].toString()] = fullSet[i];
+            if (fullSet[i] !== undefined) hash[fullSet[i].toString()] = fullSet[i];
         }
 
         for (var key in hash) {

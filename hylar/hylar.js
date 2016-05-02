@@ -16,6 +16,11 @@ console.notify = function(msg) {
     console.log(colors.green('[HyLAR] ') + msg);
     fs.appendFileSync('hylar.log', new Date().toString() + ' ' + msg + '\n');
 };
+console.warn = function(msg) {
+    console.log(colors.red('[HyLAR] WARNING: ') + msg);
+    fs.appendFileSync('hylar.log', new Date().toString() + ' ' + msg + '\n');
+};
+
 
 /**
  * HyLAR main module.

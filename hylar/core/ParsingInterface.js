@@ -2,7 +2,8 @@
  * Created by MT on 20/11/2015.
  */
 
-var Fact = require('./Logics/Fact');
+var Fact = require('./Logics/Fact'),
+    Errors = require('./Errors');
 
 var rdfext = require('rdf-ext')(),
     q = require('q');
@@ -79,7 +80,8 @@ module.exports = {
             betweenBracketsPattern = /^<.+>$/i,
             dblQuoteInStrPattern = /^(")([\s\S]*)(".*)$/i, dblQuoteMatch;
 
-        if(entityStr.match(literalPattern)) {
+        if (entityStr === undefined) return false;
+        if (entityStr.match(literalPattern)) {
             entityStr = entityStr.replace(literalPattern, '$1$2');
             dblQuoteMatch = entityStr.match(dblQuoteInStrPattern);
             return dblQuoteMatch[1] + dblQuoteMatch[2].replace(/"/g, '\\"') + dblQuoteMatch[3];
@@ -101,7 +103,11 @@ module.exports = {
             predicate = this.parseStrEntityToTurtle(fact.predicate),
             object = this.parseStrEntityToTurtle(fact.object);
 
-        return subject + ' ' + predicate + ' ' + object + ' . ';
+        if (subject && predicate && object) {
+            return subject + ' ' + predicate + ' ' + object + ' . ';
+        } else {
+            return '';//Errors.IllegalFact(fact);
+        }
     },
 
     /**
@@ -117,21 +123,6 @@ module.exports = {
             ttl += that.factToTurtle(fact);
         }
         return ttl;
-    },
-
-    /**
-     * Trasnforms a rule into turtle.
-     * @param rule
-     * @returns {{causes: (*|string), consequences: (*|string)}}
-     */
-    ruleToTurtle: function(rule) {
-        var causesTurtle = this.factsToTurtle(rule.causes),
-            consequencesTurtle = this.factsToTurtle(rule.consequences);
-
-        return {
-            causes: causesTurtle,
-            consequences: consequencesTurtle
-        }
     },
 
     /**

@@ -414,18 +414,14 @@ module.exports = {
         return !this.isVariable(fact.subject) && !this.isVariable(fact.predicate) && !this.isVariable(fact.object)
     },
 
-    /**
-     * Returns the fact if it appears in a set of facts.
-     * Returns false otherwise.
-     * @param factSet
-     */
-    refAppearsIn: function(str, factSet) {
-        for (var key in factSet) {
-            if(str == factSet[key].toString()) {
-                return factSet[key];
-            }
+    getInconsistencies: function(fs) {
+        var inconsistencies = [];
+        for (var i = 0; i < fs.length; i++) {
+           if (fs[i].falseFact) {
+               inconsistencies = fs[i].causedBy;
+           }
         }
-        return false;
+        return inconsistencies;
     }
 
 };

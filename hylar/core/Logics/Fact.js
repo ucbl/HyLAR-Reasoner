@@ -13,9 +13,12 @@ var Logics = require('./Logics');
  * @constructor
  */
 Fact = function(pred, sub, obj, originConjs, expl, graphs) {
-    if(originConjs === undefined) originConjs = [];
-    if(graphs === undefined) graphs = [];
-    if(expl === undefined) expl = true;
+    if(pred == 'FALSE') {
+        this.falseFact = 'true'
+    }
+    if (originConjs === undefined) originConjs = [];
+    if (graphs === undefined) graphs = [];
+    if (expl === undefined) expl = true;
 
     this.predicate = pred;
     this.subject = sub;
@@ -45,9 +48,16 @@ Fact.prototype = {
      * @returns {string}
      */
     toString: function() {
-        var e;
+        var e, spo;
+
+        if(this.falseFact) {
+            spo = 'FALSE';
+        } else {
+            spo = '(' + this.subject + ', ' + this.predicate + ', ' + this.object + ')'
+        }
+
         this.explicit ? e = 'E' : e = 'I';
-        return e + '(' + this.subject + ', ' + this.predicate + ', ' + this.object + ')';
+        return e + spo;
     },
 
     /**

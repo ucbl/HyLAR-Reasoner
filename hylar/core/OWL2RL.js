@@ -145,7 +145,7 @@ OWL2RL = {
             new Rule([
                 new Fact(Type, '?x', Thing, [], true)
             ], [
-                new Fact(SubClassOf, '?x', Thing, [], true)
+                new Fact('FALSE')
             ])
         ]
 
