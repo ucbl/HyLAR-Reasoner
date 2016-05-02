@@ -136,10 +136,16 @@ OWL2RL = {
 
         testsFipa: [
             new Rule([
-                new Fact(Type, '?x', 'http://sites.google.com/site/smartappliancesproject/ontologies/fipa#Function'),
-                new Fact(Type, '?x', 'http://sites.google.com/site/smartappliancesproject/ontologies/fipa#RequestDeviceInfo')
+                new Fact(Type, '?x', 'http://sites.google.com/site/smartappliancesproject/ontologies/fipa#Function', [], true),
+                new Fact(Type, '?x', 'http://sites.google.com/site/smartappliancesproject/ontologies/fipa#RequestDeviceInfo', [], true)
             ], [
                 new Fact(Type, '?x', Thing, [], true)
+            ]),
+
+            new Rule([
+                new Fact(Type, '?x', Thing, [], true)
+            ], [
+                new Fact(SubClassOf, '?x', Thing, [], true)
             ])
         ]
 

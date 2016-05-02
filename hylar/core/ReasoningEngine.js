@@ -85,7 +85,7 @@ ReasoningEngine = {
             do {
                 FiAdd = Utils.uniques(FiAdd, FiAddNew);
                 Rred = Logics.restrictRuleSet(R, FiDel);
-                FiAddNew = Solver.evaluateRuleSet(Rred, Utils.uniques(Utils.uniques(Fe, Fi), FiDel));
+                FiAddNew = Solver.evaluateRuleSet(Rred, Utils.uniques(Fe, Fi));
             } while(Utils.uniques(FiAdd, FiAddNew).length > FiAdd.length);
 
         }
@@ -254,7 +254,7 @@ ReasoningEngine = {
             f = F[i];
             if(f.explicit && f.valid) {
                 validSet.push(f);
-            } else if(f.isValid(kb_fe)) {
+            } else if(f.isValid(refs)) {
                 validSet.push(f)
             }
         }
