@@ -287,7 +287,7 @@ ReasoningEngine = {
                 Fi = Logics.combine(Fi, FiAdd);
                 superSet = Utils.uniques(Utils.uniques(Fe, FeAdd), Fi);
                 Rins = Logics.restrictRuleSet(R, superSet);
-                FiAdd = Solver.evaluateRuleSet(Rins, superSet);
+                FiAdd = Solver.evaluateRuleSet(Rins, superSet, true);
             } while (!Utils.containsSubset(Fi, FiAdd));
         }
 

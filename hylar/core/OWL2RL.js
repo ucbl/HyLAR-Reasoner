@@ -132,6 +132,15 @@ OWL2RL = {
                     new Fact(SameAs, '?x', '?y', [], true),
                     new Fact(SameAs, '?y', '?z', [], true)],
                 [new Fact(SameAs, '?x', '?z', [], true)])
+        ],
+
+        testsFipa: [
+            new Rule([
+                new Fact(Type, '?x', 'http://sites.google.com/site/smartappliancesproject/ontologies/fipa#Function'),
+                new Fact(Type, '?x', 'http://sites.google.com/site/smartappliancesproject/ontologies/fipa#RequestDeviceInfo')
+            ], [
+                new Fact(Type, '?x', Thing, [], true)
+            ])
         ]
 
     }
@@ -143,7 +152,8 @@ module.exports = {
         .concat(OWL2RL.rules.transitivity)
         .concat(OWL2RL.rules.inverse)
         .concat(OWL2RL.rules.equivalence)
-        .concat(OWL2RL.rules.equality),
+        .concat(OWL2RL.rules.equality)
+        .concat(OWL2RL.rules.testsFipa),
 
     classSubsumption: OWL2RL.rules.classSubsumption,
 

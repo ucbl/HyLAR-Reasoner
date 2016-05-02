@@ -20,10 +20,10 @@ Solver = {
      * @param facts
      * @returns Array of the evaluation.
      */
-    evaluateRuleSet: function(rs, facts) {
+    evaluateRuleSet: function(rs, facts, doTagging) {
         var newCons, cons = [];
         for (var key in rs) {
-            newCons = this.evaluateThroughRestriction(rs[key], facts);
+            newCons = this.evaluateThroughRestriction(rs[key], facts, doTagging);
             cons = Utils.uniques(cons, newCons);
         }
         return cons;
@@ -42,27 +42,17 @@ Solver = {
             mappingList = [];
 
         rule.orderCausesByMostRestrictive();
-        causesToMap = [rule.causes[i]]; // Init with first cause
+        mappingList = [rule.causes[i]]; // Init with first cause
 
         while (i < rule.causes.length) {
-            causesToMap = this.substituteNextCauses(causesToMap, rule.causes[i+1], facts, rule.constants);
+            mappingList = this.substituteNextCauses(mappingList, rule.causes[i+1], facts, rule.constants);
             i++;
         }
 
-        // The loop is over, all mappings have been returned
-        mappingList = causesToMap;
-
         for (var i = 0; i < mappingList.length; i++) {
-            var causedBy = [],
-                consequenceGraphs = [];
-            // Replace mappings on all causes
-            for (var j = 0; j < rule.causes.length; j++) {
-                causedBy.push(this.substituteFactVariables(mappingList[i], rule.causes[j]).toString());
-                consequenceGraphs = Utils.uniques(consequenceGraphs, mappingList[i].graphs);
-            }
             // Replace mappings on all consequences
             for (var j = 0; j < rule.consequences.length; j++) {
-                consequences.push(this.substituteFactVariables(mappingList[i], rule.consequences[j], causedBy, consequenceGraphs));
+                consequences.push(this.substituteFactVariables(mappingList[i], rule.consequences[j], mappingList[i].__facts__));
             }
         }
 
@@ -93,6 +83,7 @@ Solver = {
                 // ... or build a fresh one if it does not exist
                 if (mapping === undefined) {
                     mapping = {};
+                    mapping.__facts__ = [];
                 }
 
                 // Update the mapping using pattern matching
@@ -152,14 +143,18 @@ Solver = {
 
         // Merges local and global mapping
         for (var mapKey in mapping) {
-            for (var key in localMapping) {
-                if (mapping[mapKey] == localMapping[key]) {
-                    if (mapKey != key) {
-                        return false;
+            if (mapKey == '__facts__') {
+                localMapping[mapKey] = Utils.uniques(mapping[mapKey], [fact])
+            } else {
+                for (var key in localMapping) {
+                    if (mapping[mapKey] == localMapping[key]) {
+                        if (mapKey != key) {
+                            return false;
+                        }
                     }
                 }
+                localMapping[mapKey] = mapping[mapKey];
             }
-            localMapping[mapKey] = mapping[mapKey];
         }
 
         // Updates graph references
@@ -331,14 +326,6 @@ Solver = {
             }
 
         return mappings;
-    },
-
-    cloneMapping: function(mapping) {
-        var clone = {};
-        for (var key in mapping) {
-            clone[key] = mapping[key];
-        }
-        return clone;
     }
 };
 

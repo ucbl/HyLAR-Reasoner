@@ -95,8 +95,12 @@ Fact.prototype = {
                 conj = this.causedBy[key];
             for (var i = 0; i < conj.length; i++) {
                 for (var j = 0; j < fe.length; j++) {
-                    if(fe[j] == conj[i]) {
-                        valid = valid && fe[j].valid;
+                    if(fe[j] == conj[i].toString()) {
+                        if(fe[j].explicit) {
+                            valid = valid && fe[j].valid;
+                        } else {
+                            valid = valid && fe[j].isValid(fe)
+                        }
                         break;
                     }
                 }
