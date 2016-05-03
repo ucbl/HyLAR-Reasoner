@@ -244,6 +244,23 @@ module.exports = {
             }
         }
         return newAdditions;
+    },
+
+    complementOf: function(kb, subset) {
+        var complement = [];
+        for (var i = 0; i < kb.length; i++) {
+            for (var j = 0; j < subset.length; j++) {
+                if ((subset[j] !== undefined) && (kb[i].equivalentTo(subset[j]))) {
+                    delete subset[j];
+                }
+            }
+        }
+        for (var i = 0; i < subset.length; i++) {
+            if (subset[i] !== undefined) {
+                complement.push(subset[i]);
+            }
+        }
+        return complement;
     }
 
 };
