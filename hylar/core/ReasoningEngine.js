@@ -284,7 +284,7 @@ ReasoningEngine = {
 
         if(FeAdd.length > 0) {
             do {
-                Fi = Logics.combine(Fi, FiAdd);
+                Logics.combine(Fi, FiAdd);
                 superSet = Utils.uniques(Utils.uniques(Fe, FeAdd), Fi);
                 Rins = Logics.restrictRuleSet(R, superSet);
                 FiAdd = Solver.evaluateRuleSet(Rins, superSet, true);
@@ -292,7 +292,7 @@ ReasoningEngine = {
         }
 
         return {
-            additions: Logics.combineAll([FeDel, FeAdd, Fi]),
+            additions: FeDel.concat(FeAdd, Fi),
             deletions: []
         };
     }
