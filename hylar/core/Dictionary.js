@@ -11,7 +11,7 @@ var Utils = require('./Utils');
 var ParsingInterface = require('./ParsingInterface');
 
 function Dictionary() {
-    var dict = {};
+    this.dict = {};
 };
 
 /**
@@ -20,7 +20,7 @@ function Dictionary() {
  * @returns {*}
  */
 Dictionary.prototype.get = function(ttl) {
-    var fact = dict[ttl];
+    var fact = this.dict[ttl];
     if (fact) return fact;
     else return false;
 };
@@ -35,7 +35,7 @@ Dictionary.prototype.get = function(ttl) {
  */
 Dictionary.prototype.put = function(fact) {
     try {
-        dict[ParsingInterface.factToTurtle(fact)] = fact;
+        this.dict[ParsingInterface.factToTurtle(fact)] = fact;
         return true;
     } catch(e) {
         return e;
@@ -47,7 +47,7 @@ Dictionary.prototype.put = function(fact) {
  * @returns {Object}
  */
 Dictionary.prototype.content = function() {
-    return dict;
+    return this.dict;
 };
 
 /**
@@ -55,7 +55,7 @@ Dictionary.prototype.content = function() {
  * @param content Object
  */
 Dictionary.prototype.setContent = function(content) {
-    dict = content;
+    this.dict = content;
 };
 
 /**
@@ -64,8 +64,8 @@ Dictionary.prototype.setContent = function(content) {
  */
 Dictionary.prototype.values = function() {
     var values = [];
-    for (var key in dict) {
-        values.push(dict[key]);
+    for (var key in this.dict) {
+        values.push(this.dict[key]);
     }
     return values;
 };
@@ -80,7 +80,7 @@ Dictionary.prototype.findValues = function(triples) {
     var values = [], notfound = [],
         value;
     for (var i = 0; i < triples.length; i++) {
-        value = dict[triples[i].toString().slice(0, -2)];
+        value = this.dict[triples[i].toString().slice(0, -2)];
         if(value !== undefined) {
            values.push(value);
         } else {
@@ -103,7 +103,7 @@ Dictionary.prototype.findKeys = function(values) {
     var keys = [], value, notfound = [];
     for (var i = 0; i< values.length; i++) {
         value = values[i];
-        var key = Utils.getKeyByValue(dict, value);
+        var key = Utils.getKeyByValue(this.dict, value);
         if(key !== undefined) {
             keys.push(key)
         } else {

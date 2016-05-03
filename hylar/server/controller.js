@@ -7,7 +7,10 @@ var fs = require('fs'),
     request = require('request'),
     mime = require('mime-types');
 
-var Hylar = require('../Hylar');
+var escape = require('escape-html');
+
+var h = require('../hylar');
+var Hylar = new h();
 
 var appDir = path.dirname(require.main.filename),
     ontoDir = appDir + '/ontologies',
@@ -193,5 +196,25 @@ module.exports = {
             filename: req.file.originalname,
             list: fs.readdirSync(ontoDir)
         });
+    },
+
+    renderFact: function(req, res) {
+        var uri = req.param('uri'), content = Hylar.getDictionary(), html = '';
+        if(!uri) {
+            for(var key in content) {
+                html += '<a href="http://localhost:'+port+'/explore/'+encodeURIComponent(key)+'">'+escape(key)+'</a></br>';
+            }
+        } else {
+            if (content[decodeURIComponent(uri)] !== undefined) {
+                html += '<b>Usual name:</b><br/> ' + content[decodeURIComponent(uri)].toString() + '<br/>';
+                for (var i = 0; i < content[decodeURIComponent(uri)].causedBy.length; i++) {
+                    html += '<b>Derived from:</b></br> ' + content[decodeURIComponent(uri)].causedBy[i].toString() + '<br/>';
+                }
+            } else {
+                html += 'Unknown fact!';
+            }
+
+        }
+        res.status(200).send(html);
     }
 };

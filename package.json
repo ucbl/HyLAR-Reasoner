@@ -7,6 +7,7 @@
     "browserify": "^2.3.0",
     "colors": "^1.1.2",
     "deasync": "^0.1.4",
+    "escape-html": "^1.0.3",
     "express": "^4.11.1",
     "extend": "^3.0.0",
     "gulp-debug": "~2.1.2",

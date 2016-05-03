@@ -45,6 +45,10 @@ app.get('/ontology', Controller.list);
 //File uploading
 app.post('/ontology', upload.single('file'), Controller.upload);
 
+//KB Explorer
+app.get('/explore', Controller.renderFact);
+app.get('/explore/:uri', Controller.renderFact);
+
 console.notify('Done.');
 console.notify('Exposing server to port ' + port + '...');
 
