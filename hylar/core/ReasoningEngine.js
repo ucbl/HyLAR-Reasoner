@@ -278,21 +278,19 @@ ReasoningEngine = {
             Fi = Logics.getOnlyImplicitFacts(F),
             superSet;
 
-        if(FeDel.length > 0) {
-            FeDel = Logics.invalidate(FeDel);
-        }
+        FeAdd = Logics.updateValidTags(Fe, FeAdd, FeDel);
 
         if(FeAdd.length > 0) {
             do {
                 Logics.combine(Fi, FiAdd);
-                superSet = Utils.uniques(Utils.uniques(Fe, FeAdd), Fi);
+                superSet = Utils.uniques(Fe, Fi);
                 Rins = Logics.restrictRuleSet(R, superSet);
                 FiAdd = Solver.evaluateRuleSet(Rins, superSet, true);
             } while (!Utils.containsSubset(Fi, FiAdd));
         }
 
         return {
-            additions: FeDel.concat(FeAdd, Fi),
+            additions: FeAdd.concat(Fi),
             deletions: []
         };
     }

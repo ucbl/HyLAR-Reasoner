@@ -215,11 +215,35 @@ module.exports = {
     getInconsistencies: function(fs) {
         var inconsistencies = [];
         for (var i = 0; i < fs.length; i++) {
-           if (fs[i].falseFact) {
+           if ((fs[i] !== undefined) && (fs[i].falseFact)) {
                inconsistencies = fs[i].causedBy;
            }
         }
         return inconsistencies;
+    },
+
+    updateValidTags: function(kb, additions, deletions) {
+        var newAdditions = [];
+        for (var i = 0; i < kb.length; i++) {
+            for (var j = 0; j < additions.length; j++) {
+                if ((additions[j] !== undefined) && (kb[i].equivalentTo(additions[j]))) {
+                    kb[i].valid = true;
+                    delete additions[j];
+                }
+            }
+            for (var j = 0; j < deletions.length; j++) {
+                if (kb[i].equivalentTo(deletions[j])) {
+                    kb[i].valid = false;
+                }
+            }
+        }
+        for (var i = 0; i < additions.length; i++) {
+            if (additions[i] !== undefined) {
+                kb.push(additions[i]);
+                newAdditions.push(additions[i]);
+            }
+        }
+        return newAdditions;
     }
 
 };

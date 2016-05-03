@@ -95,6 +95,14 @@ module.exports = {
         return uniq;
     },
 
+    buildUniqueSetWith: function(sets) {
+        var uniqueSet = [];
+        for (var i = 0; i < sets.length; i++) {
+            uniqueSet = this.uniques(uniqueSet, sets[i]);
+        }
+        return uniqueSet;
+    },
+
     emptyObject: function(obj) {
         return (Object.keys(obj).length == 0)
     },
