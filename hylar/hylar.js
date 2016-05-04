@@ -176,7 +176,7 @@ Hylar.prototype.setStorage = function(ttl) {
  * @returns {Object}
  */
 Hylar.prototype.getDictionary = function() {
-    return this.dict.content();
+    return this.dict;
 };
 
 /**

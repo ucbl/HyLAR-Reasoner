@@ -99,20 +99,15 @@ Fact.prototype = {
      * @param fe
      * @returns {boolean}
      */
-    isValid: function(fe) {
+    isValid: function() {
         for (var key in this.causedBy) {
             var valid = true,
                 conj = this.causedBy[key];
             for (var i = 0; i < conj.length; i++) {
-                for (var j = 0; j < fe.length; j++) {
-                    if(fe[j] == conj[i].toString()) {
-                        if(fe[j].explicit) {
-                            valid = valid && fe[j].valid;
-                        } else {
-                            valid = valid && fe[j].isValid(fe)
-                        }
-                        break;
-                    }
+                if(conj[i].explicit) {
+                    valid = valid && conj[i].valid;
+                } else {
+                    valid = valid && conj[i].isValid();
                 }
             }
             if (valid) {

@@ -116,4 +116,16 @@ Dictionary.prototype.findKeys = function(values) {
     };
 };
 
+Dictionary.prototype.getFactFromStringRepresentation = function(factStr) {
+    for (var key in this.dict) {
+        if (this.dict[key].toString() == factStr) {
+            return {
+                key: key,
+                value: this.dict[key]
+            };
+        }
+    }
+    return false;
+};
+
 module.exports = Dictionary;

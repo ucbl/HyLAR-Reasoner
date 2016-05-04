@@ -11,6 +11,7 @@ var escape = require('escape-html');
 
 var h = require('../hylar');
 var Hylar = new h();
+var Utils = require('../core/Utils');
 
 var appDir = path.dirname(require.main.filename),
     ontoDir = appDir + '/ontologies',
@@ -31,6 +32,8 @@ process.argv.forEach(function(value, index) {
         }
     }
 });
+
+Hylar.setTagBased();
 
 module.exports = {
 
@@ -199,21 +202,41 @@ module.exports = {
     },
 
     renderFact: function(req, res) {
-        var uri = req.param('uri'), content = Hylar.getDictionary(), html = '';
+        var uri = req.param('uri'), dict = Hylar.getDictionary(), html = '',
+            lookup, key, fact,
+            createLink = function(value) {
+                return '<a href="http://localhost:'+port+'/explore/'+encodeURIComponent(value)+'">'+escape(value)+'</a></br>'
+            },
+            createTitle = function(title) {
+                return '<b>'+title+'</b><br/> '
+            };
         if(!uri) {
-            for(var key in content) {
-                html += '<a href="http://localhost:'+port+'/explore/'+encodeURIComponent(key)+'">'+escape(key)+'</a></br>';
+            for(var key in dict.content()) {
+                html += createLink(dict.get(key));
             }
         } else {
-            if (content[decodeURIComponent(uri)] !== undefined) {
-                html += '<b>Usual name:</b><br/> ' + content[decodeURIComponent(uri)].toString() + '<br/>';
-                for (var i = 0; i < content[decodeURIComponent(uri)].causedBy.length; i++) {
-                    html += '<b>Derived from:</b></br> ' + content[decodeURIComponent(uri)].causedBy[i].toString() + '<br/>';
+            lookup = dict.getFactFromStringRepresentation(decodeURIComponent(uri));
+            key = lookup.key,
+            fact = lookup.value;
+            if ((fact !== undefined) && (key !== undefined)) {
+                html += '<h3>' + fact.toString() + '</h3>';
+                for (var i = 0; i < fact.causedBy.length; i++) {
+                    html += createTitle('Derived from');
+                    for (var j = 0; j < fact.causedBy[i].length; j++) {
+                        html += createLink(fact.causedBy[i][j].toString());
+                        if (!(j+1==fact.causedBy[i].length)) {
+                            html += 'AND<br/>';
+                        }
+                    }
+
                 }
+
+                html += '<br/>This fact is ' + (fact.explicit ? '<b>explicit</b> and ' + (fact.valid ? '<b>valid</b>' : '<b>not valid</b>') :
+                '<b>implicit</b> and ' + (fact.isValid() ? '<b>valid</b>' : '<b>not valid</b>'));
+
             } else {
                 html += 'Unknown fact!';
             }
-
         }
         res.status(200).send(html);
     }
