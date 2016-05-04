@@ -115,6 +115,19 @@ Fact.prototype = {
             }
         }
         return false;
+    },
+
+    derives: function(kb) {
+        var factsDerived = [];
+        for (var i = 0; i < kb.length; i++) {
+            for (var j = 0; j < kb[i].causedBy.length; j++) {
+                if (this.appearsIn(kb[i].causedBy[j])) {
+                    factsDerived.push(kb[i]);
+                    break;
+                }
+            }
+        }
+        return factsDerived;
     }
 };
 

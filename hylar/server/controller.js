@@ -203,7 +203,7 @@ module.exports = {
 
     renderFact: function(req, res) {
         var uri = req.param('uri'), dict = Hylar.getDictionary(), html = '',
-            lookup, key, fact,
+            lookup, key, fact, derivations,
             createLink = function(value) {
                 return '<a href="http://localhost:'+port+'/explore/'+encodeURIComponent(value)+'">'+escape(value)+'</a></br>'
             },
@@ -220,11 +220,24 @@ module.exports = {
             fact = lookup.value;
             if ((fact !== undefined) && (key !== undefined)) {
                 html += '<h3>' + fact.toString() + '</h3>';
+
                 for (var i = 0; i < fact.causedBy.length; i++) {
                     html += createTitle('Derived from');
                     for (var j = 0; j < fact.causedBy[i].length; j++) {
                         html += createLink(fact.causedBy[i][j].toString());
                         if (!(j+1==fact.causedBy[i].length)) {
+                            html += 'AND<br/>';
+                        }
+                    }
+
+                }
+
+                derivations = fact.derives(dict.values());
+                if (derivations.length > 0) {
+                    html += createTitle('Derives');
+                    for (var j = 0; j < derivations.length; j++) {
+                        html += createLink(derivations[j].toString());
+                        if (!(j+1==derivations.length)) {
                             html += 'AND<br/>';
                         }
                     }
