@@ -19,6 +19,8 @@ process.on('uncaughtException', function(err) {
     throw err;
 });
 
+app.set('view engine', 'ejs');
+
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 

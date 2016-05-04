@@ -128,6 +128,20 @@ Fact.prototype = {
             }
         }
         return factsDerived;
+    },
+
+    alternativeEquivalent: function(kb) {
+        for (var i = 0; i < kb.length; i++) {
+            if (
+                (kb[i].subject == this.subject) &&
+                (kb[i].predicate == this.predicate) &&
+                (kb[i].object == this.object)
+                (kb[i].explicit != this.explicit)
+            ) {
+                return kb[i];
+            }
+        }
+        return false;
     }
 };
 

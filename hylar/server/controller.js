@@ -12,9 +12,11 @@ var escape = require('escape-html');
 var h = require('../hylar');
 var Hylar = new h();
 var Utils = require('../core/Utils');
+var Logics = require('../core/Logics/Logics');
 
 var appDir = path.dirname(require.main.filename),
     ontoDir = appDir + '/ontologies',
+    htmlDir = appDir + '/views',
     port = 3000,
     parsedPort;
 
@@ -34,6 +36,18 @@ process.argv.forEach(function(value, index) {
 });
 
 Hylar.setTagBased();
+
+var createLink = function(value, url) {
+        if (url) {
+            url = url;
+        } else {
+            url = '/explore/'
+        }
+        return '<a href="http://localhost:'+port+url+encodeURIComponent(value)+'">'+escape(value)+'</a></br>'
+    },
+    createTitle = function(title) {
+        return '<h3>'+title+'</h3><br/> '
+    };
 
 module.exports = {
 
@@ -110,7 +124,7 @@ module.exports = {
      * @param res
      */
     sendOntology: function(req, res) {
-        res.header('Content-Type', 'application/xml');
+        res.header('Content-Type', 'text/json');
         res.status(200).json({
             data: {
                 ontologyTxt: req.rawOntology,
@@ -171,7 +185,20 @@ module.exports = {
      * @param res
      */
     hello: function(req, res) {
-        res.send('hello world');
+        var html = '', ontologies = fs.readdirSync(ontoDir), kb = Hylar.getDictionary().values();
+
+        html += createTitle('Statistics');
+        html += 'The knowledge base currently contains ' + kb.length + ' facts.<br/>';
+        html += Logics.getOnlyExplicitFacts(kb).length + ' are explicit and ' + Logics.getOnlyImplicitFacts(kb).length + ' are implicit.<br/>';
+        html += createTitle('Available ontologies');
+
+        for (var i = 0; i < ontologies.length; i++) {
+            html += createLink(ontologies[i], '/ontology/');
+        }
+
+        res.render(htmlDir + '/pages/index', {
+            content: html
+        });
     },
 
     /**
@@ -203,14 +230,9 @@ module.exports = {
 
     renderFact: function(req, res) {
         var uri = req.param('uri'), dict = Hylar.getDictionary(), html = '',
-            lookup, key, fact, derivations,
-            createLink = function(value) {
-                return '<a href="http://localhost:'+port+'/explore/'+encodeURIComponent(value)+'">'+escape(value)+'</a></br>'
-            },
-            createTitle = function(title) {
-                return '<b>'+title+'</b><br/> '
-            };
+            lookup, key, fact, derivations;
         if(!uri) {
+            html += createTitle('KB facts');
             for(var key in dict.content()) {
                 html += createLink(dict.get(key));
             }
@@ -248,9 +270,12 @@ module.exports = {
                 '<b>implicit</b> and ' + (fact.isValid() ? '<b>valid</b>' : '<b>not valid</b>'));
 
             } else {
-                html += 'Unknown fact!';
+                res.sendFile('404.html', { root: path.join(htmlDir) });
+                return;
             }
         }
-        res.status(200).send(html);
+        res.render(htmlDir + '/pages/index', {
+            content: html
+        });
     }
 };
