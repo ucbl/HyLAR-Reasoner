@@ -266,11 +266,12 @@ module.exports = {
 
                 }
 
-                html += '<br/>This fact is ' + (fact.explicit ? '<b>explicit</b> and ' + (fact.valid ? '<b>valid</b>' : '<b>not valid</b>') :
-                '<b>implicit</b> and ' + (fact.isValid() ? '<b>valid</b>' : '<b>not valid</b>'));
+                html += (fact.explicit ? '<span class="label label-default">EXPLICIT</span>' : '<span class="label label-default">IMPLICIT</span>')
 
             } else {
-                res.sendFile('404.html', { root: path.join(htmlDir) });
+                res.render(htmlDir + '/pages/index', {
+                    content: '<h2>Fact not found.</h2>'
+                });
                 return;
             }
         }

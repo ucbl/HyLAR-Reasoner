@@ -130,14 +130,20 @@ Fact.prototype = {
         return factsDerived;
     },
 
-    alternativeEquivalent: function(kb) {
+    isAlternativeEquivalentOf: function(fact) {
+        return (
+            (fact.subject == this.subject) &&
+            (fact.predicate == this.predicate) &&
+            (fact.object == this.object) &&
+            (fact.explicit != this.explicit)
+        );
+    },
+
+    findAlternativeEquivalent: function(kb) {
+        var alternativeEquivalent;
         for (var i = 0; i < kb.length; i++) {
-            if (
-                (kb[i].subject == this.subject) &&
-                (kb[i].predicate == this.predicate) &&
-                (kb[i].object == this.object)
-                (kb[i].explicit != this.explicit)
-            ) {
+            alternativeEquivalent = this.isAlternativeEquivalentOf(kb[i]);
+            if (alternativeEquivalent) {
                 return kb[i];
             }
         }

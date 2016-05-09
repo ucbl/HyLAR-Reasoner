@@ -95,6 +95,10 @@ module.exports = {
         return uniq;
     },
 
+    insertUnique: function(_set, val) {
+        return this.uniques(_set, [val]);
+    },
+
     buildUniqueSetWith: function(sets) {
         var uniqueSet = [];
         for (var i = 0; i < sets.length; i++) {

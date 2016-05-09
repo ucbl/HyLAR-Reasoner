@@ -269,6 +269,8 @@ ReasoningEngine = {
      */
     tagging: function(FeAdd, FeDel, F, R) {
         var newExplicitFacts = [],
+            resolvedExplicitFacts = [],
+            validUpdateResults,
             FiAdd = [],
             Rins = [],
             Fe = Logics.getOnlyExplicitFacts(F),
@@ -276,12 +278,14 @@ ReasoningEngine = {
             superSet;
 
         // Returns new explicit facts to be added
-        newExplicitFacts = Logics.updateValidTags(Fe, FeAdd, FeDel);
+        validUpdateResults = Logics.updateValidTags(F, FeAdd, FeDel);
+        newExplicitFacts = validUpdateResults.__new__;
+        resolvedExplicitFacts = validUpdateResults.__resolved__;
 
         if(newExplicitFacts.length > 0) {
             do {
                 Logics.combine(Fi, FiAdd);
-                superSet = Utils.uniques(Fe, Fi);
+                superSet = Utils.uniques(F, Fi);
                 Rins = Logics.restrictRuleSet(R, superSet);
                 FiAdd = Solver.evaluateRuleSet(Rins, superSet, true);
             } while (!Utils.containsSubset(Fi, FiAdd));
@@ -289,7 +293,7 @@ ReasoningEngine = {
 
         // We here only returns things that changed
         return {
-            additions: Utils.uniques(newExplicitFacts, Fi),
+            additions: Utils.uniques(newExplicitFacts.concat(resolvedExplicitFacts), Fi),
             deletions: []
         };
     }

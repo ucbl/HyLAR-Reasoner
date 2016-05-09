@@ -223,12 +223,32 @@ module.exports = {
     },
 
     updateValidTags: function(kb, additions, deletions) {
-        var newAdditions = [];
+        var newAdditions = [],
+            resolvedAdditions = [],
+            derivations, newCauseConj;
         for (var i = 0; i < kb.length; i++) {
             for (var j = 0; j < additions.length; j++) {
-                if ((additions[j] !== undefined) && (kb[i].equivalentTo(additions[j]))) {
-                    kb[i].valid = true;
-                    delete additions[j];
+                if (additions[j] !== undefined) {
+                    if(kb[i].equivalentTo(additions[j])) {
+                        kb[i].valid = true;
+                        delete additions[j];
+                    } else if(kb[i].isAlternativeEquivalentOf(additions[j])) {
+                        derivations = kb[i].derives(kb);
+                        for (var k = 0; k < derivations.length; k++) {
+                            for (var l = 0; l < derivations[k].causedBy.length; l++) {
+                                newCauseConj = derivations[k].causedBy[l].slice();
+                                for (var m = 0; m < newCauseConj.length; m++) {
+                                    if(newCauseConj[m].isAlternativeEquivalentOf(additions[j])) {
+                                        newCauseConj[m] = additions[j];
+                                    }
+                                }
+                                derivations[k].causedBy = Utils.uniques(derivations[k].causedBy, [newCauseConj]);
+                            }
+                        }
+                        kb.push(additions[j]);
+                        resolvedAdditions.push(additions[j]);
+                        delete additions[j];
+                    }
                 }
             }
             for (var j = 0; j < deletions.length; j++) {
@@ -243,7 +263,10 @@ module.exports = {
                 newAdditions.push(additions[i]);
             }
         }
-        return newAdditions;
+        return {
+            __new__: newAdditions,
+            __resolved__: resolvedAdditions
+        };
     },
 
     complementOf: function(kb, subset) {

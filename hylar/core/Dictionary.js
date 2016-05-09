@@ -34,8 +34,18 @@ Dictionary.prototype.get = function(ttl) {
  * @returns {*}
  */
 Dictionary.prototype.put = function(fact) {
+    var factToTurtle;
     try {
-        this.dict[ParsingInterface.factToTurtle(fact)] = fact;
+        if(fact.predicate === 'FALSE') {
+            this.dict['__FALSE__'] = [fact];
+        } else {
+            factToTurtle = ParsingInterface.factToTurtle(fact);
+            if (this.dict[factToTurtle]) {
+                this.dict[factToTurtle] = Utils.insertUnique(this.dict[factToTurtle], fact);
+            } else {
+                this.dict[factToTurtle] = [fact];
+            }
+        }
         return true;
     } catch(e) {
         return e;
@@ -65,7 +75,9 @@ Dictionary.prototype.setContent = function(content) {
 Dictionary.prototype.values = function() {
     var values = [];
     for (var key in this.dict) {
-        values.push(this.dict[key]);
+        for (var i = 0; i < this.dict[key].length; i++) {
+            values.push(this.dict[key][i]);
+        }
     }
     return values;
 };
@@ -78,11 +90,13 @@ Dictionary.prototype.values = function() {
  */
 Dictionary.prototype.findValues = function(triples) {
     var values = [], notfound = [],
-        value;
+        facts;
     for (var i = 0; i < triples.length; i++) {
-        value = this.dict[triples[i].toString().slice(0, -2)];
-        if(value !== undefined) {
-           values.push(value);
+        facts = this.dict[triples[i].toString().slice(0, -2)];
+        if(facts !== undefined) {
+            for (var j = 0; j < facts.length; j++) {
+                values.push(facts[j]);
+            }
         } else {
            notfound.push(triples[i]);
         }
@@ -103,11 +117,13 @@ Dictionary.prototype.findKeys = function(values) {
     var keys = [], value, notfound = [];
     for (var i = 0; i< values.length; i++) {
         value = values[i];
-        var key = Utils.getKeyByValue(this.dict, value);
-        if(key !== undefined) {
-            keys.push(key)
-        } else {
-            notfound.push(value);
+        for (var key in this.dict) {
+            if (this.dict[key].toString().indexOf(value.toString()) !== -1) {
+                keys.push(key);
+                break;
+            } else {
+                notfound.push(value);
+            }
         }
     }
     return {
@@ -118,11 +134,13 @@ Dictionary.prototype.findKeys = function(values) {
 
 Dictionary.prototype.getFactFromStringRepresentation = function(factStr) {
     for (var key in this.dict) {
-        if (this.dict[key].toString() == factStr) {
-            return {
-                key: key,
-                value: this.dict[key]
-            };
+        for (var i = 0; i < this.dict[key].length; i++) {
+            if (this.dict[key][i].toString() == factStr) {
+                return {
+                    key: key,
+                    value: this.dict[key][i]
+                };
+            }
         }
     }
     return false;

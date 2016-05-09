@@ -197,65 +197,49 @@ Hylar.prototype.treatUpdate = function(sparql) {
         iTriples = [],
         dTriples = [],
         FeIns, FeDel, F = [],
-        turtle, update, insertion, deletion, kbT;
+        turtle, update, insertion, deletion, kbT, insDel;
 
-    return this.sm.query(
-            'CONSTRUCT { ?a ?b ?c } ' +
-            'WHERE { ?a ?b ?c . }')
-        .then(function(r) {
-            for (var i = 0; i < sparql.updates.length; i++) {
-                update = sparql.updates[i];
-                if(update.insert) {
-                    console.notify('Starting insertion.');
-                    for (var j = 0; j < update.insert.length; j++) {
-                        insertion = update.insert[j];
-                        iTriples = iTriples.concat(insertion.triples);
-                    }
-                }
-                if(update.delete) {
-                    console.notify('Starting deletion.');
-                    for (var j = 0; j < update.delete.length; j++) {
-                        deletion = update.delete[j];
-                        dTriples = iTriples.concat(deletion.triples);
-                    }
-                }
+    for (var i = 0; i < sparql.updates.length; i++) {
+        update = sparql.updates[i];
+        if(update.insert) {
+            console.notify('Starting insertion.');
+            for (var j = 0; j < update.insert.length; j++) {
+                insertion = update.insert[j];
+                iTriples = iTriples.concat(insertion.triples);
             }
-
-            for (var i = 0; i < r.triples.length; i++) {
-                kbT = r.triples[i];
-                if (!(
-                        kbT.subject.interfaceName == "BlankNode" ||
-                        kbT.predicate.interfaceName == "BlankNode" ||
-                        kbT.object.interfaceName == "BlankNode"
-                    )) {
-                    var f = that.dict.get(kbT.toString().slice(0,-2));
-                    if(!f) f = ParsingInterface.tripleToFact(kbT);
-                    F.push(f);
-                }
+        }
+        if(update.delete) {
+            console.notify('Starting deletion.');
+            for (var j = 0; j < update.delete.length; j++) {
+                deletion = update.delete[j];
+                dTriples = iTriples.concat(deletion.triples);
             }
+        }
+    }
 
-            FeIns = ParsingInterface.triplesToFacts(iTriples);
-            FeDel = ParsingInterface.triplesToFacts(dTriples);
+    F = that.getDictionary().values();
+    FeIns = ParsingInterface.triplesToFacts(iTriples);
+    FeDel = ParsingInterface.triplesToFacts(dTriples);
 
-            return Reasoner.evaluate(FeIns, FeDel, F, that.rMethod, that.rules)
-        })
+    return Reasoner.evaluate(FeIns, FeDel, F, that.rMethod, that.rules)
         .then(function(derivations) {
             that.registerDerivations(derivations);
-            return {
+            insDel = {
                 insert: ParsingInterface.factsToTurtle(derivations.additions),
                 delete: ParsingInterface.factsToTurtle(derivations.deletions)
-            }
+            };
+            console.notify('Update completed.');
+            return insDel;
         })
         .then(function(obj) {
             turtle = obj;
             if(turtle.delete != '') return that.sm.delete(turtle.delete);
             else return true;
         })
-        .then(function(d) {
+        .then(function() {
             if(turtle.insert != '') return that.sm.insert(turtle.insert);
             else return true;
         });
-    console.notify('Update completed.');
 };
 
 /**

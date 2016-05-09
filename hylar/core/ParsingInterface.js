@@ -106,7 +106,7 @@ module.exports = {
         if (subject && predicate && object) {
             return subject + ' ' + predicate + ' ' + object + ' . ';
         } else {
-            return '';//Errors.IllegalFact(fact);
+            return '';
         }
     },
 
