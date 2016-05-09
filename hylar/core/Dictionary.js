@@ -20,8 +20,10 @@ function Dictionary() {
  * @returns {*}
  */
 Dictionary.prototype.get = function(ttl) {
-    var fact = this.dict[ttl];
-    if (fact) return fact;
+    var facts = this.dict[ttl];
+    if (facts !== undefined) {
+        return facts;
+    }
     else return false;
 };
 

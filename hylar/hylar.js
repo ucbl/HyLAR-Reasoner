@@ -311,7 +311,7 @@ Hylar.prototype.classify = function() {
 
     return this.sm.query('CONSTRUCT { ?a ?b ?c } WHERE { ?a ?b ?c }')
         .then(function(r) {
-            var facts = [], triple;
+            var facts = [], triple, fs, f;
 
             for (var i = 0; i <  r.triples.length; i++) {
                 triple = r.triples[i];
@@ -320,12 +320,14 @@ Hylar.prototype.classify = function() {
                         triple.predicate.interfaceName == "BlankNode" ||
                         triple.object.interfaceName == "BlankNode"
                     )) {
-                    var f = that.dict.get(triple);
-                    if(!f) {
+                    fs = that.dict.get(triple);
+                    if(!fs) {
                         f = ParsingInterface.tripleToFact(triple);
                         that.dict.put(f);
+                        facts.push(f);
+                    } else {
+                        facts = facts.concat(fs);
                     }
-                    facts.push(f);
                 }
 
             }

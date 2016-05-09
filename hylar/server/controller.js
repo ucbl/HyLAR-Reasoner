@@ -230,18 +230,26 @@ module.exports = {
 
     renderFact: function(req, res) {
         var uri = req.param('uri'), dict = Hylar.getDictionary(), html = '',
-            lookup, key, fact, derivations;
+            lookup, key, fact, derivations, values;
         if(!uri) {
             html += createTitle('KB facts');
             for(var key in dict.content()) {
-                html += createLink(dict.get(key));
+                values = dict.get(key);
+                for (var i = 0; i < values.length; i++) {
+                    html += createLink(values[i]);
+                }
             }
         } else {
             lookup = dict.getFactFromStringRepresentation(decodeURIComponent(uri));
-            key = lookup.key,
+            key = lookup.key;
             fact = lookup.value;
             if ((fact !== undefined) && (key !== undefined)) {
                 html += '<h3>' + fact.toString() + '</h3>';
+                html += (fact.explicit ? '<span class="label label-default">EXPLICIT</span>' : '<span class="label label-default">IMPLICIT</span>')
+                html += (fact.isValid() ? '&nbsp;<span class="label label-success">VALID</span>' : '&nbsp;<span class="label label-danger">NOT VALID</span>')
+
+                html += createTitle('Equivalent as triple');
+                html += '&nbsp<code>'+escape(key)+'</code>';
 
                 for (var i = 0; i < fact.causedBy.length; i++) {
                     html += createTitle('Derived from');
@@ -265,8 +273,6 @@ module.exports = {
                     }
 
                 }
-
-                html += (fact.explicit ? '<span class="label label-default">EXPLICIT</span>' : '<span class="label label-default">IMPLICIT</span>')
 
             } else {
                 res.render(htmlDir + '/pages/index', {

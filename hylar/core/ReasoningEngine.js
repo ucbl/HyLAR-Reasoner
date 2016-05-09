@@ -245,13 +245,10 @@ ReasoningEngine = {
      * @returns {Array}
      */
     tagFilter: function(F, refs) {
-        var validSet = [], kb_fe = Logics.getOnlyExplicitFacts(refs), f;
+        var validSet = [], kb_fe = Logics.getOnlyExplicitFacts(refs);
         for (var i = 0; i < F.length; i++) {
-            f = F[i];
-            if(f.explicit && f.valid) {
-                validSet.push(f);
-            } else if(f.isValid(refs)) {
-                validSet.push(f)
+            if (F[i].isValid()) {
+                validSet.push(F[i]);
             }
         }
         return validSet;

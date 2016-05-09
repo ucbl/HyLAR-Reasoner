@@ -100,6 +100,9 @@ Fact.prototype = {
      * @returns {boolean}
      */
     isValid: function() {
+        if (this.explicit) {
+            return this.valid;
+        }
         for (var key in this.causedBy) {
             var valid = true,
                 conj = this.causedBy[key];
