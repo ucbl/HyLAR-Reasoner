@@ -46,7 +46,7 @@ var createLink = function(value, url) {
         return '<a href="http://localhost:'+port+url+encodeURIComponent(value)+'">'+escape(value)+'</a></br>'
     },
     createTitle = function(title) {
-        return '<h3>'+title+'</h3><br/> '
+        return '<h4>'+title+'</h4>'
     };
 
 module.exports = {
@@ -245,7 +245,7 @@ module.exports = {
             fact = lookup.value;
             if ((fact !== undefined) && (key !== undefined)) {
                 html += '<h3>' + fact.toString() + '</h3>';
-                html += (fact.explicit ? '<span class="label label-default">EXPLICIT</span>' : '<span class="label label-default">IMPLICIT</span>')
+                html += (fact.explicit ? '<span class="label label-primary">EXPLICIT</span>' : '<span class="label label-info">IMPLICIT</span>')
                 html += (fact.isValid() ? '&nbsp;<span class="label label-success">VALID</span>' : '&nbsp;<span class="label label-danger">NOT VALID</span>')
 
                 html += createTitle('Equivalent as triple');

@@ -3,6 +3,7 @@
  */
 
 var Logics = require('./Logics');
+var Utils = require('../Utils');
 
 /**
  * Fact in the form subClassOf(a, b)
@@ -99,18 +100,19 @@ Fact.prototype = {
      * @param fe
      * @returns {boolean}
      */
-    isValid: function() {
+    isValid: function(treated) {
         if (this.explicit) {
             return this.valid;
         }
-        for (var key in this.causedBy) {
+        for (var i = 0; i < this.causedBy.length; i++) {
             var valid = true,
-                conj = this.causedBy[key];
-            for (var i = 0; i < conj.length; i++) {
-                if(conj[i].explicit) {
-                    valid = valid && conj[i].valid;
+                conj = this.causedBy[i];
+            for (var j = 0; j < conj.length; j++) {
+                if (treated.toString().indexOf(conj[j]) === -1) {
+                    treated = Utils.insertUnique(treated, conj[j]);
+                    valid = valid && conj[j].isValid(treated);
                 } else {
-                    valid = valid && conj[i].isValid();
+                    return false;
                 }
             }
             if (valid) {

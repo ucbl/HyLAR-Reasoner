@@ -146,6 +146,12 @@ OWL2RL = {
                 new Fact(Type, '?x', Thing, [], true)
             ], [
                 new Fact('FALSE')
+            ]),
+
+            new Rule([
+                new Fact(Type, '?x', 'http://sites.google.com/site/smartappliancesproject/ontologies/fipa#Function', [], true)
+            ], [
+                new Fact(Type, '?x', 'http://sites.google.com/site/smartappliancesproject/ontologies/fipa#RequestDeviceInfo', [], true)
             ])
         ]
 
