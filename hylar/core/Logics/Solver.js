@@ -36,9 +36,10 @@ Solver = {
      * @param facts
      * @returns {Array}
      */
-    evaluateThroughRestriction: function(rule, facts) {
+    evaluateThroughRestriction: function(rule, facts, doTagging) {
         var causesToMap, i = 0,
             consequences = [],
+            consequence,
             mappingList = [];
 
         rule.orderCausesByMostRestrictive();
@@ -52,7 +53,10 @@ Solver = {
         for (var i = 0; i < mappingList.length; i++) {
             // Replace mappings on all consequences
             for (var j = 0; j < rule.consequences.length; j++) {
-                consequences.push(this.substituteFactVariables(mappingList[i], rule.consequences[j], mappingList[i].__facts__));
+                consequence = this.substituteFactVariables(mappingList[i], rule.consequences[j], mappingList[i].__facts__);
+                if ( (!doTagging) || (doTagging && Logics.filterKnownOrAlternativeImplicitFact(consequence, facts))) {
+                    consequences.push(consequence);
+                }
             }
         }
 

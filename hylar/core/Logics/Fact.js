@@ -101,6 +101,7 @@ Fact.prototype = {
      * @returns {boolean}
      */
     isValid: function(treated) {
+        if (treated === undefined) treated = [];
         if (this.explicit) {
             return this.valid;
         }
@@ -109,7 +110,7 @@ Fact.prototype = {
                 conj = this.causedBy[i];
             for (var j = 0; j < conj.length; j++) {
                 if (treated.toString().indexOf(conj[j]) === -1) {
-                    treated = Utils.insertUnique(treated, conj[j]);
+                    treated.push(conj[j]);
                     valid = valid && conj[j].isValid(treated);
                 } else {
                     return false;

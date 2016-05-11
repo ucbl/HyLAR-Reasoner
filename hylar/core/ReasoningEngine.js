@@ -268,11 +268,11 @@ ReasoningEngine = {
         var newExplicitFacts = [],
             resolvedExplicitFacts = [],
             validUpdateResults,
+            superSet,
             FiAdd = [],
             Rins = [],
             Fe = Logics.getOnlyExplicitFacts(F),
-            Fi = Logics.getOnlyImplicitFacts(F),
-            superSet;
+            Fi = Logics.getOnlyImplicitFacts(F);
 
         // Returns new explicit facts to be added
         validUpdateResults = Logics.updateValidTags(F, FeAdd, FeDel);
@@ -282,13 +282,12 @@ ReasoningEngine = {
         if(newExplicitFacts.length > 0) {
             do {
                 Logics.combine(Fi, FiAdd);
-                superSet = Utils.uniques(F, Fi);
-                Rins = Logics.restrictRuleSet(R, superSet);
-                FiAdd = Solver.evaluateRuleSet(Rins, superSet, true);
-            } while (!Utils.containsSubset(Fi, FiAdd));
+                F = Utils.uniques(F, Fi);
+                Rins = Logics.restrictRuleSet(R, F);
+                FiAdd = Solver.evaluateRuleSet(Rins, F, true);
+            } while (FiAdd.length > 0);
         }
 
-        // We here only returns things that changed
         return {
             additions: Utils.uniques(newExplicitFacts.concat(resolvedExplicitFacts), Fi),
             deletions: []
