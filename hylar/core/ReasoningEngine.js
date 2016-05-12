@@ -267,11 +267,11 @@ ReasoningEngine = {
     tagging: function(FeAdd, FeDel, F, R) {
         var newExplicitFacts = [],
             resolvedExplicitFacts = [],
+            //resolvedImplicitFacts = [],
             validUpdateResults,
             superSet,
             FiAdd = [],
             Rins = [],
-            Fe = Logics.getOnlyExplicitFacts(F),
             Fi = Logics.getOnlyImplicitFacts(F);
 
         // Returns new explicit facts to be added
@@ -281,11 +281,11 @@ ReasoningEngine = {
 
         if(newExplicitFacts.length > 0) {
             do {
-                Logics.combine(Fi, FiAdd);
+                Logics.combine(Fi, FiAdd/*.concat(resolvedImplicitFacts)*/);
                 F = Utils.uniques(F, Fi);
                 Rins = Logics.restrictRuleSet(R, F);
-                FiAdd = Solver.evaluateRuleSet(Rins, F, true);
-            } while (FiAdd.length > 0);
+                FiAdd = Solver.evaluateRuleSet(Rins, F, true/*, resolvedImplicitFacts*/);
+            } while (!Utils.containsSubset(Fi, FiAdd))//(FiAdd.length > 0);
         }
 
         return {

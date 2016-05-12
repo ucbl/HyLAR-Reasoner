@@ -294,11 +294,12 @@ module.exports = {
         return complement;
     },
 
-    filterKnownOrAlternativeImplicitFact: function(derivedFact, kb) {
+    filterKnownOrAlternativeImplicitFact: function(derivedFact, kb, implicitFactsSubset) {
         for (var i = 0; i < kb.length; i++) {
             if (kb[i].equivalentTo(derivedFact)) {
                 return false;
             } else if (kb[i].isAlternativeEquivalentOf(derivedFact)) {
+                implicitFactsSubset.push(derivedFact);
                 this.addAlternativeDerivationAsCausedBy(kb, kb[i], derivedFact);
                 return false;
             }

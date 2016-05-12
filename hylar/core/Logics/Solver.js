@@ -20,10 +20,14 @@ Solver = {
      * @param facts
      * @returns Array of the evaluation.
      */
-    evaluateRuleSet: function(rs, facts, doTagging) {
+    evaluateRuleSet: function(rs, facts, doTagging, resolvedImplicitFactSet) {
         var newCons, cons = [];
         for (var key in rs) {
-            newCons = this.evaluateThroughRestriction(rs[key], facts, doTagging);
+            if (doTagging) {
+                newCons = this.evaluateThroughRestrictionWithTagging(rs[key], facts, resolvedImplicitFactSet);
+            } else {
+                newCons = this.evaluateThroughRestriction(rs[key], facts);
+            }
             cons = Utils.uniques(cons, newCons);
         }
         return cons;
@@ -36,11 +40,46 @@ Solver = {
      * @param facts
      * @returns {Array}
      */
-    evaluateThroughRestriction: function(rule, facts, doTagging) {
-        var causesToMap, i = 0,
-            consequences = [],
-            consequence,
-            mappingList = [];
+    evaluateThroughRestriction: function(rule, facts) {
+        var mappingList = this.getMappings(rule, facts),
+            consequences = [];
+
+        for (var i = 0; i < mappingList.length; i++) {
+            // Replace mappings on all consequences
+            for (var j = 0; j < rule.consequences.length; j++) {
+                consequences.push(this.substituteFactVariables(mappingList[i], rule.consequences[j], []));
+            }
+        }
+
+        return consequences;
+    },
+
+    /**
+     * Evaluates a rule over a set of facts through
+     * restriction of the rule's causes with tagging.
+     * @param rule
+     * @param kb
+     * @returns {Array}
+     */
+    evaluateThroughRestrictionWithTagging: function(rule, kb, resolvedImplicitFacts) {
+        var mappingList = this.getMappings(rule, kb),
+            consequences = [], consequence;
+
+        for (var i = 0; i < mappingList.length; i++) {
+            // Replace mappings on all consequences
+            for (var j = 0; j < rule.consequences.length; j++) {
+                consequence = this.substituteFactVariables(mappingList[i], rule.consequences[j], mappingList[i].__facts__);
+                //if (Logics.filterKnownOrAlternativeImplicitFact(consequence, kb, resolvedImplicitFacts)) {
+                    consequences.push(consequence);
+                //}
+            }
+        }
+
+        return consequences;
+    },
+
+    getMappings: function(rule, facts) {
+        var i = 0, mappingList;
 
         rule.orderCausesByMostRestrictive();
         mappingList = [rule.causes[i]]; // Init with first cause
@@ -49,18 +88,7 @@ Solver = {
             mappingList = this.substituteNextCauses(mappingList, rule.causes[i+1], facts, rule.constants);
             i++;
         }
-
-        for (var i = 0; i < mappingList.length; i++) {
-            // Replace mappings on all consequences
-            for (var j = 0; j < rule.consequences.length; j++) {
-                consequence = this.substituteFactVariables(mappingList[i], rule.consequences[j], mappingList[i].__facts__);
-                if ( (!doTagging) || (doTagging && Logics.filterKnownOrAlternativeImplicitFact(consequence, facts))) {
-                    consequences.push(consequence);
-                }
-            }
-        }
-
-        return consequences;
+        return mappingList;
     },
 
     /**
