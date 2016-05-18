@@ -100,7 +100,26 @@ Fact.prototype = {
      * @param fe
      * @returns {boolean}
      */
-    isValid: function(treated) {
+    isValid: function() {
+        if (this.explicit) {
+            return this.valid;
+        } else {
+            var valid = true,
+                conj = this.causedBy,
+                explicitFact;
+            for (var i = 0; i < conj.length; i++) {
+                for (var j = 0; j < conj[i].length; j++) {
+                    explicitFact = conj[i][j];
+                    valid = valid && explicitFact.valid;
+                }
+                if (valid) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    },
+    /*isValid: function(treated) {
         if (treated === undefined) treated = [];
         if (this.explicit) {
             return this.valid;
@@ -121,7 +140,7 @@ Fact.prototype = {
             }
         }
         return false;
-    },
+    },*/
 
     derives: function(kb) {
         var factsDerived = [];

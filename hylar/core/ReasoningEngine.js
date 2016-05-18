@@ -247,7 +247,7 @@ ReasoningEngine = {
     tagFilter: function(F, refs) {
         var validSet = [];
         for (var i = 0; i < F.length; i++) {
-            if (F[i].isValid([])) {
+            if (F[i].isValid()) {
                 validSet.push(F[i]);
             }
         }

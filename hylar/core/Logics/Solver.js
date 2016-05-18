@@ -63,12 +63,13 @@ Solver = {
      */
     evaluateThroughRestrictionWithTagging: function(rule, kb, resolvedImplicitFacts) {
         var mappingList = this.getMappings(rule, kb),
-            consequences = [], consequence;
+            consequences = [], consequence, causes;
 
         for (var i = 0; i < mappingList.length; i++) {
             // Replace mappings on all consequences
+            causes = Logics.buildCauses(mappingList[i].__facts__);
             for (var j = 0; j < rule.consequences.length; j++) {
-                consequence = this.substituteFactVariables(mappingList[i], rule.consequences[j], mappingList[i].__facts__);
+                consequence = this.substituteFactVariables(mappingList[i], rule.consequences[j], causes);
                 //if (Logics.filterKnownOrAlternativeImplicitFact(consequence, kb, resolvedImplicitFacts)) {
                     consequences.push(consequence);
                 //}
@@ -176,7 +177,7 @@ Solver = {
         // Merges local and global mapping
         for (var mapKey in mapping) {
             if (mapKey == '__facts__') {
-                localMapping[mapKey] = Utils.uniques(mapping[mapKey], [fact])
+                localMapping[mapKey] = Utils.insertUnique(mapping[mapKey], fact)
             } else {
                 for (var key in localMapping) {
                     if (mapping[mapKey] == localMapping[key]) {
@@ -254,7 +255,7 @@ Solver = {
         substitutedFact = new Fact(predicate, subject, object);
 
         if (causedBy) {
-            substitutedFact.causedBy = [causedBy];
+            substitutedFact.causedBy = causedBy;
             substitutedFact.explicit = false;
         }
 

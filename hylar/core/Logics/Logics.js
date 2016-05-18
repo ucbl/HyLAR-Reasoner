@@ -5,6 +5,7 @@
 
 var Rule = require('./Rule');
 var Utils = require('../Utils');
+var Errors = require('../Errors');
 
 /**
  * All necessary stuff around the Logics module
@@ -235,11 +236,11 @@ module.exports = {
                         delete additions[j];
                     // If the added facts already exists as implicit, mark is as 'resolved' (= not to be evaluated)
                     // and update other facts it derives by adding a new (equivalent) cause with the explicit version.
-                    } else if(kb[i].isAlternativeEquivalentOf(additions[j])) {
+                    }/* else if(kb[i].isAlternativeEquivalentOf(additions[j])) {
                         this.addAlternativeDerivationAsCausedBy(kb, kb[i], additions[j]);
                         resolvedAdditions.push(additions[j]);
                         delete additions[j];
-                    }
+                    }*/
                 }
             }
             for (var j = 0; j < deletions.length; j++) {
@@ -305,6 +306,53 @@ module.exports = {
             }
         }
         return derivedFact;
+    },
+
+    buildCauses: function(conjunction) {
+        var explicitFacts = this.getOnlyExplicitFacts(conjunction),
+            implicitFacts = this.getOnlyImplicitFacts(conjunction),
+            combinedImplicitCauses,
+            builtCauses = [];
+
+        if (implicitFacts.length > 0) {
+            combinedImplicitCauses = this.combineImplicitCauses(implicitFacts);
+            if (explicitFacts.length > 0) {
+                for (var i = 0; i < combinedImplicitCauses.length; i++) {
+                    for (var j = 0; j < explicitFacts.length; j++) {
+                        builtCauses.push(Utils.insertUnique(combinedImplicitCauses[i], explicitFacts[j]));
+                    }
+                }
+                return builtCauses;
+            } else {
+                return combinedImplicitCauses;
+            }
+        } else {
+            return conjunction;
+        }
+    },
+
+    combineImplicitCauses: function(implicitFacts) {
+        var combination = [implicitFacts[0].causedBy];
+        for (var i = 1; i < implicitFacts.length; i++) {
+            combination = this.disjunctCauses(combination, implicitFacts[i].causedBy)
+        }
+        return combination;
+    },
+
+    disjunctCauses: function(prev, next) {
+        var conjunction, disjunction = [];
+
+        if ((prev == []) || (next == [])) {
+            throw Errors.OrphanImplicitFact();
+        }
+
+        for (var i = 0; i < prev.length; i++) {
+            conjunction = prev[i];
+            for (var j = 0; j < next.length; j++) {
+                disjunction.push(Utils.uniques(conjunction, next[j]));
+            }
+        }
+        return disjunction;
     }
 
 };
