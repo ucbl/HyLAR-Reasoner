@@ -287,8 +287,9 @@ ReasoningEngine = {
                 Rins = Logics.restrictRuleSet(R, F);
                 FiAdd = Solver.evaluateRuleSet(Rins, F, true/*, resolvedImplicitFacts*/);
             } while (!Utils.containsSubset(Fi, FiAdd))//(FiAdd.length > 0);
+            FiAdd = Logics.unifyFactSet(FiAdd);
+            Logics.combine(Fi, FiAdd/*.concat(resolvedImplicitFacts)*/);
         }
-
 
         return {
             additions: Utils.uniques(newExplicitFacts.concat(resolvedExplicitFacts), Fi),

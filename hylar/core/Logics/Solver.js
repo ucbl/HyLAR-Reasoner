@@ -64,13 +64,15 @@ Solver = {
      */
     evaluateThroughRestrictionWithTagging: function(rule, kb, resolvedImplicitFacts) {
         var mappingList = this.getMappings(rule, kb),
-            consequences = [], consequence, causes;
+            consequences = [], consequence, causes, implicitCauses;
 
         for (var i = 0; i < mappingList.length; i++) {
             // Replace mappings on all consequences
             causes = Logics.buildCauses(mappingList[i].__facts__);
+            // Retrieves implicit causes
+            implicitCauses = Logics.getOnlyImplicitFacts(mappingList[i].__facts__);
             for (var j = 0; j < rule.consequences.length; j++) {
-                consequence = this.substituteFactVariables(mappingList[i], rule.consequences[j], causes);
+                consequence = this.substituteFactVariables(mappingList[i], rule.consequences[j], causes, implicitCauses);
                 //if (Logics.filterKnownOrAlternativeImplicitFact(consequence, kb, resolvedImplicitFacts)) {
                     consequences.push(consequence);
                 //}
@@ -242,7 +244,7 @@ Solver = {
      * @param graphs
      * @returns {*}
      */
-    substituteFactVariables: function(mapping, notYetSubstitutedFact, causedBy, graphs) {
+    substituteFactVariables: function(mapping, notYetSubstitutedFact, causedBy, implicitCauses, graphs) {
         var subject, predicate, object, substitutedFact;
 
         if (mapping == {}) {
@@ -257,6 +259,11 @@ Solver = {
 
         if (causedBy) {
             substitutedFact.causedBy = causedBy;
+            substitutedFact.explicit = false;
+        }
+
+        if (implicitCauses && implicitCauses.length > 0) {
+            substitutedFact.implicitCauses = implicitCauses;
             substitutedFact.explicit = false;
         }
 

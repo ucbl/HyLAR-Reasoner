@@ -46,7 +46,7 @@ var createLink = function(value, url) {
         return '<a href="http://localhost:'+port+url+encodeURIComponent(value)+'">'+escape(value)+'</a></br>'
     },
     createTitle = function(title) {
-        return '<h4>'+title+'</h4>'
+        return '<h3>'+title+'</h3>'
     };
 
 module.exports = {
@@ -244,7 +244,7 @@ module.exports = {
             key = lookup.key;
             fact = lookup.value;
             if ((fact !== undefined) && (key !== undefined)) {
-                html += '<h3>' + fact.toString() + '</h3>';
+                html += '<h2>' + fact.toString() + '</h2>';
                 html += (fact.explicit ? '<span class="label label-primary">EXPLICIT</span>' : '<span class="label label-info">IMPLICIT</span>')
                 html += (fact.isValid() ? '&nbsp;<span class="label label-success">VALID</span>' : '&nbsp;<span class="label label-danger">NOT VALID</span>')
 
@@ -259,7 +259,16 @@ module.exports = {
                             html += 'AND<br/>';
                         }
                     }
+                }
 
+                if (fact.implicitCauses.length > 0) {
+                    html += createTitle('Implicit causes');
+                    for (var i = 0; i < fact.implicitCauses.length; i++) {
+                        html += createLink(fact.implicitCauses[i].toString());
+                        if (!(i+1==fact.implicitCauses.length)) {
+                            html += 'AND<br/>';
+                        }
+                    }
                 }
 
                 derivations = fact.derives(dict.values());

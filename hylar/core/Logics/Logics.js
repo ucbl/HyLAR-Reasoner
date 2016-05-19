@@ -23,6 +23,7 @@ module.exports = {
             for (var j = 0; j < subset.length; j++) {
                 if ((subset[j] !== undefined) && (fs[i].equivalentTo(subset[j]))) {
                     fs[i].causedBy = Utils.uniques(fs[i].causedBy, subset[j].causedBy);
+                    fs[i].implicitCauses = Utils.uniques(fs[i].implicitCauses, subset[j].implicitCauses);
                     delete subset[j];
                 }
             }
@@ -262,7 +263,7 @@ module.exports = {
 
     addAlternativeDerivationAsCausedBy: function(kb, kbFact, altFact) {
         var derivations = kbFact.derives(kb),
-            newCauseConj;
+            newCauseConj, allCauses;
         for (var k = 0; k < derivations.length; k++) {
             for (var l = 0; l < derivations[k].causedBy.length; l++) {
                 newCauseConj = derivations[k].causedBy[l].slice();
@@ -361,6 +362,7 @@ module.exports = {
             if (fs[i] !== undefined) {
                 if (foundFactIndex = fs[i].appearsIn(unifiedSet)) {
                     unifiedSet[foundFactIndex].causedBy = Utils.uniques(fs[i].causedBy, unifiedSet[foundFactIndex].causedBy);
+                    unifiedSet[foundFactIndex].implicitCauses = Utils.uniques(fs[i].implicitCauses, unifiedSet[foundFactIndex].implicitCauses);
                     delete fs[i];
                 } else {
                     unifiedSet.push(fs[i]);
