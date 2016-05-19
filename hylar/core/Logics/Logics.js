@@ -23,7 +23,6 @@ module.exports = {
             for (var j = 0; j < subset.length; j++) {
                 if ((subset[j] !== undefined) && (fs[i].equivalentTo(subset[j]))) {
                     fs[i].causedBy = Utils.uniques(fs[i].causedBy, subset[j].causedBy);
-                    fs[i].graphs = Utils.uniques(fs[i].graphs, subset[j].graphs);
                     delete subset[j];
                 }
             }
@@ -327,12 +326,12 @@ module.exports = {
                 return combinedImplicitCauses;
             }
         } else {
-            return conjunction;
+            return [conjunction];
         }
     },
 
     combineImplicitCauses: function(implicitFacts) {
-        var combination = [implicitFacts[0].causedBy];
+        var combination = implicitFacts[0].causedBy;
         for (var i = 1; i < implicitFacts.length; i++) {
             combination = this.disjunctCauses(combination, implicitFacts[i].causedBy)
         }
