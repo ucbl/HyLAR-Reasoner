@@ -370,6 +370,11 @@ module.exports = {
             }
         }
         return unifiedSet;
+    },
+
+    unify: function(subSet, updatingSet) {
+        subSet = this.unifyFactSet(subSet);
+        this.combine(updatingSet, subSet);
     }
 
 };

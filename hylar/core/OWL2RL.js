@@ -164,8 +164,8 @@ module.exports = {
         .concat(OWL2RL.rules.transitivity)
         .concat(OWL2RL.rules.inverse)
         .concat(OWL2RL.rules.equivalence)
-        .concat(OWL2RL.rules.equality)
-        .concat(OWL2RL.rules.testsFipa),
+        .concat(OWL2RL.rules.equality)/*
+        .concat(OWL2RL.rules.testsFipa)*/,
 
     classSubsumption: OWL2RL.rules.classSubsumption,
 
