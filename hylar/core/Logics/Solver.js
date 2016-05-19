@@ -25,10 +25,11 @@ Solver = {
         for (var key in rs) {
             if (doTagging) {
                 newCons = this.evaluateThroughRestrictionWithTagging(rs[key], facts, resolvedImplicitFactSet);
+                cons = cons.concat(newCons);
             } else {
                 newCons = this.evaluateThroughRestriction(rs[key], facts);
+                cons = Utils.uniques(cons, newCons);
             }
-            cons = Utils.uniques(cons, newCons);
         }
         return cons;
     },

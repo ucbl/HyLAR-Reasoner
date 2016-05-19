@@ -352,6 +352,22 @@ module.exports = {
             }
         }
         return disjunction;
+    },
+
+    unifyFactSet: function(fs) {
+        var unifiedSet = [],
+            foundFactIndex;
+        for (var i = 0; i < fs.length; i++) {
+            if (fs[i] !== undefined) {
+                if (foundFactIndex = fs[i].appearsIn(unifiedSet)) {
+                    unifiedSet[foundFactIndex].causedBy = Utils.uniques(fs[i].causedBy, unifiedSet[foundFactIndex].causedBy);
+                    delete fs[i];
+                } else {
+                    unifiedSet.push(fs[i]);
+                }
+            }
+        }
+        return unifiedSet;
     }
 
 };

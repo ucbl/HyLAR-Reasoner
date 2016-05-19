@@ -281,12 +281,14 @@ ReasoningEngine = {
 
         if(newExplicitFacts.length > 0) {
             do {
+                FiAdd = Logics.unifyFactSet(FiAdd);
                 Logics.combine(Fi, FiAdd/*.concat(resolvedImplicitFacts)*/);
                 F = Utils.uniques(F, Fi);
                 Rins = Logics.restrictRuleSet(R, F);
                 FiAdd = Solver.evaluateRuleSet(Rins, F, true/*, resolvedImplicitFacts*/);
             } while (!Utils.containsSubset(Fi, FiAdd))//(FiAdd.length > 0);
         }
+
 
         return {
             additions: Utils.uniques(newExplicitFacts.concat(resolvedExplicitFacts), Fi),
