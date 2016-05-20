@@ -271,7 +271,7 @@ module.exports = {
                     }
                 }
 
-                derivations = fact.derives(dict.values());
+                derivations = fact.explicitlyDerives(dict.values());
                 if (derivations.length > 0) {
                     html += createTitle('Derives');
                     for (var j = 0; j < derivations.length; j++) {

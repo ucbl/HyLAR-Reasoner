@@ -144,7 +144,17 @@ Fact.prototype = {
         return false;
     },*/
 
-    derives: function(kb) {
+    implicitlyDerives: function(kb) {
+        var factsDerived = [];
+        for (var i = 0; i < kb.length; i++) {
+            if (this.appearsIn(kb[i].implicitCauses)) {
+                factsDerived.push(kb[i]);
+            }
+        }
+        return factsDerived;
+    },
+
+    explicitlyDerives: function(kb) {
         var factsDerived = [];
         for (var i = 0; i < kb.length; i++) {
             for (var j = 0; j < kb[i].causedBy.length; j++) {

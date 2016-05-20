@@ -236,11 +236,11 @@ module.exports = {
                         delete additions[j];
                     // If the added facts already exists as implicit, mark is as 'resolved' (= not to be evaluated)
                     // and update other facts it derives by adding a new (equivalent) cause with the explicit version.
-                    }/* else if(kb[i].isAlternativeEquivalentOf(additions[j])) {
+                    } else if(kb[i].isAlternativeEquivalentOf(additions[j])) {
                         this.addAlternativeDerivationAsCausedBy(kb, kb[i], additions[j]);
                         resolvedAdditions.push(additions[j]);
                         delete additions[j];
-                    }*/
+                    }
                 }
             }
             for (var j = 0; j < deletions.length; j++) {
@@ -261,14 +261,14 @@ module.exports = {
         };
     },
 
-    addAlternativeDerivationAsCausedBy: function(kb, kbFact, altFact) {
+    /*addAlternativeDerivationAsCausedBy: function(kb, kbFact, altFact) {
         var derivations = kbFact.derives(kb),
             newCauseConj, allCauses;
         for (var k = 0; k < derivations.length; k++) {
             for (var l = 0; l < derivations[k].causedBy.length; l++) {
                 newCauseConj = derivations[k].causedBy[l].slice();
                 for (var m = 0; m < newCauseConj.length; m++) {
-                    if(newCauseConj[m].isAlternativeEquivalentOf(altFact)) {
+                    if(newCauseConj[m].toString() == altFact) {
                         newCauseConj[m] = altFact;
                     }
                 }
@@ -276,26 +276,28 @@ module.exports = {
             }
         }
         kb.push(altFact);
-    },
+    },*/
 
-    complementOf: function(kb, subset) {
-        var complement = [];
-        for (var i = 0; i < kb.length; i++) {
-            for (var j = 0; j < subset.length; j++) {
-                if ((subset[j] !== undefined) && (kb[i].equivalentTo(subset[j]))) {
-                    delete subset[j];
+    addAlternativeDerivationAsCausedBy: function(kb, kbFact, altFact) {
+        var derivations = kbFact.implicitlyDerives(kb),
+            derivConj, kbConj, newConj, alternativeConjs = [];
+        for (var i = 0; i < derivations.length; i++) {
+            for (var j = 0; j < derivations[i].causedBy.length; j++) {
+                derivConj = derivations[i].causedBy[j];
+                for (var k = 0; k < kbFact.causedBy.length; k++) {
+                    kbConj = kbFact.causedBy[k];
+                    if (newConj = Utils.removeSubset(derivConj, kbConj)) {
+                        newConj.push(altFact);
+                        derivations[i].causedBy.push(newConj);
+                    }
                 }
             }
+
         }
-        for (var i = 0; i < subset.length; i++) {
-            if (subset[i] !== undefined) {
-                complement.push(subset[i]);
-            }
-        }
-        return complement;
+        kb.push(altFact);
     },
 
-    filterKnownOrAlternativeImplicitFact: function(derivedFact, kb, implicitFactsSubset) {
+    /*filterKnownOrAlternativeImplicitFact: function(derivedFact, kb, implicitFactsSubset) {
         for (var i = 0; i < kb.length; i++) {
             if (kb[i].equivalentTo(derivedFact)) {
                 return false;
@@ -306,7 +308,7 @@ module.exports = {
             }
         }
         return derivedFact;
-    },
+    },*/
 
     buildCauses: function(conjunction) {
         var explicitFacts = this.getOnlyExplicitFacts(conjunction),

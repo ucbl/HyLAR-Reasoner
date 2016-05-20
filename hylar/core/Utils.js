@@ -99,20 +99,45 @@ module.exports = {
         return this.uniques(_set, [val]);
     },
 
-    buildUniqueSetWith: function(sets) {
-        var uniqueSet = [];
-        for (var i = 0; i < sets.length; i++) {
-            uniqueSet = this.uniques(uniqueSet, sets[i]);
-        }
-        return uniqueSet;
-    },
-
     emptyObject: function(obj) {
         return (Object.keys(obj).length == 0)
     },
 
     containsSubset: function(_set1, _set2) {
         return this.uniques(_set1, _set2).length == _set1.length
+    },
+
+    removeEquivStrRepr: function(_set, elem) {
+        for (var i = 0; i < _set.length; i++) {
+            if (_set[i] !== undefined) {
+                if (elem.toString() == _set[i].toString()) {
+                    delete _set[i];
+                }
+            }
+        }
+    },
+
+    removeSubset: function(mainSet, subSet) {
+        var copiedSet = mainSet.slice(),
+            resultSet = [];
+
+        if (mainSet.toString() == subSet.toString()) return [];
+
+        for (var i = 0; i < subSet.length; i++) {
+            if (copiedSet.toString().indexOf(subSet[i].toString()) === -1) {
+                return false;
+            } else {
+                this.removeEquivStrRepr(copiedSet, subSet[i]);
+            }
+        }
+
+        for (var i = 0; i < copiedSet.length; i++) {
+            if (copiedSet[i] !== undefined) {
+                resultSet.push(copiedSet[i]);
+            }
+        }
+
+        return resultSet;
     },
 
     isArray: isArray
