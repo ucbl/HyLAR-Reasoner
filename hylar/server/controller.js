@@ -47,6 +47,9 @@ var createLink = function(value, url) {
     },
     createTitle = function(title) {
         return '<h3>'+title+'</h3>'
+    },
+    consistency = function() {
+        return Hylar.checkConsistency().consistent;
     };
 
 module.exports = {
@@ -190,6 +193,7 @@ module.exports = {
         html += createTitle('Statistics');
         html += 'The knowledge base currently contains ' + kb.length + ' facts.<br/>';
         html += Logics.getOnlyExplicitFacts(kb).length + ' are explicit and ' + Logics.getOnlyImplicitFacts(kb).length + ' are implicit.<br/>';
+        html += 'The KB is currently ' + (consistency() ? 'consistent.' : '<a href="/explore/IFALSE">inconsistent.</a>');
         html += createTitle('Available ontologies');
 
         for (var i = 0; i < ontologies.length; i++) {
@@ -292,6 +296,32 @@ module.exports = {
         }
         res.render(htmlDir + '/pages/index', {
             content: html
+        });
+    },
+
+    simpleSparql: function(req, res, next) {
+        //noinspection JSValidateTypes
+        if (req.param('query') !== undefined) {
+            try {
+                Hylar.query(req.param('query')).then(function (result) {
+                    req.sparqlResults = result;
+                    req.sparqlQuery = req.param('query');
+                    next();
+                });
+            } catch (StorageNotInitializedException) {
+                req.error = StorageNotInitializedException;
+                next();
+            }
+        } else {
+            next();
+        }
+    },
+
+    sparqlInterface: function(req, res) {
+        res.render(htmlDir + '/pages/sparql', {
+            sparqlQuery: (req.sparqlQuery ? req.sparqlQuery : 'SELECT * { ?s ?p ?o . }'),
+            prevResults: (req.sparqlResults ? req.sparqlResults : ''),
+            error: (req.error ? req.error: '')
         });
     }
 };

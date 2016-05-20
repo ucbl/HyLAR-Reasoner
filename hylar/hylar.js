@@ -10,7 +10,8 @@ var Dictionary = require('./core/Dictionary'),
     ParsingInterface = require('./core/ParsingInterface'),
     StorageManager = require('./core/StorageManager'),
     Reasoner = require('./core/Reasoner');
-    OWL2RL = require('./core/OWL2RL');
+    OWL2RL = require('./core/OWL2RL'),
+    Errors = require('./core/Errors');
 
 console.notify = function(msg) {
     console.log(colors.green('[HyLAR] ') + msg);
@@ -141,12 +142,17 @@ Hylar.prototype.query = function(query, reasoningMethod) {
 
     this.updateReasoningMethod(reasoningMethod);
 
-    switch(sparql.type) {
-        case 'update':
-            return this.treatUpdate(sparql);
-            break;
-        default:
-            return this.treatSelectOrConstruct(query);
+    if (this.sm.storage === undefined) {
+        throw Errors.StorageNotInitialized();
+    } else {
+
+        switch (sparql.type) {
+            case 'update':
+                return this.treatUpdate(sparql);
+                break;
+            default:
+                return this.treatSelectOrConstruct(query);
+        }
     }
 };
 
@@ -185,6 +191,31 @@ Hylar.prototype.getDictionary = function() {
  */
 Hylar.prototype.setDictionaryContent = function(dict) {
     this.dict.setContent(dict);
+};
+
+Hylar.prototype.checkConsistency = function() {
+    var __FALSE__ = this.getDictionary().dict['__FALSE__'],
+        isConsistent = true, inconsistencyReasons;
+
+    if (__FALSE__ !== undefined) {
+        if ( (this.isIncremental()) || (this.isTagBased() && __FALSE__[0].isValid()) ) {
+            isConsistent = false;
+            inconsistencyReasons = __FALSE__.causedBy;
+        }
+    }
+
+    return {
+        consistent: isConsistent,
+        trace: inconsistencyReasons
+    }
+};
+
+Hylar.prototype.isTagBased = function() {
+    return (this.rMethod == Reasoner.process.it.tagBased);
+};
+
+Hylar.prototype.isIncremental = function() {
+    return (this.rMethod == Reasoner.process.it.incrementally);
 };
 
 /**

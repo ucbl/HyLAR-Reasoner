@@ -47,6 +47,10 @@ app.get('/ontology', Controller.list);
 //File uploading
 app.post('/ontology', upload.single('file'), Controller.upload);
 
+//SPARQL endpoint interface
+app.get('/sparql', Controller.sparqlInterface);
+app.post('/sparql', Controller.simpleSparql, Controller.sparqlInterface);
+
 //KB Explorer
 app.get('/explore', Controller.renderFact);
 app.get('/explore/:uri', Controller.renderFact);
