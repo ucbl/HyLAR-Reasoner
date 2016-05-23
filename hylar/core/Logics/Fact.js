@@ -63,6 +63,19 @@ Fact.prototype = {
         return e + spo;
     },
 
+    truncatedString: function() {
+        var e, spo;
+
+        if(this.falseFact) {
+            spo = 'FALSE';
+        } else {
+            spo = '(' + Utils.removeBeforeSharp(this.subject) + ', ' + Utils.removeBeforeSharp(this.predicate) + ', ' + Utils.removeBeforeSharp(this.object) + ')'
+        }
+
+        this.explicit ? e = 'E' : e = 'I';
+        return e + spo;
+    },
+
     /**
      * Checks if the fact is equivalent to another fact.
      * @param fact
@@ -161,6 +174,23 @@ Fact.prototype = {
                 if (this.appearsIn(kb[i].causedBy[j])) {
                     factsDerived.push(kb[i]);
                     break;
+                }
+            }
+        }
+        return factsDerived;
+    },
+
+    derives: function(kb) {
+        var factsDerived = [];
+        for (var i = 0; i < kb.length; i++) {
+            if (this.appearsIn(kb[i].implicitCauses)) {
+                factsDerived.push(kb[i]);
+            } else {
+                for (var j = 0; j < kb[i].causedBy.length; j++) {
+                    if (this.appearsIn(kb[i].causedBy[j])) {
+                        factsDerived.push(kb[i]);
+                        break;
+                    }
                 }
             }
         }

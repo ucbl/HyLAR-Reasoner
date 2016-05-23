@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../partials/head.ejs %>
+</head>
+<body>
+<header>
+    <% include ../partials/menu.ejs %>
+</header>
+<div class="container">
+    <% if (!fact) { %>
+
+        <h3>KB Explorer</h3>
+
+        <% if (kb.length == 0) { %>Currently empty!<% } %>
+
+        <% for (var i = 0; i < kb.length; i++) { %>
+            <a class="fact" href="/explore/<%- encodeURIComponent(kb[i]) %>"><%- kb[i].truncatedString() %></a></br>
+        <% } %>
+
+    <% } else { %>
+
+        <h2><%- fact.toString() %></h2>
+
+        <% if (fact.explicit) { %>
+            <span class="label label-primary">EXPLICIT</span>
+        <% } else { %>
+            <span class="label label-info">IMPLICIT</span>
+        <% } %>
+
+        <% if (fact.isValid()) { %>
+            &nbsp;<span class="label label-success">VALID</span>
+        <% } else {%>
+            &nbsp;<span class="label label-danger">NOT VALID</span>
+        <% } %>
+
+        <% if (fact.toString() === 'IFALSE') { %><br/><i>Note: IFALSE denotes KB inconsistency.</i><% } %>
+
+        <h3>Equivalent as triple</h3>
+        <code><%- factTriple %></code>
+
+        <h3>Truncated version</h3>
+        <%- fact.truncatedString() %>
+
+        <!-- Analyzing explicit causes -->
+        <% for (var i = 0; i < fact.causedBy.length; i++) { %>
+        <h3>Explicitly derived from</h3>
+            <% for (var j = 0; j < fact.causedBy[i].length; j++) { %>
+                <a class="fact" href="/explore/<%- encodeURIComponent(fact.causedBy[i][j].toString()) %>"><%- fact.causedBy[i][j].truncatedString() %></a>
+                <% if (!(j+1==fact.causedBy[i].length)) { %> <b>AND</b> <% } %>
+            <% } %>
+        <% } %>
+
+        <!-- Analyzing implicit causes -->
+        <% if (fact.implicitCauses.length > 0) { %>
+            <h3>Implicit causes</h3>
+            <ul>
+            <% for (var i = 0; i < fact.implicitCauses.length; i++) { %>
+                <li>
+                    <a class="fact" href="/explore/<%- encodeURIComponent(fact.implicitCauses[i].toString()) %>"><%- fact.implicitCauses[i].truncatedString() %></a>
+                </li>
+            <% } %>
+            </ul>
+        <% } %>
+
+        <!-- Analyzing consequences -->
+        <% if (derivations.length > 0) { %>
+            <h3>Derives</h3>
+            <ul>
+            <% for (var j = 0; j < derivations.length; j++) { %>
+                <li>
+                    <a class="fact" href="/explore/<%- encodeURIComponent(derivations[j].toString()) %>"><%- derivations[j].truncatedString() %></a>
+                </li>
+            <% } %>
+            </ul>
+        <% } %>
+
+    <% } %>
+</div>
+</body>

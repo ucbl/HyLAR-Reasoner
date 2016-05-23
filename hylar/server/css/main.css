@@ -1,0 +1,26 @@
+a.fact {
+    color: darkslategray;
+    display: inline-block;
+    border: 1px solid slategray;
+    padding: 3px;
+    margin-right: 5px;
+    margin-left: 5px;
+    margin-bottom: 5px;
+    border-radius: 7px;
+    width: auto;
+    background: ghostwhite;
+    box-shadow: slategray 1px 1px;
+}
+
+a.fact:hover {
+    color: slategray;
+    text-decoration: none;
+}
+
+h3 {
+    border-bottom: 1px solid slategray;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    padding-top: 15px;
+    text-shadow: 1px 1px lightslategrey;
+}

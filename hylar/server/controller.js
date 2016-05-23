@@ -233,70 +233,36 @@ module.exports = {
     },
 
     renderFact: function(req, res) {
-        var uri = req.param('uri'), dict = Hylar.getDictionary(), html = '',
-            lookup, key, fact, derivations, values;
-        if(!uri) {
-            html += createTitle('KB facts');
-            for(var key in dict.content()) {
-                values = dict.get(key);
+        var uri = req.param('uri'), dict = Hylar.getDictionary(), kb = [],
+            lookup, key, fact, derivations;
+
+        if (!uri) {
+            for (var dictKey in dict.content()) {
+                var values = dict.get(dictKey);
                 for (var i = 0; i < values.length; i++) {
-                    html += createLink(values[i]);
+                    kb.push(values[i]);
                 }
             }
         } else {
             lookup = dict.getFactFromStringRepresentation(decodeURIComponent(uri));
             key = lookup.key;
             fact = lookup.value;
-            if ((fact !== undefined) && (key !== undefined)) {
-                html += '<h2>' + fact.toString() + '</h2>';
-                html += (fact.explicit ? '<span class="label label-primary">EXPLICIT</span>' : '<span class="label label-info">IMPLICIT</span>')
-                html += (fact.isValid() ? '&nbsp;<span class="label label-success">VALID</span>' : '&nbsp;<span class="label label-danger">NOT VALID</span>')
 
-                html += createTitle('Equivalent as triple');
-                html += '&nbsp<code>'+escape(key)+'</code>';
-
-                for (var i = 0; i < fact.causedBy.length; i++) {
-                    html += createTitle('Derived from');
-                    for (var j = 0; j < fact.causedBy[i].length; j++) {
-                        html += createLink(fact.causedBy[i][j].toString());
-                        if (!(j+1==fact.causedBy[i].length)) {
-                            html += 'AND<br/>';
-                        }
-                    }
-                }
-
-                if (fact.implicitCauses.length > 0) {
-                    html += createTitle('Implicit causes');
-                    for (var i = 0; i < fact.implicitCauses.length; i++) {
-                        html += createLink(fact.implicitCauses[i].toString());
-                        if (!(i+1==fact.implicitCauses.length)) {
-                            html += 'AND<br/>';
-                        }
-                    }
-                }
-
-                derivations = fact.explicitlyDerives(dict.values());
-                if (derivations.length > 0) {
-                    html += createTitle('Derives');
-                    for (var j = 0; j < derivations.length; j++) {
-                        html += createLink(derivations[j].toString());
-                        if (!(j+1==derivations.length)) {
-                            html += 'AND<br/>';
-                        }
-                    }
-
-                }
-
-            } else {
-                res.render(htmlDir + '/pages/index', {
-                    content: '<h2>Fact not found.</h2>'
-                });
+            if ((fact === undefined) && (key === undefined)) {
+                res.status(404).render(htmlDir + '/pages/404');
                 return;
+            } else {
+                derivations = fact.derives(dict.values());
             }
         }
-        res.render(htmlDir + '/pages/index', {
-            content: html
+
+        res.render(htmlDir + '/pages/explore', {
+            kb: kb,
+            fact: fact,
+            factTriple: escape(key),
+            derivations: derivations
         });
+
     },
 
     simpleSparql: function(req, res, next) {

@@ -140,5 +140,11 @@ module.exports = {
         return resultSet;
     },
 
-    isArray: isArray
+    isArray: isArray,
+
+    removeBeforeSharp: function(str) {
+        if (str.indexOf('#') === -1 || str.charAt(0) === '"') return str;
+        var splitted = str.split('#');
+        return /*splitted[0].slice(0,10) + '...#' + */splitted[1];
+    }
 };

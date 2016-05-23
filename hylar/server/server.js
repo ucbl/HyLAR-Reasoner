@@ -24,6 +24,10 @@ app.set('view engine', 'ejs');
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 
+// CSS & images
+app.use('/css', express.static(__dirname + '/css'));
+app.use('/img', express.static(__dirname + '/images'));
+
 // parse application/json
 app.use(bodyParser.json());
 console.notify('Setting up routes...');
