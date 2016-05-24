@@ -322,12 +322,22 @@ Hylar.prototype.treatSelectOrConstruct = function(query) {
  * @param derivations The derivations to be registered.
  */
 Hylar.prototype.registerDerivations = function(derivations) {
-    var facts = derivations.additions;
+    var factsToBeAdded = derivations.additions,
+        factsToBeDeleted = derivations.deletions;
     console.notify('Registering derivations to dictionary...');
 
-    for (var i = 0; i < facts.length; i++) {
-        this.dict.put(facts[i]);
+    for (var i = 0; i < factsToBeDeleted.length; i++) {
+        if (factsToBeDeleted[i].toString() == 'IFALSE') {
+            delete this.dict.dict['__FALSE__'];
+        } else {
+            delete this.dict.dict[ParsingInterface.factToTurtle(factsToBeDeleted[i])];
+        }
     }
+
+    for (var i = 0; i < factsToBeAdded.length; i++) {
+        this.dict.put(factsToBeAdded[i]);
+    }
+
     console.notify('Registered successfully.');
 };
 

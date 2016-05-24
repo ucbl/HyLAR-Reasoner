@@ -37,21 +37,6 @@ process.argv.forEach(function(value, index) {
 
 Hylar.setTagBased();
 
-var createLink = function(value, url) {
-        if (url) {
-            url = url;
-        } else {
-            url = '/explore/'
-        }
-        return '<a href="http://localhost:'+port+url+encodeURIComponent(value)+'">'+escape(value)+'</a></br>'
-    },
-    createTitle = function(title) {
-        return '<h3>'+title+'</h3>'
-    },
-    consistency = function() {
-        return Hylar.checkConsistency().consistent;
-    };
-
 module.exports = {
 
     /**
@@ -188,20 +173,17 @@ module.exports = {
      * @param res
      */
     hello: function(req, res) {
-        var html = '', ontologies = fs.readdirSync(ontoDir), kb = Hylar.getDictionary().values();
-
-        html += createTitle('Statistics');
-        html += 'The knowledge base currently contains ' + kb.length + ' facts.<br/>';
-        html += Logics.getOnlyExplicitFacts(kb).length + ' are explicit and ' + Logics.getOnlyImplicitFacts(kb).length + ' are implicit.<br/>';
-        html += 'The KB is currently ' + (consistency() ? 'consistent.' : '<a href="/explore/IFALSE">inconsistent.</a>');
-        html += createTitle('Available ontologies');
-
-        for (var i = 0; i < ontologies.length; i++) {
-            html += createLink(ontologies[i], '/ontology/');
-        }
+        var ontologies = fs.readdirSync(ontoDir), kb = Hylar.getDictionary().values(),
+            nbExplicit = Logics.getOnlyExplicitFacts(kb).length,
+            nbImplicit = kb.length - nbExplicit,
+            consistent = Hylar.checkConsistency().consistent;
 
         res.render(htmlDir + '/pages/index', {
-            content: html
+            kb: kb,
+            ontologies: ontologies,
+            nbExplicit: nbExplicit,
+            nbImplicit: nbImplicit,
+            consistent: consistent
         });
     },
 
@@ -234,7 +216,7 @@ module.exports = {
 
     renderFact: function(req, res) {
         var uri = req.param('uri'), dict = Hylar.getDictionary(), kb = [],
-            lookup, key, fact, derivations;
+            lookup, key, fact, derivations, factName;
 
         if (!uri) {
             for (var dictKey in dict.content()) {
@@ -252,6 +234,7 @@ module.exports = {
                 res.status(404).render(htmlDir + '/pages/404');
                 return;
             } else {
+                factName = escape(fact.toString());
                 derivations = fact.derives(dict.values());
             }
         }
@@ -259,6 +242,7 @@ module.exports = {
         res.render(htmlDir + '/pages/explore', {
             kb: kb,
             fact: fact,
+            factName: factName,
             factTriple: escape(key),
             derivations: derivations
         });

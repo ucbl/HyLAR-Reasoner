@@ -8,7 +8,23 @@
     <% include ../partials/menu.ejs %>
 </header>
     <div class="container">
-    <%- content %>
+
+        <h3>Statistics</h3>
+        The knowledge base currently contains <%- kb.length %> facts (<%- nbExplicit %> explicit, <%- nbImplicit %>  implicit).<br/>
+        The KB is currently <% if (consistent) { %>consistent.<% } else { %><a href="/explore/IFALSE">inconsistent</a>.<% } %>
+
+        <h3>Available ontologies</h3>
+        <ul>
+            <% for (var i = 0; i < ontologies.length; i++) { %>
+                <li>
+                    <a target="_blank" href="/classify?filename=<%- ontologies[i] %>">
+                        <span about="Load and classify <%- ontologies[i] %>" class="glyphicon glyphicon-open"></span>
+                    </a>
+                    &nbsp;<a href="/ontology/<%- ontologies[i] %>"><%- ontologies[i] %></a>
+
+                </li>
+            <% } %>
+        </ul>
     </div>
 </body>
 </html>
