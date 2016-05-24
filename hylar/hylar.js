@@ -249,8 +249,8 @@ Hylar.prototype.treatUpdate = function(sparql) {
     }
 
     F = that.getDictionary().values();
-    FeIns = ParsingInterface.triplesToFacts(iTriples);
-    FeDel = ParsingInterface.triplesToFacts(dTriples);
+    FeIns = ParsingInterface.triplesToFacts(iTriples, true, (that.rMethod == Reasoner.process.it.incrementally));
+    FeDel = ParsingInterface.triplesToFacts(dTriples, true, (that.rMethod == Reasoner.process.it.incrementally));
 
     return Reasoner.evaluate(FeIns, FeDel, F, that.rMethod, that.rules)
         .then(function(derivations) {
@@ -363,7 +363,7 @@ Hylar.prototype.classify = function() {
                     )) {
                     fs = that.dict.get(triple);
                     if(!fs) {
-                        f = ParsingInterface.tripleToFact(triple);
+                        f = ParsingInterface.tripleToFact(triple, true, (that.rMethod == Reasoner.process.it.incrementally));
                         that.dict.put(f);
                         facts.push(f);
                     } else {

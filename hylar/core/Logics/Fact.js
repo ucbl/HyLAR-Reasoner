@@ -13,7 +13,7 @@ var Utils = require('../Utils');
  * @param originFacts array of facts causing this
  * @constructor
  */
-Fact = function(pred, sub, obj, originConjs, expl, graphs, implicitCauses) {
+Fact = function(pred, sub, obj, originConjs, expl, graphs, implicitCauses, notUsingValidity) {
     if(pred == 'FALSE') {
         this.falseFact = 'true'
     }
@@ -30,7 +30,11 @@ Fact = function(pred, sub, obj, originConjs, expl, graphs, implicitCauses) {
     this.causedBy = originConjs;
     this.explicit = expl;
     this.graphs = graphs;
-    this.valid = true;
+    if (notUsingValidity) {
+        this.valid = undefined;
+    } else {
+        this.valid = true;
+    }
 
     this.constants = [];
     if (!Logics.isVariable(this.subject)) {
@@ -118,11 +122,14 @@ Fact.prototype = {
     isValid: function() {
         if (this.explicit) {
             return this.valid;
+        } else if (this.causedBy === undefined || this.causedBy.length == 0) {
+            return undefined;
         } else {
-            var valid = true,
+            var valid,
                 conj = this.causedBy,
                 explicitFact;
             for (var i = 0; i < conj.length; i++) {
+                valid = true;
                 for (var j = 0; j < conj[i].length; j++) {
                     explicitFact = conj[i][j];
                     valid = valid && explicitFact.valid;

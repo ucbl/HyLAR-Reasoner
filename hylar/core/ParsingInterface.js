@@ -44,16 +44,16 @@ module.exports = {
      * Transforms a triple into a fact.
      * @param t The triple
      * @param explicit True if the resulting fact is explicit, false otherwise (default: true)
-     * @returns the resulting fact
+     * @returns Object resulting fact
      */
-    tripleToFact: function(t, explicit) {
+    tripleToFact: function(t, explicit, notUsingValid) {
         if(explicit === undefined) {
             explicit = true;
         }
-        return new Fact(t.predicate.toString(), t.subject.toString(), t.object.toString(), [], explicit)
+        return new Fact(t.predicate.toString(), t.subject.toString(), t.object.toString(), [], explicit, [], [], notUsingValid)
     },
 
-    triplesToFacts: function(t, explicit) {
+    triplesToFacts: function(t, explicit, notUsingValid) {
         var arr = [], triple,
             that = this;
 
@@ -63,7 +63,7 @@ module.exports = {
 
         for (var i = 0; i < t.length; i++) {
             triple = t[i];
-            arr.push(that.tripleToFact(triple, explicit));
+            arr.push(that.tripleToFact(triple, explicit, notUsingValid));
         }
         return arr;
     },

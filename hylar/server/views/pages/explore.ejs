@@ -15,7 +15,7 @@
         <% if (kb.length == 0) { %>Currently empty!<% } %>
 
         <% for (var i = 0; i < kb.length; i++) { %>
-            <a class="fact" href="/explore/<%- encodeURIComponent(kb[i]) %>"><%- kb[i].truncatedString() %></a></br>
+            <a class="fact fact-valid-<%- kb[i].isValid() %>" href="/explore/<%- encodeURIComponent(kb[i]) %>"><%- kb[i].truncatedString() %></a></br>
         <% } %>
 
     <% } else { %>
@@ -28,9 +28,9 @@
             <span class="label label-info">IMPLICIT</span>
         <% } %>
 
-        <% if (fact.isValid()) { %>
+        <% if (fact.isValid() == true) { %>
             &nbsp;<span class="label label-success">VALID</span>
-        <% } else {%>
+        <% } else if (fact.isValid() == false) {%>
             &nbsp;<span class="label label-danger">NOT VALID</span>
         <% } %>
 
@@ -46,7 +46,7 @@
         <% for (var i = 0; i < fact.causedBy.length; i++) { %>
         <h3>Explicitly derived from</h3>
             <% for (var j = 0; j < fact.causedBy[i].length; j++) { %>
-                <a class="fact" href="/explore/<%- encodeURIComponent(fact.causedBy[i][j].toString()) %>"><%- fact.causedBy[i][j].truncatedString() %></a>
+                <a class="fact fact-valid-<%- fact.causedBy[i][j].isValid() %>" href="/explore/<%- encodeURIComponent(fact.causedBy[i][j].toString()) %>"><%- fact.causedBy[i][j].truncatedString() %></a>
                 <% if (!(j+1==fact.causedBy[i].length)) { %> <b>AND</b> <% } %>
             <% } %>
         <% } %>
@@ -57,7 +57,7 @@
             <ul>
             <% for (var i = 0; i < fact.implicitCauses.length; i++) { %>
                 <li>
-                    <a class="fact" href="/explore/<%- encodeURIComponent(fact.implicitCauses[i].toString()) %>"><%- fact.implicitCauses[i].truncatedString() %></a>
+                    <a class="fact fact-valid-<%- fact.implicitCauses[i].isValid() %>" href="/explore/<%- encodeURIComponent(fact.implicitCauses[i].toString()) %>"><%- fact.implicitCauses[i].truncatedString() %></a>
                 </li>
             <% } %>
             </ul>
@@ -69,7 +69,7 @@
             <ul>
             <% for (var j = 0; j < derivations.length; j++) { %>
                 <li>
-                    <a class="fact" href="/explore/<%- encodeURIComponent(derivations[j].toString()) %>"><%- derivations[j].truncatedString() %></a>
+                    <a class="fact fact-valid-<%- derivations[j].isValid() %>" href="/explore/<%- encodeURIComponent(derivations[j].toString()) %>"><%- derivations[j].truncatedString() %></a>
                 </li>
             <% } %>
             </ul>

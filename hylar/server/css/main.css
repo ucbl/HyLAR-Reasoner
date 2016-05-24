@@ -12,6 +12,16 @@ a.fact {
     box-shadow: slategray 1px 1px;
 }
 
+a.fact-valid-true {
+    color: green;
+    border-color: limegreen;
+}
+
+a.fact-valid-false {
+    color: indianred;
+    border-color: indianred;
+}
+
 a.fact:hover {
     color: slategray;
     text-decoration: none;
