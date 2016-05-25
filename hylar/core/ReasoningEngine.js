@@ -267,7 +267,7 @@ ReasoningEngine = {
     tagging: function(FeAdd, FeDel, F, R) {
         var newExplicitFacts, resolvedExplicitFacts, validUpdateResults,
             FiAdd = [], Rins = [],
-            Fi = Logics.getOnlyImplicitFacts(F);
+            Fi = Logics.getOnlyImplicitFacts(F), Fe;
 
         // Returns new explicit facts to be added
         validUpdateResults = Logics.updateValidTags(F, FeAdd, FeDel);
@@ -279,7 +279,7 @@ ReasoningEngine = {
                 F = Utils.uniques(F, Fi);
                 Rins = Logics.restrictRuleSet(R, F);
                 FiAdd = Solver.evaluateRuleSet(Rins, F, true);
-            } while (Fi.length < Logics.unify(FiAdd, Fi));
+            } while (Logics.unify(FiAdd, Fi, F));
         }
 
         return {

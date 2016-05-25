@@ -374,9 +374,21 @@ module.exports = {
         return unifiedSet;
     },
 
-    unify: function(subSet, updatingSet) {
+    unify: function(subSet, updatingSet, kb) {
+        var initialLength = updatingSet.length;/*,
+            explicitSet = this.getOnlyExplicitFacts(kb);*/
+
         subSet = this.unifyFactSet(subSet);
         this.combine(updatingSet, subSet);
-    }
 
+        //initialLength += this.checkExplicitEquivalents(subSet, explicitSet);
+
+        if (initialLength < updatingSet.length) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+
+    //checkExplicitEquivalents: function()
 };
