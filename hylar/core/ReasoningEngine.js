@@ -276,12 +276,10 @@ ReasoningEngine = {
 
         if(newExplicitFacts.length > 0) {
             do {
-                Logics.unify(FiAdd, Fi);
                 F = Utils.uniques(F, Fi);
                 Rins = Logics.restrictRuleSet(R, F);
                 FiAdd = Solver.evaluateRuleSet(Rins, F, true);
-            } while (!Utils.containsSubset(Fi, FiAdd));
-            Logics.unify(FiAdd, Fi);
+            } while (Fi.length < Logics.unify(FiAdd, Fi));
         }
 
         return {
