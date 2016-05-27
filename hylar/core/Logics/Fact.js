@@ -18,8 +18,8 @@ Fact = function(pred, sub, obj, originConjs, expl, graphs, implicitCauses, notUs
         this.falseFact = 'true'
     }
     if (originConjs === undefined) originConjs = [];
-    if (graphs === undefined) graphs = [];
     if (expl === undefined) expl = true;
+    if (graphs === undefined) graphs = [];
     if (implicitCauses === undefined) implicitCauses = [];
 
     this.predicate = pred;
@@ -30,7 +30,7 @@ Fact = function(pred, sub, obj, originConjs, expl, graphs, implicitCauses, notUs
     this.causedBy = originConjs;
     this.explicit = expl;
     this.graphs = graphs;
-    if (notUsingValidity) {
+    if (notUsingValidity || this.explicit == false) {
         this.valid = undefined;
     } else {
         this.valid = true;

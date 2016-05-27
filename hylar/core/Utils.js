@@ -140,6 +140,23 @@ module.exports = {
         return resultSet;
     },
 
+    removeFromSet: function(_set, elem) {
+        var newSet;
+
+        if (_set.toString().indexOf(elem.toString()) === -1) {
+            return false;
+        }
+
+        newSet =  _set.slice();
+
+        for (var i = 0; i < newSet.length; i++) {
+            if (newSet[i].toString() == elem.toString()) {
+                newSet.splice(i, 1);
+                return newSet;
+            }
+        }
+    },
+
     isArray: isArray,
 
     removeBeforeSharp: function(str) {

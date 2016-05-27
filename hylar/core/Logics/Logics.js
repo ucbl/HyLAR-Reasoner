@@ -303,13 +303,15 @@ module.exports = {
             derivConj, kbConj, newConj, alternativeConjs = [];
 
         for (var i = 0; i < derivations.length; i++) {
+            derivations[i].implicitCauses.push(altFact);
             for (var j = 0; j < derivations[i].causedBy.length; j++) {
                 derivConj = derivations[i].causedBy[j];
                 for (var k = 0; k < altFact.causedBy.length; k++) {
                     kbConj = altFact.causedBy[k];
-                    if (newConj = Utils.removeSubset(derivConj, [kbFact])) {
+                    if (newConj = Utils.removeFromSet(derivConj, kbFact)) {
                         newConj = Utils.uniques(newConj, kbConj);
-                        derivations[i].causedBy.push(newConj);
+                        //derivations[i].causedBy.push(newConj);
+                        derivations[i].causedBy = Utils.insertUnique(derivations[i].causedBy, newConj);
                     }
                 }
             }
@@ -423,5 +425,6 @@ module.exports = {
                 }
             }
         }
+        return countedEquivalents;
     }
 };
