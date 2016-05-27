@@ -279,7 +279,7 @@ ReasoningEngine = {
                 F = Utils.uniques(F, Fi);
                 Rins = Logics.restrictRuleSet(R, F);
                 FiAdd = Solver.evaluateRuleSet(Rins, F, true);
-            } while (Logics.unify(FiAdd, Fi, F));
+            } while (Logics.unify(FiAdd, Fi));
         }
 
         return {
