@@ -386,7 +386,7 @@ module.exports = {
         for (var i = 0; i < fs.length; i++) {
             if (fs[i] !== undefined) {
                 if (foundFactIndex = fs[i].appearsIn(unifiedSet)) {
-                    unifiedSet[foundFactIndex].causedBy = Utils.uniques(fs[i].causedBy, unifiedSet[foundFactIndex].causedBy);
+                    unifiedSet[foundFactIndex].causedBy = this.uniquesCausedBy(fs[i].causedBy, unifiedSet[foundFactIndex].causedBy);//Utils.uniques(fs[i].causedBy, unifiedSet[foundFactIndex].causedBy);
                     unifiedSet[foundFactIndex].implicitCauses = Utils.uniques(fs[i].implicitCauses, unifiedSet[foundFactIndex].implicitCauses);
                     delete fs[i];
                 } else {
@@ -439,5 +439,23 @@ module.exports = {
             }
         }
         return countedEquivalents;
+    },
+
+    uniquesCausedBy: function(cb1, cb2) {
+        var newCb = cb2.slice(),
+            found;
+        for (var i = 0; i < cb1.length; i++) {
+            found = false;
+            for (var j = 0; j < cb2.length; j++) {
+                if (Utils.equivalentSets(cb1[i], cb2[j])) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                newCb.push(cb1[i]);
+            }
+        }
+        return newCb;
     }
 };

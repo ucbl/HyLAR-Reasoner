@@ -163,5 +163,18 @@ module.exports = {
         if (str.indexOf('#') === -1 || str.charAt(0) === '"') return str;
         var splitted = str.split('#');
         return /*splitted[0].slice(0,10) + '...#' + */splitted[1];
+    },
+
+    equivalentSets: function(s1, s2) {
+        for (var i = 0; i < s1.length; i++) {
+            if (this.notInSet(s2, s1[i])) {
+                return false;
+            }
+        }
+        return true;
+    },
+
+    notInSet: function(s1, elem) {
+        return (s1.toString().indexOf(elem.toString()) === -1);
     }
 };
