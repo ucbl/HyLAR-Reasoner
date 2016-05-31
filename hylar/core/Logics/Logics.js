@@ -22,7 +22,7 @@ module.exports = {
         for (var i = 0; i < fs.length; i++) {
             for (var j = 0; j < subset.length; j++) {
                 if ((subset[j] !== undefined) && (fs[i].equivalentTo(subset[j]))) {
-                    fs[i].causedBy = Utils.uniques(fs[i].causedBy, subset[j].causedBy);
+                    fs[i].causedBy = this.uniquesCausedBy(fs[i].causedBy, subset[j].causedBy);
                     fs[i].implicitCauses = Utils.uniques(fs[i].implicitCauses, subset[j].implicitCauses);
                     delete subset[j];
                 }
@@ -289,7 +289,7 @@ module.exports = {
                     kbConj = kbFact.causedBy[k];
                     if (newConj = Utils.removeSubset(derivConj, kbConj)) {
                         newConj.push(altFact);
-                        derivations[i].causedBy.push(newConj);
+                        derivations[i].causedBy = this.uniquesCausedBy(derivations[i].causedBy, [newConj]);
                     }
                 }
             }
@@ -311,7 +311,7 @@ module.exports = {
                     if (newConj = Utils.removeFromSet(derivConj, kbFact)) {
                         newConj = Utils.uniques(newConj, kbConj);
                         //derivations[i].causedBy.push(newConj);
-                        derivations[i].causedBy = Utils.insertUnique(derivations[i].causedBy, newConj);
+                        derivations[i].causedBy = this.uniquesCausedBy(derivations[i].causedBy, [newConj]);
                     }
                 }
             }
@@ -442,18 +442,28 @@ module.exports = {
     },
 
     uniquesCausedBy: function(cb1, cb2) {
-        var newCb = cb2.slice(),
-            found;
-        for (var i = 0; i < cb1.length; i++) {
+        var min, max, newCb, found;
+
+        if (cb1.length >= cb2.length) {
+            min = cb2;
+            max = cb1;
+        } else {
+            min = cb1;
+            max = cb2;
+        }
+
+        newCb = min.slice();
+
+        for (var i = 0; i < max.length; i++) {
             found = false;
-            for (var j = 0; j < cb2.length; j++) {
-                if (Utils.equivalentSets(cb1[i], cb2[j])) {
+            for (var j = 0; j < min.length; j++) {
+                if (Utils.equivalentSets(max[i], min[j])) {
                     found = true;
                     break;
                 }
             }
             if (!found) {
-                newCb.push(cb1[i]);
+                newCb.push(max[i]);
             }
         }
         return newCb;
