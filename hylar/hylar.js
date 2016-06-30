@@ -3,23 +3,32 @@
  */
 
 var fs = require('fs'),
-    path = require('path'),
-    colors = require('colors');
+    path = require('path');
 
 var Dictionary = require('./core/Dictionary'),
     ParsingInterface = require('./core/ParsingInterface'),
     StorageManager = require('./core/StorageManager'),
-    Reasoner = require('./core/Reasoner');
+    Reasoner = require('./core/Reasoner'),
     OWL2RL = require('./core/OWL2RL'),
     Errors = require('./core/Errors');
 
+var logFile = 'hylar.log';
+
 console.notify = function(msg) {
-    console.log(colors.green('[HyLAR] ') + msg);
-    fs.appendFileSync('hylar.log', new Date().toString() + ' ' + msg + '\n');
+    console.log('[HyLAR] ' + msg);
+    try {
+        fs.appendFileSync(logFile, new Date().toString() + ' ' + msg + '\n');
+    } catch (e) {
+        //return Errors.FileIO(logFile);
+    }
 };
 console.warn = function(msg) {
-    console.log(colors.red('[HyLAR] WARNING: ') + msg);
-    fs.appendFileSync('hylar.log', new Date().toString() + ' ' + msg + '\n');
+    console.log('[HyLAR] WARNING: ' + msg);
+    try {
+        fs.appendFileSync(logFile, new Date().toString() + ' ' + msg + '\n');
+    } catch (e) {
+        //return Errors.FileIO(logFile);
+    }
 };
 
 

@@ -13,5 +13,9 @@ module.exports = {
 
     StorageNotInitialized: function() {
         return new Error('Storage has not been initialized. Please load an ontology first.');
+    },
+
+    FileIO: function(filename) {
+        return new Error('Cannot access ' + filename);
     }
 };
