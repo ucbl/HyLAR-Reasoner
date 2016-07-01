@@ -35,6 +35,10 @@ process.argv.forEach(function(value, index) {
     }
 });
 
+var detectMimeType = function() {
+
+};
+
 Hylar.setTagBased();
 
 module.exports = {
@@ -90,6 +94,16 @@ module.exports = {
                 req.processingDelay  = new Date().getTime() - initialTime;
                 next();
             });
+    },
+
+    escapeStrOntology: function(req, res, next) {
+        req.rawOntology  = req.text.replace(/(&)([a-z0-9]+)(;)/gi, '$2:');
+        req.mimeType = req.param('mimetype');
+        next();
+    },
+
+    acknowledgeEnd: function(req, res) {
+        res.send(true);
     },
 
     sendHylarContents: function(req, res) {
@@ -273,5 +287,16 @@ module.exports = {
             prevResults: (req.sparqlResults ? req.sparqlResults : ''),
             error: (req.error ? req.error: '')
         });
+    },
+
+    addRules: function(req, res, next) {
+        var rules = req.param('rules'),
+            parsedRules = Logics.parseRules(rules);
+        Hylar.addRules(parsedRules);
+        next();
+    },
+
+    listRules: function(req, res) {
+        res.json({'rules': Hylar.rules.toString()});
     }
 };

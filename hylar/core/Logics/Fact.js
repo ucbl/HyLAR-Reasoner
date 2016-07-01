@@ -2,7 +2,6 @@
  * Created by mt on 21/12/2015.
  */
 
-var Logics = require('./Logics');
 var Utils = require('../Utils');
 
 /**
@@ -37,13 +36,13 @@ Fact = function(pred, sub, obj, originConjs, expl, graphs, implicitCauses, notUs
     }
 
     this.constants = [];
-    if (!Logics.isVariable(this.subject)) {
+    if (!Utils.isVariable(this.subject)) {
         this.constants.push(this.subject);
     }
-    if (!Logics.isVariable(this.predicate)) {
+    if (!Utils.isVariable(this.predicate)) {
         this.constants.push(this.predicate);
     }
-    if (!Logics.isVariable(this.object)) {
+    if (!Utils.isVariable(this.object)) {
         this.constants.push(this.object);
     }
 };

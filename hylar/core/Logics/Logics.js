@@ -4,6 +4,7 @@
  */
 
 var Rule = require('./Rule');
+var Fact = require('./Fact');
 var Utils = require('../Utils');
 var Errors = require('../Errors');
 
@@ -467,5 +468,34 @@ module.exports = {
             }
         }
         return newCb;
+    },
+
+    parseRules: function(strRuleList) {
+        var parsedRuleList = [];
+        for (var i = 0; i < strRuleList.length; i++) {
+            parsedRuleList.push(this.parseRule(strRuleList[i]));
+        }
+        return parsedRuleList;
+    },
+
+    parseRule: function(strRule) {
+        var tripleRegex = /(\([^\s]+?\s[^\s]+?\s[^\s]+?\))/gi,
+            atomRegex = /\(([^\s]+)\s([^\s]+)\s([^\s]+)\)/i,
+            head = strRule.split('->')[0],
+            body = strRule.split('->')[1],
+            bodyTriples = body.match(tripleRegex),
+            headTriples = head.match(tripleRegex),
+            causes = [], consequences = [], atoms;
+
+        for (var i = 0; i < headTriples.length; i++) {
+            atoms = headTriples[i].match(atomRegex).splice(1);
+            causes.push(new Fact(atoms[1], atoms[0], atoms[2]));
+        }
+        for (var i = 0; i < bodyTriples.length; i++) {
+            atoms = bodyTriples[i].match(atomRegex).splice(1);
+            consequences.push(new Fact(atoms[1], atoms[0], atoms[2]));
+        }
+
+        return new Rule(causes, consequences);
     }
 };

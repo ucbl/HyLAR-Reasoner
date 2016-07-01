@@ -393,4 +393,13 @@ Hylar.prototype.classify = function() {
         });
 };
 
+/**
+ * Add rules to the reasoner for
+ * the next inferences.
+ * @param ruleSet
+ */
+Hylar.prototype.addRules = function(ruleSet) {
+    this.rules = this.rules.concat(ruleSet);
+};
+
 module.exports = Hylar;

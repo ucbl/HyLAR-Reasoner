@@ -159,6 +159,38 @@ module.exports = {
 
     isArray: isArray,
 
+    /**
+     * Checks if a string is a variable,
+     * @param str
+     * @returns {boolean}
+     */
+    isVariable: function(str) {
+        try {
+            return (str.indexOf('?') === 0);
+        } catch(e) {
+            return false;
+        }
+    },
+
+    /**
+     * Checks if a string is a datatype,
+     * i.e. starts with dbl quotes, which is
+     * not allowed for URIs.
+     * @param str
+     * @returns {boolean}
+     */
+    isDataType: function(str) {
+        try {
+            return (str.indexOf('"') === 0);
+        } catch(e) {
+            return false;
+        }
+    },
+
+    isURI: function(str) {
+        return (!this.isVariable(str) && !this.isDataType(str));
+    },
+
     removeBeforeSharp: function(str) {
         if (str.indexOf('#') === -1 || str.charAt(0) === '"') return str;
         var splitted = str.split('#');
