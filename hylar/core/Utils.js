@@ -173,6 +173,19 @@ module.exports = {
     },
 
     /**
+     * Checks if a string is an operator (>, <, >=, <= or =)
+     * @param str
+     * @returns {boolean}
+     */
+    isOperator: function(str) {
+        try {
+            return ((str == '>') || (str == '<') || (str == '<=') || (str == '>=') || (str == '='));
+        } catch(e) {
+            return false;
+        }
+    },
+
+    /**
      * Checks if a string is a datatype,
      * i.e. starts with dbl quotes, which is
      * not allowed for URIs.

@@ -53,7 +53,7 @@ app.get('/time', Controller.time);
 // OWL ontology parsing, getting, classifying
 app.get('/ontology/:filename', Controller.getOntology, Controller.sendOntology);
 app.get('/classify', Controller.getOntology, Controller.loadOntology, Controller.sendHylarContents);
-app.post('/classify/:mimetype', Controller.escapeStrOntology, Controller.loadOntology, Controller.acknowledgeEnd);
+app.get('/classify/:mimetype', Controller.escapeStrOntology, Controller.loadOntology, Controller.acknowledgeEnd);
 
 app.put('/rule', Controller.addRules, Controller.acknowledgeEnd);
 app.get('/rule', Controller.listRules);

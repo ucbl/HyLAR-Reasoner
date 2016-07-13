@@ -62,7 +62,7 @@ Solver = {
      * @param kb
      * @returns {Array}
      */
-    evaluateThroughRestrictionWithTagging: function(rule, kb, resolvedImplicitFacts) {
+    evaluateThroughRestrictionWithTagging: function(rule, kb) {
         var mappingList = this.getMappings(rule, kb),
             consequences = [], consequence, causes, implicitCauses;
 

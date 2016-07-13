@@ -45,6 +45,11 @@ Fact = function(pred, sub, obj, originConjs, expl, graphs, implicitCauses, notUs
     if (!Utils.isVariable(this.object)) {
         this.constants.push(this.object);
     }
+
+    this.operatorPredicate = false;
+    if (Utils.isOperator(this.predicate)) {
+        this.operatorPredicate = true;
+    }
 };
 
 Fact.prototype = {
