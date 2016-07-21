@@ -46,11 +46,13 @@ HyLAR also provides the following inferences, based on the semantics detailed [h
 
 ## Use HyLAR's reasoner module locally
 
-**Installation.**
+### Installation
+
 To use HyLAR locally, just launch
 `npm install --save hylar`
 
-**Loading an ontology.**
+### Loading an ontology
+
 Import HyLAR, then classify your ontology and query it using `load()`,
 which takes three parameters:
 - rawOntology: A string, the raw ontology.
@@ -67,7 +69,8 @@ Hylar.load(rawOntology, mimeType, reasoningMethod)
     });
 ```
 
-**Querying an ontology.**
+### Querying an ontology
+
 Once loaded, HyLAR is able to process SPARQL queries using `query()`, with the following parameters:
 
 - query: A string, the SPARQL query
@@ -80,7 +83,8 @@ Hylar.query(query, reasoningMethod)
     });
 ```
 
-**Create your own rules.**
+### Create your own rules
+
 HyLAR supports insertion of custom forward-chaining conjunctive rules in the form:
 ```
 triple_head_1 ^ ... ^ triple_head_n -> triple_body_3
@@ -99,10 +103,12 @@ Each subject/predicate/object can be one of the following:
 
 ## Use HyLAR as a server
 
-**Installation.**
+### Installation
+
 `npm install -g hylar`.
 
-**Run the server.**
+### Run the server
+
 `hylar --port 3000 -od /usr/local/share/ontologies/`
 
 > **Note:**  `--port <port_number>` or `-p <port_number>` is optional. HyLAR runs at port 3000 by default. 
@@ -110,7 +116,7 @@ Each subject/predicate/object can be one of the following:
 > `--ontology-directory </your/base/ontology/directory/>` or `-od </your/base/ontology/directory/>` is also optional.
 This parameter specifies the directory in which ontologies are located, in order to classify them. By default, HyLAR uses its module path, i.e. `{path_to_hylar}/server/ontologies/`.
 
-**Load and query your ontology.**
+### Load and query your ontology
 
 ***GET /classify***
 Loads, parses and classify an ontology in the same way it is done with `Hylar.load()`. You don't have to specify the ontology file's mimetype however, as it is detected automatically.
