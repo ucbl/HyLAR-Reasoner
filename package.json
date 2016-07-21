@@ -1,7 +1,7 @@
 {
   "name": "hylar",
   "main": "hylar/hylar.js",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "dependencies": {
     "body-parser": "^1.11.0",
     "browserify": "^2.3.0",
@@ -16,6 +16,7 @@
     "json-stringify-safe": "^5.0.1",
     "jsonld": "^0.4.6",
     "mime-types": "^2.1.10",
+    "multer": "^1.1.0",
     "n3": "^0.4.5",
     "path": "^0.11.14",
     "q": "^1.0.1",
