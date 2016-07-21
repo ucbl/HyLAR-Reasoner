@@ -105,7 +105,7 @@ Each subject/predicate/object can be one of the following:
 
 ### Installation
 
-`npm install -g hylar`.
+`npm install -g hylar`
 
 ### Run the server
 

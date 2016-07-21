@@ -1,0 +1,18 @@
+# Schema for test data
+#
+# This is only 
+@prefix daml: <http://www.daml.org/2001/03/daml+oil#> .
+@prefix mech: <#> .
+
+@prefix : <#> .
+
+:includes a daml:TransitiveProperty .
+
+:partOf a daml:TransitiveProperty; daml:inverseOf :includes .
+
+:dependsOn a daml:TransitiveProperty ;
+      daml:hasSubProperty  :includes .   # Real name of subproperty?
+
+
+
+
