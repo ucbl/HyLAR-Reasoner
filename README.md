@@ -121,3 +121,9 @@ SPARQL queries your loaded ontology as does `Hylar.query()`.
 
 > **Parameters:** `query` (the SPARQL query string)
 Being a GET request parameter, the query must be urlencoded accordingly.
+
+***PUT /rule***
+Puts an list of custom rules and adds it to the reasoner.
+
+> **Parameters:** `rules` (an array of conjunctive rules)
+This parameter is expected to be a stringified array.
