@@ -118,18 +118,36 @@ This parameter specifies the directory in which ontologies are located, in order
 
 ### Load and query your ontology
 
-***GET /classify***
-Loads, parses and classify an ontology in the same way it is done with `Hylar.load()`. You don't have to specify the ontology file's mimetype however, as it is detected automatically.
-> **Parameters:** `filename` (the absolute path of the ontology file to be processed)
+##### GET /classify/{FILE_NAME}
+Loads, parses and classify the file **{FILE_NAME}** from the ontology directory, and classifies it in the same way it is done with `Hylar.load()`. 
+> **Note:** You don't have to specify the ontology file's mimetype as it is detected automatically using its extension.
 
-***GET /query***
+
+----------
+
+
+##### GET /classify/
+Allows classifying an ontology as a string, which requires its original serialization type.
+> **Body parameters** 
+>`filename` the absolute path of the ontology file to be processed.
+> `mimetype` the serialization of the ontology (mimetype, one of application/rdf+xml, text/turtle, text/n3 or application/ld+json).
+
+
+----------
+
+
+#####GET /query
 SPARQL queries your loaded ontology as does `Hylar.query()`.
 
-> **Parameters:** `query` (the SPARQL query string)
-Being a GET request parameter, the query must be urlencoded accordingly.
+> **Body parameters**
+> `query` the SPARQL query string.
 
-***PUT /rule***
+
+----------
+
+
+##### PUT /rule
 Puts an list of custom rules and adds it to the reasoner.
 
-> **Parameters:** `rules` (an array of conjunctive rules)
-This parameter is expected to be a stringified array.
+> **Body parameters**
+> `rules` the array of conjunctive rules.
