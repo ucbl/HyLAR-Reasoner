@@ -118,35 +118,23 @@ This parameter specifies the directory in which ontologies are located, in order
 
 ### Load and query your ontology
 
-##### GET /classify/{FILE_NAME}
+#### GET /classify/{FILE_NAME}
 Loads, parses and classify the file **{FILE_NAME}** from the ontology directory, and classifies it in the same way it is done with `Hylar.load()`. 
 > **Note:** You don't have to specify the ontology file's mimetype as it is detected automatically using its extension.
 
-
-----------
-
-
-##### GET /classify/
+#### GET /classify/
 Allows classifying an ontology as a string, which requires its original serialization type.
 > **Body parameters** 
 >`filename` the absolute path of the ontology file to be processed.
 > `mimetype` the serialization of the ontology (mimetype, one of application/rdf+xml, text/turtle, text/n3 or application/ld+json).
 
-
-----------
-
-
-#####GET /query
+#### GET /query
 SPARQL queries your loaded ontology as does `Hylar.query()`.
 
 > **Body parameters**
 > `query` the SPARQL query string.
 
-
-----------
-
-
-##### PUT /rule
+#### PUT /rule
 Puts an list of custom rules and adds it to the reasoner.
 
 > **Body parameters**
