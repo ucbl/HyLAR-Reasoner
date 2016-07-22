@@ -35,10 +35,6 @@ process.argv.forEach(function(value, index) {
     }
 });
 
-var detectMimeType = function() {
-
-};
-
 Hylar.setTagBased();
 
 module.exports = {
@@ -59,9 +55,9 @@ module.exports = {
      * @param next
      */
     getOntology: function(req, res, next) {
-        var initialTime = req.param('time'),
+        var initialTime = req.body.time,
             receivedReqTime = new Date().getTime(),
-            filename = req.param('filename'),
+            filename = req.params.filename,
             absolutePathToFile = ontoDir + '/' + filename,
             extension = path.extname(absolutePathToFile),
             contentType = mime.contentType(extension);
@@ -89,7 +85,7 @@ module.exports = {
             mimeType = req.mimeType,
             initialTime = new Date().getTime();
 
-        Hylar.load(rawOntology, mimeType, req.param('reasoningMethod'))
+        Hylar.load(rawOntology, mimeType, req.body.reasoningMethod)
             .then(function() {
                 req.processingDelay  = new Date().getTime() - initialTime;
                 next();
@@ -97,8 +93,8 @@ module.exports = {
     },
 
     escapeStrOntology: function(req, res, next) {
-        req.rawOntology  = req.text.replace(/(&)([a-z0-9]+)(;)/gi, '$2:');
-        req.mimeType = req.param('mimetype');
+        req.rawOntology  = req.body.content.replace(/(&)([a-z0-9]+)(;)/gi, '$2:');
+        req.mimeType = req.body.mimetype;
         next();
     },
 
@@ -138,12 +134,12 @@ module.exports = {
     },
 
     processSPARQL: function(req, res) {
-        var initialTime = req.param('time'),
+        var initialTime = req.body.time,
             receivedReqTime = new Date().getTime(),
             requestDelay =  receivedReqTime - initialTime,
             processedTime;
 
-        Hylar.query(req.param('query'), req.param('reasoningMethod'))
+        Hylar.query(req.body.query, req.body.reasoningMethod)
             .then(function(results) {
                 processedTime = new Date().getTime();
 
@@ -171,7 +167,7 @@ module.exports = {
             receivedReqTime = new Date().getTime();
 
         req.requestDelay =  receivedReqTime - initialTime;
-        var url = req.param('url');
+        var url = req.body.url;
 
         request.get(url, function (error, response, body) {
             if (!error && response.statusCode == 200) {
@@ -229,7 +225,7 @@ module.exports = {
     },
 
     renderFact: function(req, res) {
-        var uri = req.param('uri'), dict = Hylar.getDictionary(), kb = [],
+        var uri = req.params.uri, dict = Hylar.getDictionary(), kb = [],
             lookup, key, fact, derivations, factName;
 
         if (!uri) {
@@ -265,11 +261,11 @@ module.exports = {
 
     simpleSparql: function(req, res, next) {
         //noinspection JSValidateTypes
-        if (req.param('query') !== undefined) {
+        if (req.body.query !== undefined) {
             try {
-                Hylar.query(req.param('query')).then(function (result) {
+                Hylar.query(req.body.query).then(function (result) {
                     req.sparqlResults = result;
-                    req.sparqlQuery = req.param('query');
+                    req.sparqlQuery = req.body.query;
                     next();
                 });
             } catch (StorageNotInitializedException) {
@@ -290,7 +286,7 @@ module.exports = {
     },
 
     addRules: function(req, res, next) {
-        var rules = req.param('rules'),
+        var rules = req.body.rules,
             parsedRules = Logics.parseRules(rules);
         Hylar.addRules(parsedRules);
         next();

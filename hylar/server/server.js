@@ -46,32 +46,30 @@ console.notify('Setting up routes...');
 
 
 // Server utils
-app.all('*', Controller.allowCrossDomain);   // Cross domain allowed
-app.get('/', Controller.hello);              // Hello world
+app.all('*', Controller.allowCrossDomain);
+app.get('/', Controller.hello);
 app.get('/time', Controller.time);
 
-// OWL ontology parsing, getting, classifying
+// OWL ontology uploading, parsing, getting, classifying
+app.get('/ontology', Controller.list);
+app.post('/ontology', upload.single('file'), Controller.upload);
 app.get('/ontology/:filename', Controller.getOntology, Controller.sendOntology);
-app.get('/classify', Controller.getOntology, Controller.loadOntology, Controller.sendHylarContents);
-app.get('/classify/:mimetype', Controller.escapeStrOntology, Controller.loadOntology, Controller.acknowledgeEnd);
 
+app.get('/classify/:filename', Controller.getOntology, Controller.loadOntology, Controller.sendHylarContents);
+app.post('/classify', Controller.escapeStrOntology, Controller.loadOntology, Controller.acknowledgeEnd);
+
+// Rule adding, listing
 app.put('/rule', Controller.addRules, Controller.acknowledgeEnd);
 app.get('/rule', Controller.listRules);
 
-//SPARQL query processing
+// SPARQL query processing
 app.get('/query', Controller.processSPARQL);
 
-//Ontology listing
-app.get('/ontology', Controller.list);
-
-//File uploading
-app.post('/ontology', upload.single('file'), Controller.upload);
-
-//SPARQL endpoint interface
+// SPARQL endpoint interface
 app.get('/sparql', Controller.sparqlInterface);
 app.post('/sparql', Controller.simpleSparql, Controller.sparqlInterface);
 
-//KB Explorer
+// KB explorer interface
 app.get('/explore', Controller.renderFact);
 app.get('/explore/:uri', Controller.renderFact);
 

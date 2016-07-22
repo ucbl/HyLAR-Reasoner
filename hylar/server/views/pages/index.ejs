@@ -17,7 +17,7 @@
         <ul>
             <% for (var i = 0; i < ontologies.length; i++) { %>
                 <li>
-                    <a target="_blank" href="/classify?filename=<%- ontologies[i] %>">
+                    <a target="_blank" href="/classify/<%- ontologies[i] %>">
                         <span about="Load and classify <%- ontologies[i] %>" class="glyphicon glyphicon-open"></span>
                     </a>
                     &nbsp;<a href="/ontology/<%- ontologies[i] %>"><%- ontologies[i] %></a>
