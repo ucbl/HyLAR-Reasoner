@@ -26,7 +26,7 @@ String.prototype.format = function() {
     if (this.match(RegularExpressions.LITERAL_UNFORMATTED)) {
         return this.replace(RegularExpressions.LITERAL_UNFORMATTED, "$1<$2>");
     } else {
-        return this;
+        return this.toString();
     }
 };
 
