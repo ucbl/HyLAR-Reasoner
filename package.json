@@ -1,7 +1,7 @@
 {
   "name": "hylar",
   "main": "hylar/hylar.js",
-  "version": "1.7.1",
+  "version": "1.7.2",
   "dependencies": {
     "body-parser": "^1.11.0",
     "chalk": "^1.1.3",
@@ -14,7 +14,7 @@
     "multer": "^1.1.0",
     "path": "^0.12.7",
     "q": "^1.0.1",
-    "rdf-ext": "^0.3.0",
+    "rdf-ext": "^0.2.6",
     "rdflib": "^0.7.2",
     "rdfstore": "^0.9.14",
     "sparqljs": "^1.1.3"
@@ -24,12 +24,15 @@
     "gulp-clean": "^0.3.1",
     "gulp-concat": "^2.6.0",
     "gulp-replace": "^0.5.4",
-    "request": "^2.60.0",
+    "request": "^2.74.0",
     "run-sequence": "^1.1.2",
     "should": "^10.0.0"
   },
   "engines": {
     "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "export rm=incremental &&mocha test/adaptation_test test/asawoo-functionalities-tests.js test/tests.js && export rm=tagBased && mocha test/tests.js && mocha test/logics_test.js"
   },
   "bin": {
     "hylar": "hylar/server/server.js"

@@ -32,7 +32,7 @@ console.warn = function(msg) {
     }
 };
 console.error = function(msg) {
-    console.log(chalk.red('[HyLAR] ERROR: ' + msg));
+    console.log(chalk.white.bgRed('[HyLAR]') + ' ' + chalk.bold('ERROR:') + ' ' + msg);
     try {
         fs.appendFileSync(logFile, new Date().toString() + ' ' + msg + '\n');
     } catch (e) {
