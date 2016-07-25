@@ -1,6 +1,10 @@
 language: node_js
 node_js:
-  - "0.6"
+  - "node",
+  - "iojs",
+  - "6",
+  - "5",
+  - "4"
 branches:
   only:
   - master
