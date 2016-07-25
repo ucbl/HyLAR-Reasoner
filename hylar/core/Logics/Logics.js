@@ -7,6 +7,7 @@ var Rule = require('./Rule');
 var Fact = require('./Fact');
 var Utils = require('../Utils');
 var Errors = require('../Errors');
+var RegularExpressions = require('../RegularExpressions');
 
 /**
  * All necessary stuff around the Logics module
@@ -479,8 +480,8 @@ module.exports = {
     },
 
     parseRule: function(strRule) {
-        var tripleRegex = /(\([^\s]+?\s[^\s]+?\s[^\s]+?\))/gi,
-            atomRegex = /\(([^\s]+)\s([^\s]+)\s([^\s]+)\)/i,
+        var tripleRegex = RegularExpressions.TRIPLE,
+            atomRegex = RegularExpressions.ATOM,
             head = strRule.split('->')[0],
             body = strRule.split('->')[1],
             bodyTriples = body.match(tripleRegex),

@@ -15,7 +15,7 @@ var ontoDir = Controller.configuration.ontoDir,
     upload = multer({ dest: ontoDir });
 
 process.on('uncaughtException', function(err) {
-    console.error('[HyLAR] Fatal error!');
+    console.error('Uncaught Exception');
     throw err;
 });
 

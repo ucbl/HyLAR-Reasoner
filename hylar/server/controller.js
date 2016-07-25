@@ -89,6 +89,10 @@ module.exports = {
             .then(function() {
                 req.processingDelay  = new Date().getTime() - initialTime;
                 next();
+            })
+            .catch(function(error) {
+                console.error(error.stack);
+                res.status(500).send(error.stack);
             });
     },
 
@@ -149,6 +153,10 @@ module.exports = {
                     requestDelay : requestDelay,
                     serverTime : new Date().getTime()
                 });
+            })
+            .catch(function(error) {
+                console.error(error.stack);
+                res.status(500).send(error.stack);
             });
     },
 

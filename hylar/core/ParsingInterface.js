@@ -3,19 +3,32 @@
  */
 
 var Fact = require('./Logics/Fact'),
-    Errors = require('./Errors');
+    Errors = require('./Errors'),
+    RegularExpressions = require('./RegularExpressions');
 
-var rdfext = require('rdf-ext')(),
+var rdflib = require('rdflib'),
     q = require('q');
     sparqlJs = require('sparqljs'),
 
     SparqlParser = new sparqlJs.Parser(),
-    RdfXmlParser = new rdfext.RdfXmlParser();
+    RdfXmlParser = new rdflib.RDFParser();
 
 /**
  * The parsing interface, for transforming facts, triples, turtle or even results bindings
  * into other representations.
  */
+
+/**
+ * The SPARQL parser oddly transforms prefixed typed literal without angle brackets (!).
+ * This should fix it.
+ */
+String.prototype.format = function() {
+    if (this.match(RegularExpressions.LITERAL_UNFORMATTED)) {
+        return this.replace(RegularExpressions.LITERAL_UNFORMATTED, "$1<$2>");
+    } else {
+        return this;
+    }
+};
 
 module.exports = {
 
@@ -50,7 +63,7 @@ module.exports = {
         if(explicit === undefined) {
             explicit = true;
         }
-        return new Fact(t.predicate.toString(), t.subject.toString(), t.object.toString(), [], explicit, [], [], notUsingValid)
+        return new Fact(t.predicate.toString(), t.subject.toString(), t.object.toString().format(), [], explicit, [], [], notUsingValid)
     },
 
     triplesToFacts: function(t, explicit, notUsingValid) {
@@ -74,18 +87,19 @@ module.exports = {
      * @returns {*}
      */
     parseStrEntityToTurtle: function(entityStr) {
-        var literalPattern = /^("[\s\S]*")(@([a-zA-Z]+)|\^\^<?.+>?)?$/i,
-            blankNodePattern = /^_:/i,
-            variablePattern = /^\?/i,
-            betweenBracketsPattern = /^<.+>$/i,
-            dblQuoteInStrPattern = /^(")([\s\S]*)(".*)$/i, dblQuoteMatch;
+        var literalPattern = RegularExpressions.LITERAL,
+            blankNodePattern = RegularExpressions.BLANK_NODE,
+            variablePattern = RegularExpressions.VARIABLE,
+            typeOfDatatypePattern = RegularExpressions.DATATYPE_TYPE,
+            dblQuoteInStrPattern = RegularExpressions.DBLQUOTED_STRING,
+            dblQuoteMatch;
 
         if (entityStr === undefined) return false;
         if (entityStr.match(literalPattern)) {
             entityStr = entityStr.replace(literalPattern, '$1$2');
             dblQuoteMatch = entityStr.match(dblQuoteInStrPattern);
             return dblQuoteMatch[1] + dblQuoteMatch[2].replace(/"/g, '\\"') + dblQuoteMatch[3];
-        } else if(entityStr.match(blankNodePattern) || entityStr.match(variablePattern) || entityStr.match(betweenBracketsPattern)) {
+        } else if(entityStr.match(blankNodePattern) || entityStr.match(variablePattern) || entityStr.match(typeOfDatatypePattern)) {
             return entityStr
 
         } else {
@@ -231,7 +245,7 @@ module.exports = {
         var triples = [], triple, m;
         for (var i = 0; i < results.triples.length; i++) {
             triple = results.triples[i];
-            m = triple.toString().match(/^(.+)(> \.)/i);
+            m = triple.toString().match(RegularExpressions.END_OF_TRIPLE);
             if(m && ttl.toString().indexOf(m[0]) !== -1) triples.push(triple);
         }
         triples = triples.concat(blanknodes);

@@ -3,7 +3,8 @@
  */
 
 var fs = require('fs'),
-    path = require('path');
+    path = require('path'),
+    chalk = require('chalk');
 
 var Dictionary = require('./core/Dictionary'),
     ParsingInterface = require('./core/ParsingInterface'),
@@ -15,7 +16,7 @@ var Dictionary = require('./core/Dictionary'),
 var logFile = 'hylar.log';
 
 console.notify = function(msg) {
-    console.log('[HyLAR] ' + msg);
+    console.log(chalk.green('[HyLAR] ') + msg);
     try {
         fs.appendFileSync(logFile, new Date().toString() + ' ' + msg + '\n');
     } catch (e) {
@@ -23,7 +24,15 @@ console.notify = function(msg) {
     }
 };
 console.warn = function(msg) {
-    console.log('[HyLAR] WARNING: ' + msg);
+    console.log(chalk.yellow('[HyLAR] WARNING: ') + msg);
+    try {
+        fs.appendFileSync(logFile, new Date().toString() + ' ' + msg + '\n');
+    } catch (e) {
+        //return Errors.FileIO(logFile);
+    }
+};
+console.error = function(msg) {
+    console.log(chalk.red('[HyLAR] ERROR: ' + msg));
     try {
         fs.appendFileSync(logFile, new Date().toString() + ' ' + msg + '\n');
     } catch (e) {
