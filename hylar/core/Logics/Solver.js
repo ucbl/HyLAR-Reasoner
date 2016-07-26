@@ -92,8 +92,7 @@ Solver = {
 
     checkOperators: function(rule, mappingList) {
         var causes = rule.operatorCauses,
-            operationToEvaluate, substitutedFact,
-            newMappingList = [];
+            operationToEvaluate, substitutedFact;
 
         if (rule.operatorCauses.length == 0) return mappingList;
 
@@ -115,11 +114,10 @@ Solver = {
     getMappings: function(rule, facts) {
         var i = 0, mappingList, causes;
 
-        causes = rule.nonOperatorCauses;
-        mappingList = [causes[i]]; // Init with first cause
+        mappingList = [rule.causes[i]]; // Init with first cause
 
-        while (i < causes.length) {
-            mappingList = this.substituteNextCauses(mappingList, causes[i+1], facts, rule.constants);
+        while (i < rule.causes.length) {
+            mappingList = this.substituteNextCauses(mappingList, rule.causes[i+1], facts, rule.constants);
             i++;
         }
         return mappingList;

@@ -12,16 +12,25 @@ var Utils = require('../Utils');
  * @constructor
  */
 Rule = function(slf, srf) {
-    this.causes = slf;
+    this.causes = [];
+    this.operatorCauses = [];
     this.consequences = srf;
     this.constants = [];
+
     for (var i = 0; i < slf.length; i++) {
+        if (!slf[i].operatorPredicate) {
+            this.causes.push(slf[i]);
+        } else {
+            this.operatorCauses.push(slf[i]);
+        }
+    }
+
+    for (var i = 0; i < this.causes.length; i++) {
         this.constants = Utils.uniques(this.constants, slf[i].constants);
     }
-    for (var i = 0; i < srf.length; i++) {
+    for (var i = 0; i < this.consequences.length; i++) {
         this.constants = Utils.uniques(this.constants, srf[i].constants);
     }
-    this.classifyCauses();
     this.orderCausesByMostRestrictive();
 };
 
@@ -65,13 +74,8 @@ Rule.prototype = {
         }
 
         totalConstantOccurences = totalConstantOccurences.sort(function(a, b) {
-            if (a.constantOccurences > b.constantOccurences) {
-                return 1;
-            }
-            if (a.constantOccurences < b.constantOccurences) {
-                return -1;
-            }
-            return 0;
+            var x = a.constantOccurences; var y = b.constantOccurences;
+            return ((x > y) ? -1 : ((x < y) ? 1 : 0));
         });
 
         for(var i = 0; i < totalConstantOccurences.length; i++) {
@@ -79,20 +83,6 @@ Rule.prototype = {
         }
 
         this.causes = orderedCauses;
-    },
-
-    classifyCauses: function() {
-        var nonOperators = [],
-            operators = [];
-        for (var i = 0; i < this.causes.length; i++) {
-            if (!this.causes[i].operatorPredicate) {
-                nonOperators.push(this.causes[i]);
-            } else {
-                operators.push(this.causes[i]);
-            }
-        }
-        this.nonOperatorCauses = nonOperators;
-        this.operatorCauses = operators;
     },
 
     addCause: function(cause) {
