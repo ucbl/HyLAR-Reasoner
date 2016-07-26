@@ -17,7 +17,7 @@ describe('Rule tests', function () {
             mostRestrictiveTransitiveCause = transitiveRule.causes[1];
 
         transitiveRule.orderCausesByMostRestrictive();
-        transitiveRule.causes[0].toString().should.equal(mostRestrictiveTransitiveCause.toString());
+        transitiveRule.causes[0].constants.length.should.equal(0);
     });
 });
 

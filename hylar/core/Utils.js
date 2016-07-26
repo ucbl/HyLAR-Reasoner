@@ -2,6 +2,8 @@
  * Created by Spadon on 13/02/2015.
  */
 
+var RegularExpressions = require('./RegularExpressions');
+
 /**
  * Utility functions.
  */
@@ -224,5 +226,15 @@ module.exports = {
 
     notInSet: function(s1, elem) {
         return (s1.toString().indexOf(elem.toString()) === -1);
+    },
+
+    getValueFromDatatype: function(datatype) {
+        var rawValueMatch = datatype.match(RegularExpressions.LITERAL_RAW_VALUE)[1],
+           literalWithoutTypeMatch = datatype.match(RegularExpressions.LITERAL_WITHOUT_TYPE)[1];
+        if (parseFloat(rawValueMatch) === NaN) {
+            return literalWithoutTypeMatch;
+        } else {
+            return rawValueMatch;
+        }
     }
 };

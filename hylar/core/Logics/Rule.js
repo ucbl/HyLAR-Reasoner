@@ -21,6 +21,8 @@ Rule = function(slf, srf) {
     for (var i = 0; i < srf.length; i++) {
         this.constants = Utils.uniques(this.constants, srf[i].constants);
     }
+    this.classifyCauses();
+    this.orderCausesByMostRestrictive();
 };
 
 Rule.prototype = {
@@ -63,8 +65,13 @@ Rule.prototype = {
         }
 
         totalConstantOccurences = totalConstantOccurences.sort(function(a, b) {
-            var x = a.constantOccurences; var y = b.constantOccurences;
-            return ((x > y) ? -1 : ((x < y) ? 1 : 0));
+            if (a.constantOccurences > b.constantOccurences) {
+                return 1;
+            }
+            if (a.constantOccurences < b.constantOccurences) {
+                return -1;
+            }
+            return 0;
         });
 
         for(var i = 0; i < totalConstantOccurences.length; i++) {
@@ -72,6 +79,20 @@ Rule.prototype = {
         }
 
         this.causes = orderedCauses;
+    },
+
+    classifyCauses: function() {
+        var nonOperators = [],
+            operators = [];
+        for (var i = 0; i < this.causes.length; i++) {
+            if (!this.causes[i].operatorPredicate) {
+                nonOperators.push(this.causes[i]);
+            } else {
+                operators.push(this.causes[i]);
+            }
+        }
+        this.nonOperatorCauses = nonOperators;
+        this.operatorCauses = operators;
     },
 
     addCause: function(cause) {

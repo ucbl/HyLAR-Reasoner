@@ -45,10 +45,14 @@ Solver = {
         var mappingList = this.getMappings(rule, facts),
             consequences = [];
 
+        this.checkOperators(rule, mappingList);
+
         for (var i = 0; i < mappingList.length; i++) {
-            // Replace mappings on all consequences
-            for (var j = 0; j < rule.consequences.length; j++) {
-                consequences.push(this.substituteFactVariables(mappingList[i], rule.consequences[j], []));
+            if (mappingList[i]) {
+                // Replace mappings on all consequences
+                for (var j = 0; j < rule.consequences.length; j++) {
+                    consequences.push(this.substituteFactVariables(mappingList[i], rule.consequences[j], []));
+                }
             }
         }
 
@@ -66,30 +70,56 @@ Solver = {
         var mappingList = this.getMappings(rule, kb),
             consequences = [], consequence, causes, implicitCauses;
 
+        this.checkOperators(rule, mappingList);
+
         for (var i = 0; i < mappingList.length; i++) {
-            // Replace mappings on all consequences
-            causes = Logics.buildCauses(mappingList[i].__facts__);
-            // Retrieves implicit causes
-            implicitCauses = Logics.getOnlyImplicitFacts(mappingList[i].__facts__);
-            for (var j = 0; j < rule.consequences.length; j++) {
-                consequence = this.substituteFactVariables(mappingList[i], rule.consequences[j], causes, implicitCauses);
-                //if (Logics.filterKnownOrAlternativeImplicitFact(consequence, kb, resolvedImplicitFacts)) {
+            if (mappingList[i]) {
+                // Replace mappings on all consequences
+                causes = Logics.buildCauses(mappingList[i].__facts__);
+                // Retrieves implicit causes
+                implicitCauses = Logics.getOnlyImplicitFacts(mappingList[i].__facts__);
+                for (var j = 0; j < rule.consequences.length; j++) {
+                    consequence = this.substituteFactVariables(mappingList[i], rule.consequences[j], causes, implicitCauses);
+                    //if (Logics.filterKnownOrAlternativeImplicitFact(consequence, kb, resolvedImplicitFacts)) {
                     consequences.push(consequence);
-                //}
+                    //}
+                }
             }
         }
 
         return consequences;
     },
 
+    checkOperators: function(rule, mappingList) {
+        var causes = rule.operatorCauses,
+            operationToEvaluate, substitutedFact,
+            newMappingList = [];
+
+        if (rule.operatorCauses.length == 0) return mappingList;
+
+        for (var i = 0; i < mappingList.length; i++) {
+            for (var j = 0; j < causes.length; j++) {
+                substitutedFact = this.substituteFactVariables(mappingList[i], causes[j]);
+                operationToEvaluate = Utils.getValueFromDatatype(substitutedFact.subject) +
+                    substitutedFact.predicate +
+                    Utils.getValueFromDatatype(substitutedFact.object);
+                if (!eval(operationToEvaluate)) {
+                    delete mappingList[i];
+                    break;
+                }
+            }
+        }
+
+    },
+
     getMappings: function(rule, facts) {
-        var i = 0, mappingList;
+        var i = 0, mappingList, causes;
 
-        rule.orderCausesByMostRestrictive();
-        mappingList = [rule.causes[i]]; // Init with first cause
+        causes = rule.nonOperatorCauses;
+        mappingList = [causes[i]]; // Init with first cause
 
-        while (i < rule.causes.length) {
-            mappingList = this.substituteNextCauses(mappingList, rule.causes[i+1], facts, rule.constants);
+        while (i < causes.length) {
+            mappingList = this.substituteNextCauses(mappingList, causes[i+1], facts, rule.constants);
             i++;
         }
         return mappingList;
@@ -160,13 +190,13 @@ Solver = {
         var localMapping = {};
 
         // Checks and update localMapping if matches
-        if (!this.factElemMatches(fact.subject, ruleFact.subject, mapping, localMapping, constants)) {
+        if (!this.factElemMatches(fact.subject, ruleFact.subject, mapping, localMapping)) {
             return false;
         }
-        if (!this.factElemMatches(fact.predicate, ruleFact.predicate, mapping, localMapping, constants)) {
+        if (!this.factElemMatches(fact.predicate, ruleFact.predicate, mapping, localMapping)) {
             return false;
         }
-        if (!this.factElemMatches(fact.object, ruleFact.object, mapping, localMapping, constants)) {
+        if (!this.factElemMatches(fact.object, ruleFact.object, mapping, localMapping)) {
             return false;
         }
 
@@ -204,7 +234,7 @@ Solver = {
         return localMapping;
     },
 
-    factElemMatches: function(factElem, causeElem, globalMapping, localMapping, constants) {
+    factElemMatches: function(factElem, causeElem, globalMapping, localMapping) {
         if (Logics.isVariable(causeElem)) {
             if (globalMapping[causeElem] && (globalMapping[causeElem] != factElem)) {
                 return false;

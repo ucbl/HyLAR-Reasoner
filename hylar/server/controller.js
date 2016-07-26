@@ -35,7 +35,7 @@ process.argv.forEach(function(value, index) {
     }
 });
 
-Hylar.setTagBased();
+Hylar.setIncremental();
 
 module.exports = {
 
