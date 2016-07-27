@@ -156,17 +156,29 @@ Hylar.prototype.load = function(ontologyTxt, mimeType, reasoningMethod) {
  * @param reasoningMethod The desired reasoning method if inserting/deleting
  */
 Hylar.prototype.query = function(query, reasoningMethod) {
-    var sparql = ParsingInterface.parseSPARQL(query);
+    var sparql = ParsingInterface.parseSPARQL(query),
+        promises = [], updates;
 
     this.updateReasoningMethod(reasoningMethod);
 
     if (this.sm.storage === undefined) {
         throw Errors.StorageNotInitialized();
     } else {
-
         switch (sparql.type) {
             case 'update':
-                return this.treatUpdate(sparql);
+                for (var i = 0; i < sparql.updates.length; i++) {
+                    if (sparql.updates[i].updateType == 'insert') {
+                        updates = sparql.updates[i].insert;
+                    } else if (sparql.updates[i].updateType == 'delete') {
+                        updates = sparql.updates[i].delete;
+                    }
+                    for (var j = 0; j < updates.length; j++) {
+                        promises.push(this.treatUpdate(updates[j], sparql.updates[i].updateType));
+                    }
+                }
+                return Promise.all(promises).then(function(values) {
+                    return values;
+                });
                 break;
             default:
                 return this.treatSelectOrConstruct(query);
@@ -241,38 +253,29 @@ Hylar.prototype.isIncremental = function() {
  * @param sparql The query text.
  * @returns {Object} The results of this query.
  */
-Hylar.prototype.treatUpdate = function(sparql) {
+Hylar.prototype.treatUpdate = function(update, type) {
     var that = this,
+        graph = update.name,
         iTriples = [],
         dTriples = [],
         FeIns, FeDel, F = [],
-        turtle, update, insertion, deletion, kbT, insDel;
+        turtle, insDel;
 
-    for (var i = 0; i < sparql.updates.length; i++) {
-        update = sparql.updates[i];
-        if(update.insert) {
-            console.notify('Starting insertion.');
-            for (var j = 0; j < update.insert.length; j++) {
-                insertion = update.insert[j];
-                iTriples = iTriples.concat(insertion.triples);
-            }
-        }
-        if(update.delete) {
-            console.notify('Starting deletion.');
-            for (var j = 0; j < update.delete.length; j++) {
-                deletion = update.delete[j];
-                dTriples = iTriples.concat(deletion.triples);
-            }
-        }
+    if(type == 'insert') {
+        console.notify('Starting insertion.');
+        iTriples = iTriples.concat(update.triples);
+    } else if(type  == 'delete') {
+        console.notify('Starting deletion.');
+        dTriples = dTriples.concat(update.triples);
     }
 
-    F = that.getDictionary().values();
+    F = that.getDictionary().values(graph);
     FeIns = ParsingInterface.triplesToFacts(iTriples, true, (that.rMethod == Reasoner.process.it.incrementally));
     FeDel = ParsingInterface.triplesToFacts(dTriples, true, (that.rMethod == Reasoner.process.it.incrementally));
 
     return Reasoner.evaluate(FeIns, FeDel, F, that.rMethod, that.rules)
         .then(function(derivations) {
-            that.registerDerivations(derivations);
+            that.registerDerivations(derivations, graph);
             insDel = {
                 insert: ParsingInterface.factsToTurtle(derivations.additions),
                 delete: ParsingInterface.factsToTurtle(derivations.deletions)
@@ -282,11 +285,11 @@ Hylar.prototype.treatUpdate = function(sparql) {
         })
         .then(function(obj) {
             turtle = obj;
-            if(turtle.delete != '') return that.sm.delete(turtle.delete);
+            if(turtle.delete != '') return that.sm.delete(turtle.delete, graph);
             else return true;
         })
         .then(function() {
-            if(turtle.insert != '') return that.sm.insert(turtle.insert);
+            if(turtle.insert != '') return that.sm.insert(turtle.insert, graph);
             else return true;
         });
 };
