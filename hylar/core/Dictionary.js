@@ -11,7 +11,24 @@ var Utils = require('./Utils');
 var ParsingInterface = require('./ParsingInterface');
 
 function Dictionary() {
-    this.dict = {};
+    this.dict = {
+        '#default': {}
+    };
+};
+
+Dictionary.prototype.resolveGraph = function(graph) {
+    if (!graph) {
+        return "#default";
+    } else if (!this.dict[graph]) {
+        this.dict[graph] = {};
+    }
+    return graph;
+};
+
+Dictionary.prototype.clear = function() {
+    this.dict = {
+        '#default': {}
+    };
 };
 
 /**
@@ -19,8 +36,10 @@ function Dictionary() {
  * @param ttl
  * @returns {*}
  */
-Dictionary.prototype.get = function(ttl) {
-    var facts = this.dict[ttl];
+Dictionary.prototype.get = function(ttl, graph) {
+    var facts;
+    graph = this.resolveGraph(graph);
+    facts = this.dict[graph][ttl];
     if (facts !== undefined) {
         return facts;
     }
@@ -35,17 +54,18 @@ Dictionary.prototype.get = function(ttl) {
  * @param fact
  * @returns {*}
  */
-Dictionary.prototype.put = function(fact) {
+Dictionary.prototype.put = function(fact, graph) {
     var factToTurtle;
+    graph = this.resolveGraph(graph);
     try {
         if(fact.predicate === 'FALSE') {
-            this.dict['__FALSE__'] = [fact];
+            this.dict[graph]['__FALSE__'] = [fact];
         } else {
             factToTurtle = ParsingInterface.factToTurtle(fact);
-            if (this.dict[factToTurtle]) {
-                this.dict[factToTurtle] = Utils.insertUnique(this.dict[factToTurtle], fact);
+            if (this.dict[graph][factToTurtle]) {
+                this.dict[graph][factToTurtle] = Utils.insertUnique(this.dict[graph][factToTurtle], fact);
             } else {
-                this.dict[factToTurtle] = [fact];
+                this.dict[graph][factToTurtle] = [fact];
             }
         }
         return true;
@@ -74,11 +94,12 @@ Dictionary.prototype.setContent = function(content) {
  * Gets all facts from the dictionary.
  * @returns {Array}
  */
-Dictionary.prototype.values = function() {
+Dictionary.prototype.values = function(graph) {
     var values = [];
-    for (var key in this.dict) {
-        for (var i = 0; i < this.dict[key].length; i++) {
-            values.push(this.dict[key][i]);
+    graph = this.resolveGraph(graph);
+    for (var key in this.dict[graph]) {
+        for (var i = 0; i < this.dict[graph][key].length; i++) {
+            values.push(this.dict[graph][key][i]);
         }
     }
     return values;
@@ -90,11 +111,12 @@ Dictionary.prototype.values = function() {
  * @param triples An array of turtle triples.
  * @returns {{found: Array, notfound: Array}}
  */
-Dictionary.prototype.findValues = function(triples) {
+Dictionary.prototype.findValues = function(triples, graph) {
     var values = [], notfound = [],
         facts;
+    graph = this.resolveGraph(graph);
     for (var i = 0; i < triples.length; i++) {
-        facts = this.dict[triples[i].toString().slice(0, -2)];
+        facts = this.dict[graph][triples[i].toString().slice(0, -2)];
         if(facts !== undefined) {
             for (var j = 0; j < facts.length; j++) {
                 values.push(facts[j]);
@@ -115,12 +137,13 @@ Dictionary.prototype.findValues = function(triples) {
  * @param values
  * @returns {{found: Array, notfound: Array}}
  */
-Dictionary.prototype.findKeys = function(values) {
+Dictionary.prototype.findKeys = function(values, graph) {
     var keys = [], value, notfound = [];
+    graph = this.resolveGraph(graph);
     for (var i = 0; i< values.length; i++) {
         value = values[i];
-        for (var key in this.dict) {
-            if (this.dict[key].toString().indexOf(value.toString()) !== -1) {
+        for (var key in this.dict[graph]) {
+            if (this.dict[graph][key].toString().indexOf(value.toString()) !== -1) {
                 keys.push(key);
                 break;
             } else {
@@ -134,14 +157,18 @@ Dictionary.prototype.findKeys = function(values) {
     };
 };
 
+/** todo gerer graphs **/
 Dictionary.prototype.getFactFromStringRepresentation = function(factStr) {
-    for (var key in this.dict) {
-        for (var i = 0; i < this.dict[key].length; i++) {
-            if (this.dict[key][i].toString() == factStr) {
-                return {
-                    key: key,
-                    value: this.dict[key][i]
-                };
+    for (var graph in this.dict) {
+        for (var key in this.dict[graph]) {
+            for (var i = 0; i < this.dict[graph][key].length; i++) {
+                if (this.dict[graph][key][i].toString() == factStr) {
+                    return {
+                        key: key,
+                        value: this.dict[graph][key][i],
+                        graph: graph
+                    };
+                }
             }
         }
     }

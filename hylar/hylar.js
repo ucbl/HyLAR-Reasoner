@@ -116,7 +116,7 @@ Hylar.prototype.updateReasoningMethod = function(method) {
 Hylar.prototype.load = function(ontologyTxt, mimeType, reasoningMethod) {
     var that = this;
     this.updateReasoningMethod(reasoningMethod);
-    this.dict.setContent({});
+    this.dict.clear();
 
     return this.sm.init().then(function() {
         switch(mimeType) {
@@ -342,21 +342,22 @@ Hylar.prototype.treatSelectOrConstruct = function(query) {
  * in the Dictionary.
  * @param derivations The derivations to be registered.
  */
-Hylar.prototype.registerDerivations = function(derivations) {
+Hylar.prototype.registerDerivations = function(derivations, graph) {
     var factsToBeAdded = derivations.additions,
         factsToBeDeleted = derivations.deletions;
+    graph = this.dict.resolveGraph(graph);
     console.notify('Registering derivations to dictionary...');
 
     for (var i = 0; i < factsToBeDeleted.length; i++) {
         if (factsToBeDeleted[i].toString() == 'IFALSE') {
-            delete this.dict.dict['__FALSE__'];
+            delete this.dict.dict[graph]['__FALSE__'];
         } else {
-            delete this.dict.dict[ParsingInterface.factToTurtle(factsToBeDeleted[i])];
+            delete this.dict.dict[graph][ParsingInterface.factToTurtle(factsToBeDeleted[i])];
         }
     }
 
     for (var i = 0; i < factsToBeAdded.length; i++) {
-        this.dict.put(factsToBeAdded[i]);
+        this.dict.put(factsToBeAdded[i], graph);
     }
 
     console.notify('Registered successfully.');

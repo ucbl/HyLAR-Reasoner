@@ -233,27 +233,29 @@ module.exports = {
     },
 
     renderFact: function(req, res) {
-        var uri = req.params.uri, dict = Hylar.getDictionary(), kb = [],
-            lookup, key, fact, derivations, factName;
+        var uri = req.params.uri, dict = Hylar.getDictionary(), kb = [], graph,
+            lookup, key, fact, derivations, factName, content = dict.content();
 
         if (!uri) {
-            for (var dictKey in dict.content()) {
-                var values = dict.get(dictKey);
-                for (var i = 0; i < values.length; i++) {
-                    kb.push(values[i]);
+            for (var graph in content) {
+                for (var dictKey in content[graph]) {
+                    var values = dict.get(dictKey, graph);
+                    for (var i = 0; i < values.length; i++) {
+                        kb.push(values[i]);
+                    }
                 }
             }
         } else {
             lookup = dict.getFactFromStringRepresentation(decodeURIComponent(uri));
             key = lookup.key;
             fact = lookup.value;
-
             if ((fact === undefined) && (key === undefined)) {
                 res.status(404).render(htmlDir + '/pages/404');
                 return;
             } else {
                 factName = escape(fact.toString());
                 derivations = fact.derives(dict.values());
+                graph = lookup.graph;
             }
         }
 
@@ -262,7 +264,8 @@ module.exports = {
             fact: fact,
             factName: factName,
             factTriple: escape(key),
-            derivations: derivations
+            derivations: derivations,
+            graph: graph
         });
 
     },
