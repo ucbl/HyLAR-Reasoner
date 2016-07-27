@@ -158,17 +158,16 @@ Dictionary.prototype.findKeys = function(values, graph) {
 };
 
 /** todo gerer graphs **/
-Dictionary.prototype.getFactFromStringRepresentation = function(factStr) {
-    for (var graph in this.dict) {
-        for (var key in this.dict[graph]) {
-            for (var i = 0; i < this.dict[graph][key].length; i++) {
-                if (this.dict[graph][key][i].toString() == factStr) {
-                    return {
-                        key: key,
-                        value: this.dict[graph][key][i],
-                        graph: graph
-                    };
-                }
+Dictionary.prototype.getFactFromStringRepresentation = function(factStr, graph) {
+    graph = this.resolveGraph(graph);
+    for (var key in this.dict[graph]) {
+        for (var i = 0; i < this.dict[graph][key].length; i++) {
+            if (this.dict[graph][key][i].toString() == factStr) {
+                return {
+                    key: key,
+                    value: this.dict[graph][key][i],
+                    graph: graph
+                };
             }
         }
     }

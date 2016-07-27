@@ -233,20 +233,23 @@ module.exports = {
     },
 
     renderFact: function(req, res) {
-        var uri = req.params.uri, dict = Hylar.getDictionary(), kb = [], graph,
-            lookup, key, fact, derivations, factName, content = dict.content();
+        var uri = req.params.fact, dict = Hylar.getDictionary(), graph = decodeURIComponent(req.params.graph),
+            kb = [], content = dict.content(), lookup, key, fact, derivations, factName;
 
         if (!uri) {
             for (var graph in content) {
                 for (var dictKey in content[graph]) {
                     var values = dict.get(dictKey, graph);
                     for (var i = 0; i < values.length; i++) {
-                        kb.push(values[i]);
+                        kb.push({
+                            val: values[i],
+                            graph: graph
+                        });
                     }
                 }
             }
         } else {
-            lookup = dict.getFactFromStringRepresentation(decodeURIComponent(uri));
+            lookup = dict.getFactFromStringRepresentation(decodeURIComponent(uri), graph);
             key = lookup.key;
             fact = lookup.value;
             if ((fact === undefined) && (key === undefined)) {

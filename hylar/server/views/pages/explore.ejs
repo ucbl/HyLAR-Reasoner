@@ -15,7 +15,7 @@
         <% if (kb.length == 0) { %>Currently empty!<% } %>
 
         <% for (var i = 0; i < kb.length; i++) { %>
-            <a class="fact fact-valid-<%- kb[i].isValid() %>" href="/explore/<%- encodeURIComponent(kb[i]) %>"><%- kb[i].truncatedString() %></a></br>
+            <a class="fact fact-valid-<%- kb[i].val.isValid() %>" href="/explore/<%- encodeURIComponent(kb[i].graph) %>/<%- encodeURIComponent(kb[i].val) %>"><%- kb[i].val.truncatedString() %></a> from <code><%- kb[i].graph %></code> </br>
         <% } %>
 
     <% } else { %>

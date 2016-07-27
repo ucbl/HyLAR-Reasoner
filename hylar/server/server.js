@@ -71,7 +71,7 @@ app.post('/sparql', Controller.simpleSparql, Controller.sparqlInterface);
 
 // KB explorer interface
 app.get('/explore', Controller.renderFact);
-app.get('/explore/:uri', Controller.renderFact);
+app.get('/explore/:graph/:fact', Controller.renderFact);
 
 console.notify('Done.');
 console.notify('Exposing server to port ' + port + '...');
