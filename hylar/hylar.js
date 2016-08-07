@@ -270,8 +270,12 @@ Hylar.prototype.treatUpdate = function(update, type) {
     } else if(type  == 'delete') {
         console.notify('Starting deletion.');
         for (var i = 0; i < update.triples.length; i++) {
-            deleteQueryBody = ParsingInterface.tripleToTurtle(update.triples[i]);
-            promises.push(this.sm.query('CONSTRUCT { ' + deleteQueryBody + " }  WHERE { " + deleteQueryBody + " }"));
+            if (Utils.tripleContainsVariable(update.triples[i])) {
+                deleteQueryBody = ParsingInterface.tripleToTurtle(update.triples[i]);
+                promises.push(this.sm.query('CONSTRUCT { ' + deleteQueryBody + " }  WHERE { " + deleteQueryBody + " }"));
+            } else {
+                dTriples.push(update.triples[i]);
+            }
         }
         initialResponse = Promise.all(promises);
     }

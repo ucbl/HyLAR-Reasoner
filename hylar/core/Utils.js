@@ -244,5 +244,14 @@ module.exports = {
         var deferred = q.defer();
         deferred.resolve(toBeReturned);
         return deferred.promise;
+    },
+
+    tripleContainsVariable: function(triple) {
+        if (this.isVariable(triple.subject)
+            || this.isVariable(triple.predicate)
+            || this.isVariable(triple.object)) {
+            return true;
+        }
+        return false;
     }
 };
