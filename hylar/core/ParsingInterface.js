@@ -94,6 +94,8 @@ module.exports = {
             dblQuoteInStrPattern = RegularExpressions.DBLQUOTED_STRING,
             dblQuoteMatch;
 
+        entityStr = entityStr.format();
+
         if (entityStr === undefined) return false;
         if (entityStr.match(literalPattern)) {
             entityStr = entityStr.replace(literalPattern, '$1$2');
@@ -308,5 +310,12 @@ module.exports = {
             }
         }
         return returning;
+    },
+
+    tripleToTurtle: function(triple) {
+        var ttl = this.parseStrEntityToTurtle(triple.subject) + " "
+                + this.parseStrEntityToTurtle(triple.predicate) + " "
+                + this.parseStrEntityToTurtle(triple.object) + " . ";
+        return ttl;
     }
 };

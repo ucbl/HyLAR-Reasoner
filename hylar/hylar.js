@@ -11,7 +11,8 @@ var Dictionary = require('./core/Dictionary'),
     StorageManager = require('./core/StorageManager'),
     Reasoner = require('./core/Reasoner'),
     OWL2RL = require('./core/OWL2RL'),
-    Errors = require('./core/Errors');
+    Errors = require('./core/Errors'),
+    Utils = require('./core/Utils');
 
 var logFile = 'hylar.log';
 
@@ -258,23 +259,34 @@ Hylar.prototype.treatUpdate = function(update, type) {
         graph = update.name,
         iTriples = [],
         dTriples = [],
-        FeIns, FeDel, F = [],
-        turtle, insDel;
+        FeIns, FeDel, F = this.getDictionary().values(graph),
+        turtle, insDel, deleteQueryBody, promises = [],
+        initialResponse = Utils.emptyPromise([ { triples:[] } ]);
 
     if(type == 'insert') {
         console.notify('Starting insertion.');
         iTriples = iTriples.concat(update.triples);
+
     } else if(type  == 'delete') {
         console.notify('Starting deletion.');
-        dTriples = dTriples.concat(update.triples);
+        for (var i = 0; i < update.triples.length; i++) {
+            deleteQueryBody = ParsingInterface.tripleToTurtle(update.triples[i]);
+            promises.push(this.sm.query('CONSTRUCT { ' + deleteQueryBody + " }  WHERE { " + deleteQueryBody + " }"));
+        }
+        initialResponse = Promise.all(promises);
     }
 
-    F = that.getDictionary().values(graph);
-    FeIns = ParsingInterface.triplesToFacts(iTriples, true, (that.rMethod == Reasoner.process.it.incrementally));
-    FeDel = ParsingInterface.triplesToFacts(dTriples, true, (that.rMethod == Reasoner.process.it.incrementally));
+    return initialResponse
 
-    return Reasoner.evaluate(FeIns, FeDel, F, that.rMethod, that.rules)
-        .then(function(derivations) {
+        .then(function(results) {
+            for (var i = 0; i < results.length; i++) {
+                dTriples = dTriples.concat(results[i].triples);
+            }
+            FeIns = ParsingInterface.triplesToFacts(iTriples, true, (that.rMethod == Reasoner.process.it.incrementally));
+            FeDel = ParsingInterface.triplesToFacts(dTriples, true, (that.rMethod == Reasoner.process.it.incrementally));
+            return Reasoner.evaluate(FeIns, FeDel, F, that.rMethod, that.rules)
+
+        }).then(function(derivations) {
             that.registerDerivations(derivations, graph);
             insDel = {
                 insert: ParsingInterface.factsToTurtle(derivations.additions),
@@ -283,11 +295,13 @@ Hylar.prototype.treatUpdate = function(update, type) {
             console.notify('Update completed.');
             return insDel;
         })
+
         .then(function(obj) {
             turtle = obj;
             if(turtle.delete != '') return that.sm.delete(turtle.delete, graph);
             else return true;
         })
+
         .then(function() {
             if(turtle.insert != '') return that.sm.insert(turtle.insert, graph);
             else return true;

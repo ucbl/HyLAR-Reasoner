@@ -2,6 +2,8 @@
  * Created by Spadon on 13/02/2015.
  */
 
+var q = require('q');
+
 var RegularExpressions = require('./RegularExpressions');
 
 /**
@@ -236,5 +238,11 @@ module.exports = {
         } else {
             return rawValueMatch;
         }
+    },
+
+    emptyPromise: function(toBeReturned) {
+        var deferred = q.defer();
+        deferred.resolve(toBeReturned);
+        return deferred.promise;
     }
 };
