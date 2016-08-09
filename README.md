@@ -57,13 +57,12 @@ Import HyLAR, then classify your ontology and query it using `load()`,
 which takes three parameters:
 - rawOntology: A string, the raw ontology.
 - mimeType: A string, either `application/rdf+xml`, `text/turtle`, `text/n3` or `application/ld+json`.
-- reasoningMethod: A string, either `tagBased` or `incremental` (if left blank at first initialization, it will automatically set to tag-based).
 
 ```javascript
 var H = require('hylar'),
     Hylar = new H();
     
-Hylar.load(rawOntology, mimeType, reasoningMethod)
+Hylar.load(rawOntology, mimeType)
     .then(function(reponse) {
         console.log(response) // outputs true if succeeded
     });
@@ -74,10 +73,9 @@ Hylar.load(rawOntology, mimeType, reasoningMethod)
 Once loaded, HyLAR is able to process SPARQL queries using `query()`, with the following parameters:
 
 - query: A string, the SPARQL query
-- reasoningMethod: A string, either `tagBased` or `incremental` (if left blank, it will not change anything to the initial configuration).
 
 ```javascript
-Hylar.query(query, reasoningMethod)
+Hylar.query(query)
     .then(function(results) {
         console.log(results) // is a JSON object
     });
@@ -98,8 +96,7 @@ Each subject/predicate/object can be one of the following:
 - An URI, *e.g.* `http://www.w3.org/2000/01/rdf-schema#subClassOf`
 - A literal, *e.g.* `"0.5"`, `"Hello world!"`
 
-> **Note:** Comparison operators such as `<`, `>`, `=`, `<=`, `=>` are **not (yet) supported**.
-
+A predicate can also be any of these comparison operators: `<`, `>`, `=`, `<=`, `=>`.
 
 ## Use HyLAR as a server
 
