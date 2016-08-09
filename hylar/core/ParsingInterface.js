@@ -4,10 +4,11 @@
 
 var Fact = require('./Logics/Fact'),
     Errors = require('./Errors'),
-    RegularExpressions = require('./RegularExpressions');
+    RegularExpressions = require('./RegularExpressions'),
+    Utils = require('./Utils');
 
 var rdfext = require('rdf-ext')(),
-    q = require('q');
+    q = require('q'),
     sparqlJs = require('sparqljs'),
 
     SparqlParser = new sparqlJs.Parser(),
@@ -200,6 +201,7 @@ module.exports = {
                 object = that.replaceVar(object, binding, vars);
                 predicate = that.replaceVar(predicate, binding, vars);
                 returned.push(subject + ' ' + predicate + ' ' + object + ' .  \n');
+
             }
         }
         return returned;
@@ -228,6 +230,10 @@ module.exports = {
             statement = originalQuery.where[i];
             if(statement.type == 'bgp') {
                 t = t.concat(that.replaceVars(vars, statement.triples, queryResults));
+            } else if(statement.type == 'graph') {
+                for (var j = 0; j < statement.patterns.length; j++) {
+                    t = t.concat(that.replaceVars(vars, statement.patterns[j].triples, queryResults))
+                }
             }
         }
 
@@ -293,9 +299,13 @@ module.exports = {
      * @param blanknodes
      * @returns {*}
      */
-    reformSelectResults: function(parsedQuery, results, ttl) {
+    reformSelectResults: function(parsedQuery, r, ttl) {
         var that = this, statement, wtriple, b,
-            returning = [];
+            returning = [], results = r.results;
+
+        if (r.filtered.length == 0) {
+            return [];
+        }
 
         for (var i = 0; i < parsedQuery.where.length; i++) {
             statement = parsedQuery.where[i];
@@ -303,8 +313,19 @@ module.exports = {
                 for (var j = 0; j < statement.triples.length; j++) {
                     wtriple = statement.triples[j];
                     for (var k = 0; k < results.length; k++) {
-                        b = results[k];
-                        returning = returning.concat(that.getValidBindings(b, wtriple, ttl));
+                        b = that.getValidBindings(results[k], wtriple, ttl);
+                        returning = returning.concat(this.removeUnusedVariables(b, parsedQuery.variables));
+
+                    }
+                }
+            } else if (statement.type == 'graph') {
+                for (var j = 0; j < statement.patterns.length; j++) {
+                    for (var k = 0; k < statement.patterns[j].triples.length; k++) {
+                        wtriple = statement.patterns[j].triples[k];
+                        for (var l = 0; l < results.length; l++) {
+                            b = that.getValidBindings(results[l], wtriple, ttl);
+                            returning = returning.concat(this.removeUnusedVariables(b, parsedQuery.variables));
+                        }
                     }
                 }
             }
@@ -317,5 +338,123 @@ module.exports = {
                 + this.parseStrEntityToTurtle(triple.predicate) + " "
                 + this.parseStrEntityToTurtle(triple.object) + " . ";
         return ttl;
+    },
+
+    triplesToTurtle: function(triples) {
+        var ttl = '';
+        for (var i = 0; i < triples.length; i++) {
+            ttl += this.tripleToTurtle(triples[i]);
+        }
+        return ttl;
+    },
+
+    isolateWhereQuery: function(parsedQuery, whereIndex) {
+        var isolatedQuery,
+            patterns = parsedQuery.where[whereIndex].patterns;
+        if (parsedQuery.queryType == 'SELECT') {
+            isolatedQuery = parsedQuery.queryType + " "
+                + parsedQuery.variables.join(' ')
+                + " { ";
+        } else if (parsedQuery.queryType == 'CONSTRUCT') {
+            isolatedQuery = parsedQuery.queryType + " { ";
+            for (var i = 0; i < parsedQuery.template.length; i++) {
+                isolatedQuery += this.tripleToTurtle(parsedQuery.template[i]);
+            }
+            isolatedQuery += " } WHERE { ";
+        }
+
+        if (parsedQuery.where[whereIndex].name !== undefined) {
+            isolatedQuery += " GRAPH <" + parsedQuery.where[whereIndex].name + "> ";
+        }
+        isolatedQuery += " { ";
+        if (patterns != null) {
+            for (var i = 0; i < patterns.length; i++) {
+                isolatedQuery += " " + this.triplesToTurtle(patterns[i].triples) + " ";
+            }
+        } else {
+            isolatedQuery += " " + this.triplesToTurtle( parsedQuery.where[whereIndex].triples) + " ";
+        }
+        isolatedQuery += " } ";
+
+        return isolatedQuery + " } ";
+    },
+
+    rewriteWithAllVariables: function(query, parsedQuery) {
+        if (parsedQuery.queryType == 'CONSTRUCT') {
+            return query;
+        }
+
+        var variables = parsedQuery.variables,
+            updateVariableList = function(triples, variables) {
+                for (var k = 0; k < triples.length; k++) {
+                    if (Utils.isVariable(triples[k].subject)) {
+                        variables = Utils.insertUnique(variables, triples[k].subject);
+                    }
+                    if (Utils.isVariable(triples[k].predicate)) {
+                        variables = Utils.insertUnique(variables, triples[k].predicate);
+                    }
+                    if (Utils.isVariable(triples[k].object)) {
+                        variables = Utils.insertUnique(variables, triples[k].object);
+                    }
+                }
+                return variables;
+            };
+
+        if (query.match(/(SELECT)(\s+\*\s+)([^\{]*)(\{.+)/i) != null) {
+            return query;
+        }
+
+        for (var i = 0; i < parsedQuery.where.length; i++) {
+            if (parsedQuery.where[i].type == 'graph') {
+                for (var j = 0; j < parsedQuery.where[i].patterns.length; j++) {
+                    variables = updateVariableList(parsedQuery.where[i].patterns[j].triples, variables);
+                }
+            } else if (parsedQuery.where[i].type == 'bgp') {
+                variables = updateVariableList(parsedQuery.where[i].triples, variables);
+            }
+        }
+
+        variables = variables.join(' ');
+
+        return query.replace(/(SELECT)([^\{]*)(\{.+)/i, "$1 " + variables + " $3");
+    },
+
+    removeUnusedVariables: function(bindings, variables) {
+        var binding,
+            newBindings = [],
+            newBinding;
+
+        if (variables[0] == '*') {
+            return bindings;
+        }
+
+        for (var i = 0; i < bindings.length; i++) {
+            newBinding = {};
+            binding = bindings[i];
+            for (var key in binding) {
+                if (!Utils.notInSet(variables, '?' + key)) {
+                    newBinding[key] = binding[key];
+                }
+            }
+            newBindings.push(newBinding);
+        }
+
+        return newBindings;
+    },
+
+    removeNullsFromResults: function(results) {
+        var newResults = [],
+            newResult;
+        for (var i = 0; i < results.length; i++) {
+            newResult = {};
+            for (var key in results[i]) {
+                if (results[i][key] != null) {
+                    newResult[key] = results[i][key];
+                }
+            }
+            newResults.push(newResult);
+        }
+
+        return newResults;
     }
 };

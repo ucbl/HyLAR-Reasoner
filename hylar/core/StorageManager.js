@@ -109,8 +109,14 @@ StorageManager.prototype.clear = function()  {
  * @param ttl Triples to insert, in turtle.
  * @returns {*}
  */
-StorageManager.prototype.insert = function(ttl) {
-    return this.query('INSERT DATA { ' + ttl + ' }');
+StorageManager.prototype.insert = function(ttl, graph) {
+    var query;
+    if (graph === undefined) {
+        query = 'INSERT DATA { ' + ttl + ' }';
+    } else {
+        query = 'INSERT DATA { GRAPH <' + graph + '> { ' + ttl + ' } }'
+    }
+    return this.query(query);
 };
 
 /**
@@ -119,8 +125,14 @@ StorageManager.prototype.insert = function(ttl) {
  * @param ttl Triples to insert, in turtle.
  * @returns {*}
  */
-StorageManager.prototype.delete = function(ttl) {
-    return this.query('DELETE DATA { ' + ttl + ' }');
+StorageManager.prototype.delete = function(ttl, graph) {
+    var query;
+    if (graph === undefined) {
+        query = 'DELETE DATA { ' + ttl + ' }';
+    } else {
+        query = 'DELETE DATA { GRAPH <' + graph + '> { ' + ttl + ' } }'
+    }
+    return this.query(query);
 };
 
 /**

@@ -158,7 +158,7 @@ Hylar.prototype.load = function(ontologyTxt, mimeType, reasoningMethod) {
  */
 Hylar.prototype.query = function(query, reasoningMethod) {
     var sparql = ParsingInterface.parseSPARQL(query),
-        promises = [], updates;
+        singleWhereQuery, promises = [], updates;
 
     this.updateReasoningMethod(reasoningMethod);
 
@@ -178,11 +178,20 @@ Hylar.prototype.query = function(query, reasoningMethod) {
                     }
                 }
                 return Promise.all(promises).then(function(values) {
-                    return values;
+                    return [].concat.apply([], values);
                 });
                 break;
             default:
-                return this.treatSelectOrConstruct(query);
+                if (sparql.where.length == 1 || this.rMethod == Reasoner.process.it.incrementally) {
+                    return this.treatSelectOrConstruct(query);
+                }
+                for (var i = 0; i < sparql.where.length; i++) {
+                    singleWhereQuery = ParsingInterface.isolateWhereQuery(sparql, i);
+                    promises.push(this.treatSelectOrConstruct(singleWhereQuery));
+                }
+                return Promise.all(promises).then(function(values) {
+                    return [].concat.apply([], values);
+                });
         }
     }
 };
@@ -321,29 +330,31 @@ Hylar.prototype.treatSelectOrConstruct = function(query) {
     var that = this;
     if (this.rMethod == Reasoner.process.it.tagBased) {
         var val, blanknodes, facts, triples,
-            parsedQuery = ParsingInterface.parseSPARQL(query),
-            queryType = parsedQuery.queryType;
+            parsedQuery= ParsingInterface.parseSPARQL(query),
+            queryType = parsedQuery.queryType,
+            graph = parsedQuery.where[0].name;
 
-        return this.sm.query(query)
+        return this.sm.query(ParsingInterface.rewriteWithAllVariables(query, parsedQuery))
             .then(function(r) {
                 if(queryType == 'SELECT') {
+                    r = ParsingInterface.removeNullsFromResults(r);
                     triples = ParsingInterface.constructTriplesFromResultBindings(parsedQuery, r)
                 } else {
                     triples = r.triples;
                 }
 
-                val = that.dict.findValues(triples);
+                val = that.dict.findValues(triples, graph);
                 facts = val.found;
                 blanknodes = val.notfound;
                 return {
                     results: r,
-                    filtered: Reasoner.engine.tagFilter(facts, that.dict.values())
+                    filtered: Reasoner.engine.tagFilter(facts, that.dict.values(graph))
                 }
             })
             .then(function(r) {
-                var ttl = that.dict.findKeys(r.filtered).found;
+                var ttl = that.dict.findKeys(r.filtered, graph).found;
                 if(queryType == 'SELECT') {
-                    var reformedResults = ParsingInterface.reformSelectResults(parsedQuery, r.results, ttl.concat(blanknodes));
+                    var reformedResults = ParsingInterface.reformSelectResults(parsedQuery, r, ttl.concat(blanknodes));
                     return reformedResults;
                 } else {
                     return ParsingInterface.reformConstructResults(r.results, ttl, blanknodes);

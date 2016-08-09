@@ -35,7 +35,15 @@ process.argv.forEach(function(value, index) {
     }
 });
 
-Hylar.setTagBased();
+process.argv.forEach(function(value, index) {
+    if((value=='-rm') || (value=='--reasoning-method')) {
+        if (process.argv[index + 1] == 'tagBased') {
+            Hylar.setTagBased();
+        } else {
+            Hylar.setIncremental();
+        }
+    }
+});
 
 module.exports = {
 
@@ -270,7 +278,6 @@ module.exports = {
             derivations: derivations,
             graph: graph
         });
-
     },
 
     simpleSparql: function(req, res, next) {
