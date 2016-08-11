@@ -14,5 +14,8 @@ module.exports = {
     TRIPLE: /(\([^\s]+?\s[^\s]+?\s[^\s]+?\))/gi,
     ATOM: /\(([^\s]+)\s([^\s]+)\s([^\s]+)\)/i,
     LITERAL_WITHOUT_TYPE:/^(".*").*$/i,
-    LITERAL_RAW_VALUE: /^"(.*)".*$/i
+    LITERAL_RAW_VALUE: /^"(.*)".*$/i,
+    NO_BRACKET_BODYQUERY: /^[^\{]*\{([^\{\}]*)\}\s*$/i,
+    SINGLE_BRACKET_BODYQUERY: /^[^\{]*\{[^\{\}]*\{([^\{\}]*)\}\s*\}\s*$/i,
+    CONSTRUCT_BODYQUERY_WITH_BRACKETS: /\s*CONSTRUCT\s*\{.*\}\s*WHERE\s*(.*)/i
 };

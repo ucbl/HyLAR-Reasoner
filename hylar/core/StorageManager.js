@@ -156,4 +156,39 @@ StorageManager.prototype.createStoreWith = function(ttl) {
     });
 };
 
+StorageManager.prototype.regenerateSideStore = function() {
+    var deferred = q.defer(),
+        that = this;
+
+    rdfstore.create(function(err, store) {
+        that.sideStore = store;
+        deferred.resolve();
+    });
+    return deferred.promise;
+};
+
+StorageManager.prototype.loadIntoSideStore = function(ttl, graph) {
+    var deferred = q.defer(),
+        query = 'INSERT DATA { ' + ttl + ' }';
+
+    if (graph) {
+        query = 'INSERT DATA { GRAPH <' + graph + '> { ' + ttl + ' } }'
+    }
+
+    this.sideStore.execute(query,
+        function(err, r) {
+            deferred.resolve(r);
+        });
+    return deferred.promise;
+};
+
+StorageManager.prototype.querySideStore = function(query) {
+    var deferred = q.defer();
+    this.sideStore.execute(query,
+        function(err, r) {
+            deferred.resolve(r);
+        });
+    return deferred.promise;
+};
+
 module.exports = StorageManager;

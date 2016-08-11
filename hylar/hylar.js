@@ -6,6 +6,8 @@ var fs = require('fs'),
     path = require('path'),
     chalk = require('chalk');
 
+var Promise = require('bluebird');
+
 var Dictionary = require('./core/Dictionary'),
     ParsingInterface = require('./core/ParsingInterface'),
     StorageManager = require('./core/StorageManager'),
@@ -158,7 +160,7 @@ Hylar.prototype.load = function(ontologyTxt, mimeType, reasoningMethod) {
  */
 Hylar.prototype.query = function(query, reasoningMethod) {
     var sparql = ParsingInterface.parseSPARQL(query),
-        singleWhereQuery, promises = [], updates;
+        singleWhereQueries = [], promises = [], updates, that = this;
 
     this.updateReasoningMethod(reasoningMethod);
 
@@ -182,16 +184,21 @@ Hylar.prototype.query = function(query, reasoningMethod) {
                 });
                 break;
             default:
-                if (sparql.where.length == 1 || this.rMethod == Reasoner.process.it.incrementally) {
-                    return this.treatSelectOrConstruct(query);
+                if (this.rMethod == Reasoner.process.it.incrementally) {
+                    return that.sm.query(query);
                 }
-                for (var i = 0; i < sparql.where.length; i++) {
-                    singleWhereQuery = ParsingInterface.isolateWhereQuery(sparql, i);
-                    promises.push(this.treatSelectOrConstruct(singleWhereQuery));
-                }
-                return Promise.all(promises).then(function(values) {
-                    return [].concat.apply([], values);
-                });
+                return that.sm.regenerateSideStore()
+                    .then(function(done) {
+                        for (var i = 0; i < sparql.where.length; i++) {
+                            singleWhereQueries.push(ParsingInterface.isolateWhereQuery(sparql, i));
+                        }
+                        return Promise.reduce(singleWhereQueries, function(previous, singleWhereQuery) {
+                            return that.treatSelectOrConstruct(singleWhereQuery);
+                        }, 0);
+                    })
+                    .then(function(done) {
+                        return that.sm.querySideStore(query);
+                    });
         }
     }
 };
@@ -329,20 +336,14 @@ Hylar.prototype.treatUpdate = function(update, type) {
 Hylar.prototype.treatSelectOrConstruct = function(query) {
     var that = this;
     if (this.rMethod == Reasoner.process.it.tagBased) {
-        var val, blanknodes, facts, triples,
+        var val, blanknodes, facts, triples, temporaryData, sideStoreIndex,
             parsedQuery= ParsingInterface.parseSPARQL(query),
-            queryType = parsedQuery.queryType,
-            graph = parsedQuery.where[0].name;
+            graph = parsedQuery.where[0].name,
+            constructEquivalentQuery = ParsingInterface.constructEquivalentQuery(query, graph);
 
-        return this.sm.query(ParsingInterface.rewriteWithAllVariables(query, parsedQuery))
+        return this.sm.query(constructEquivalentQuery)
             .then(function(r) {
-                if(queryType == 'SELECT') {
-                    r = ParsingInterface.removeNullsFromResults(r);
-                    triples = ParsingInterface.constructTriplesFromResultBindings(parsedQuery, r)
-                } else {
-                    triples = r.triples;
-                }
-
+                triples = r.triples;
                 val = that.dict.findValues(triples, graph);
                 facts = val.found;
                 blanknodes = val.notfound;
@@ -352,13 +353,8 @@ Hylar.prototype.treatSelectOrConstruct = function(query) {
                 }
             })
             .then(function(r) {
-                var ttl = that.dict.findKeys(r.filtered, graph).found;
-                if(queryType == 'SELECT') {
-                    var reformedResults = ParsingInterface.reformSelectResults(parsedQuery, r, ttl.concat(blanknodes));
-                    return reformedResults;
-                } else {
-                    return ParsingInterface.reformConstructResults(r.results, ttl, blanknodes);
-                }
+                temporaryData = that.dict.findKeys(r.filtered, graph).found.join(' ');
+                return that.sm.loadIntoSideStore(temporaryData, graph);
             });
 
     } else {

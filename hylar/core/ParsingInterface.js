@@ -456,5 +456,27 @@ module.exports = {
         }
 
         return newResults;
+    },
+
+    constructEquivalentQuery: function(query, graph) {
+        var rewrittenQuery, regex;
+
+        if (query.match(RegularExpressions.CONSTRUCT_BODYQUERY_WITH_BRACKETS)) {
+            query = query.replace(RegularExpressions.CONSTRUCT_BODYQUERY_WITH_BRACKETS, '$1');
+        }
+
+        if (query.match(RegularExpressions.NO_BRACKET_BODYQUERY)) {
+            regex = RegularExpressions.NO_BRACKET_BODYQUERY;
+        } else {
+            regex = RegularExpressions.SINGLE_BRACKET_BODYQUERY;
+        }
+
+        if (graph) {
+            rewrittenQuery = query.replace(regex, 'CONSTRUCT { $1 } WHERE { GRAPH <' + graph + '> { $1 } }');
+        } else {
+            rewrittenQuery = query.replace(regex, 'CONSTRUCT { $1 } WHERE { $1 }');
+        }
+
+        return rewrittenQuery;
     }
 };
