@@ -1,11 +1,13 @@
 language: node_js
+
 node_js:
-  - "node",
-  - "iojs",
-  - "6",
-  - "5",
+  - "node"
+  - "iojs"
+  - "6"
+  - "5"
   - "4"
+
 branches:
   only:
-  - master
-  - dev
+    - master
+    - dev
