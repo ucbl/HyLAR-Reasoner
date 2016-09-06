@@ -3,7 +3,6 @@
  */
 
 var fs = require('fs'),
-    path = require('path'),
     chalk = require('chalk');
 
 var Promise = require('bluebird');
@@ -114,43 +113,54 @@ Hylar.prototype.updateReasoningMethod = function(method) {
  * @param ontologyTxt The raw ontology text
  * @param mimeType The specified mime type
  * @param reasoningMethod The desired reasoning method for the classification
+ * @param graph (optional) The graph in which the ontology will be loaded
+ * @param keepOldValues (optional - default: false) Avoid storage cleaning if set to true.
  * @returns {*}
  */
-Hylar.prototype.load = function(ontologyTxt, mimeType, reasoningMethod) {
+Hylar.prototype.load = function(ontologyTxt, mimeType, reasoningMethod, graph, keepOldValues) {
     var that = this;
     this.updateReasoningMethod(reasoningMethod);
-    this.dict.clear();
 
-    return this.sm.init().then(function() {
-        switch(mimeType) {
-            case 'application/xml':
-                return that.sm.loadRdfXml(ontologyTxt)
-                    .then(function() {
-                        console.notify('Store initialized successfully.');
-                        return that.classify();
-                    });
-                break;
-            case 'application/rdf+xml':
-                return that.sm.loadRdfXml(ontologyTxt)
-                    .then(function() {
-                        return that.classify();
-                    });
-                break;
-            case false:
-                console.error('Unrecognized or unsupported mimetype. ' +
-                    'Supported formats are rdf/xml, jsonld, turtle, n3');
-                return false;
-                break;
-            default:
-                return that.sm.load(ontologyTxt, mimeType)
-                    .then(function() {
-                        return that.classify();
-                    }, function(error) {
-                        console.error(error);
-                        throw error;
-                    });
-        }
-    });
+    if (!keepOldValues) {
+        this.dict.clear();
+        return this.sm.init().then(function() {
+            return that.treatLoad(ontologyTxt, mimeType, graph);
+        });
+    } else {
+        return this.treatLoad(ontologyTxt, mimeType, graph);
+    }
+};
+
+Hylar.prototype.treatLoad = function(ontologyTxt, mimeType, graph) {
+    var that = this;
+    switch(mimeType) {
+        case 'application/xml':
+            return that.sm.loadRdfXml(ontologyTxt, graph)
+                .then(function() {
+                    console.notify('Store initialized successfully.');
+                    return that.classify();
+                });
+            break;
+        case 'application/rdf+xml':
+            return that.sm.loadRdfXml(ontologyTxt, graph)
+                .then(function() {
+                    return that.classify();
+                });
+            break;
+        case false:
+            console.error('Unrecognized or unsupported mimetype. ' +
+                'Supported formats are rdf/xml, jsonld, turtle, n3');
+            return false;
+            break;
+        default:
+            return that.sm.load(ontologyTxt, mimeType, graph)
+                .then(function() {
+                    return that.classify();
+                }, function(error) {
+                    console.error(error);
+                    throw error;
+                });
+    }
 };
 
 /**

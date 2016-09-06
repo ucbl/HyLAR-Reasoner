@@ -77,8 +77,9 @@ console.notify('Done.');
 console.notify('Exposing server to port ' + port + '...');
 
 // Launching server
-app.listen(port);
-console.notify('Done.');
-console.notify('HyLAR is running.');
+return app.listen(port, function() {
+  console.notify('HyLAR is running.');
+  return;
+});
 
 

@@ -91,9 +91,10 @@ module.exports = {
     loadOntology: function(req, res, next) {
         var rawOntology = req.rawOntology,
             mimeType = req.mimeType,
+            graph = req.graph,
             initialTime = new Date().getTime();
 
-        Hylar.load(rawOntology, mimeType, req.body.reasoningMethod)
+        Hylar.load(rawOntology, mimeType, req.body.reasoningMethod, graph, req.query.keepoldvalues)
             .then(function() {
                 req.processingDelay  = new Date().getTime() - initialTime;
                 next();
@@ -107,6 +108,7 @@ module.exports = {
     escapeStrOntology: function(req, res, next) {
         req.rawOntology  = req.body.content.replace(/(&)([a-z0-9]+)(;)/gi, '$2:');
         req.mimeType = req.body.mimetype;
+        req.graph = req.body.graph;
         next();
     },
 
