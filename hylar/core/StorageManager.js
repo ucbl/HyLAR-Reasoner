@@ -5,7 +5,7 @@
 var ParsingInterface = require('./ParsingInterface');
 var Prefixes = require('./Prefixes');
 
-var rdfstore = new require('rdfstore');
+var rdfstore = require('rdfstore');
 var q = require('q');
 
 /**
@@ -25,7 +25,7 @@ function StorageManager() {
 StorageManager.prototype.init = function() {
     var deferred = q.defer(),
         that = this;
-    rdfstore.create(function(err, store) {
+    new rdfstore.create(function(err, store) {
         if(err) {
             deferred.reject(err);
         } else {
@@ -160,7 +160,7 @@ StorageManager.prototype.regenerateSideStore = function() {
     var deferred = q.defer(),
         that = this;
 
-    rdfstore.create(function(err, store) {
+    new rdfstore.create(function(err, store) {
         that.sideStore = store;
         deferred.resolve();
     });

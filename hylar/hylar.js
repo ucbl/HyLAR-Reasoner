@@ -50,11 +50,11 @@ console.error = function(msg) {
  * @email mehdi.terdjimi@univ-lyon1.fr
  */
 
-function Hylar() {
+Hylar = function() {
     this.dict = new Dictionary();
     this.sm = new StorageManager();
     this.rules = OWL2RL.rules;
-}
+};
 
 /**
  * Puts on incremental reasoning
