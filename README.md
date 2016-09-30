@@ -1,4 +1,4 @@
-# HyLAR-Reasoner
+# HyLAR-Reasoner ![HyLAR icon](http://www.pixhoster.info/f/2016-09/799629aa855bda3fa7bf0262fdabc6c8.png) 
 
 An OWL 2 RL incremental reasoner for the Web.
 
