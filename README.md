@@ -4,7 +4,7 @@ An OWL 2 RL incremental reasoner for the Web.
 
 ## Description
 
-HyLAR-Reasoner is an OWL 2 RL reasoner that uses known rdf-based librairies such as rdfstore.js, sparqljs and rdf-ext while providing an additional incremental reasoning engine. The framework implementation of HyLAR can be [tested online](http://dataconf.liris.cnrs.fr/hylar/). HyLAR can be either use locally as any npm module, or globally as a server.
+HyLAR-Reasoner is an OWL 2 RL reasoner that uses known rdf-based librairies such as rdfstore.js, sparqljs and rdf-ext while providing an additional incremental reasoning engine. The framework implementation of HyLAR can be [tested online](http://dataconf.liris.cnrs.fr/hylar/). HyLAR can be either used locally as a npm module or globally as a server, and comes with a browserified version. 
 
 ## Supported serializations, OWL constructs and inferences
 
@@ -97,6 +97,14 @@ Each subject/predicate/object can be one of the following:
 - A literal, *e.g.* `"0.5"`, `"Hello world!"`
 
 A predicate can also be any of these comparison operators: `<`, `>`, `=`, `<=`, `=>`.
+
+## Use HyLAR's reasoner in a browser
+
+HyLAR comes with a browserified version. Include the file `hylar-client.js` as a script in your page with this line:
+```html
+<script src="path-to/hylar-client.js"></script>
+```
+As in the node module version, you can instantiate HyLAR with `Hylar = new H();` and call the same methods `query()`, `load()` and `addRules()`.
 
 ## Use HyLAR as a server
 
