@@ -18,6 +18,9 @@ var Class = Prefixes.OWL + 'Class',
     Thing = Prefixes.OWL + 'Thing',
     Nothing = Prefixes.OWL + 'Nothing',
     Type = Prefixes.RDF + 'type',
+    Subject = Prefixes.RDF + 'subject',
+    Predicate = Prefixes.RDF + 'predicate',
+    Object = Prefixes.RDF + 'object',
     SubClassOf = Prefixes.RDFS + 'subClassOf',
     SubPropertyOf = Prefixes.RDFS + 'subPropertyOf',
     TransitiveProperty = Prefixes.OWL + 'TransitiveProperty',
@@ -153,19 +156,37 @@ OWL2RL = {
             ], [
                 new Fact(Type, '?x', 'http://sites.google.com/site/smartappliancesproject/ontologies/fipa#RequestDeviceInfo', [], true)
             ])
+        ],
+
+        testsBNode: [
+            new Rule([
+                new Fact(Type, '?x', 'http://sites.google.com/site/smartappliancesproject/ontologies/fipa#Function', [], true)
+            ], [
+                new Fact(Subject, '__bnode__1', '?x', [], true),
+                new Fact(Predicate, '__bnode__1', Type, [], true),
+                new Fact(Object, '__bnode__1', 'http://sites.google.com/site/smartappliancesproject/ontologies/fipa#Function', [], true)
+            ])
         ]
 
     }
 };
 
 module.exports = {
+    test: OWL2RL.rules.classSubsumption
+        .concat(OWL2RL.rules.propertySubsumption)
+        .concat(OWL2RL.rules.transitivity)
+        .concat(OWL2RL.rules.inverse)
+        .concat(OWL2RL.rules.equivalence)
+        .concat(OWL2RL.rules.equality)
+        .concat(OWL2RL.rules.testsFipa)
+        .concat(OWL2RL.rules.testsBNode),
+
     rules: OWL2RL.rules.classSubsumption
         .concat(OWL2RL.rules.propertySubsumption)
         .concat(OWL2RL.rules.transitivity)
         .concat(OWL2RL.rules.inverse)
         .concat(OWL2RL.rules.equivalence)
-        .concat(OWL2RL.rules.equality)/*
-        .concat(OWL2RL.rules.testsFipa)*/,
+        .concat(OWL2RL.rules.equality),
 
     classSubsumption: OWL2RL.rules.classSubsumption,
 

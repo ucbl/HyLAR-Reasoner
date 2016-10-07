@@ -95,7 +95,11 @@ module.exports = {
             dblQuoteInStrPattern = RegularExpressions.DBLQUOTED_STRING,
             dblQuoteMatch;
 
-        entityStr = entityStr.format();
+        try {
+            entityStr = entityStr.format();
+        } catch(e) {
+            console.warn("Inconsistency detected!");
+        }
 
         if (entityStr === undefined) return false;
         if (entityStr.match(literalPattern)) {
@@ -116,9 +120,11 @@ module.exports = {
      * @returns {string}
      */
     factToTurtle: function(fact) {
-        var subject = this.parseStrEntityToTurtle(fact.subject),
-            predicate = this.parseStrEntityToTurtle(fact.predicate),
-            object = this.parseStrEntityToTurtle(fact.object);
+        var subject, predicate, object;
+
+        subject = this.parseStrEntityToTurtle(fact.subject);
+        predicate = this.parseStrEntityToTurtle(fact.predicate);
+        object = this.parseStrEntityToTurtle(fact.object);
 
         if (subject && predicate && object) {
             return subject + ' ' + predicate + ' ' + object + ' . ';

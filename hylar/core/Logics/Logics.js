@@ -9,6 +9,8 @@ var Utils = require('../Utils');
 var Errors = require('../Errors');
 var RegularExpressions = require('../RegularExpressions');
 
+var md5 = require('md5');
+
 /**
  * All necessary stuff around the Logics module
  * @type {{substractFactSets: Function, mergeFactSets: Function}}
@@ -498,5 +500,17 @@ module.exports = {
         }
 
         return new Rule(causes, consequences);
+    },
+
+    isBNode: function(elem) {
+        return ( (elem !== undefined) && (elem.indexOf('__bnode__') === 0));
+    },
+
+    skolemize: function(facts, elem) {
+        var skolem = '';
+        for (var i = 0; i < facts.length; i++) {
+            skolem += facts[i].toString();
+        }
+        return md5(skolem) + elem;
     }
 };

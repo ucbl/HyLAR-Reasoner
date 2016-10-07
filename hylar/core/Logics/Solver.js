@@ -255,7 +255,9 @@ Solver = {
      * @returns {*}
      */
     substituteElementVariablesWithMapping: function(elem, mapping) {
-        if(Logics.isVariable(elem)) {
+        if(Logics.isBNode(elem)) {
+            return Logics.skolemize(mapping.__facts__, elem);
+        } else if(Logics.isVariable(elem)) {
             if (mapping[elem] !== undefined) {
                 return mapping[elem]
             }

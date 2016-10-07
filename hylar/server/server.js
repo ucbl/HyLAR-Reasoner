@@ -42,8 +42,6 @@ app.use('/img', express.static(__dirname + '/images'));
 
 // parse application/json
 app.use(bodyParser.json());
-console.notify('Setting up routes...');
-
 
 // Server utils
 app.all('*', Controller.allowCrossDomain);
@@ -73,12 +71,9 @@ app.post('/sparql', Controller.simpleSparql, Controller.sparqlInterface);
 app.get('/explore', Controller.renderFact);
 app.get('/explore/:graph/:fact', Controller.renderFact);
 
-console.notify('Done.');
-console.notify('Exposing server to port ' + port + '...');
-
 // Launching server
 return app.listen(port, function() {
-  console.notify('HyLAR is running.');
+  console.notify('HyLAR is running at port ' + port + '.');
   return;
 });
 

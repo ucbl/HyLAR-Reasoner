@@ -7,18 +7,17 @@ var fs = require('fs');
 var path = require('path');
 var mime = require('mime-types');
 
+var OWL2RL = require('../hylar/core/OWL2RL')
 var Logics = require('../hylar/core/Logics/Logics');
-var OWL2RL = require('../hylar/core/OWL2RL');
-
 var H = require('../hylar/hylar');
 var queries = require('./query-examples');
 var owl, ontology, mimeType, Hylar = new H();
 
-//Hylar.setRules(OWL2RL.classSubsumption);
-
-var a, b, c;
+var a, b;
 
 var reasoningMethod = process.env.rm, ontologyFilename = '/ontologies/fipa.ttl';
+
+Hylar.rules = OWL2RL.test;
 
 describe('File access', function () {
     it('should access the file', function () {
