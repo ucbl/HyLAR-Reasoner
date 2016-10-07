@@ -67,9 +67,11 @@ app.get('/query', Controller.processSPARQL);
 app.get('/sparql', Controller.sparqlInterface);
 app.post('/sparql', Controller.simpleSparql, Controller.sparqlInterface);
 
-// KB explorer interface
+// KB and rules explorer interface
 app.get('/explore', Controller.renderFact);
 app.get('/explore/:graph/:fact', Controller.renderFact);
+app.get('/explore/rules', Controller.renderRules);
+app.post('/explore/rules', Controller.addRules, Controller.renderRules);
 
 // Launching server
 return app.listen(port, function() {

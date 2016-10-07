@@ -11,7 +11,8 @@ var Utils = require('../Utils');
  * @param ra the consequence facts
  * @constructor
  */
-Rule = function(slf, srf) {
+Rule = function(slf, srf, name) {
+    this.name = name;
     this.causes = [];
     this.operatorCauses = [];
     this.consequences = srf;
@@ -42,9 +43,9 @@ Rule.prototype = {
     toString: function() {
         var factConj = '';
         for(var key in this.causes) {
-            factConj += ' ^ ' + this.causes[key].toString();
+            factConj += ' ^ ' + this.causes[key].toString().substring(1);
         }
-        return factConj.substr(3) + ' -> ' + this.consequences.toString();
+        return factConj.substr(3) + ' -> ' + this.consequences.toString().substring(1);
     },
 
     /**

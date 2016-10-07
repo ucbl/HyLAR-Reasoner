@@ -290,11 +290,11 @@ module.exports = {
                     req.sparqlResults = result;
                     req.sparqlQuery = req.body.query;
                     next();
+                }).fail(function (fail) {
+                    req.error = fail;
+                    next();
                 });
-            } catch (StorageNotInitializedException) {
-                req.error = StorageNotInitializedException;
-                next();
-            }
+            } catch(e) {}
         } else {
             next();
         }
@@ -308,7 +308,17 @@ module.exports = {
         });
     },
 
+    renderRules: function(req, res) {
+        res.render(htmlDir + '/pages/rules', {
+            rules: Hylar.getRulesAsStringArray()
+        });
+    },
+
     addRules: function(req, res, next) {
+        if (req.body.rule !== undefined) {
+            req.body.rules = [req.body.rule];
+        }
+
         var rules = req.body.rules,
             parsedRules = Logics.parseRules(rules);
         Hylar.addRules(parsedRules);

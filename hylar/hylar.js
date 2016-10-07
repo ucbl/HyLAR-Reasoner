@@ -53,7 +53,8 @@ console.error = function(msg) {
 Hylar = function() {
     this.dict = new Dictionary();
     this.sm = new StorageManager();
-    this.rules = OWL2RL.rules;
+    this.rules = OWL2RL.test;
+    this.sm.init();
 };
 
 /**
@@ -232,6 +233,14 @@ Hylar.prototype.getStorage = function() {
  */
 Hylar.prototype.setStorage = function(ttl) {
     return this.sm.createStoreWith(ttl);
+};
+
+Hylar.prototype.getRulesAsStringArray = function() {
+    var strRules = [];
+    for (var i = 0; i < this.rules.length; i++) {
+        strRules.push({ name: this.rules[i].name, rule: this.rules[i].toString() } );
+    }
+    return strRules;
 };
 
 /**

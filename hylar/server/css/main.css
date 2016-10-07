@@ -27,6 +27,20 @@ a.fact:hover {
     text-decoration: none;
 }
 
+span.rule {
+    color: teal;
+    display: inline-block;
+    border: 1px solid slategray;
+    padding: 3px;
+    margin-right: 5px;
+    margin-left: 5px;
+    margin-bottom: 5px;
+    border-radius: 7px;
+    width: auto;
+    background: #FEFEFE;
+    box-shadow: slategray 1px 1px;
+}
+
 h3 {
     border-bottom: 1px solid slategray;
     padding-bottom: 5px;
