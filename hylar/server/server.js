@@ -2,7 +2,6 @@
 
 var express = require('express'),
     app = express(),
-
     bodyParser = require('body-parser'),
     multer  = require('multer');
 
@@ -78,5 +77,3 @@ return app.listen(port, function() {
     console.notify('HyLAR is running at port ' + port + '.');
     return;
 });
-
-
