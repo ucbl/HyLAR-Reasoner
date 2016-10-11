@@ -101,7 +101,7 @@ Solver = {
                 substitutedFact = this.substituteFactVariables(mappingList[i], causes[j]);
                 operationToEvaluate = Utils.getValueFromDatatype(substitutedFact.subject) +
                     substitutedFact.predicate +
-                    Utils.getValueFromDatatype(substitutedFact.object);
+                    Utils.getValueFromDatatype('"' + substitutedFact.object + '"');
                 if (!eval(operationToEvaluate)) {
                     delete mappingList[i];
                     break;

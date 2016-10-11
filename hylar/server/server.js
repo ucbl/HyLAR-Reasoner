@@ -3,7 +3,6 @@
 var express = require('express'),
     app = express(),
 
-    path = require('path'),
     bodyParser = require('body-parser'),
     multer  = require('multer');
 
@@ -75,8 +74,9 @@ app.post('/explore/rules', Controller.addRules, Controller.renderRules);
 
 // Launching server
 return app.listen(port, function() {
-  console.notify('HyLAR is running at port ' + port + '.');
-  return;
+    Utils._instanceid = port;
+    console.notify('HyLAR is running at port ' + port + '.');
+    return;
 });
 
 

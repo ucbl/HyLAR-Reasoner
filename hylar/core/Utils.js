@@ -60,6 +60,8 @@ IterableStructure.prototype.toArray = function() {
 
 module.exports = {
 
+    _instanceid: 1,
+
     IterableStructure: IterableStructure,
 
     /**
