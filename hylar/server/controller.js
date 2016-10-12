@@ -158,8 +158,8 @@ module.exports = {
             .then(function(results) {
                 processedTime = new Date().getTime();
 
-                if (asString) {
-                    results = results.toString();
+                if (asString && results.triples) {
+                    res.status(200).send(results.triples.toString());
                 }
 
                 res.status(200).send({
