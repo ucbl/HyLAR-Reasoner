@@ -160,7 +160,7 @@ module.exports = {
 
                 if (asString && results.triples && results.triples.length) {
                     asString = "";
-                    for (var i = 0; i < results.triples; i++) {
+                    for (var i = 0; i < results.triples.length; i++) {
                         asString += results.triples[i].toString() + " ";
                     }
                     res.status(200).send(asString);
