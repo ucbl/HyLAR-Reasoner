@@ -149,6 +149,7 @@ module.exports = {
 
     processSPARQL: function(req, res) {
         var initialTime = req.body.time,
+            asString = req.body.asString,
             receivedReqTime = new Date().getTime(),
             requestDelay =  receivedReqTime - initialTime,
             processedTime;
@@ -156,6 +157,10 @@ module.exports = {
         Hylar.query(req.body.query, req.body.reasoningMethod)
             .then(function(results) {
                 processedTime = new Date().getTime();
+
+                if (asString) {
+                    results = results.toString();
+                }
 
                 res.status(200).send({
                     data : results,
