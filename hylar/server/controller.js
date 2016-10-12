@@ -158,8 +158,12 @@ module.exports = {
             .then(function(results) {
                 processedTime = new Date().getTime();
 
-                if (asString && results.triples) {
-                    res.status(200).send(results.triples.toString());
+                if (asString && results.triples && results.triples.length) {
+                    asString = "";
+                    for (var i = 0; i < results.triples; i++) {
+                        asString += results.triples[i].toString() + " ";
+                    }
+                    res.status(200).send(asString);
                 }
 
                 res.status(200).send({
