@@ -14,6 +14,16 @@ function Dictionary() {
     this.dict = {
         '#default': {}
     };
+    this.lastUpdate = 0;
+    this.purgeThreshold = 13000000;
+};
+
+Dictionary.prototype.allowPurge = function() {
+    this.allowPurge = true;
+};
+
+Dictionary.prototype.disallowPurge = function() {
+    this.allowPurge = false;
 };
 
 Dictionary.prototype.resolveGraph = function(graph) {
@@ -55,8 +65,15 @@ Dictionary.prototype.get = function(ttl, graph) {
  * @returns {*}
  */
 Dictionary.prototype.put = function(fact, graph) {
-    var factToTurtle;
+    var timestamp = new Date().getTime(), factToTurtle;
+
+    if (this.lastUpdateIsOld()) {
+        this.purgeOld();
+    }
+
+    this.lastUpdate = timestamp;
     graph = this.resolveGraph(graph);
+
     try {
         if(fact.predicate === 'FALSE') {
             this.dict[graph]['__FALSE__'] = [fact];
@@ -66,11 +83,36 @@ Dictionary.prototype.put = function(fact, graph) {
                 this.dict[graph][factToTurtle] = Utils.insertUnique(this.dict[graph][factToTurtle], fact);
             } else {
                 this.dict[graph][factToTurtle] = [fact];
+                this.dict[graph][factToTurtle].lastUpdate = timestamp;
             }
         }
         return true;
     } catch(e) {
         return e;
+    }
+};
+
+Dictionary.prototype.lastUpdateIsOld = function() {
+    if (this.allowPurge) {
+        return ( (this.lastUpdate != 0) && (new Date().getTime() - this.lastUpdate) > this.purgeThreshold);
+    } else {
+        return false;
+    }
+};
+
+Dictionary.prototype.isOld = function(graph, factIndex) {
+    return (this.dict[graph][factIndex].lastUpdate - this.lastUpdate) > this.purgeThreshold;
+};
+
+Dictionary.prototype.purgeOld = function() {
+    for (var i in this.dict.length) {
+        for (var j in this.dict[i].length) {
+            for (var k in this.dict[i][j]) {
+                if (!this.dict[i][j][k].isValid() && this.isOld(i,j)) {
+                    delete this.dict[i][j][k];
+                }
+            }
+        }
     }
 };
 
