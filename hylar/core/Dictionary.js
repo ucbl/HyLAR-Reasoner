@@ -18,11 +18,11 @@ function Dictionary() {
     this.purgeThreshold = 13000000;
 };
 
-Dictionary.prototype.allowPurge = function() {
+Dictionary.prototype.turnOnForgetting = function() {
     this.allowPurge = true;
 };
 
-Dictionary.prototype.disallowPurge = function() {
+Dictionary.prototype.turnOffForgetting = function() {
     this.allowPurge = false;
 };
 
@@ -67,7 +67,7 @@ Dictionary.prototype.get = function(ttl, graph) {
 Dictionary.prototype.put = function(fact, graph) {
     var timestamp = new Date().getTime(), factToTurtle;
 
-    if (this.lastUpdateIsOld()) {
+    if (this.allowPurge) {
         this.purgeOld();
     }
 

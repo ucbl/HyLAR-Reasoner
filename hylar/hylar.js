@@ -62,7 +62,7 @@ Hylar = function() {
  */
 Hylar.prototype.setIncremental = function() {
     this.rMethod = Reasoner.process.it.incrementally;
-    this.dict.disallowPurge();
+    this.dict.turnOffForgetting();
     console.notify('Reasoner set as incremental.');
 };
 
@@ -71,7 +71,7 @@ Hylar.prototype.setIncremental = function() {
  */
 Hylar.prototype.setTagBased = function() {
     this.rMethod = Reasoner.process.it.tagBased;
-    this.dict.allowPurge();
+    this.dict.turnOnForgetting();
     console.notify('Reasoner set as tag-based.');
 };
 
