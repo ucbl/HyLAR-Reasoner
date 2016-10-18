@@ -71,7 +71,6 @@ describe('CLASSIFICATION UNIV 2', function () {
     });
 });
 
-
 describe('INSERT UNIV 2', function () {
     var query, results;
     it('insert data and derivations', function () {
