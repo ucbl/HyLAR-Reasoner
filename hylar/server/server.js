@@ -42,7 +42,6 @@ app.use('/img', express.static(__dirname + '/images'));
 app.use(bodyParser.json());
 
 // Server utils
-app.all('*', Controller.allowCrossDomain);
 app.get('/', Controller.hello);
 app.get('/time', Controller.time);
 
