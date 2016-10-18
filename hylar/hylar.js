@@ -171,7 +171,7 @@ Hylar.prototype.treatLoad = function(ontologyTxt, mimeType, graph) {
  */
 Hylar.prototype.query = function(query, reasoningMethod) {
     var sparql = ParsingInterface.parseSPARQL(query),
-        singleWhereQueries = [], promises = [], updates, that = this;
+        singleWhereQueries = [], that = this;
 
     this.updateReasoningMethod(reasoningMethod);
 
@@ -180,19 +180,14 @@ Hylar.prototype.query = function(query, reasoningMethod) {
     } else {
         switch (sparql.type) {
             case 'update':
-                for (var i = 0; i < sparql.updates.length; i++) {
-                    if (sparql.updates[i].updateType == 'insert') {
-                        updates = sparql.updates[i].insert;
-                    } else if (sparql.updates[i].updateType == 'delete') {
-                        updates = sparql.updates[i].delete;
-                    }
-                    for (var j = 0; j < updates.length; j++) {
-                        promises.push(this.treatUpdate(updates[j], sparql.updates[i].updateType));
-                    }
+                if (ParsingInterface.isUpdateWhere(sparql)) {
+                    return this.query(ParsingInterface.updateWhereToConstructWhere(query))
+                        .then(function(data) {
+                            return that.query(ParsingInterface.buildUpdateQueryWithConstructResults(sparql, data));
+                        });
+                } else {
+                    return this.treatUpdateWithGraph(query);
                 }
-                return Promise.all(promises).then(function(values) {
-                    return [].concat.apply([], values);
-                });
                 break;
             default:
                 if (this.rMethod == Reasoner.process.it.incrementally) {
@@ -212,6 +207,29 @@ Hylar.prototype.query = function(query, reasoningMethod) {
                     });
         }
     }
+};
+
+/**
+ * High-level treatUpdate that takes graphs into account.
+ * @returns Promise
+ */
+Hylar.prototype.treatUpdateWithGraph = function(query) {
+    var sparql = ParsingInterface.parseSPARQL(query),
+        promises = [], updates;
+
+    for (var i = 0; i < sparql.updates.length; i++) {
+        if (sparql.updates[i].updateType == 'insert') {
+            updates = sparql.updates[i].insert;
+        } else if (sparql.updates[i].updateType == 'delete') {
+            updates = sparql.updates[i].delete;
+        }
+        for (var j = 0; j < updates.length; j++) {
+            promises.push(this.treatUpdate(updates[j], sparql.updates[i].updateType));
+        }
+    }
+    return Promise.all(promises).then(function(values) {
+        return [].concat.apply([], values);
+    });
 };
 
 /**

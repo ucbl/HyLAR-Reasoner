@@ -175,10 +175,15 @@ StorageManager.prototype.loadIntoSideStore = function(ttl, graph) {
         query = 'INSERT DATA { GRAPH <' + graph + '> { ' + ttl + ' } }'
     }
 
-    this.sideStore.execute(query,
-        function(err, r) {
-            deferred.resolve(r);
-        });
+    try {
+        this.sideStore.execute(query,
+            function (err, r) {
+                deferred.resolve(r);
+            });
+    } catch(e) {
+        deferred.reject(e + "\n@" + this.constructor.name);
+    }
+
     return deferred.promise;
 };
 
