@@ -148,6 +148,11 @@ module.exports = {
         });
     },
 
+    removeOntology: function(req, res, next) {
+        fs.unlinkSync(ontoDir + '/' + req.params.filename);
+        next();
+    },
+
     processSPARQL: function(req, res) {
         var initialTime = req.body.time,
             asString = req.body.asString,
@@ -246,12 +251,9 @@ module.exports = {
         });
     },
 
-    upload: function(req, res) {
-        fs.renameSync(req.file.destination + req.file.filename, req.file.destination + req.file.originalname);
-        res.json({
-            filename: req.file.originalname,
-            list: fs.readdirSync(ontoDir)
-        });
+    upload: function(req, res, next) {
+        fs.renameSync(req.file.path, path.normalize(req.file.destination + '/' + req.file.originalname));
+        next();
     },
 
     renderFact: function(req, res) {

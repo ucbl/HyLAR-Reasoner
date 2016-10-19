@@ -48,3 +48,7 @@ h3 {
     padding-top: 15px;
     text-shadow: 1px 1px lightslategrey;
 }
+
+.remove {
+    color: darkred;
+}

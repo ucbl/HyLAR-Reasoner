@@ -47,8 +47,9 @@ app.get('/time', Controller.time);
 
 // OWL ontology uploading, parsing, getting, classifying
 app.get('/ontology', Controller.list);
-app.post('/ontology', upload.single('file'), Controller.upload);
+app.post('/ontology', upload.single('file'), Controller.upload, Controller.hello);
 app.get('/ontology/:filename', Controller.getOntology, Controller.sendOntology);
+app.get('/remove/:filename', Controller.removeOntology, Controller.hello);
 
 app.get('/classify/:filename', Controller.getOntology, Controller.loadOntology, Controller.sendHylarContents);
 app.post('/classify', Controller.escapeStrOntology, Controller.loadOntology, Controller.acknowledgeEnd);

@@ -13,6 +13,12 @@
         The knowledge base currently contains <%- kb.length %> facts (<%- nbExplicit %> explicit, <%- nbImplicit %>  implicit).<br/>
         The KB is currently <% if (consistent) { %>consistent.<% } else { %><a href="/explore/IFALSE">inconsistent</a>.<% } %>
 
+        <h3>Upload an ontology (RDF/XML, Turtle, N3 or JSON-LD)</h3>
+        <form target="_self" enctype="multipart/form-data" method="post" action="/ontology">
+            <input type="file" name="file"/>
+            <input type=submit value="Upload"/>
+        </form>
+
         <h3>Available ontologies</h3>
         <ul>
             <% for (var i = 0; i < ontologies.length; i++) { %>
@@ -22,6 +28,9 @@
                     </a>
                     <a target="_blank" href="/classify/<%- ontologies[i] %>?keepoldvalues=true">
                         <span about="Load <%- ontologies[i] %> without clearing data " class="glyphicon glyphicon-plus"></span>
+                    </a>
+                    <a target="_self" href="/remove/<%- ontologies[i] %>">
+                        <span about="Remove <%- ontologies[i] %>" class="glyphicon glyphicon-remove"></span>
                     </a>
                     &nbsp;<a href="/ontology/<%- ontologies[i] %>"><%- ontologies[i] %></a>
                 </li>
