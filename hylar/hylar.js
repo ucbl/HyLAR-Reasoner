@@ -58,6 +58,12 @@ Hylar = function() {
     this.sm.init();
 };
 
+Hylar.prototype.clean = function() {
+    this.dict = new Dictionary();
+    this.sm = new StorageManager();
+    this.sm.init();
+};
+
 /**
  * Puts on incremental reasoning
  */
@@ -495,5 +501,9 @@ Hylar.prototype.removeRule = function(index) {
 Hylar.prototype.addToQueryHistory = function(query, noError) {
     this.queryHistory.push({ query: query, noError: noError });
 };
+
+Hylar.prototype.resetRules = function() {
+    this.rules = OWL2RL.rules;
+}
 
 module.exports = Hylar;

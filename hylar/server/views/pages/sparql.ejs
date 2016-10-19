@@ -17,7 +17,12 @@
 
     <div class="table-responsive">
         <h4>Results</h4>
-        <table>
+        <table class="table table-bordered">
+            <tr>
+            <% for (var variable in prevResults[0]) { %>
+                <th><%= variable %></th>
+            <% } %>
+            </tr>
             <% for (var i = 0; i < prevResults.length; i++) { %>
             <tr>
                 <% for (var key in prevResults[i]) { %>
@@ -28,22 +33,20 @@
         </table>
     </div>
 
-
-
     <h3>Query history</h3>
     <table class="table table-bordered">
         <tr>
             <th>SPARQL query</th>
             <th>Status</th>
         </tr>
-        <% for (var i = 0; i < history.length; i++) { %>
+        <% for (var i = (history.length-1); i > -1; i--) { %>
         <tr>
-            <td><%- history[i].query %></td>
+            <td><%= history[i].query %></td>
             <td>
                 <% if(history[i].noError) { %>
-                    <div class="noerr"<span class="noerror glyphicon glyphicon-ok">Passed</span>
+                    <span class="noerror glyphicon glyphicon-ok"> Passed</span>
                 <% } else { %>
-                    <span class="noerror glyphicon glyphicon-remove-circle"> Errored</span>
+                    <span class="error glyphicon glyphicon-remove-circle"> Errored</span>
                 <% } %>
             </td>
         </tr>

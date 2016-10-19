@@ -12,7 +12,7 @@
 
         <h3>KB Explorer</h3>
 
-        <% if (kb.length == 0) { %>Currently empty!<% } %>
+        <% if (kb.length == 0) { %>Currently empty!<% } else { %><h4><a href="/explore/resetKB">Reset KB</a></h4><% } %>
 
         <% for (var i = 0; i < kb.length; i++) { %>
             <a class="fact fact-valid-<%- kb[i].val.isValid() %>" href="/explore/<%- encodeURIComponent(kb[i].graph) %>/<%- encodeURIComponent(kb[i].val) %>"><%- kb[i].val.truncatedString() %></a> from <code><%- kb[i].graph %></code> </br>

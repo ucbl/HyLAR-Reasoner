@@ -10,13 +10,18 @@
 <div class="container">
     <h3>Rules</h3>
 
+    <h4>
+        <a href="/explore/resetRules">Reset rules</a>
+    </h4>
+
     <h4>Add a new rule</h4>
-    <form method="post" action="">
+    <form method="post" action="/explore/rules">
         (see <a target="_blank" href="https://www.npmjs.com/package/hylar#create-your-own-rules">guidelines</a> for creating your own rules).
-        <textarea name="rule" style="font-family: 'Courier New'; font-size: 16px;" class="form-control" rows="1"></textarea>
+        Prefixes on rule are not supported (e.g. owl:*, rdf:*, ...). Please use full URIs.
+        <textarea name="rule" style="font-family: 'Courier New'; font-size: 16px;" class="form-control" rows="6"></textarea>
         <input type=submit value="Add rule"/>
     </form>
-
+    <div style="padding-top: 10px; font-weight: bold; color:indianred;"><%- error %></div>
     <h4>Current rules</h4>
     <% if (rules.length == 0) { %>HyLAR has no rules (no pun intended!)<% } %>
     <% for (var i = 0; i < rules.length; i++) { %>

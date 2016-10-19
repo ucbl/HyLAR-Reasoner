@@ -482,6 +482,7 @@ module.exports = {
     },
 
     parseRule: function(strRule) {
+
         var tripleRegex = RegularExpressions.TRIPLE,
             atomRegex = RegularExpressions.ATOM,
             head = strRule.split('->')[0],
@@ -494,9 +495,13 @@ module.exports = {
             atoms = headTriples[i].match(atomRegex).splice(1);
             causes.push(new Fact(atoms[1], atoms[0], atoms[2]));
         }
-        for (var i = 0; i < bodyTriples.length; i++) {
-            atoms = bodyTriples[i].match(atomRegex).splice(1);
-            consequences.push(new Fact(atoms[1], atoms[0], atoms[2]));
+        if (body.toLowerCase().indexOf('false') !== -1) {
+            consequences.push(new Fact('FALSE'));
+        } else {
+            for (var i = 0; i < bodyTriples.length; i++) {
+                atoms = bodyTriples[i].match(atomRegex).splice(1);
+                consequences.push(new Fact(atoms[1], atoms[0], atoms[2]));
+            }
         }
 
         return new Rule(causes, consequences);

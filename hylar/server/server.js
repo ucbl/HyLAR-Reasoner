@@ -69,12 +69,14 @@ app.post('/sparql', Controller.simpleSparql, Controller.sparqlInterface);
 // KB and rules explorer interface
 app.get('/explore', Controller.renderFact);
 app.get('/explore/:graph/:fact', Controller.renderFact);
+app.get('/explore/resetKB', Controller.resetKB, Controller.renderFact);
 app.get('/explore/rules', Controller.renderRules);
+app.get('/explore/resetRules', Controller.resetRules, Controller.renderRules);
 app.post('/explore/rules', Controller.addRules, Controller.renderRules);
 
 // Launching server
 return app.listen(port, function() {
     Utils._instanceid = port;
-    console.notify('HyLAR is running at port ' + port + '.');
+    console.notify('HyLAR is running on port ' + port + '.');
     return;
 });

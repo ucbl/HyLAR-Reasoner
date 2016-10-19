@@ -330,7 +330,8 @@ module.exports = {
 
     renderRules: function(req, res) {
         res.render(htmlDir + '/pages/rules', {
-            rules: Hylar.getRulesAsStringArray()
+            rules: Hylar.getRulesAsStringArray(),
+            error: req.error
         });
     },
 
@@ -340,8 +341,18 @@ module.exports = {
         }
 
         var rules = req.body.rules,
+            parsedRules;
+        try {
             parsedRules = Logics.parseRules(rules);
-        Hylar.addRules(parsedRules);
+            Hylar.addRules(parsedRules);
+        } catch (e) {
+            req.error = "Rule parse error!";
+        }
+        next();
+    },
+
+    resetRules: function(req, res, next) {
+        Hylar.resetRules();
         next();
     },
 
@@ -353,5 +364,10 @@ module.exports = {
 
     listRules: function(req, res) {
         res.json({'rules': Hylar.rules.toString()});
+    },
+
+    resetKB: function(req, res, next) {
+        Hylar.clean();
+        next();
     }
 };

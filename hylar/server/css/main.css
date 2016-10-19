@@ -49,7 +49,11 @@ h3 {
     text-shadow: 1px 1px lightslategrey;
 }
 
-.menuitel {
-    float: left;
+.error {
+    color: darkred;
+}
+
+.noerror {
+    color: teal;
 }
 
