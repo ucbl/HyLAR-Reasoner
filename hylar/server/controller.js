@@ -97,6 +97,7 @@ module.exports = {
         Hylar.load(rawOntology, mimeType, req.body.reasoningMethod, graph, req.query.keepoldvalues)
             .then(function() {
                 req.processingDelay  = new Date().getTime() - initialTime;
+                console.notify("Classification finished in " + req.processingDelay + "ms.");
                 next();
             })
             .catch(function(error) {
@@ -165,6 +166,8 @@ module.exports = {
                     }
                     res.status(200).send(asString);
                 }
+
+                console.notify("Evaluation finished in " + processedTime - receivedReqTime + "ms.");
 
                 res.status(200).send({
                     data : results,
@@ -293,9 +296,12 @@ module.exports = {
 
     simpleSparql: function(req, res, next) {
         //noinspection JSValidateTypes
+        var start = new Date().getTime(), processingDelay;
         if (req.body.query !== undefined) {
             try {
                 Hylar.query(req.body.query).then(function (result) {
+                    processingDelay = new Date().getTime() - start;
+                    console.notify("Evaluation finished in " + processingDelay + "ms.");
                     req.sparqlResults = result;
                     req.sparqlQuery = req.body.query;
                     next();
