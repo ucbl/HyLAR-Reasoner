@@ -1,7 +1,7 @@
 {
   "name": "hylar",
   "main": "hylar/hylar.js",
-  "version": "1.7.17",
+  "version": "1.7.18",
   "dependencies": {
     "async": "^2.1.2",
     "bluebird": "^3.4.1",

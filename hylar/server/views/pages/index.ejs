@@ -31,7 +31,7 @@
             <% for (var i = 0; i < ontologies.length; i++) { %>
             <tr>
                 <td>
-                <a href="/ontology/<%- ontologies[i] %>"><%- ontologies[i] %></a>
+                    <a href="/ontology/<%- ontologies[i] %>"><%- ontologies[i] %></a>
                 </td>
                 <td>
                     <a target="_blank" href="/classify/<%- ontologies[i] %>" class="menuitem">
@@ -48,8 +48,8 @@
                         <span about="Remove <%- ontologies[i] %>" class="glyphicon glyphicon-remove"></span>
                     </a>
                 </td>
-                <% } %>
             </tr>
+            <% } %>
         </table>
 
     </div>

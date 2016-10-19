@@ -54,6 +54,7 @@ Hylar = function() {
     this.dict = new Dictionary();
     this.sm = new StorageManager();
     this.rules = OWL2RL.test;
+    this.queryHistory = [];
     this.sm.init();
 };
 
@@ -489,6 +490,10 @@ Hylar.prototype.removeRule = function(index) {
         }
     }
     this.rules = newRules;
+};
+
+Hylar.prototype.addToQueryHistory = function(query, noError) {
+    this.queryHistory.push({ query: query, noError: noError });
 };
 
 module.exports = Hylar;

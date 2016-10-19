@@ -28,7 +28,29 @@
         </table>
     </div>
 
-    </div>
+
+
+    <h3>Query history</h3>
+    <table class="table table-bordered">
+        <tr>
+            <th>SPARQL query</th>
+            <th>Status</th>
+        </tr>
+        <% for (var i = 0; i < history.length; i++) { %>
+        <tr>
+            <td><%- history[i].query %></td>
+            <td>
+                <% if(history[i].noError) { %>
+                    <div class="noerr"<span class="noerror glyphicon glyphicon-ok">Passed</span>
+                <% } else { %>
+                    <span class="noerror glyphicon glyphicon-remove-circle"> Errored</span>
+                <% } %>
+            </td>
+        </tr>
+        <% } %>
+    </table>
+
+</div>
     <div style="padding-top: 10px; font-weight: bold; color:indianred;"><%- error %></div>
 </div>
 </body>

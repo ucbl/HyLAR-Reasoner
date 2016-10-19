@@ -306,12 +306,14 @@ module.exports = {
                     console.notify("Evaluation finished in " + processingDelay + "ms.");
                     req.sparqlResults = result;
                     req.sparqlQuery = req.body.query;
+                    Hylar.addToQueryHistory(req.sparqlQuery, true);
                     next();
-                }).fail(function (fail) {
-                    req.error = fail;
-                    next();
-                });
-            } catch(e) {}
+                })
+            } catch(e) {
+                Hylar.addToQueryHistory(req.body.query, false);
+                req.error = e;
+                next();
+            }
         } else {
             next();
         }
@@ -321,6 +323,7 @@ module.exports = {
         res.render(htmlDir + '/pages/sparql', {
             sparqlQuery: (req.sparqlQuery ? req.sparqlQuery : 'SELECT * { ?s ?p ?o . }'),
             prevResults: (req.sparqlResults ? req.sparqlResults : ''),
+            history: Hylar.queryHistory,
             error: (req.error ? req.error: '')
         });
     },
