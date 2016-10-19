@@ -57,6 +57,7 @@ app.post('/classify', Controller.escapeStrOntology, Controller.loadOntology, Con
 // Rule adding, listing
 app.put('/rule', Controller.addRules, Controller.acknowledgeEnd);
 app.get('/rule', Controller.listRules);
+app.get('/rule/remove/:ruleIndex', Controller.removeRule, Controller.renderRules);
 
 // SPARQL query processing
 app.get('/query', Controller.processSPARQL);

@@ -342,6 +342,12 @@ module.exports = {
         next();
     },
 
+    removeRule: function(req, res, next) {
+        var ruleIndex = req.params.ruleIndex;
+        Hylar.removeRule(ruleIndex);
+        next();
+    },
+
     listRules: function(req, res) {
         res.json({'rules': Hylar.rules.toString()});
     }

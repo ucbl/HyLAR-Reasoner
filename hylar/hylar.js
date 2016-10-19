@@ -479,4 +479,16 @@ Hylar.prototype.addRules = function(ruleSet) {
     this.rules = this.rules.concat(ruleSet);
 };
 
+Hylar.prototype.removeRule = function(index) {
+    var newRules = [];
+    for (var i = 0; i < this.rules.length; i++) {
+        if (i!=index) {
+            newRules.push(this.rules[i]);
+        } else {
+            console.notify("Removed rule " + this.rules[i].toString());
+        }
+    }
+    this.rules = newRules;
+};
+
 module.exports = Hylar;
