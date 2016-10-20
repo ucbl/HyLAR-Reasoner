@@ -17,8 +17,6 @@ var a, b;
 
 var reasoningMethod = process.env.rm, ontologyFilename = '/ontologies/fipa.ttl';
 
-Hylar.rules = OWL2RL.test;
-
 describe('File access', function () {
     it('should access the file', function () {
         var exists = fs.existsSync(path.resolve(__dirname + ontologyFilename));

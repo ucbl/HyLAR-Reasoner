@@ -6,7 +6,6 @@ var fs = require('fs');
 var path = require('path');
 
 var Logics = require('../hylar/core/Logics/Logics');
-var OWL2RL = require('../hylar/core/OWL2RL');
 
 var H = require('../hylar/hylar');
 var owl, ontology, Hylar = new H();
