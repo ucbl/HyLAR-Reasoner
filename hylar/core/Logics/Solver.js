@@ -7,6 +7,8 @@ var Logics = require('./Logics');
 var Utils = require('../Utils');
 var AnnotatedQuery = require('./AnnotatedQuery');
 
+var q = require('q');
+
 /**
  * Core solver used to evaluate rules against facts
  * using pattern matching mechanisms.
@@ -21,17 +23,34 @@ Solver = {
      * @returns Array of the evaluation.
      */
     evaluateRuleSet: function(rs, facts, doTagging, resolvedImplicitFactSet) {
-        var newCons, cons = [];
+        /*var newCons, cons = [];
         for (var key in rs) {
-            if (doTagging) {
-                newCons = this.evaluateThroughRestrictionWithTagging(rs[key], facts, resolvedImplicitFactSet);
-                cons = cons.concat(newCons);
+
             } else {
                 newCons = this.evaluateThroughRestriction(rs[key], facts);
                 cons = Utils.uniques(cons, newCons);
             }
         }
-        return cons;
+        return cons;*/
+        var deferred = q.defer(), promises = [], cons = [];
+        for (var key in rs) {
+            if (doTagging) {
+                promises.push(this.evaluateThroughRestrictionWithTagging(rs[key], facts, resolvedImplicitFactSet));
+            } else {
+                promises.push(this.evaluateThroughRestriction(rs[key], facts));
+            }
+        }
+        try {
+            q.all(promises).then(function (consTab) {
+                for (var i = 0; i < consTab.length; i++) {
+                    cons = Utils.uniques(cons, consTab[i]);
+                }
+                deferred.resolve(cons);
+            });
+        } catch(e) {
+            deferred.reject(e);
+        }
+        return deferred.promise;
     },
 
     /**
@@ -43,20 +62,25 @@ Solver = {
      */
     evaluateThroughRestriction: function(rule, facts) {
         var mappingList = this.getMappings(rule, facts),
-            consequences = [];
+            consequences = [], deferred = q.defer();
 
-        this.checkOperators(rule, mappingList);
+        try {
+            this.checkOperators(rule, mappingList);
 
-        for (var i = 0; i < mappingList.length; i++) {
-            if (mappingList[i]) {
-                // Replace mappings on all consequences
-                for (var j = 0; j < rule.consequences.length; j++) {
-                    consequences.push(this.substituteFactVariables(mappingList[i], rule.consequences[j], []));
+            for (var i = 0; i < mappingList.length; i++) {
+                if (mappingList[i]) {
+                    // Replace mappings on all consequences
+                    for (var j = 0; j < rule.consequences.length; j++) {
+                        consequences.push(this.substituteFactVariables(mappingList[i], rule.consequences[j], []));
+                    }
                 }
             }
+            deferred.resolve(consequences);
+        } catch(e) {
+            deferred.reject(e);
         }
 
-        return consequences;
+        return deferred.promise;
     },
 
     /**
@@ -67,27 +91,32 @@ Solver = {
      * @returns {Array}
      */
     evaluateThroughRestrictionWithTagging: function(rule, kb) {
-        var mappingList = this.getMappings(rule, kb),
+        var mappingList = this.getMappings(rule, kb), deferred = q.defer(),
             consequences = [], consequence, causes, implicitCauses;
 
         this.checkOperators(rule, mappingList);
 
-        for (var i = 0; i < mappingList.length; i++) {
-            if (mappingList[i]) {
-                // Replace mappings on all consequences
-                causes = Logics.buildCauses(mappingList[i].__facts__);
-                // Retrieves implicit causes
-                implicitCauses = Logics.getOnlyImplicitFacts(mappingList[i].__facts__);
-                for (var j = 0; j < rule.consequences.length; j++) {
-                    consequence = this.substituteFactVariables(mappingList[i], rule.consequences[j], causes, implicitCauses);
-                    //if (Logics.filterKnownOrAlternativeImplicitFact(consequence, kb, resolvedImplicitFacts)) {
-                    consequences.push(consequence);
-                    //}
+        try {
+            for (var i = 0; i < mappingList.length; i++) {
+                if (mappingList[i]) {
+                    // Replace mappings on all consequences
+                    causes = Logics.buildCauses(mappingList[i].__facts__);
+                    // Retrieves implicit causes
+                    implicitCauses = Logics.getOnlyImplicitFacts(mappingList[i].__facts__);
+                    for (var j = 0; j < rule.consequences.length; j++) {
+                        consequence = this.substituteFactVariables(mappingList[i], rule.consequences[j], causes, implicitCauses);
+                        //if (Logics.filterKnownOrAlternativeImplicitFact(consequence, kb, resolvedImplicitFacts)) {
+                        consequences.push(consequence);
+                        //}
+                    }
                 }
             }
+            deferred.resolve(consequences);
+        } catch(e) {
+            deferred.reject(e);
         }
 
-        return consequences;
+        return deferred.promise;
     },
 
     checkOperators: function(rule, mappingList) {

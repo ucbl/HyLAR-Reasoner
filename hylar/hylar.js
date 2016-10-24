@@ -3,7 +3,8 @@
  */
 
 var fs = require('fs'),
-    chalk = require('chalk');
+    chalk = require('chalk'),
+    q = require('q');
 
 var Promise = require('bluebird');
 
@@ -440,7 +441,7 @@ Hylar.prototype.registerDerivations = function(derivations, graph) {
  * @returns {*}
  */
 Hylar.prototype.classify = function() {
-    var that = this;
+    var that = this, factsChunk, chunks = [], chunksNb = 5000, insertionPromises = [];
     console.notify('Classification started.');
 
     return this.sm.query('CONSTRUCT { ?a ?b ?c } WHERE { ?a ?b ?c }')
@@ -469,11 +470,23 @@ Hylar.prototype.classify = function() {
         })
         .then(function(r) {
             that.registerDerivations(r);
-            return ParsingInterface.factsToTurtle(r.additions);
+            for (var i = 0, j = r.additions.length; i < j; i += chunksNb) {
+                factsChunk = r.additions.slice(i,i+chunksNb);
+                chunks.push(ParsingInterface.factsToTurtle(factsChunk));
+            }
+            return;
         })
-        .then(function(ttl) {
+        .then(function() {
             console.notify('Classification succeeded.');
-            return that.sm.insert(ttl.replace(/(\n|\r)/g, ''));
+            for (var i = 0; i < chunks.length; i++) {
+                insertionPromises.push();
+            }
+            return Promise.reduce(chunks, function(previous, chunk) {
+                return that.sm.insert(chunk.replace(/(\n|\r)/g, ''));
+            }, 0);
+        })
+        .then(function() {
+            return true;
         });
 };
 

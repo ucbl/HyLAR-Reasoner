@@ -26,7 +26,7 @@
             <% for (var i = 0; i < prevResults.length; i++) { %>
             <tr>
                 <% for (var key in prevResults[i]) { %>
-                <td><small style="font-weight: bold;"><%- prevResults[i][key].value %></small></td>
+                <td class="col-md-<%= prevResults[0].length %>"><small style="font-weight: bold;"><%- prevResults[i][key].value %></small></td>
                 <% } %>
             </tr>
             <% } %>

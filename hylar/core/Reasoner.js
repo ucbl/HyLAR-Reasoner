@@ -23,20 +23,8 @@ module.exports = {
      * @returns {*}
      */
     evaluate: function(fI, fD, F, alg, rules) {
-        var deferred = q.defer(),
-            evaluationResults, inconsistencies;
         if (!alg) alg = ReasoningEngine.incremental;
-
-        evaluationResults = alg(fI, fD, F, rules);
-        inconsistencies = Logics.getInconsistencies(evaluationResults.additions);
-
-        console.notify('Evaluation finished.');
-        if (inconsistencies.length > 0) console.warn(inconsistencies.length + ' inconsistency(ies) detected.');
-        console.notify(evaluationResults.additions.length + ' additions, ' + evaluationResults.deletions.length + ' deletions.');
-
-        deferred.resolve(evaluationResults);
-
-        return deferred.promise;
+        return alg(fI, fD, F, rules);
     },
 
     /**

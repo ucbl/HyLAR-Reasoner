@@ -94,16 +94,19 @@ module.exports = {
             graph = req.graph,
             initialTime = new Date().getTime();
 
-        Hylar.load(rawOntology, mimeType, req.body.reasoningMethod, graph, req.query.keepoldvalues)
-            .then(function() {
-                req.processingDelay  = new Date().getTime() - initialTime;
-                console.notify("Classification finished in " + req.processingDelay + "ms.");
-                next();
-            })
-            .catch(function(error) {
-                console.error(error.stack);
-                res.status(500).send(error.stack);
-            });
+        setTimeout(function() {
+            Hylar.load(rawOntology, mimeType, req.body.reasoningMethod, graph, req.query.keepoldvalues)
+                .then(function() {
+                    req.processingDelay  = new Date().getTime() - initialTime;
+                    console.notify("Classification finished in " + req.processingDelay + "ms.");
+                    next();
+                })
+                .catch(function(error) {
+                    console.error(error.stack);
+                    res.status(500).send(error.stack);
+                });
+        }, 0);
+
     },
 
     escapeStrOntology: function(req, res, next) {

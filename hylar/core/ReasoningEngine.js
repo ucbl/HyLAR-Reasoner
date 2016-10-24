@@ -6,6 +6,8 @@ var Logics = require('./Logics/Logics'),
     Solver = require('./Logics/Solver'),
     Utils = require('./Utils');
 
+var q = require('q');
+
 /**
  * Reasoning engine containing incremental algorithms
  * and heuristics for KB view maintaining.
@@ -69,44 +71,66 @@ ReasoningEngine = {
             additions, deletions,
 
             Fe = Logics.getOnlyExplicitFacts(F),
-            Fi = Logics.getOnlyImplicitFacts(F);
+            Fi = Logics.getOnlyImplicitFacts(F),
 
-        if(FeDel && FeDel.length) {
-            // Overdeletion
-            do {
+            deferred = q.defer(),
+
+            startAlgorithm = function() {
+                overDeletionEvaluationLoop(FiDelNew);
+            },
+
+            overDeletionEvaluationLoop = function() {
                 FiDel = Utils.uniques(FiDel, FiDelNew);
                 Rdel = Logics.restrictRuleSet(R, Utils.uniques(FeDel, FiDel));
-                FiDelNew = Solver.evaluateRuleSet(Rdel, Utils.uniques(Utils.uniques(Fi, Fe), FeDel));
-            } while (Utils.uniques(FiDel, FiDelNew).length > FiDel.length);
-            Fe = Logics.minus(Fe, FeDel);
-            Fi = Logics.minus(Fi, FiDel);
+                Solver.evaluateRuleSet(Rdel, Utils.uniques(Utils.uniques(Fi, Fe), FeDel))
+                    .then(function(values) {
+                        FiDelNew = values;
+                        if (Utils.uniques(FiDel, FiDelNew).length > FiDel.length) {
+                            setTimeout(overDeletionEvaluationLoop, 1);
+                        } else {
+                            Fe = Logics.minus(Fe, FeDel);
+                            Fi = Logics.minus(Fi, FiDel);
+                            setTimeout(rederivationEvaluationLoop, 1);
+                        }
+                    });
+            },
 
-            // Rederivation
-            do {
+            rederivationEvaluationLoop = function() {
                 FiAdd = Utils.uniques(FiAdd, FiAddNew);
                 Rred = Logics.restrictRuleSet(R, FiDel);
-                FiAddNew = Solver.evaluateRuleSet(Rred, Utils.uniques(Fe, Fi));
-            } while(Utils.uniques(FiAdd, FiAddNew).length > FiAdd.length);
+                Solver.evaluateRuleSet(Rred, Utils.uniques(Fe, Fi))
+                    .then(function(values) {
+                        FiAddNew = values;
+                        if (Utils.uniques(FiAdd, FiAddNew).length > FiAdd.length) {
+                            setTimeout(rederivationEvaluationLoop, 1);
+                        } else {
+                            setTimeout(insertionEvaluationLoop, 1);
+                        }
+                    });
+            },
 
-        }
-
-        // Insertion
-        if(FeAdd && FeAdd.length) {
-            do {
+            insertionEvaluationLoop = function() {
                 FiAdd = Utils.uniques(FiAdd, FiAddNew);
                 superSet = Utils.uniques(Utils.uniques(Utils.uniques(Fe, Fi), FeAdd), FiAdd);
                 Rins = Logics.restrictRuleSet(R, superSet);
-                FiAddNew = Solver.evaluateRuleSet(Rins, superSet);
-            } while (!Utils.containsSubset(FiAdd, FiAddNew));
-        }
+                Solver.evaluateRuleSet(Rins, superSet)
+                    .then(function(values) {
+                        FiAddNew = values;
+                        if (!Utils.containsSubset(FiAdd, FiAddNew)) {
+                            setTimeout(insertionEvaluationLoop, 1);
+                        } else {
+                            additions = Utils.uniques(FeAdd, FiAdd);
+                            deletions = Utils.uniques(FeDel, FiDel);
+                            deferred.resolve({
+                                additions: additions,
+                                deletions: deletions
+                            });
+                        }
+                    });
+            };
 
-        additions = Utils.uniques(FeAdd, FiAdd);
-        deletions = Utils.uniques(FeDel, FiDel);
-
-        return {
-            additions: additions,
-            deletions: deletions
-        };
+        startAlgorithm();
+        return deferred.promise;
     },
 
     incrementalBf: function (FeAdd, FeDel, F, R) {
@@ -244,7 +268,7 @@ ReasoningEngine = {
      * @param refs
      * @returns {Array}
      */
-    tagFilter: function(F, refs) {
+    tagFilter: function(F) {
         var validSet = [];
         for (var i = 0; i < F.length; i++) {
             if (F[i].isValid()) {
@@ -266,26 +290,45 @@ ReasoningEngine = {
      */
     tagging: function(FeAdd, FeDel, F, R) {
         var newExplicitFacts, resolvedExplicitFacts, validUpdateResults,
-            FiAdd = [], Rins = [],
-            Fi = Logics.getOnlyImplicitFacts(F), Fe;
+            FiAdd = [], Rins = [], deferred = q.defer(),
+            Fi = Logics.getOnlyImplicitFacts(F), Fe,
+
+            startAlgorithm = function() {
+                if(newExplicitFacts.length > 0) {
+                    evaluationLoop(F);
+                } else {
+                    deferred.resolve({
+                        additions: Utils.uniques(newExplicitFacts.concat(resolvedExplicitFacts), Fi),
+                        deletions: []
+                    });
+                }
+            },
+
+            evaluationLoop = function() {
+                F = Utils.uniques(F, Fi);
+                Rins = Logics.restrictRuleSet(R, F);
+                Solver.evaluateRuleSet(Rins, F, true)
+                    .then(function(values) {
+                        FiAdd = values;
+                        if (Logics.unify(FiAdd, Fi)) {
+                            setTimeout(evaluationLoop, 1);
+                        } else {
+                            deferred.resolve({
+                                additions: Utils.uniques(newExplicitFacts.concat(resolvedExplicitFacts), Fi),
+                                deletions: []
+                            });
+                        }
+                    });
+            };
 
         // Returns new explicit facts to be added
         validUpdateResults = Logics.updateValidTags(F, FeAdd, FeDel);
         newExplicitFacts = validUpdateResults.__new__;
         resolvedExplicitFacts = validUpdateResults.__resolved__;
 
-        if(newExplicitFacts.length > 0) {
-            do {
-                F = Utils.uniques(F, Fi);
-                Rins = Logics.restrictRuleSet(R, F);
-                FiAdd = Solver.evaluateRuleSet(Rins, F, true);
-            } while (Logics.unify(FiAdd, Fi));
-        }
+        startAlgorithm();
 
-        return {
-            additions: Utils.uniques(newExplicitFacts.concat(resolvedExplicitFacts), Fi),
-            deletions: []
-        };
+        return deferred.promise;
     }
 };
 
