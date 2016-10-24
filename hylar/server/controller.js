@@ -94,7 +94,6 @@ module.exports = {
             graph = req.graph,
             initialTime = new Date().getTime();
 
-        setTimeout(function() {
             Hylar.load(rawOntology, mimeType, req.body.reasoningMethod, graph, req.query.keepoldvalues)
                 .then(function() {
                     req.processingDelay  = new Date().getTime() - initialTime;
@@ -105,8 +104,6 @@ module.exports = {
                     console.error(error.stack);
                     res.status(500).send(error.stack);
                 });
-        }, 0);
-
     },
 
     escapeStrOntology: function(req, res, next) {
@@ -163,31 +160,33 @@ module.exports = {
             requestDelay =  receivedReqTime - initialTime,
             processedTime;
 
+
         Hylar.query(req.body.query, req.body.reasoningMethod)
-            .then(function(results) {
-                processedTime = new Date().getTime();
+        .then(function(results) {
+            processedTime = new Date().getTime();
 
-                if (asString && results.triples && results.triples.length) {
-                    asString = "";
-                    for (var i = 0; i < results.triples.length; i++) {
-                        asString += results.triples[i].toString() + " ";
-                    }
-                    res.status(200).send(asString);
+            if (asString && results.triples && results.triples.length) {
+                asString = "";
+                for (var i = 0; i < results.triples.length; i++) {
+                    asString += results.triples[i].toString() + " ";
                 }
+                res.status(200).send(asString);
+            }
 
-                console.notify("Evaluation finished in " + processedTime - receivedReqTime + "ms.");
+            console.notify("Evaluation finished in " + processedTime - receivedReqTime + "ms.");
 
-                res.status(200).send({
-                    data : results,
-                    processingDelay: processedTime - receivedReqTime,
-                    requestDelay : requestDelay,
-                    serverTime : new Date().getTime()
-                });
-            })
-            .catch(function(error) {
-                console.error(error.stack);
-                res.status(500).send(error.stack);
+            res.status(200).send({
+                data : results,
+                processingDelay: processedTime - receivedReqTime,
+                requestDelay : requestDelay,
+                serverTime : new Date().getTime()
             });
+        })
+        .catch(function(error) {
+            console.error(error.stack);
+            res.status(500).send(error.stack);
+        })
+
     },
 
     list: function(req, res) {
@@ -301,6 +300,7 @@ module.exports = {
 
     simpleSparql: function(req, res, next) {
         //noinspection JSValidateTypes
+        console.log("doing stuff");
         var start = new Date().getTime(), processingDelay;
         if (req.body.query !== undefined) {
             try {

@@ -60,7 +60,7 @@ app.get('/rule', Controller.listRules);
 app.get('/rule/remove/:ruleIndex', Controller.removeRule, Controller.renderRules);
 
 // SPARQL query processing
-app.get('/query', Controller.processSPARQL);
+app.post('/query', Controller.processSPARQL);
 
 // SPARQL endpoint interface
 app.get('/sparql', Controller.sparqlInterface);
