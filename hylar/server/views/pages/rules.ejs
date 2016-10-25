@@ -16,6 +16,7 @@
 
     <h4>Add a new rule</h4>
     <form method="post" action="/explore/rules">
+        Name: <input type="text" name="rulename"/><br/>
         (see <a target="_blank" href="https://www.npmjs.com/package/hylar#create-your-own-rules">guidelines</a> for creating your own rules).
         Prefixes on rule are not supported (e.g. owl:*, rdf:*, ...). Please use full URIs.
         <textarea name="rule" style="font-family: 'Courier New'; font-size: 16px;" class="form-control" rows="6"></textarea>
@@ -24,13 +25,26 @@
     <div style="padding-top: 10px; font-weight: bold; color:indianred;"><%- error %></div>
     <h4>Current rules</h4>
     <% if (rules.length == 0) { %>HyLAR has no rules (no pun intended!)<% } %>
-    <% for (var i = 0; i < rules.length; i++) { %>
-    <h5>
-        <% if (rules[i].name) { %><%- rules[i].name %><% } else { %>Unnamed rule #<%- i %>%><% } %>
-        &nbsp;<a href="/rule/remove/<%- i %>"><span class="glyphicon glyphicon-remove"/>(remove)</a>
-    </h5>
-    <span class="rule"><%- rules[i].rule %></span>
+    <table class="table table-bordered">
+        <tr>
+            <th>Name</th>
+            <th>Rule</th>
+            <th>Remove</th>
+        </tr>
+        <% for (var i = 0; i < rules.length; i++) { %>
+            <tr>
+                <td>
+                    <% if (rules[i].name) { %><%- rules[i].name %><% } else { %>Unnamed rule #<%- i %>%><% } %>
+                </td>
+                <td>
+                    <small><%- rules[i].rule %></small>
+                </td>
+                <td class="status">
+                    <a href="/rule/remove/<%- i %>"><span class="glyphicon glyphicon-remove"/></a>
+                </td>
+            </tr>
+        <% } %>
+    </table>
     </br>
-    <% } %>
 </div>
 </body>

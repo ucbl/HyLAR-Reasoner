@@ -57,3 +57,23 @@ h3 {
     color: teal;
 }
 
+.sparqlresults-table {
+    table-layout: fixed;
+    word-wrap: break-word;
+}
+
+.sparqlresults-table th {
+    text-align: center;
+    background-color: #ededed;
+}
+
+.sparqlresults {
+    font-family: "Courier New";
+    font-weight: bold;
+}
+
+.sparqlstatus {
+    width: 15%;
+    text-align: center;
+}
+

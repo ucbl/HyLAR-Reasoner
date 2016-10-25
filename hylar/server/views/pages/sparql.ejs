@@ -15,23 +15,21 @@
         <input type=submit value="Submit query"/>
     </form>
 
-    <div class="table-responsive">
-        <h4>Results</h4>
-        <table class="table table-bordered">
-            <tr>
-            <% for (var variable in prevResults[0]) { %>
-                <th><%= variable %></th>
+    <h3>Results</h3>
+    <table class="table table-bordered sparqlresults-table">
+        <tr>
+        <% for (var variable in prevResults[0]) { %>
+            <th><%= variable %></th>
+        <% } %>
+        </tr>
+        <% for (var i = 0; i < prevResults.length; i++) { %>
+        <tr>
+            <% for (var key in prevResults[i]) { %>
+            <td><small class="sparqlresults"><%- prevResults[i][key].value %></small></td>
             <% } %>
-            </tr>
-            <% for (var i = 0; i < prevResults.length; i++) { %>
-            <tr>
-                <% for (var key in prevResults[i]) { %>
-                <td class="col-md-<%= prevResults[0].length %>"><small style="font-weight: bold;"><%- prevResults[i][key].value %></small></td>
-                <% } %>
-            </tr>
-            <% } %>
-        </table>
-    </div>
+        </tr>
+        <% } %>
+    </table>
 
     <h3>Query history</h3>
     <table class="table table-bordered">
@@ -42,7 +40,7 @@
         <% for (var i = (history.length-1); i > -1; i--) { %>
         <tr>
             <td><%= history[i].query %></td>
-            <td>
+            <td class="sparqlstatus">
                 <% if(history[i].noError) { %>
                     <span class="noerror glyphicon glyphicon-ok"> Passed</span>
                 <% } else { %>

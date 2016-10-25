@@ -300,7 +300,6 @@ module.exports = {
 
     simpleSparql: function(req, res, next) {
         //noinspection JSValidateTypes
-        console.log("doing stuff");
         var start = new Date().getTime(), processingDelay;
         if (req.body.query !== undefined) {
             try {
@@ -339,17 +338,21 @@ module.exports = {
     },
 
     addRules: function(req, res, next) {
-        if (req.body.rule !== undefined) {
-            req.body.rules = [req.body.rule];
-        }
-
         var rules = req.body.rules,
             parsedRules;
-        try {
-            parsedRules = Logics.parseRules(rules);
-            Hylar.addRules(parsedRules);
-        } catch (e) {
-            req.error = "Rule parse error!";
+        if (req.body.rule !== undefined) {
+            try {
+                Hylar.addRule(Logics.parseRule(req.body.rule), req.body.rulename);
+            } catch(e) {
+                req.error = "Rule parse error!";
+            }
+        } else {
+            try {
+                parsedRules = Logics.parseRules(rules);
+                Hylar.addRules(parsedRules);
+            } catch (e) {
+                req.error = "Rule parse error!";
+            }
         }
         next();
     },

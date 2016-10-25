@@ -48,6 +48,10 @@ Rule.prototype = {
         return factConj.substr(3) + ' -> ' + this.consequences.toString().substring(1);
     },
 
+    setName: function(name) {
+        this.name = name;
+    },
+
     /**
      * Orders rule causes (inplace) from the most to the least restrictive.
      * The least a cause have variables, the most it is restrictive.
