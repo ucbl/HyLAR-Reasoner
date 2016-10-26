@@ -1,9 +1,8 @@
 {
   "name": "hylar",
   "main": "hylar/hylar.js",
-  "version": "1.7.21",
+  "version": "1.7.22",
   "dependencies": {
-    "async": "^2.1.2",
     "bluebird": "^3.4.1",
     "body-parser": "^1.11.0",
     "chalk": "^1.1.3",

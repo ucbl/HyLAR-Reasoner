@@ -7612,6 +7612,16 @@ function Dictionary() {
     this.dict = {
         '#default': {}
     };
+    this.lastUpdate = 0;
+    this.purgeThreshold = 13000000;
+};
+
+Dictionary.prototype.turnOnForgetting = function() {
+    this.allowPurge = true;
+};
+
+Dictionary.prototype.turnOffForgetting = function() {
+    this.allowPurge = false;
 };
 
 Dictionary.prototype.resolveGraph = function(graph) {
@@ -7653,8 +7663,15 @@ Dictionary.prototype.get = function(ttl, graph) {
  * @returns {*}
  */
 Dictionary.prototype.put = function(fact, graph) {
-    var factToTurtle;
+    var timestamp = new Date().getTime(), factToTurtle;
+
+    if (this.allowPurge) {
+        this.purgeOld();
+    }
+
+    this.lastUpdate = timestamp;
     graph = this.resolveGraph(graph);
+
     try {
         if(fact.predicate === 'FALSE') {
             this.dict[graph]['__FALSE__'] = [fact];
@@ -7664,11 +7681,36 @@ Dictionary.prototype.put = function(fact, graph) {
                 this.dict[graph][factToTurtle] = Utils.insertUnique(this.dict[graph][factToTurtle], fact);
             } else {
                 this.dict[graph][factToTurtle] = [fact];
+                this.dict[graph][factToTurtle].lastUpdate = timestamp;
             }
         }
         return true;
     } catch(e) {
         return e;
+    }
+};
+
+Dictionary.prototype.lastUpdateIsOld = function() {
+    if (this.allowPurge) {
+        return ( (this.lastUpdate != 0) && (new Date().getTime() - this.lastUpdate) > this.purgeThreshold);
+    } else {
+        return false;
+    }
+};
+
+Dictionary.prototype.isOld = function(graph, factIndex) {
+    return (this.dict[graph][factIndex].lastUpdate - this.lastUpdate) > this.purgeThreshold;
+};
+
+Dictionary.prototype.purgeOld = function() {
+    for (var i in this.dict.length) {
+        for (var j in this.dict[i].length) {
+            for (var k in this.dict[i][j]) {
+                if (!this.dict[i][j][k].isValid() && this.isOld(i,j)) {
+                    delete this.dict[i][j][k];
+                }
+            }
+        }
     }
 };
 
@@ -7935,7 +7977,7 @@ Fact.prototype = {
         if(this.falseFact) {
             spo = 'FALSE';
         } else {
-            spo = '(' + this.subject + ', ' + this.predicate + ', ' + this.object + ')'
+            spo = '(' + this.subject + ' ' + this.predicate + ' ' + this.object + ')'
         }
 
         this.explicit ? e = 'E' : e = 'I';
@@ -8114,6 +8156,8 @@ var Fact = require('./Fact');
 var Utils = require('../Utils');
 var Errors = require('../Errors');
 var RegularExpressions = require('../RegularExpressions');
+
+var md5 = require('md5');
 
 /**
  * All necessary stuff around the Logics module
@@ -8586,6 +8630,7 @@ module.exports = {
     },
 
     parseRule: function(strRule) {
+
         var tripleRegex = RegularExpressions.TRIPLE,
             atomRegex = RegularExpressions.ATOM,
             head = strRule.split('->')[0],
@@ -8598,15 +8643,31 @@ module.exports = {
             atoms = headTriples[i].match(atomRegex).splice(1);
             causes.push(new Fact(atoms[1], atoms[0], atoms[2]));
         }
-        for (var i = 0; i < bodyTriples.length; i++) {
-            atoms = bodyTriples[i].match(atomRegex).splice(1);
-            consequences.push(new Fact(atoms[1], atoms[0], atoms[2]));
+        if (body.toLowerCase().indexOf('false') !== -1) {
+            consequences.push(new Fact('FALSE'));
+        } else {
+            for (var i = 0; i < bodyTriples.length; i++) {
+                atoms = bodyTriples[i].match(atomRegex).splice(1);
+                consequences.push(new Fact(atoms[1], atoms[0], atoms[2]));
+            }
         }
 
         return new Rule(causes, consequences);
+    },
+
+    isBNode: function(elem) {
+        return ( (elem !== undefined) && (elem.indexOf('__bnode__') === 0));
+    },
+
+    skolemize: function(facts, elem) {
+        var skolem = '';
+        for (var i = 0; i < facts.length; i++) {
+            skolem += facts[i].toString();
+        }
+        return md5(skolem) + elem;
     }
 };
-},{"../Errors":44,"../RegularExpressions":55,"../Utils":57,"./Fact":46,"./Rule":48}],48:[function(require,module,exports){
+},{"../Errors":44,"../RegularExpressions":55,"../Utils":57,"./Fact":46,"./Rule":48,"md5":73}],48:[function(require,module,exports){
 /**
  * Created by mt on 21/12/2015.
  */
@@ -8620,7 +8681,8 @@ var Utils = require('../Utils');
  * @param ra the consequence facts
  * @constructor
  */
-Rule = function(slf, srf) {
+Rule = function(slf, srf, name) {
+    this.name = name;
     this.causes = [];
     this.operatorCauses = [];
     this.consequences = srf;
@@ -8651,9 +8713,13 @@ Rule.prototype = {
     toString: function() {
         var factConj = '';
         for(var key in this.causes) {
-            factConj += ' ^ ' + this.causes[key].toString();
+            factConj += ' ^ ' + this.causes[key].toString().substring(1);
         }
-        return factConj.substr(3) + ' -> ' + this.consequences.toString();
+        return factConj.substr(3) + ' -> ' + this.consequences.toString().substring(1);
+    },
+
+    setName: function(name) {
+        this.name = name;
     },
 
     /**
@@ -8731,6 +8797,8 @@ var Logics = require('./Logics');
 var Utils = require('../Utils');
 var AnnotatedQuery = require('./AnnotatedQuery');
 
+var q = require('q');
+
 /**
  * Core solver used to evaluate rules against facts
  * using pattern matching mechanisms.
@@ -8745,17 +8813,34 @@ Solver = {
      * @returns Array of the evaluation.
      */
     evaluateRuleSet: function(rs, facts, doTagging, resolvedImplicitFactSet) {
-        var newCons, cons = [];
+        /*var newCons, cons = [];
         for (var key in rs) {
-            if (doTagging) {
-                newCons = this.evaluateThroughRestrictionWithTagging(rs[key], facts, resolvedImplicitFactSet);
-                cons = cons.concat(newCons);
+
             } else {
                 newCons = this.evaluateThroughRestriction(rs[key], facts);
                 cons = Utils.uniques(cons, newCons);
             }
         }
-        return cons;
+        return cons;*/
+        var deferred = q.defer(), promises = [], cons = [];
+        for (var key in rs) {
+            if (doTagging) {
+                promises.push(this.evaluateThroughRestrictionWithTagging(rs[key], facts, resolvedImplicitFactSet));
+            } else {
+                promises.push(this.evaluateThroughRestriction(rs[key], facts));
+            }
+        }
+        try {
+            q.all(promises).then(function (consTab) {
+                for (var i = 0; i < consTab.length; i++) {
+                    cons = Utils.uniques(cons, consTab[i]);
+                }
+                deferred.resolve(cons);
+            });
+        } catch(e) {
+            deferred.reject(e);
+        }
+        return deferred.promise;
     },
 
     /**
@@ -8767,20 +8852,25 @@ Solver = {
      */
     evaluateThroughRestriction: function(rule, facts) {
         var mappingList = this.getMappings(rule, facts),
-            consequences = [];
+            consequences = [], deferred = q.defer();
 
-        this.checkOperators(rule, mappingList);
+        try {
+            this.checkOperators(rule, mappingList);
 
-        for (var i = 0; i < mappingList.length; i++) {
-            if (mappingList[i]) {
-                // Replace mappings on all consequences
-                for (var j = 0; j < rule.consequences.length; j++) {
-                    consequences.push(this.substituteFactVariables(mappingList[i], rule.consequences[j], []));
+            for (var i = 0; i < mappingList.length; i++) {
+                if (mappingList[i]) {
+                    // Replace mappings on all consequences
+                    for (var j = 0; j < rule.consequences.length; j++) {
+                        consequences.push(this.substituteFactVariables(mappingList[i], rule.consequences[j], []));
+                    }
                 }
             }
+            deferred.resolve(consequences);
+        } catch(e) {
+            deferred.reject(e);
         }
 
-        return consequences;
+        return deferred.promise;
     },
 
     /**
@@ -8791,27 +8881,32 @@ Solver = {
      * @returns {Array}
      */
     evaluateThroughRestrictionWithTagging: function(rule, kb) {
-        var mappingList = this.getMappings(rule, kb),
+        var mappingList = this.getMappings(rule, kb), deferred = q.defer(),
             consequences = [], consequence, causes, implicitCauses;
 
         this.checkOperators(rule, mappingList);
 
-        for (var i = 0; i < mappingList.length; i++) {
-            if (mappingList[i]) {
-                // Replace mappings on all consequences
-                causes = Logics.buildCauses(mappingList[i].__facts__);
-                // Retrieves implicit causes
-                implicitCauses = Logics.getOnlyImplicitFacts(mappingList[i].__facts__);
-                for (var j = 0; j < rule.consequences.length; j++) {
-                    consequence = this.substituteFactVariables(mappingList[i], rule.consequences[j], causes, implicitCauses);
-                    //if (Logics.filterKnownOrAlternativeImplicitFact(consequence, kb, resolvedImplicitFacts)) {
-                    consequences.push(consequence);
-                    //}
+        try {
+            for (var i = 0; i < mappingList.length; i++) {
+                if (mappingList[i]) {
+                    // Replace mappings on all consequences
+                    causes = Logics.buildCauses(mappingList[i].__facts__);
+                    // Retrieves implicit causes
+                    implicitCauses = Logics.getOnlyImplicitFacts(mappingList[i].__facts__);
+                    for (var j = 0; j < rule.consequences.length; j++) {
+                        consequence = this.substituteFactVariables(mappingList[i], rule.consequences[j], causes, implicitCauses);
+                        //if (Logics.filterKnownOrAlternativeImplicitFact(consequence, kb, resolvedImplicitFacts)) {
+                        consequences.push(consequence);
+                        //}
+                    }
                 }
             }
+            deferred.resolve(consequences);
+        } catch(e) {
+            deferred.reject(e);
         }
 
-        return consequences;
+        return deferred.promise;
     },
 
     checkOperators: function(rule, mappingList) {
@@ -8825,7 +8920,7 @@ Solver = {
                 substitutedFact = this.substituteFactVariables(mappingList[i], causes[j]);
                 operationToEvaluate = Utils.getValueFromDatatype(substitutedFact.subject) +
                     substitutedFact.predicate +
-                    Utils.getValueFromDatatype(substitutedFact.object);
+                    Utils.getValueFromDatatype('"' + substitutedFact.object + '"');
                 if (!eval(operationToEvaluate)) {
                     delete mappingList[i];
                     break;
@@ -8979,7 +9074,9 @@ Solver = {
      * @returns {*}
      */
     substituteElementVariablesWithMapping: function(elem, mapping) {
-        if(Logics.isVariable(elem)) {
+        if(Logics.isBNode(elem)) {
+            return Logics.skolemize(mapping.__facts__, elem);
+        } else if(Logics.isVariable(elem)) {
             if (mapping[elem] !== undefined) {
                 return mapping[elem]
             }
@@ -9123,7 +9220,7 @@ Solver = {
 };
 
 module.exports = Solver;
-},{"../Utils":57,"./AnnotatedQuery":45,"./Fact":46,"./Logics":47}],50:[function(require,module,exports){
+},{"../Utils":57,"./AnnotatedQuery":45,"./Fact":46,"./Logics":47,"q":83}],50:[function(require,module,exports){
 /**
  * Created by MT on 17/09/2015.
  */
@@ -9136,7 +9233,8 @@ module.exports = Solver;
 
 var Rule = require('./Logics/Rule'),
     Fact = require('./Logics/Fact'),
-    Prefixes = require('./Prefixes');
+    Prefixes = require('./Prefixes'),
+    Logics = require('./Logics/Logics');
 
 var Class = Prefixes.OWL + 'Class',
     EquivalentClass = Prefixes.OWL + 'equivalentClass',
@@ -9144,6 +9242,9 @@ var Class = Prefixes.OWL + 'Class',
     Thing = Prefixes.OWL + 'Thing',
     Nothing = Prefixes.OWL + 'Nothing',
     Type = Prefixes.RDF + 'type',
+    Subject = Prefixes.RDF + 'subject',
+    Predicate = Prefixes.RDF + 'predicate',
+    Object = Prefixes.RDF + 'object',
     SubClassOf = Prefixes.RDFS + 'subClassOf',
     SubPropertyOf = Prefixes.RDFS + 'subPropertyOf',
     TransitiveProperty = Prefixes.OWL + 'TransitiveProperty',
@@ -9162,13 +9263,13 @@ OWL2RL = {
             new Rule([
                     new Fact(SubClassOf, '?c1', '?c2', [], true),
                     new Fact(SubClassOf, '?c2', '?c3', [], true)],
-                [new Fact(SubClassOf, '?c1', '?c3', [], true)]),
+                [new Fact(SubClassOf, '?c1', '?c3', [], true)], "Class-Subsumption-1"),
 
             // cax-sco
             new Rule([
                     new Fact(SubClassOf, '?c1', '?c2', [], true),
                     new Fact(Type, '?x', '?c1', [], true)],
-                [new Fact(Type, '?x', '?c2', [], true)])
+                [new Fact(Type, '?x', '?c2', [], true)], "Class-Subsumption-2")
         ],
 
         propertySubsumption: [
@@ -9176,13 +9277,13 @@ OWL2RL = {
             new Rule([
                     new Fact(SubPropertyOf, '?p1', '?p2', [], true),
                     new Fact(SubPropertyOf, '?p2', '?p3', [], true)],
-                [new Fact(SubClassOf, '?p1', '?p3', [], true)]),
+                [new Fact(SubClassOf, '?p1', '?p3', [], true)], "Property-Subsumption-1"),
 
             // prp-spo1
             new Rule([
                     new Fact(SubPropertyOf, '?p1', '?p2', [], true),
                     new Fact('?p1', '?x', '?y', [], true)],
-                [new Fact('?p2', '?x', '?y', [], true)])
+                [new Fact('?p2', '?x', '?y', [], true)], "Property-Subsumption-2")
         ],
 
         transitivity: [
@@ -9191,7 +9292,7 @@ OWL2RL = {
                     new Fact('?p', '?x', '?y', [], true),
                     new Fact(Type, '?p', TransitiveProperty, [], true),
                     new Fact('?p', '?y', '?z', [], true)],
-                [new Fact('?p', '?x', '?z', [], true)])
+                [new Fact('?p', '?x', '?z', [], true)], "Property-Transitivity")
         ],
 
         inverse: [
@@ -9199,13 +9300,13 @@ OWL2RL = {
             new Rule([
                     new Fact(InverseOf, '?p1', '?p2', [], true),
                     new Fact('?p1', '?x', '?y', [], true)],
-                [new Fact('?p2', '?y', '?x', [], true)]),
+                [new Fact('?p2', '?y', '?x', [], true)], "Property-Inverse-1"),
 
             //prp-inv2
             new Rule([
                     new Fact(InverseOf, '?p1', '?p2', [], true),
                     new Fact('?p2', '?x', '?y', [], true)],
-                [new Fact('?p1', '?y', '?x', [], true)])
+                [new Fact('?p1', '?y', '?x', [], true)], "Property-Inverse-2")
         ],
 
         equivalence: [
@@ -9213,25 +9314,25 @@ OWL2RL = {
             new Rule([
                     new Fact(EquivalentClass, '?c1', '?c2', [], true),
                     new Fact(Type, '?x', '?c1', [], true)],
-                [new Fact(Type, '?x', '?c2', [], true)]),
+                [new Fact(Type, '?x', '?c2', [], true)], "Class-Equivalence-1"),
 
             //cax-eqc2
             new Rule([
                     new Fact(EquivalentClass, '?c1', '?c2', [], true),
                     new Fact(Type, '?x', '?c2', [], true)],
-                [new Fact(Type, '?x', '?c1', [], true)]),
+                [new Fact(Type, '?x', '?c1', [], true)], "Class-Equivalence-2"),
 
             //prp-eqp1
             new Rule([
                     new Fact(EquivalentProperty, '?p1', '?p2', [], true),
                     new Fact('?p1', '?x', 'y', [], true)],
-                [new Fact('?p2', '?x', '?y', [], true)]),
+                [new Fact('?p2', '?x', '?y', [], true)], "Property-Equivalence-1"),
 
             //prp-eqp2
             new Rule([
                     new Fact(EquivalentProperty, '?p1', '?p2', [], true),
                     new Fact('?p2', '?x', 'y', [], true)],
-                [new Fact('?p1', '?x', '?y', [], true)])
+                [new Fact('?p1', '?x', '?y', [], true)], "Property-Equivalence-2")
         ],
 
         equality: [
@@ -9239,25 +9340,25 @@ OWL2RL = {
             new Rule([
                     new Fact(SameAs, '?s1', '?s2', [], true),
                     new Fact('?p', '?s1', '?o', [], true)],
-                [new Fact('?p', '?s2', '?o', [], true)]),
+                [new Fact('?p', '?s2', '?o', [], true)], "Equality-1"),
 
             //eq-rep-p
             new Rule([
                     new Fact(SameAs, '?p1', '?p2', [], true),
                     new Fact('?p1', '?s', '?o', [], true)],
-                [new Fact('?p2', '?s', '?o', [], true)]),
+                [new Fact('?p2', '?s', '?o', [], true)], "Equality-2"),
 
             //eq-rep-o
             new Rule([
                     new Fact(SameAs, '?o1', '?o2', [], true),
                     new Fact('?p', '?s', '?o1', [], true)],
-                [new Fact('?p', '?s', '?o2', [], true)]),
+                [new Fact('?p', '?s', '?o2', [], true)], "Equality-3"),
 
             //eq-trans
             new Rule([
                     new Fact(SameAs, '?x', '?y', [], true),
                     new Fact(SameAs, '?y', '?z', [], true)],
-                [new Fact(SameAs, '?x', '?z', [], true)])
+                [new Fact(SameAs, '?x', '?z', [], true)], "Equality-4")
         ],
 
         testsFipa: [
@@ -9266,32 +9367,116 @@ OWL2RL = {
                 new Fact(Type, '?x', 'http://sites.google.com/site/smartappliancesproject/ontologies/fipa#RequestDeviceInfo', [], true)
             ], [
                 new Fact(Type, '?x', Thing, [], true)
-            ]),
+            ], "Propagation-Test-1"),
 
             new Rule([
                 new Fact(Type, '?x', Thing, [], true)
             ], [
                 new Fact('FALSE')
-            ]),
+            ], "Inconsitency-Test"),
 
             new Rule([
                 new Fact(Type, '?x', 'http://sites.google.com/site/smartappliancesproject/ontologies/fipa#Function', [], true)
             ], [
                 new Fact(Type, '?x', 'http://sites.google.com/site/smartappliancesproject/ontologies/fipa#RequestDeviceInfo', [], true)
             ])
+        ],
+
+        testsBNode: [
+            new Rule([
+                new Fact(Type, '?x', 'http://sites.google.com/site/smartappliancesproject/ontologies/fipa#Function', [], true)
+            ], [
+                new Fact(Subject, '__bnode__1', '?x', [], true),
+                new Fact(Predicate, '__bnode__1', Type, [], true),
+                new Fact(Object, '__bnode__1', 'http://sites.google.com/site/smartappliancesproject/ontologies/fipa#Function', [], true)
+            ], "BNode-Test")
         ]
 
     }
 };
 
 module.exports = {
+    test: OWL2RL.rules.classSubsumption
+        .concat(OWL2RL.rules.propertySubsumption)
+        .concat(OWL2RL.rules.transitivity)
+        .concat(OWL2RL.rules.inverse)
+        .concat(OWL2RL.rules.equivalence)
+        .concat(OWL2RL.rules.equality)
+        .concat(Logics.parseRules([
+            "(?x, http://www.w3.org/2002/07/owl#sameAs, ?y) -> (?y, http://www.w3.org/2002/07/owl#sameAs, ?x)",
+            "(?x, http://www.w3.org/2002/07/owl#sameAs, ?y) ^ (?y, http://www.w3.org/2002/07/owl#sameAs, ?z) -> (?x, http://www.w3.org/2002/07/owl#sameAs, ?z)",
+            "(?p, http://www.w3.org/2000/01/rdf-schema#domain, ?c) ^ (?x, ?p, ?y) -> (?x, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?c)",
+            "(?p, http://www.w3.org/2000/01/rdf-schema#range, ?c) ^ (?x, ?p, ?y) -> (?y, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?c)",
+            "(?p, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/2002/07/owl#FunctionalProperty) ^ (?x, ?p, ?y1) ^ (?x, ?p, ?y2)	-> (?y1, http://www.w3.org/2002/07/owl#sameAs, ?y2)",
+            "(?p, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/2002/07/owl#InverseFunctionalProperty) ^ (?x1, ?p, ?y) ^ (?x2, ?p, ?y) -> (?x1, http://www.w3.org/2002/07/owl#sameAs, ?x2)",
+            "(?p, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/2002/07/owl#SymmetricProperty) ^ (?x, ?p, ?y) -> (?y, ?p, ?x)",
+            "(?p, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/2002/07/owl#TransitiveProperty) ^ (?x, ?p, ?y) ^ (?y, ?p, ?z) -> (?x, ?p, ?z)",
+            "(?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) ^ (?x, ?p1, ?y) -> (?x, ?p2, ?y)",
+            "(?x, http://www.w3.org/2002/07/owl#someValuesFrom, ?y) ^ (?x, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?u, ?p, ?v) ^ (?v, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?y) -> (?u, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?x)",
+            "(?x, http://www.w3.org/2002/07/owl#someValuesFrom, http://www.w3.org/2002/07/owl#Thing) ^ (?x, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?u, ?p, ?v)	-> (?u, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?x)",
+            "(?x, http://www.w3.org/2002/07/owl#allValuesFrom, ?y) ^ (?x, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?u, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?x) ^ (?u, ?p, ?v)	-> (?v, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?y)",
+            "(?x, http://www.w3.org/2002/07/owl#hasValue, ?y) ^ (?x, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?u, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?x)	-> (?u, ?p, ?y)",
+            "(?x, http://www.w3.org/2002/07/owl#hasValue, ?y) ^ (?x, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?u, ?p, ?y) -> (?u, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?x)",
+            "(?c, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/2002/07/owl#Class) -> (?c, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c) ^ (?c, http://www.w3.org/2002/07/owl#equivalentClass, ?c) ^ (?c, http://www.w3.org/2000/01/rdf-schema#subClassOf, http://www.w3.org/2002/07/owl#Thing) ^ (http://www.w3.org/2002/07/owl#Nothing, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c)",
+            "(?c1, http://www.w3.org/2002/07/owl#equivalentClass, ?c2) -> (?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2) ^ (?c2, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c1)",
+            "(?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2) ^ (?c2, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c1) -> (?c1, http://www.w3.org/2002/07/owl#equivalentClass, ?c2)",
+            "(?p, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/2002/07/owl#ObjectProperty) -> (?p, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p) ^ (?p, http://www.w3.org/2002/07/owl#equivalentProperty, ?p)",
+            "(?p, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/2002/07/owl#DatatypeProperty) -> (?p, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p) ^ (?p, http://www.w3.org/2002/07/owl#equivalentProperty, ?p)",
+            "(?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) ^ (?p2, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p3) -> (?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p3)",
+            "(?p1, http://www.w3.org/2002/07/owl#equivalentProperty, ?p2) -> (?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) ^ (?p2, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p1)",
+            "(?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) ^ (?p2, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p1) -> (?p1, http://www.w3.org/2002/07/owl#equivalentProperty, ?p2)",
+            "(?p, http://www.w3.org/2000/01/rdf-schema#domain, ?c1) ^ (?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2) -> (?p, http://www.w3.org/2000/01/rdf-schema#domain, ?c2)",
+            "(?p2, http://www.w3.org/2000/01/rdf-schema#domain, ?c) ^ (?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) -> (?p1, http://www.w3.org/2000/01/rdf-schema#domain, ?c)",
+            "(?p, http://www.w3.org/2000/01/rdf-schema#range, ?c1) ^ (?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2) -> (?p, http://www.w3.org/2000/01/rdf-schema#range, ?c2)",
+            "(?p2, http://www.w3.org/2000/01/rdf-schema#range, ?c) ^ (?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2)	-> (?p1, http://www.w3.org/2000/01/rdf-schema#range, ?c)",
+            "(?c1, http://www.w3.org/2002/07/owl#hasValue, ?i) ^ (?c1, http://www.w3.org/2002/07/owl#onProperty, ?p1) ^ (?c2, http://www.w3.org/2002/07/owl#hasValue, ?i) ^ (?c2, http://www.w3.org/2002/07/owl#onProperty, ?p2) ^ (?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) -> (?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2)",
+            "(?c1, http://www.w3.org/2002/07/owl#someValuesFrom, ?y1) ^ (?c1, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?c2, http://www.w3.org/2002/07/owl#someValuesFrom, ?y2) ^ (?c2, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?y1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?y2) -> (?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2)",
+            "(?c1, http://www.w3.org/2002/07/owl#someValuesFrom, ?y) ^ (?c1, http://www.w3.org/2002/07/owl#onProperty, ?p1) ^ (?c2, http://www.w3.org/2002/07/owl#someValuesFrom, ?y) ^ (?c2, http://www.w3.org/2002/07/owl#onProperty, ?p2) ^ (?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) -> (?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2)",
+            "(?c1, http://www.w3.org/2002/07/owl#allValuesFrom, ?y1) ^ (?c1, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?c2, http://www.w3.org/2002/07/owl#allValuesFrom, ?y2) ^ (?c2, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?y1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?y2) -> (?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2)",
+            "(?c1, http://www.w3.org/2002/07/owl#allValuesFrom, ?y) ^ (?c1, http://www.w3.org/2002/07/owl#onProperty, ?p1) ^ (?c2, http://www.w3.org/2002/07/owl#allValuesFrom, ?y) ^ (?c2, http://www.w3.org/2002/07/owl#onProperty, ?p2) ^ (?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) -> (?c2, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c1)"
+        ]))/*
+        .concat(OWL2RL.rules.testsFipa)
+        .concat(OWL2RL.rules.testsBNode)*/,
+
     rules: OWL2RL.rules.classSubsumption
         .concat(OWL2RL.rules.propertySubsumption)
         .concat(OWL2RL.rules.transitivity)
         .concat(OWL2RL.rules.inverse)
         .concat(OWL2RL.rules.equivalence)
-        .concat(OWL2RL.rules.equality)/*
-        .concat(OWL2RL.rules.testsFipa)*/,
+        .concat(OWL2RL.rules.equality)
+        .concat(Logics.parseRules([
+                "(?x, http://www.w3.org/2002/07/owl#sameAs, ?y) -> (?y, http://www.w3.org/2002/07/owl#sameAs, ?x)",
+                "(?x, http://www.w3.org/2002/07/owl#sameAs, ?y) ^ (?y, http://www.w3.org/2002/07/owl#sameAs, ?z) -> (?x, http://www.w3.org/2002/07/owl#sameAs, ?z)",
+                "(?p, http://www.w3.org/2000/01/rdf-schema#domain, ?c) ^ (?x, ?p, ?y) -> (?x, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?c)",
+                "(?p, http://www.w3.org/2000/01/rdf-schema#range, ?c) ^ (?x, ?p, ?y) -> (?y, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?c)",
+                "(?p, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/2002/07/owl#FunctionalProperty) ^ (?x, ?p, ?y1) ^ (?x, ?p, ?y2)	-> (?y1, http://www.w3.org/2002/07/owl#sameAs, ?y2)",
+                "(?p, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/2002/07/owl#InverseFunctionalProperty) ^ (?x1, ?p, ?y) ^ (?x2, ?p, ?y) -> (?x1, http://www.w3.org/2002/07/owl#sameAs, ?x2)",
+                "(?p, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/2002/07/owl#SymmetricProperty) ^ (?x, ?p, ?y) -> (?y, ?p, ?x)",
+                "(?p, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/2002/07/owl#TransitiveProperty) ^ (?x, ?p, ?y) ^ (?y, ?p, ?z) -> (?x, ?p, ?z)",
+                "(?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) ^ (?x, ?p1, ?y) -> (?x, ?p2, ?y)",
+                "(?x, http://www.w3.org/2002/07/owl#someValuesFrom, ?y) ^ (?x, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?u, ?p, ?v) ^ (?v, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?y) -> (?u, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?x)",
+                "(?x, http://www.w3.org/2002/07/owl#someValuesFrom, http://www.w3.org/2002/07/owl#Thing) ^ (?x, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?u, ?p, ?v)	-> (?u, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?x)",
+                "(?x, http://www.w3.org/2002/07/owl#allValuesFrom, ?y) ^ (?x, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?u, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?x) ^ (?u, ?p, ?v)	-> (?v, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?y)",
+                "(?x, http://www.w3.org/2002/07/owl#hasValue, ?y) ^ (?x, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?u, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?x)	-> (?u, ?p, ?y)",
+                "(?x, http://www.w3.org/2002/07/owl#hasValue, ?y) ^ (?x, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?u, ?p, ?y) -> (?u, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?x)",
+                "(?c, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/2002/07/owl#Class) -> (?c, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c) ^ (?c, http://www.w3.org/2002/07/owl#equivalentClass, ?c) ^ (?c, http://www.w3.org/2000/01/rdf-schema#subClassOf, http://www.w3.org/2002/07/owl#Thing) ^ (http://www.w3.org/2002/07/owl#Nothing, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c)",
+                "(?c1, http://www.w3.org/2002/07/owl#equivalentClass, ?c2) -> (?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2) ^ (?c2, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c1)",
+                "(?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2) ^ (?c2, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c1) -> (?c1, http://www.w3.org/2002/07/owl#equivalentClass, ?c2)",
+                "(?p, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/2002/07/owl#ObjectProperty) -> (?p, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p) ^ (?p, http://www.w3.org/2002/07/owl#equivalentProperty, ?p)",
+                "(?p, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/2002/07/owl#DatatypeProperty) -> (?p, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p) ^ (?p, http://www.w3.org/2002/07/owl#equivalentProperty, ?p)",
+                "(?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) ^ (?p2, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p3) -> (?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p3)",
+                "(?p1, http://www.w3.org/2002/07/owl#equivalentProperty, ?p2) -> (?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) ^ (?p2, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p1)",
+                "(?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) ^ (?p2, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p1) -> (?p1, http://www.w3.org/2002/07/owl#equivalentProperty, ?p2)",
+                "(?p, http://www.w3.org/2000/01/rdf-schema#domain, ?c1) ^ (?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2) -> (?p, http://www.w3.org/2000/01/rdf-schema#domain, ?c2)",
+                "(?p2, http://www.w3.org/2000/01/rdf-schema#domain, ?c) ^ (?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) -> (?p1, http://www.w3.org/2000/01/rdf-schema#domain, ?c)",
+                "(?p, http://www.w3.org/2000/01/rdf-schema#range, ?c1) ^ (?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2) -> (?p, http://www.w3.org/2000/01/rdf-schema#range, ?c2)",
+                "(?p2, http://www.w3.org/2000/01/rdf-schema#range, ?c) ^ (?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2)	-> (?p1, http://www.w3.org/2000/01/rdf-schema#range, ?c)",
+                "(?c1, http://www.w3.org/2002/07/owl#hasValue, ?i) ^ (?c1, http://www.w3.org/2002/07/owl#onProperty, ?p1) ^ (?c2, http://www.w3.org/2002/07/owl#hasValue, ?i) ^ (?c2, http://www.w3.org/2002/07/owl#onProperty, ?p2) ^ (?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) -> (?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2)",
+                "(?c1, http://www.w3.org/2002/07/owl#someValuesFrom, ?y1) ^ (?c1, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?c2, http://www.w3.org/2002/07/owl#someValuesFrom, ?y2) ^ (?c2, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?y1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?y2) -> (?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2)",
+                "(?c1, http://www.w3.org/2002/07/owl#someValuesFrom, ?y) ^ (?c1, http://www.w3.org/2002/07/owl#onProperty, ?p1) ^ (?c2, http://www.w3.org/2002/07/owl#someValuesFrom, ?y) ^ (?c2, http://www.w3.org/2002/07/owl#onProperty, ?p2) ^ (?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) -> (?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2)",
+                "(?c1, http://www.w3.org/2002/07/owl#allValuesFrom, ?y1) ^ (?c1, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?c2, http://www.w3.org/2002/07/owl#allValuesFrom, ?y2) ^ (?c2, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?y1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?y2) -> (?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2)",
+                "(?c1, http://www.w3.org/2002/07/owl#allValuesFrom, ?y) ^ (?c1, http://www.w3.org/2002/07/owl#onProperty, ?p1) ^ (?c2, http://www.w3.org/2002/07/owl#allValuesFrom, ?y) ^ (?c2, http://www.w3.org/2002/07/owl#onProperty, ?p2) ^ (?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) -> (?c2, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c1)"
+            ])),
 
     classSubsumption: OWL2RL.rules.classSubsumption,
 
@@ -9310,7 +9495,7 @@ module.exports = {
     equality: OWL2RL.rules.equality
 };
 
-},{"./Logics/Fact":46,"./Logics/Rule":48,"./Prefixes":52}],51:[function(require,module,exports){
+},{"./Logics/Fact":46,"./Logics/Logics":47,"./Logics/Rule":48,"./Prefixes":52}],51:[function(require,module,exports){
 /*
  * Created by MT on 20/11/2015.
  */
@@ -9325,6 +9510,7 @@ var rdfext = require('rdf-ext')(),
     sparqlJs = require('sparqljs'),
 
     SparqlParser = new sparqlJs.Parser(),
+    SparqlGenerator = new sparqlJs.Generator(),
     RdfXmlParser = new rdfext.RdfXmlParser();
 
 /**
@@ -9408,7 +9594,9 @@ module.exports = {
             dblQuoteInStrPattern = RegularExpressions.DBLQUOTED_STRING,
             dblQuoteMatch;
 
-        entityStr = entityStr.format();
+        try {
+            entityStr = entityStr.format();
+        } catch(e){}
 
         if (entityStr === undefined) return false;
         if (entityStr.match(literalPattern)) {
@@ -9429,9 +9617,11 @@ module.exports = {
      * @returns {string}
      */
     factToTurtle: function(fact) {
-        var subject = this.parseStrEntityToTurtle(fact.subject),
-            predicate = this.parseStrEntityToTurtle(fact.predicate),
-            object = this.parseStrEntityToTurtle(fact.object);
+        var subject, predicate, object;
+
+        subject = this.parseStrEntityToTurtle(fact.subject);
+        predicate = this.parseStrEntityToTurtle(fact.predicate);
+        object = this.parseStrEntityToTurtle(fact.object);
 
         if (subject && predicate && object) {
             return subject + ' ' + predicate + ' ' + object + ' . ';
@@ -9455,6 +9645,26 @@ module.exports = {
         return ttl;
     },
 
+    updateWhereToConstructWhere: function(query, doParse) {
+        var parsedQuery = SparqlParser.parse(query);
+
+        if (this.isInsert(parsedQuery)) {
+            parsedQuery.template = parsedQuery.updates[0].insert[0].triples;
+        } else {
+            parsedQuery.template = parsedQuery.updates[0].delete[0].triples;
+        }
+
+        parsedQuery.type = "query";
+        parsedQuery.queryType = "CONSTRUCT";
+        parsedQuery.where = parsedQuery.updates[0].where;
+        delete parsedQuery.updates;
+
+        if (doParse) {
+            return parsedQuery;
+        }
+        return SparqlGenerator.stringify(parsedQuery);
+    },
+
     /**
      * Parses a SPARQL query.
      * @param query
@@ -9464,192 +9674,10 @@ module.exports = {
         return SparqlParser.parse(query);
     },
 
-    /**
-     * Replace a variable from a result binding.
-     * @param elem Element to be replaced (subject, predicate or object)
-     * @param binding The result binding
-     * @param value The value to replace
-     * @returns The replaced element
-     */
-    replaceVar: function(elem, binding, vars) {
-        for (var key in vars) {
-            var variable = vars[key],
-                variableRegExpPattern = new RegExp('\\?'+variable, 'g');
-            if (elem.match(variableRegExpPattern)) {
-                elem = elem.replace(variableRegExpPattern, binding[variable].value);
-                if (binding[variable].token == 'literal') {
-                    elem = '"' + elem + '"';
-                } else {
-                    elem = '<' + elem + '>';
-                }
-            } else {
-                elem = this.parseStrEntityToTurtle(elem);
-            }
-        }
-        return elem;
-    },
-
-    /**
-     * Replaces variables in triples from results bindings.
-     * @param vars The variables to be replaced
-     * @param triples The triples to be replaced
-     * @param results The results bindings
-     * @returns {Array} The replaced triples.
-     */
-    replaceVars: function(vars, triples, results) {
-        var returned = [],
-            triple, binding,
-            that = this;
-
-        for (var i = 0; i < triples.length; i++) {
-            triple = triples[i];
-
-            for (var k = 0; k < results.length; k++) {
-                var subject = triple.subject,
-                    predicate = triple.predicate,
-                    object = triple.object;
-
-                binding = results[k];
-                subject = that.replaceVar(subject, binding, vars);
-                object = that.replaceVar(object, binding, vars);
-                predicate = that.replaceVar(predicate, binding, vars);
-                returned.push(subject + ' ' + predicate + ' ' + object + ' .  \n');
-
-            }
-        }
-        return returned;
-    },
-
-    /**
-     * Builds new triples from results bindings,
-     * given their original query. This function is
-     * used to tag-filter unfiltered store results.
-     * @param originalQuery Query originally launched against the store
-     * @param queryResults Results sent by the store
-     * @returns {Array} The newly build triples
-     */
-    constructTriplesFromResultBindings: function(originalQuery, queryResults) {
-        var that = this,
-            t = [],
-            vars, statement;
-
-        try {
-            vars = Object.keys(queryResults[0]);
-        } catch(e) {
-            vars = []
-        }
-
-        for (var i = 0; i < originalQuery.where.length; i++) {
-            statement = originalQuery.where[i];
-            if(statement.type == 'bgp') {
-                t = t.concat(that.replaceVars(vars, statement.triples, queryResults));
-            } else if(statement.type == 'graph') {
-                for (var j = 0; j < statement.patterns.length; j++) {
-                    t = t.concat(that.replaceVars(vars, statement.patterns[j].triples, queryResults))
-                }
-            }
-        }
-
-        return t;
-    },
-
-    /**
-     * Reforms results from a construct query,
-     * after tag-filtering.
-     * @param results
-     * @param ttl
-     * @param blanknodes
-     * @returns {*}
-     */
-    reformConstructResults: function(results, ttl, blanknodes) {
-        console.notify('Started construct results reform.');
-        var triples = [], triple, m;
-        for (var i = 0; i < results.triples.length; i++) {
-            triple = results.triples[i];
-            m = triple.toString().match(RegularExpressions.END_OF_TRIPLE);
-            if(m && ttl.toString().indexOf(m[0]) !== -1) triples.push(triple);
-        }
-        triples = triples.concat(blanknodes);
-        results.triples = triples;
-        results.length = triples.length;
-        console.notify('Finished construct results reform.');
-        return results;
-    },
-
-    /**
-     * Returns bindings that have not been
-     * tag-filtered.
-     * @param results
-     * @param ttl
-     * @param blanknodes
-     * @returns {*}
-     */
-    getValidBindings: function(bindings, triple, ttl) {
-        var replaced,
-            subject = triple.subject,
-            predicate = triple.predicate,
-            object = triple.object,
-            validBindings = [],
-            vars = Object.keys(bindings);
-
-        subject = this.replaceVar(subject, bindings, vars);
-        object = this.replaceVar(object, bindings, vars);
-        predicate = this.replaceVar(predicate, bindings, vars);
-
-        replaced = subject + ' ' + predicate + ' ' + object + ' . ';
-        if(replaced && ttl.toString().indexOf(replaced) !== -1) {
-            validBindings.push(bindings);
-        }
-
-        return validBindings;
-    },
-
-    /**
-     * Reforms results from a construct query,
-     * after tag-filtering.
-     * @param results
-     * @param ttl
-     * @param blanknodes
-     * @returns {*}
-     */
-    reformSelectResults: function(parsedQuery, r, ttl) {
-        var that = this, statement, wtriple, b,
-            returning = [], results = r.results;
-
-        if (r.filtered.length == 0) {
-            return [];
-        }
-
-        for (var i = 0; i < parsedQuery.where.length; i++) {
-            statement = parsedQuery.where[i];
-            if (statement.type == 'bgp') {
-                for (var j = 0; j < statement.triples.length; j++) {
-                    wtriple = statement.triples[j];
-                    for (var k = 0; k < results.length; k++) {
-                        b = that.getValidBindings(results[k], wtriple, ttl);
-                        returning = returning.concat(this.removeUnusedVariables(b, parsedQuery.variables));
-
-                    }
-                }
-            } else if (statement.type == 'graph') {
-                for (var j = 0; j < statement.patterns.length; j++) {
-                    for (var k = 0; k < statement.patterns[j].triples.length; k++) {
-                        wtriple = statement.patterns[j].triples[k];
-                        for (var l = 0; l < results.length; l++) {
-                            b = that.getValidBindings(results[l], wtriple, ttl);
-                            returning = returning.concat(this.removeUnusedVariables(b, parsedQuery.variables));
-                        }
-                    }
-                }
-            }
-        }
-        return returning;
-    },
-
     tripleToTurtle: function(triple) {
-        var ttl = this.parseStrEntityToTurtle(triple.subject) + " "
-                + this.parseStrEntityToTurtle(triple.predicate) + " "
-                + this.parseStrEntityToTurtle(triple.object) + " . ";
+        var ttl = this.parseStrEntityToTurtle(triple.subject.toString()) + " "
+                + this.parseStrEntityToTurtle(triple.predicate.toString()) + " "
+                + this.parseStrEntityToTurtle(triple.object.toString()) + " . ";
         return ttl;
     },
 
@@ -9692,85 +9720,6 @@ module.exports = {
         return isolatedQuery + " } ";
     },
 
-    rewriteWithAllVariables: function(query, parsedQuery) {
-        if (parsedQuery.queryType == 'CONSTRUCT') {
-            return query;
-        }
-
-        var variables = parsedQuery.variables,
-            updateVariableList = function(triples, variables) {
-                for (var k = 0; k < triples.length; k++) {
-                    if (Utils.isVariable(triples[k].subject)) {
-                        variables = Utils.insertUnique(variables, triples[k].subject);
-                    }
-                    if (Utils.isVariable(triples[k].predicate)) {
-                        variables = Utils.insertUnique(variables, triples[k].predicate);
-                    }
-                    if (Utils.isVariable(triples[k].object)) {
-                        variables = Utils.insertUnique(variables, triples[k].object);
-                    }
-                }
-                return variables;
-            };
-
-        if (query.match(/(SELECT)(\s+\*\s+)([^\{]*)(\{.+)/i) != null) {
-            return query;
-        }
-
-        for (var i = 0; i < parsedQuery.where.length; i++) {
-            if (parsedQuery.where[i].type == 'graph') {
-                for (var j = 0; j < parsedQuery.where[i].patterns.length; j++) {
-                    variables = updateVariableList(parsedQuery.where[i].patterns[j].triples, variables);
-                }
-            } else if (parsedQuery.where[i].type == 'bgp') {
-                variables = updateVariableList(parsedQuery.where[i].triples, variables);
-            }
-        }
-
-        variables = variables.join(' ');
-
-        return query.replace(/(SELECT)([^\{]*)(\{.+)/i, "$1 " + variables + " $3");
-    },
-
-    removeUnusedVariables: function(bindings, variables) {
-        var binding,
-            newBindings = [],
-            newBinding;
-
-        if (variables[0] == '*') {
-            return bindings;
-        }
-
-        for (var i = 0; i < bindings.length; i++) {
-            newBinding = {};
-            binding = bindings[i];
-            for (var key in binding) {
-                if (!Utils.notInSet(variables, '?' + key)) {
-                    newBinding[key] = binding[key];
-                }
-            }
-            newBindings.push(newBinding);
-        }
-
-        return newBindings;
-    },
-
-    removeNullsFromResults: function(results) {
-        var newResults = [],
-            newResult;
-        for (var i = 0; i < results.length; i++) {
-            newResult = {};
-            for (var key in results[i]) {
-                if (results[i][key] != null) {
-                    newResult[key] = results[i][key];
-                }
-            }
-            newResults.push(newResult);
-        }
-
-        return newResults;
-    },
-
     constructEquivalentQuery: function(query, graph) {
         var rewrittenQuery, regex;
 
@@ -9791,10 +9740,49 @@ module.exports = {
         }
 
         return rewrittenQuery;
+    },
+
+    isUpdateWhere: function(parsedQuery) {
+        var res;
+        try {
+            res = parsedQuery.updates[0].where.length > 0;
+        } catch(e) {
+            return false;
+        }
+        return res;
+    },
+
+    isInsert: function(parsedQuery) {
+        var res;
+        try {
+            res = parsedQuery.updates[0].insert.length > 0;
+        } catch(e) {
+            return false;
+        }
+        return res;
+    },
+
+    isDelete: function(parsedQuery) {
+        var res;
+        try {
+            res = parsedQuery.updates[0].delete.length > 0;
+        } catch(e) {
+            return false;
+        }
+        return res;
+    },
+
+    buildUpdateQueryWithConstructResults: function(initialQuery, results) {
+        switch(this.isInsert(initialQuery)) {
+            case true:
+                return "INSERT DATA { " + this.triplesToTurtle(results.triples) + " }";
+            default:
+                return "DELETE DATA { " + this.triplesToTurtle(results.triples) + " }";
+        }
     }
 };
 
-},{"./Errors":44,"./Logics/Fact":46,"./RegularExpressions":55,"./Utils":57,"q":79,"rdf-ext":98,"sparqljs":131}],52:[function(require,module,exports){
+},{"./Errors":44,"./Logics/Fact":46,"./RegularExpressions":55,"./Utils":57,"q":83,"rdf-ext":102,"sparqljs":135}],52:[function(require,module,exports){
 /**
  * Created by mt on 23/11/2015.
  */
@@ -9836,20 +9824,8 @@ module.exports = {
      * @returns {*}
      */
     evaluate: function(fI, fD, F, alg, rules) {
-        var deferred = q.defer(),
-            evaluationResults, inconsistencies;
         if (!alg) alg = ReasoningEngine.incremental;
-
-        evaluationResults = alg(fI, fD, F, rules);
-        inconsistencies = Logics.getInconsistencies(evaluationResults.additions);
-
-        console.notify('Evaluation finished.');
-        if (inconsistencies.length > 0) console.warn(inconsistencies.length + ' inconsistency(ies) detected.');
-        console.notify(evaluationResults.additions.length + ' additions, ' + evaluationResults.deletions.length + ' deletions.');
-
-        deferred.resolve(evaluationResults);
-
-        return deferred.promise;
+        return alg(fI, fD, F, rules);
     },
 
     /**
@@ -9871,7 +9847,7 @@ module.exports = {
     }
 };
 
-},{"./Logics/Logics":47,"./ReasoningEngine":54,"q":79}],54:[function(require,module,exports){
+},{"./Logics/Logics":47,"./ReasoningEngine":54,"q":83}],54:[function(require,module,exports){
 /**
  * Created by Spadon on 11/09/2015.
  */
@@ -9879,6 +9855,8 @@ module.exports = {
 var Logics = require('./Logics/Logics'),
     Solver = require('./Logics/Solver'),
     Utils = require('./Utils');
+
+var q = require('q');
 
 /**
  * Reasoning engine containing incremental algorithms
@@ -9943,44 +9921,66 @@ ReasoningEngine = {
             additions, deletions,
 
             Fe = Logics.getOnlyExplicitFacts(F),
-            Fi = Logics.getOnlyImplicitFacts(F);
+            Fi = Logics.getOnlyImplicitFacts(F),
 
-        if(FeDel && FeDel.length) {
-            // Overdeletion
-            do {
+            deferred = q.defer(),
+
+            startAlgorithm = function() {
+                overDeletionEvaluationLoop(FiDelNew);
+            },
+
+            overDeletionEvaluationLoop = function() {
                 FiDel = Utils.uniques(FiDel, FiDelNew);
                 Rdel = Logics.restrictRuleSet(R, Utils.uniques(FeDel, FiDel));
-                FiDelNew = Solver.evaluateRuleSet(Rdel, Utils.uniques(Utils.uniques(Fi, Fe), FeDel));
-            } while (Utils.uniques(FiDel, FiDelNew).length > FiDel.length);
-            Fe = Logics.minus(Fe, FeDel);
-            Fi = Logics.minus(Fi, FiDel);
+                Solver.evaluateRuleSet(Rdel, Utils.uniques(Utils.uniques(Fi, Fe), FeDel))
+                    .then(function(values) {
+                        FiDelNew = values;
+                        if (Utils.uniques(FiDel, FiDelNew).length > FiDel.length) {
+                            setTimeout(overDeletionEvaluationLoop, 1);
+                        } else {
+                            Fe = Logics.minus(Fe, FeDel);
+                            Fi = Logics.minus(Fi, FiDel);
+                            setTimeout(rederivationEvaluationLoop, 1);
+                        }
+                    });
+            },
 
-            // Rederivation
-            do {
+            rederivationEvaluationLoop = function() {
                 FiAdd = Utils.uniques(FiAdd, FiAddNew);
                 Rred = Logics.restrictRuleSet(R, FiDel);
-                FiAddNew = Solver.evaluateRuleSet(Rred, Utils.uniques(Fe, Fi));
-            } while(Utils.uniques(FiAdd, FiAddNew).length > FiAdd.length);
+                Solver.evaluateRuleSet(Rred, Utils.uniques(Fe, Fi))
+                    .then(function(values) {
+                        FiAddNew = values;
+                        if (Utils.uniques(FiAdd, FiAddNew).length > FiAdd.length) {
+                            setTimeout(rederivationEvaluationLoop, 1);
+                        } else {
+                            setTimeout(insertionEvaluationLoop, 1);
+                        }
+                    });
+            },
 
-        }
-
-        // Insertion
-        if(FeAdd && FeAdd.length) {
-            do {
+            insertionEvaluationLoop = function() {
                 FiAdd = Utils.uniques(FiAdd, FiAddNew);
                 superSet = Utils.uniques(Utils.uniques(Utils.uniques(Fe, Fi), FeAdd), FiAdd);
                 Rins = Logics.restrictRuleSet(R, superSet);
-                FiAddNew = Solver.evaluateRuleSet(Rins, superSet);
-            } while (!Utils.containsSubset(FiAdd, FiAddNew));
-        }
+                Solver.evaluateRuleSet(Rins, superSet)
+                    .then(function(values) {
+                        FiAddNew = values;
+                        if (!Utils.containsSubset(FiAdd, FiAddNew)) {
+                            setTimeout(insertionEvaluationLoop, 1);
+                        } else {
+                            additions = Utils.uniques(FeAdd, FiAdd);
+                            deletions = Utils.uniques(FeDel, FiDel);
+                            deferred.resolve({
+                                additions: additions,
+                                deletions: deletions
+                            });
+                        }
+                    });
+            };
 
-        additions = Utils.uniques(FeAdd, FiAdd);
-        deletions = Utils.uniques(FeDel, FiDel);
-
-        return {
-            additions: additions,
-            deletions: deletions
-        };
+        startAlgorithm();
+        return deferred.promise;
     },
 
     incrementalBf: function (FeAdd, FeDel, F, R) {
@@ -10118,7 +10118,7 @@ ReasoningEngine = {
      * @param refs
      * @returns {Array}
      */
-    tagFilter: function(F, refs) {
+    tagFilter: function(F) {
         var validSet = [];
         for (var i = 0; i < F.length; i++) {
             if (F[i].isValid()) {
@@ -10140,26 +10140,45 @@ ReasoningEngine = {
      */
     tagging: function(FeAdd, FeDel, F, R) {
         var newExplicitFacts, resolvedExplicitFacts, validUpdateResults,
-            FiAdd = [], Rins = [],
-            Fi = Logics.getOnlyImplicitFacts(F), Fe;
+            FiAdd = [], Rins = [], deferred = q.defer(),
+            Fi = Logics.getOnlyImplicitFacts(F), Fe,
+
+            startAlgorithm = function() {
+                if(newExplicitFacts.length > 0) {
+                    evaluationLoop(F);
+                } else {
+                    deferred.resolve({
+                        additions: Utils.uniques(newExplicitFacts.concat(resolvedExplicitFacts), Fi),
+                        deletions: []
+                    });
+                }
+            },
+
+            evaluationLoop = function() {
+                F = Utils.uniques(F, Fi);
+                Rins = Logics.restrictRuleSet(R, F);
+                Solver.evaluateRuleSet(Rins, F, true)
+                    .then(function(values) {
+                        FiAdd = values;
+                        if (Logics.unify(FiAdd, Fi)) {
+                            setTimeout(evaluationLoop, 1);
+                        } else {
+                            deferred.resolve({
+                                additions: Utils.uniques(newExplicitFacts.concat(resolvedExplicitFacts), Fi),
+                                deletions: []
+                            });
+                        }
+                    });
+            };
 
         // Returns new explicit facts to be added
         validUpdateResults = Logics.updateValidTags(F, FeAdd, FeDel);
         newExplicitFacts = validUpdateResults.__new__;
         resolvedExplicitFacts = validUpdateResults.__resolved__;
 
-        if(newExplicitFacts.length > 0) {
-            do {
-                F = Utils.uniques(F, Fi);
-                Rins = Logics.restrictRuleSet(R, F);
-                FiAdd = Solver.evaluateRuleSet(Rins, F, true);
-            } while (Logics.unify(FiAdd, Fi));
-        }
+        startAlgorithm();
 
-        return {
-            additions: Utils.uniques(newExplicitFacts.concat(resolvedExplicitFacts), Fi),
-            deletions: []
-        };
+        return deferred.promise;
     }
 };
 
@@ -10170,7 +10189,7 @@ module.exports = {
     tagging: ReasoningEngine.tagging,
     tagFilter: ReasoningEngine.tagFilter
 };
-},{"./Logics/Logics":47,"./Logics/Solver":49,"./Utils":57}],55:[function(require,module,exports){
+},{"./Logics/Logics":47,"./Logics/Solver":49,"./Utils":57,"q":83}],55:[function(require,module,exports){
 /**
  * Created by aifb on 25.07.16.
  */
@@ -10370,10 +10389,15 @@ StorageManager.prototype.loadIntoSideStore = function(ttl, graph) {
         query = 'INSERT DATA { GRAPH <' + graph + '> { ' + ttl + ' } }'
     }
 
-    this.sideStore.execute(query,
-        function(err, r) {
-            deferred.resolve(r);
-        });
+    try {
+        this.sideStore.execute(query,
+            function (err, r) {
+                deferred.resolve(r);
+            });
+    } catch(e) {
+        deferred.reject(e + "\n@" + this.constructor.name);
+    }
+
     return deferred.promise;
 };
 
@@ -10387,7 +10411,7 @@ StorageManager.prototype.querySideStore = function(query) {
 };
 
 module.exports = StorageManager;
-},{"./ParsingInterface":51,"./Prefixes":52,"q":79,"rdfstore":127}],57:[function(require,module,exports){
+},{"./ParsingInterface":51,"./Prefixes":52,"q":83,"rdfstore":131}],57:[function(require,module,exports){
 /**
  * Created by Spadon on 13/02/2015.
  */
@@ -10449,6 +10473,8 @@ IterableStructure.prototype.toArray = function() {
 };
 
 module.exports = {
+
+    _instanceid: 1,
 
     IterableStructure: IterableStructure,
 
@@ -10646,13 +10672,14 @@ module.exports = {
     }
 };
 
-},{"./RegularExpressions":55,"q":79}],58:[function(require,module,exports){
+},{"./RegularExpressions":55,"q":83}],58:[function(require,module,exports){
 /**
  * Created by MT on 01/12/2015.
  */
 
 var fs = require('fs'),
-    chalk = require('chalk');
+    chalk = require('chalk'),
+    q = require('q');
 
 var Promise = require('bluebird');
 
@@ -10702,7 +10729,15 @@ console.error = function(msg) {
 Hylar = function() {
     this.dict = new Dictionary();
     this.sm = new StorageManager();
-    this.rules = OWL2RL.rules;
+    this.rules = OWL2RL.test;
+    this.queryHistory = [];
+    this.sm.init();
+};
+
+Hylar.prototype.clean = function() {
+    this.dict = new Dictionary();
+    this.sm = new StorageManager();
+    this.sm.init();
 };
 
 /**
@@ -10710,6 +10745,7 @@ Hylar = function() {
  */
 Hylar.prototype.setIncremental = function() {
     this.rMethod = Reasoner.process.it.incrementally;
+    this.dict.turnOffForgetting();
     console.notify('Reasoner set as incremental.');
 };
 
@@ -10718,6 +10754,7 @@ Hylar.prototype.setIncremental = function() {
  */
 Hylar.prototype.setTagBased = function() {
     this.rMethod = Reasoner.process.it.tagBased;
+    this.dict.turnOnForgetting();
     console.notify('Reasoner set as tag-based.');
 };
 
@@ -10819,7 +10856,7 @@ Hylar.prototype.treatLoad = function(ontologyTxt, mimeType, graph) {
  */
 Hylar.prototype.query = function(query, reasoningMethod) {
     var sparql = ParsingInterface.parseSPARQL(query),
-        singleWhereQueries = [], promises = [], updates, that = this;
+        singleWhereQueries = [], that = this;
 
     this.updateReasoningMethod(reasoningMethod);
 
@@ -10828,19 +10865,14 @@ Hylar.prototype.query = function(query, reasoningMethod) {
     } else {
         switch (sparql.type) {
             case 'update':
-                for (var i = 0; i < sparql.updates.length; i++) {
-                    if (sparql.updates[i].updateType == 'insert') {
-                        updates = sparql.updates[i].insert;
-                    } else if (sparql.updates[i].updateType == 'delete') {
-                        updates = sparql.updates[i].delete;
-                    }
-                    for (var j = 0; j < updates.length; j++) {
-                        promises.push(this.treatUpdate(updates[j], sparql.updates[i].updateType));
-                    }
+                if (ParsingInterface.isUpdateWhere(sparql)) {
+                    return this.query(ParsingInterface.updateWhereToConstructWhere(query))
+                        .then(function(data) {
+                            return that.query(ParsingInterface.buildUpdateQueryWithConstructResults(sparql, data));
+                        });
+                } else {
+                    return this.treatUpdateWithGraph(query);
                 }
-                return Promise.all(promises).then(function(values) {
-                    return [].concat.apply([], values);
-                });
                 break;
             default:
                 if (this.rMethod == Reasoner.process.it.incrementally) {
@@ -10863,6 +10895,29 @@ Hylar.prototype.query = function(query, reasoningMethod) {
 };
 
 /**
+ * High-level treatUpdate that takes graphs into account.
+ * @returns Promise
+ */
+Hylar.prototype.treatUpdateWithGraph = function(query) {
+    var sparql = ParsingInterface.parseSPARQL(query),
+        promises = [], updates;
+
+    for (var i = 0; i < sparql.updates.length; i++) {
+        if (sparql.updates[i].updateType == 'insert') {
+            updates = sparql.updates[i].insert;
+        } else if (sparql.updates[i].updateType == 'delete') {
+            updates = sparql.updates[i].delete;
+        }
+        for (var j = 0; j < updates.length; j++) {
+            promises.push(this.treatUpdate(updates[j], sparql.updates[i].updateType));
+        }
+    }
+    return Promise.all(promises).then(function(values) {
+        return [].concat.apply([], values);
+    });
+};
+
+/**
  * Returns the content of the triplestore as turtle.
  * @returns {String}
  */
@@ -10881,6 +10936,14 @@ Hylar.prototype.getStorage = function() {
  */
 Hylar.prototype.setStorage = function(ttl) {
     return this.sm.createStoreWith(ttl);
+};
+
+Hylar.prototype.getRulesAsStringArray = function() {
+    var strRules = [];
+    for (var i = 0; i < this.rules.length; i++) {
+        strRules.push({ name: this.rules[i].name, rule: this.rules[i].toString() } );
+    }
+    return strRules;
 };
 
 /**
@@ -11053,7 +11116,7 @@ Hylar.prototype.registerDerivations = function(derivations, graph) {
  * @returns {*}
  */
 Hylar.prototype.classify = function() {
-    var that = this;
+    var that = this, factsChunk, chunks = [], chunksNb = 5000, insertionPromises = [];
     console.notify('Classification started.');
 
     return this.sm.query('CONSTRUCT { ?a ?b ?c } WHERE { ?a ?b ?c }')
@@ -11082,11 +11145,23 @@ Hylar.prototype.classify = function() {
         })
         .then(function(r) {
             that.registerDerivations(r);
-            return ParsingInterface.factsToTurtle(r.additions);
+            for (var i = 0, j = r.additions.length; i < j; i += chunksNb) {
+                factsChunk = r.additions.slice(i,i+chunksNb);
+                chunks.push(ParsingInterface.factsToTurtle(factsChunk));
+            }
+            return;
         })
-        .then(function(ttl) {
+        .then(function() {
             console.notify('Classification succeeded.');
-            return that.sm.insert(ttl.replace(/(\n|\r)/g, ''));
+            for (var i = 0; i < chunks.length; i++) {
+                insertionPromises.push();
+            }
+            return Promise.reduce(chunks, function(previous, chunk) {
+                return that.sm.insert(chunk.replace(/(\n|\r)/g, ''));
+            }, 0);
+        })
+        .then(function() {
+            return true;
         });
 };
 
@@ -11099,9 +11174,34 @@ Hylar.prototype.addRules = function(ruleSet) {
     this.rules = this.rules.concat(ruleSet);
 };
 
+Hylar.prototype.addRule = function(rule, name) {
+    this.rules.push(rule);
+    this.rules[this.rules.length-1].setName(name);
+}
+
+Hylar.prototype.removeRule = function(index) {
+    var newRules = [];
+    for (var i = 0; i < this.rules.length; i++) {
+        if (i!=index) {
+            newRules.push(this.rules[i]);
+        } else {
+            console.notify("Removed rule " + this.rules[i].toString());
+        }
+    }
+    this.rules = newRules;
+};
+
+Hylar.prototype.addToQueryHistory = function(query, noError) {
+    this.queryHistory.push({ query: query, noError: noError });
+};
+
+Hylar.prototype.resetRules = function() {
+    this.rules = OWL2RL.rules;
+}
+
 module.exports = Hylar;
 
-},{"./core/Dictionary":43,"./core/Errors":44,"./core/OWL2RL":50,"./core/ParsingInterface":51,"./core/Reasoner":53,"./core/StorageManager":56,"./core/Utils":57,"bluebird":61,"chalk":62,"fs":1}],59:[function(require,module,exports){
+},{"./core/Dictionary":43,"./core/Errors":44,"./core/OWL2RL":50,"./core/ParsingInterface":51,"./core/Reasoner":53,"./core/StorageManager":56,"./core/Utils":57,"bluebird":61,"chalk":62,"fs":1,"q":83}],59:[function(require,module,exports){
 'use strict';
 module.exports = function () {
 	return /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
@@ -16773,7 +16873,140 @@ module.exports.stripColor = stripAnsi;
 module.exports.supportsColor = supportsColor;
 
 }).call(this,require('_process'))
-},{"_process":13,"ansi-styles":60,"escape-string-regexp":64,"has-ansi":65,"strip-ansi":132,"supports-color":133}],63:[function(require,module,exports){
+},{"_process":13,"ansi-styles":60,"escape-string-regexp":66,"has-ansi":67,"strip-ansi":136,"supports-color":137}],63:[function(require,module,exports){
+var charenc = {
+  // UTF-8 encoding
+  utf8: {
+    // Convert a string to a byte array
+    stringToBytes: function(str) {
+      return charenc.bin.stringToBytes(unescape(encodeURIComponent(str)));
+    },
+
+    // Convert a byte array to a string
+    bytesToString: function(bytes) {
+      return decodeURIComponent(escape(charenc.bin.bytesToString(bytes)));
+    }
+  },
+
+  // Binary encoding
+  bin: {
+    // Convert a string to a byte array
+    stringToBytes: function(str) {
+      for (var bytes = [], i = 0; i < str.length; i++)
+        bytes.push(str.charCodeAt(i) & 0xFF);
+      return bytes;
+    },
+
+    // Convert a byte array to a string
+    bytesToString: function(bytes) {
+      for (var str = [], i = 0; i < bytes.length; i++)
+        str.push(String.fromCharCode(bytes[i]));
+      return str.join('');
+    }
+  }
+};
+
+module.exports = charenc;
+
+},{}],64:[function(require,module,exports){
+(function() {
+  var base64map
+      = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',
+
+  crypt = {
+    // Bit-wise rotation left
+    rotl: function(n, b) {
+      return (n << b) | (n >>> (32 - b));
+    },
+
+    // Bit-wise rotation right
+    rotr: function(n, b) {
+      return (n << (32 - b)) | (n >>> b);
+    },
+
+    // Swap big-endian to little-endian and vice versa
+    endian: function(n) {
+      // If number given, swap endian
+      if (n.constructor == Number) {
+        return crypt.rotl(n, 8) & 0x00FF00FF | crypt.rotl(n, 24) & 0xFF00FF00;
+      }
+
+      // Else, assume array and swap all items
+      for (var i = 0; i < n.length; i++)
+        n[i] = crypt.endian(n[i]);
+      return n;
+    },
+
+    // Generate an array of any length of random bytes
+    randomBytes: function(n) {
+      for (var bytes = []; n > 0; n--)
+        bytes.push(Math.floor(Math.random() * 256));
+      return bytes;
+    },
+
+    // Convert a byte array to big-endian 32-bit words
+    bytesToWords: function(bytes) {
+      for (var words = [], i = 0, b = 0; i < bytes.length; i++, b += 8)
+        words[b >>> 5] |= bytes[i] << (24 - b % 32);
+      return words;
+    },
+
+    // Convert big-endian 32-bit words to a byte array
+    wordsToBytes: function(words) {
+      for (var bytes = [], b = 0; b < words.length * 32; b += 8)
+        bytes.push((words[b >>> 5] >>> (24 - b % 32)) & 0xFF);
+      return bytes;
+    },
+
+    // Convert a byte array to a hex string
+    bytesToHex: function(bytes) {
+      for (var hex = [], i = 0; i < bytes.length; i++) {
+        hex.push((bytes[i] >>> 4).toString(16));
+        hex.push((bytes[i] & 0xF).toString(16));
+      }
+      return hex.join('');
+    },
+
+    // Convert a hex string to a byte array
+    hexToBytes: function(hex) {
+      for (var bytes = [], c = 0; c < hex.length; c += 2)
+        bytes.push(parseInt(hex.substr(c, 2), 16));
+      return bytes;
+    },
+
+    // Convert a byte array to a base-64 string
+    bytesToBase64: function(bytes) {
+      for (var base64 = [], i = 0; i < bytes.length; i += 3) {
+        var triplet = (bytes[i] << 16) | (bytes[i + 1] << 8) | bytes[i + 2];
+        for (var j = 0; j < 4; j++)
+          if (i * 8 + j * 6 <= bytes.length * 8)
+            base64.push(base64map.charAt((triplet >>> 6 * (3 - j)) & 0x3F));
+          else
+            base64.push('=');
+      }
+      return base64.join('');
+    },
+
+    // Convert a base-64 string to a byte array
+    base64ToBytes: function(base64) {
+      // Remove non-base-64 characters
+      base64 = base64.replace(/[^A-Z0-9+\/]/ig, '');
+
+      for (var bytes = [], i = 0, imod4 = 0; i < base64.length;
+          imod4 = ++i % 4) {
+        if (imod4 == 0) continue;
+        bytes.push(((base64map.indexOf(base64.charAt(i - 1))
+            & (Math.pow(2, -2 * imod4 + 8) - 1)) << (imod4 * 2))
+            | (base64map.indexOf(base64.charAt(i)) >>> (6 - imod4 * 2)));
+      }
+      return bytes;
+    }
+  };
+
+  module.exports = crypt;
+})();
+
+},{}],65:[function(require,module,exports){
 (function (process,global){
 /*!
  * @overview es6-promise - a tiny implementation of Promises/A+.
@@ -17749,7 +17982,7 @@ module.exports.supportsColor = supportsColor;
 
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":13}],64:[function(require,module,exports){
+},{"_process":13}],66:[function(require,module,exports){
 'use strict';
 
 var matchOperatorsRe = /[|\\{}()[\]^$+*?.]/g;
@@ -17762,15 +17995,38 @@ module.exports = function (str) {
 	return str.replace(matchOperatorsRe, '\\$&');
 };
 
-},{}],65:[function(require,module,exports){
+},{}],67:[function(require,module,exports){
 'use strict';
 var ansiRegex = require('ansi-regex');
 var re = new RegExp(ansiRegex().source); // remove the `g` flag
 module.exports = re.test.bind(re);
 
-},{"ansi-regex":59}],66:[function(require,module,exports){
+},{"ansi-regex":59}],68:[function(require,module,exports){
+/*!
+ * Determine if an object is a Buffer
+ *
+ * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
+ * @license  MIT
+ */
+
+// The _isBuffer check is for Safari 5-7 support, because it's missing
+// Object.prototype.constructor. Remove this eventually
+module.exports = function (obj) {
+  return obj != null && (isBuffer(obj) || isSlowBuffer(obj) || !!obj._isBuffer)
+}
+
+function isBuffer (obj) {
+  return !!obj.constructor && typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
+}
+
+// For Node v0.10 support. Remove this eventually.
+function isSlowBuffer (obj) {
+  return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
+}
+
+},{}],69:[function(require,module,exports){
 // Ignore module for browserify (see package.json)
-},{}],67:[function(require,module,exports){
+},{}],70:[function(require,module,exports){
 (function (process,global,__dirname){
 /**
  * A JavaScript implementation of the JSON-LD API.
@@ -25141,7 +25397,7 @@ return factory;
 })();
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},"/node_modules\\jsonld\\js")
-},{"./request":66,"_process":13,"crypto":66,"es6-promise":69,"http":66,"pkginfo":78,"request":66,"util":66,"xmldom":66}],68:[function(require,module,exports){
+},{"./request":69,"_process":13,"crypto":69,"es6-promise":72,"http":69,"pkginfo":82,"request":69,"util":69,"xmldom":69}],71:[function(require,module,exports){
 /*
 Copyright (c) 2011-2012, R. Alexander Milowski <alex@milowski.com>
 All rights reserved.
@@ -26753,7 +27009,7 @@ else {
   }
 }
 
-},{}],69:[function(require,module,exports){
+},{}],72:[function(require,module,exports){
 (function (process,global){
 /*!
  * @overview es6-promise - a tiny implementation of Promises/A+.
@@ -27716,7 +27972,169 @@ else {
     }
 }).call(this);
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":13}],70:[function(require,module,exports){
+},{"_process":13}],73:[function(require,module,exports){
+(function(){
+  var crypt = require('crypt'),
+      utf8 = require('charenc').utf8,
+      isBuffer = require('is-buffer'),
+      bin = require('charenc').bin,
+
+  // The core
+  md5 = function (message, options) {
+    // Convert to byte array
+    if (message.constructor == String)
+      if (options && options.encoding === 'binary')
+        message = bin.stringToBytes(message);
+      else
+        message = utf8.stringToBytes(message);
+    else if (isBuffer(message))
+      message = Array.prototype.slice.call(message, 0);
+    else if (!Array.isArray(message))
+      message = message.toString();
+    // else, assume byte array already
+
+    var m = crypt.bytesToWords(message),
+        l = message.length * 8,
+        a =  1732584193,
+        b = -271733879,
+        c = -1732584194,
+        d =  271733878;
+
+    // Swap endian
+    for (var i = 0; i < m.length; i++) {
+      m[i] = ((m[i] <<  8) | (m[i] >>> 24)) & 0x00FF00FF |
+             ((m[i] << 24) | (m[i] >>>  8)) & 0xFF00FF00;
+    }
+
+    // Padding
+    m[l >>> 5] |= 0x80 << (l % 32);
+    m[(((l + 64) >>> 9) << 4) + 14] = l;
+
+    // Method shortcuts
+    var FF = md5._ff,
+        GG = md5._gg,
+        HH = md5._hh,
+        II = md5._ii;
+
+    for (var i = 0; i < m.length; i += 16) {
+
+      var aa = a,
+          bb = b,
+          cc = c,
+          dd = d;
+
+      a = FF(a, b, c, d, m[i+ 0],  7, -680876936);
+      d = FF(d, a, b, c, m[i+ 1], 12, -389564586);
+      c = FF(c, d, a, b, m[i+ 2], 17,  606105819);
+      b = FF(b, c, d, a, m[i+ 3], 22, -1044525330);
+      a = FF(a, b, c, d, m[i+ 4],  7, -176418897);
+      d = FF(d, a, b, c, m[i+ 5], 12,  1200080426);
+      c = FF(c, d, a, b, m[i+ 6], 17, -1473231341);
+      b = FF(b, c, d, a, m[i+ 7], 22, -45705983);
+      a = FF(a, b, c, d, m[i+ 8],  7,  1770035416);
+      d = FF(d, a, b, c, m[i+ 9], 12, -1958414417);
+      c = FF(c, d, a, b, m[i+10], 17, -42063);
+      b = FF(b, c, d, a, m[i+11], 22, -1990404162);
+      a = FF(a, b, c, d, m[i+12],  7,  1804603682);
+      d = FF(d, a, b, c, m[i+13], 12, -40341101);
+      c = FF(c, d, a, b, m[i+14], 17, -1502002290);
+      b = FF(b, c, d, a, m[i+15], 22,  1236535329);
+
+      a = GG(a, b, c, d, m[i+ 1],  5, -165796510);
+      d = GG(d, a, b, c, m[i+ 6],  9, -1069501632);
+      c = GG(c, d, a, b, m[i+11], 14,  643717713);
+      b = GG(b, c, d, a, m[i+ 0], 20, -373897302);
+      a = GG(a, b, c, d, m[i+ 5],  5, -701558691);
+      d = GG(d, a, b, c, m[i+10],  9,  38016083);
+      c = GG(c, d, a, b, m[i+15], 14, -660478335);
+      b = GG(b, c, d, a, m[i+ 4], 20, -405537848);
+      a = GG(a, b, c, d, m[i+ 9],  5,  568446438);
+      d = GG(d, a, b, c, m[i+14],  9, -1019803690);
+      c = GG(c, d, a, b, m[i+ 3], 14, -187363961);
+      b = GG(b, c, d, a, m[i+ 8], 20,  1163531501);
+      a = GG(a, b, c, d, m[i+13],  5, -1444681467);
+      d = GG(d, a, b, c, m[i+ 2],  9, -51403784);
+      c = GG(c, d, a, b, m[i+ 7], 14,  1735328473);
+      b = GG(b, c, d, a, m[i+12], 20, -1926607734);
+
+      a = HH(a, b, c, d, m[i+ 5],  4, -378558);
+      d = HH(d, a, b, c, m[i+ 8], 11, -2022574463);
+      c = HH(c, d, a, b, m[i+11], 16,  1839030562);
+      b = HH(b, c, d, a, m[i+14], 23, -35309556);
+      a = HH(a, b, c, d, m[i+ 1],  4, -1530992060);
+      d = HH(d, a, b, c, m[i+ 4], 11,  1272893353);
+      c = HH(c, d, a, b, m[i+ 7], 16, -155497632);
+      b = HH(b, c, d, a, m[i+10], 23, -1094730640);
+      a = HH(a, b, c, d, m[i+13],  4,  681279174);
+      d = HH(d, a, b, c, m[i+ 0], 11, -358537222);
+      c = HH(c, d, a, b, m[i+ 3], 16, -722521979);
+      b = HH(b, c, d, a, m[i+ 6], 23,  76029189);
+      a = HH(a, b, c, d, m[i+ 9],  4, -640364487);
+      d = HH(d, a, b, c, m[i+12], 11, -421815835);
+      c = HH(c, d, a, b, m[i+15], 16,  530742520);
+      b = HH(b, c, d, a, m[i+ 2], 23, -995338651);
+
+      a = II(a, b, c, d, m[i+ 0],  6, -198630844);
+      d = II(d, a, b, c, m[i+ 7], 10,  1126891415);
+      c = II(c, d, a, b, m[i+14], 15, -1416354905);
+      b = II(b, c, d, a, m[i+ 5], 21, -57434055);
+      a = II(a, b, c, d, m[i+12],  6,  1700485571);
+      d = II(d, a, b, c, m[i+ 3], 10, -1894986606);
+      c = II(c, d, a, b, m[i+10], 15, -1051523);
+      b = II(b, c, d, a, m[i+ 1], 21, -2054922799);
+      a = II(a, b, c, d, m[i+ 8],  6,  1873313359);
+      d = II(d, a, b, c, m[i+15], 10, -30611744);
+      c = II(c, d, a, b, m[i+ 6], 15, -1560198380);
+      b = II(b, c, d, a, m[i+13], 21,  1309151649);
+      a = II(a, b, c, d, m[i+ 4],  6, -145523070);
+      d = II(d, a, b, c, m[i+11], 10, -1120210379);
+      c = II(c, d, a, b, m[i+ 2], 15,  718787259);
+      b = II(b, c, d, a, m[i+ 9], 21, -343485551);
+
+      a = (a + aa) >>> 0;
+      b = (b + bb) >>> 0;
+      c = (c + cc) >>> 0;
+      d = (d + dd) >>> 0;
+    }
+
+    return crypt.endian([a, b, c, d]);
+  };
+
+  // Auxiliary functions
+  md5._ff  = function (a, b, c, d, x, s, t) {
+    var n = a + (b & c | ~b & d) + (x >>> 0) + t;
+    return ((n << s) | (n >>> (32 - s))) + b;
+  };
+  md5._gg  = function (a, b, c, d, x, s, t) {
+    var n = a + (b & d | c & ~d) + (x >>> 0) + t;
+    return ((n << s) | (n >>> (32 - s))) + b;
+  };
+  md5._hh  = function (a, b, c, d, x, s, t) {
+    var n = a + (b ^ c ^ d) + (x >>> 0) + t;
+    return ((n << s) | (n >>> (32 - s))) + b;
+  };
+  md5._ii  = function (a, b, c, d, x, s, t) {
+    var n = a + (c ^ (b | ~d)) + (x >>> 0) + t;
+    return ((n << s) | (n >>> (32 - s))) + b;
+  };
+
+  // Package private blocksize
+  md5._blocksize = 16;
+  md5._digestsize = 16;
+
+  module.exports = function (message, options) {
+    if (message === undefined || message === null)
+      throw new Error('Illegal argument ' + message);
+
+    var digestbytes = crypt.wordsToBytes(md5(message, options));
+    return options && options.asBytes ? digestbytes :
+        options && options.asString ? bin.bytesToString(digestbytes) :
+        crypt.bytesToHex(digestbytes);
+  };
+
+})();
+
+},{"charenc":63,"crypt":64,"is-buffer":68}],74:[function(require,module,exports){
 // Replace local require by a lazy loader
 var globalRequire = require;
 require = function () {};
@@ -27744,7 +28162,7 @@ Object.keys(exports).forEach(function (submodule) {
   });
 });
 
-},{"./lib/N3Lexer":71,"./lib/N3Parser":72,"./lib/N3Store":73,"./lib/N3StreamParser":74,"./lib/N3StreamWriter":75,"./lib/N3Util":76,"./lib/N3Writer":77}],71:[function(require,module,exports){
+},{"./lib/N3Lexer":75,"./lib/N3Parser":76,"./lib/N3Store":77,"./lib/N3StreamParser":78,"./lib/N3StreamWriter":79,"./lib/N3Util":80,"./lib/N3Writer":81}],75:[function(require,module,exports){
 // **N3Lexer** tokenizes N3 documents.
 var fromCharCode = String.fromCharCode;
 var immediately = typeof setImmediate === 'function' ? setImmediate :
@@ -28105,7 +28523,7 @@ N3Lexer.prototype = {
 // Export the `N3Lexer` class as a whole.
 module.exports = N3Lexer;
 
-},{}],72:[function(require,module,exports){
+},{}],76:[function(require,module,exports){
 // **N3Parser** parses N3 documents.
 var N3Lexer = require('./N3Lexer');
 
@@ -28807,7 +29225,7 @@ function noop() {}
 // Export the `N3Parser` class as a whole.
 module.exports = N3Parser;
 
-},{"./N3Lexer":71}],73:[function(require,module,exports){
+},{"./N3Lexer":75}],77:[function(require,module,exports){
 // **N3Store** objects store N3 triples by graph in memory.
 
 var expandPrefixedName = require('./N3Util').expandPrefixedName;
@@ -29166,7 +29584,7 @@ N3Store.prototype = {
 // Export the `N3Store` class as a whole.
 module.exports = N3Store;
 
-},{"./N3Util":76}],74:[function(require,module,exports){
+},{"./N3Util":80}],78:[function(require,module,exports){
 // **N3StreamParser** parses an N3 stream into a triple stream
 var Transform = require('stream').Transform,
     util = require('util'),
@@ -29202,7 +29620,7 @@ util.inherits(N3StreamParser, Transform);
 // Export the `N3StreamParser` class as a whole.
 module.exports = N3StreamParser;
 
-},{"./N3Parser.js":72,"stream":31,"util":41}],75:[function(require,module,exports){
+},{"./N3Parser.js":76,"stream":31,"util":41}],79:[function(require,module,exports){
 // **N3StreamWriter** serializes a triple stream into an N3 stream
 var Transform = require('stream').Transform,
     util = require('util'),
@@ -29234,7 +29652,7 @@ util.inherits(N3StreamWriter, Transform);
 // Export the `N3StreamWriter` class as a whole.
 module.exports = N3StreamWriter;
 
-},{"./N3Writer.js":77,"stream":31,"util":41}],76:[function(require,module,exports){
+},{"./N3Writer.js":81,"stream":31,"util":41}],80:[function(require,module,exports){
 // **N3Util** provides N3 utility functions
 
 var Xsd = 'http://www.w3.org/2001/XMLSchema#';
@@ -29352,7 +29770,7 @@ function applyToThis(f) {
 // Expose N3Util, attaching all functions to it
 module.exports = addN3Util(addN3Util);
 
-},{}],77:[function(require,module,exports){
+},{}],81:[function(require,module,exports){
 // **N3Writer** writes N3 documents.
 
 // Matches a literal as represented in memory by the N3 library
@@ -29682,7 +30100,7 @@ function characterReplacer(character) {
 // Export the `N3Writer` class as a whole.
 module.exports = N3Writer;
 
-},{}],78:[function(require,module,exports){
+},{}],82:[function(require,module,exports){
 (function (__dirname){
 /*
  * pkginfo.js: Top-level include for the pkginfo module
@@ -29821,7 +30239,7 @@ pkginfo(module, {
   target: pkginfo
 });
 }).call(this,"/node_modules\\pkginfo\\lib")
-},{"fs":1,"path":12}],79:[function(require,module,exports){
+},{"fs":1,"path":12}],83:[function(require,module,exports){
 (function (process){
 // vim:ts=4:sts=4:sw=4:
 /*!
@@ -31873,7 +32291,7 @@ return Q;
 });
 
 }).call(this,require('_process'))
-},{"_process":13}],80:[function(require,module,exports){
+},{"_process":13}],84:[function(require,module,exports){
 'use strict';
 
 
@@ -32189,7 +32607,7 @@ var init = function (rdf) {
 
 module.exports = init;
 
-},{}],81:[function(require,module,exports){
+},{}],85:[function(require,module,exports){
 'use strict';
 
 
@@ -32280,7 +32698,7 @@ module.exports = function (rdf) {
   };
 };
 
-},{}],82:[function(require,module,exports){
+},{}],86:[function(require,module,exports){
 'use strict';
 
 
@@ -32558,7 +32976,7 @@ module.exports = function (rdf) {
   rdf.parseRdfa = rdfaParser.parse.bind(rdfaParser);
 };
 
-},{"jsonld":67,"jsonld/js/rdfa":68}],83:[function(require,module,exports){
+},{"jsonld":70,"jsonld/js/rdfa":71}],87:[function(require,module,exports){
 'use strict';
 
 
@@ -32644,7 +33062,7 @@ module.exports = function (rdf) {
   rdf.serializeJsonLd = (serializer).serialize.bind(serializer);
 };
 
-},{"jsonld":67}],84:[function(require,module,exports){
+},{"jsonld":70}],88:[function(require,module,exports){
 'use strict';
 
 
@@ -32883,7 +33301,7 @@ module.exports = function (rdf) {
   rdf.LdpStore = LdpStore.bind(null, rdf);
 };
 
-},{}],85:[function(require,module,exports){
+},{}],89:[function(require,module,exports){
 /* global rdf */
 'use strict';
 
@@ -33251,7 +33669,7 @@ module.exports = function (rdf) {
   rdf.parseMicrodata = parser.parse.bind(parser);
 };
 
-},{"./uri-resolver":94}],86:[function(require,module,exports){
+},{"./uri-resolver":98}],90:[function(require,module,exports){
 /* global rdf:true */
 'use strict';
 
@@ -33276,7 +33694,7 @@ module.exports = function (rdf) {
   rdf.serializeNTriples = serializer.serialize.bind(serializer);
 };
 
-},{}],87:[function(require,module,exports){
+},{}],91:[function(require,module,exports){
 /* global rdf:true, Promise:false */
 'use strict';
 
@@ -33338,7 +33756,7 @@ module.exports = function (rdf) {
   rdf.promise.parse = parsePromiseWrapper.bind(null, rdf.Promise);
 };
 
-},{}],88:[function(require,module,exports){
+},{}],92:[function(require,module,exports){
 /* global rdf:true */
 'use strict';
 
@@ -33426,7 +33844,7 @@ module.exports = function (rdf) {
   rdf.RdfstoreStore = RdfstoreStore;
 };
 
-},{}],89:[function(require,module,exports){
+},{}],93:[function(require,module,exports){
 /**
  * @fileoverview
  *  RDF/XML PARSER
@@ -34065,7 +34483,7 @@ module.exports = function (rdf) {
   rdf.utils.mimeTypeParserMap['application/rdf+xml'] = rdf.parseRdfXml;
 };
 
-},{}],90:[function(require,module,exports){
+},{}],94:[function(require,module,exports){
 /* global rdf:true */
 'use strict';
 
@@ -34113,7 +34531,7 @@ module.exports = function (rdf) {
   rdf.SingleGraphStore = SingleGraphStore.bind(null, rdf);
 };
 
-},{}],91:[function(require,module,exports){
+},{}],95:[function(require,module,exports){
 'use strict';
 
 
@@ -34245,7 +34663,7 @@ module.exports = function (rdf) {
   rdf.SparqlStore = SparqlStore.bind(null, rdf);
 };
 
-},{}],92:[function(require,module,exports){
+},{}],96:[function(require,module,exports){
 'use strict';
 
 
@@ -34358,7 +34776,7 @@ module.exports = function (rdf) {
   rdf.utils.mimeTypeParserMap['text/turtle'] = rdf.parseTurtle;
 };
 
-},{"n3":70}],93:[function(require,module,exports){
+},{"n3":74}],97:[function(require,module,exports){
 'use strict';
 
 
@@ -34435,7 +34853,7 @@ module.exports = function (rdf) {
   rdf.serializeTurtle = serializer.serialize.bind(serializer);
 };
 
-},{"n3":70}],94:[function(require,module,exports){
+},{"n3":74}],98:[function(require,module,exports){
 /* global rdf:true */
 'use strict';
 
@@ -34641,7 +35059,7 @@ URIResolver.prototype.parseGeneric = function(parsed) {
 
 module.exports = URIResolver;
 
-},{}],95:[function(require,module,exports){
+},{}],99:[function(require,module,exports){
 /* global DOMParser, XMLHttpRequest */
 'use strict';
 
@@ -34704,7 +35122,7 @@ utils.mixin = function (rdf) {
 
 module.exports = utils.mixin;
 
-},{}],96:[function(require,module,exports){
+},{}],100:[function(require,module,exports){
 'use strict';
 
 var
@@ -34768,7 +35186,7 @@ utils.mixin = function (rdf) {
 
 module.exports = utils.mixin;
 
-},{"es6-promise":63,"http":32,"https":8,"url":38,"xmldom":134}],97:[function(require,module,exports){
+},{"es6-promise":65,"http":32,"https":8,"url":38,"xmldom":138}],101:[function(require,module,exports){
 'use strict';
 
 
@@ -34975,7 +35393,7 @@ utils.mixin = function (rdf) {
 
 module.exports = utils.mixin;
 
-},{}],98:[function(require,module,exports){
+},{}],102:[function(require,module,exports){
 (function (process){
 /* global window */
 'use strict';
@@ -35121,7 +35539,7 @@ if (!rdf.isNode) {
 module.exports = mixin;
 
 }).call(this,require('_process'))
-},{"./lib/clownface.js":80,"./lib/inmemory-store.js":81,"./lib/jsonld-parser.js":82,"./lib/jsonld-serializer.js":83,"./lib/ldp-store.js":84,"./lib/microdata-parser.js":85,"./lib/ntriples-serializer.js":86,"./lib/promise.js":87,"./lib/rdfstore-store.js":88,"./lib/rdfxml-parser.js":89,"./lib/singlegraph-store.js":90,"./lib/sparql-store.js":91,"./lib/turtle-parser.js":92,"./lib/turtle-serializer.js":93,"./lib/utils":97,"./lib/utils-browser":95,"./lib/utils-node":96,"_process":13,"rdf-interfaces":99}],99:[function(require,module,exports){
+},{"./lib/clownface.js":84,"./lib/inmemory-store.js":85,"./lib/jsonld-parser.js":86,"./lib/jsonld-serializer.js":87,"./lib/ldp-store.js":88,"./lib/microdata-parser.js":89,"./lib/ntriples-serializer.js":90,"./lib/promise.js":91,"./lib/rdfstore-store.js":92,"./lib/rdfxml-parser.js":93,"./lib/singlegraph-store.js":94,"./lib/sparql-store.js":95,"./lib/turtle-parser.js":96,"./lib/turtle-serializer.js":97,"./lib/utils":101,"./lib/utils-browser":99,"./lib/utils-node":100,"_process":13,"rdf-interfaces":103}],103:[function(require,module,exports){
 /**
  * ECMAScript-262 V5 Implementation of the Core RDF Interfaces
  * 
@@ -35530,9 +35948,9 @@ rdf = (function() {
 if(typeof module != "undefined") module.exports = rdf; 
 
 
-},{}],100:[function(require,module,exports){
-arguments[4][66][0].apply(exports,arguments)
-},{"dup":66}],101:[function(require,module,exports){
+},{}],104:[function(require,module,exports){
+arguments[4][69][0].apply(exports,arguments)
+},{"dup":69}],105:[function(require,module,exports){
 (function (process,global,__dirname){
 /**
  * A JavaScript implementation of the JSON-LD API.
@@ -43716,13 +44134,13 @@ return factory;
 })();
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},"/node_modules\\rdfstore\\node_modules\\jsonld\\js")
-},{"_process":13,"crypto":100,"es6-promise":63,"http":100,"jsonld-request":100,"pkginfo":100,"request":100,"util":100,"xmldom":100}],102:[function(require,module,exports){
-arguments[4][70][0].apply(exports,arguments)
-},{"./lib/N3Lexer":103,"./lib/N3Parser":104,"./lib/N3Store":105,"./lib/N3StreamParser":106,"./lib/N3StreamWriter":107,"./lib/N3Util":108,"./lib/N3Writer":109,"dup":70}],103:[function(require,module,exports){
-arguments[4][71][0].apply(exports,arguments)
-},{"dup":71}],104:[function(require,module,exports){
-arguments[4][72][0].apply(exports,arguments)
-},{"./N3Lexer":103,"dup":72}],105:[function(require,module,exports){
+},{"_process":13,"crypto":104,"es6-promise":65,"http":104,"jsonld-request":104,"pkginfo":104,"request":104,"util":104,"xmldom":104}],106:[function(require,module,exports){
+arguments[4][74][0].apply(exports,arguments)
+},{"./lib/N3Lexer":107,"./lib/N3Parser":108,"./lib/N3Store":109,"./lib/N3StreamParser":110,"./lib/N3StreamWriter":111,"./lib/N3Util":112,"./lib/N3Writer":113,"dup":74}],107:[function(require,module,exports){
+arguments[4][75][0].apply(exports,arguments)
+},{"dup":75}],108:[function(require,module,exports){
+arguments[4][76][0].apply(exports,arguments)
+},{"./N3Lexer":107,"dup":76}],109:[function(require,module,exports){
 // **N3Store** objects store N3 triples by graph in memory.
 
 var expandPrefixedName = require('./N3Util').expandPrefixedName;
@@ -44100,11 +44518,11 @@ N3Store.prototype = {
 // Export the `N3Store` class as a whole.
 module.exports = N3Store;
 
-},{"./N3Util":108}],106:[function(require,module,exports){
-arguments[4][74][0].apply(exports,arguments)
-},{"./N3Parser.js":104,"dup":74,"stream":31,"util":41}],107:[function(require,module,exports){
-arguments[4][75][0].apply(exports,arguments)
-},{"./N3Writer.js":109,"dup":75,"stream":31,"util":41}],108:[function(require,module,exports){
+},{"./N3Util":112}],110:[function(require,module,exports){
+arguments[4][78][0].apply(exports,arguments)
+},{"./N3Parser.js":108,"dup":78,"stream":31,"util":41}],111:[function(require,module,exports){
+arguments[4][79][0].apply(exports,arguments)
+},{"./N3Writer.js":113,"dup":79,"stream":31,"util":41}],112:[function(require,module,exports){
 // **N3Util** provides N3 utility functions
 
 var Xsd = 'http://www.w3.org/2001/XMLSchema#';
@@ -44251,9 +44669,9 @@ function applyToThis(f) {
 // Expose N3Util, attaching all functions to it
 module.exports = addN3Util(addN3Util);
 
-},{}],109:[function(require,module,exports){
-arguments[4][77][0].apply(exports,arguments)
-},{"dup":77}],110:[function(require,module,exports){
+},{}],113:[function(require,module,exports){
+arguments[4][81][0].apply(exports,arguments)
+},{"dup":81}],114:[function(require,module,exports){
 // imports
 var SparqlParser = require("./parser");
 var Utils = require("./utils");
@@ -44918,7 +45336,7 @@ module.exports = {
     SparqlParserError: SparqlParserError
 };
 
-},{"./parser":116,"./utils":128}],111:[function(require,module,exports){
+},{"./parser":120,"./utils":132}],115:[function(require,module,exports){
 "use strict";
 
 var utils = require('./utils');
@@ -45885,7 +46303,7 @@ module.exports = {
     Tree: Tree,
     Node: Node
 };
-},{"./utils":128}],112:[function(require,module,exports){
+},{"./utils":132}],116:[function(require,module,exports){
 //imports
 var _ = require('./utils');
 var async = require('./utils');
@@ -46392,7 +46810,7 @@ Callbacks.CallbacksBackend.eventsFlushed = Callbacks.eventsFlushed;
 
 module.exports = Callbacks;
 
-},{"./abstract_query_tree":110,"./quad_index":120,"./rdf_model":125,"./utils":128}],113:[function(require,module,exports){
+},{"./abstract_query_tree":114,"./quad_index":124,"./rdf_model":129,"./utils":132}],117:[function(require,module,exports){
 var jsonld = require('jsonld');
 
 var toTriples = function (input, graph, cb) {
@@ -46474,7 +46892,7 @@ module.exports = {
     JSONLDParser: JSONLDParser
 };
 
-},{"jsonld":101}],114:[function(require,module,exports){
+},{"jsonld":105}],118:[function(require,module,exports){
 var async = require('./utils');
 var Tree = require('./btree').Tree;
 
@@ -47011,7 +47429,7 @@ module.exports = {
     Lexicon: Lexicon
 };
 
-},{"./btree":111,"./utils":128}],115:[function(require,module,exports){
+},{"./btree":115,"./utils":132}],119:[function(require,module,exports){
 var utils = require("./utils");
 if(!utils.isWorker()) {
     var http = require("http");
@@ -47080,7 +47498,7 @@ if(!utils.isWorker()) {
         NetworkTransport: NetworkTransport
     };
 }
-},{"./utils":128,"http":32,"https":8,"url":38}],116:[function(require,module,exports){
+},{"./utils":132,"http":32,"https":8,"url":38}],120:[function(require,module,exports){
 module.exports = /*
  * Generated by PEG.js 0.10.0.
  *
@@ -66789,7 +67207,7 @@ module.exports = /*
     parse:       peg$parse
   };
 })()
-},{}],117:[function(require,module,exports){
+},{}],121:[function(require,module,exports){
 var Tree = require('./btree').Tree;
 var utils = require('./utils');
 var async = utils;
@@ -67313,7 +67731,7 @@ module.exports = {
     PersistentLexicon: PersistentLexicon
 };
 
-},{"./btree":111,"./lexicon":114,"./utils":128}],118:[function(require,module,exports){
+},{"./btree":115,"./lexicon":118,"./utils":132}],122:[function(require,module,exports){
 
 // imports
 var utils = require('./utils');
@@ -67512,7 +67930,7 @@ PersistentQuadBackend.prototype.clear = function(callback) {
 
 module.exports.PersistentQuadBackend = PersistentQuadBackend;
 
-},{"./utils":128}],119:[function(require,module,exports){
+},{"./utils":132}],123:[function(require,module,exports){
 
 // imports
 var QuadIndex = require("./quad_index").QuadIndex;
@@ -67643,7 +68061,7 @@ QuadBackend.prototype.clear = function(callback) {
 
 module.exports.QuadBackend = QuadBackend;
 
-},{"./quad_index":120,"./utils":128}],120:[function(require,module,exports){
+},{"./quad_index":124,"./utils":132}],124:[function(require,module,exports){
 var BaseTree = require("./btree").Tree;
 var _ = require('./utils');
 var async = require('./utils');
@@ -67884,7 +68302,7 @@ module.exports = {
 };
 
 
-},{"./btree":111,"./utils":128}],121:[function(require,module,exports){
+},{"./btree":115,"./utils":132}],125:[function(require,module,exports){
 //imports
 var AbstractQueryTree = require("./abstract_query_tree").AbstractQueryTree;
 var NonSupportedSparqlFeatureError = require("./abstract_query_tree").NonSupportedSparqlFeatureError;
@@ -69807,7 +70225,7 @@ module.exports = {
     QueryEngine: QueryEngine
 };
 
-},{"./abstract_query_tree":110,"./graph_callbacks":112,"./quad_index":120,"./query_filters":122,"./query_plan":123,"./rdf_loader":124,"./rdf_model":125,"./utils":128}],122:[function(require,module,exports){
+},{"./abstract_query_tree":114,"./graph_callbacks":116,"./quad_index":124,"./query_filters":126,"./query_plan":127,"./rdf_loader":128,"./rdf_model":129,"./utils":132}],126:[function(require,module,exports){
 var Utils = require('./utils');
 var     _ = Utils;
 var async = require('./utils');
@@ -71604,7 +72022,7 @@ module.exports = {
     QueryFilters: QueryFilters
 };
 
-},{"./utils":128}],123:[function(require,module,exports){
+},{"./utils":132}],127:[function(require,module,exports){
 var _ = require('./utils');
 var async = require('./utils');
 
@@ -72342,7 +72760,7 @@ module.exports = {
     QueryPlan: QueryPlanDPSize
 };
 
-},{"./utils":128}],124:[function(require,module,exports){
+},{"./utils":132}],128:[function(require,module,exports){
 var NetworkTransport = require("./network_transport").NetworkTransport;
 var RVN3Parser = require("./rvn3_parser").RVN3Parser;
 var JSONLDParser = require("./jsonld_parser").JSONLDParser;
@@ -72485,7 +72903,7 @@ module.exports = {
 
 // var loader = require("./js-communication/src/rdf_loader").RDFLoader; loader = new loader.RDFLoader(); loader.load('http://dbpedialite.org/titles/Lisp_%28programming_language%29', function(success, results){console.log("hey"); console.log(success); console.log(results)})
 
-},{"./jsonld_parser":113,"./network_transport":115,"./rvn3_parser":126,"./utils":128,"fs":1}],125:[function(require,module,exports){
+},{"./jsonld_parser":117,"./network_transport":119,"./rvn3_parser":130,"./utils":132,"fs":1}],129:[function(require,module,exports){
 // imports
 var _ = require("./utils");
 var QueryFilters = require("./query_filters").QueryFilters;
@@ -73149,7 +73567,7 @@ RDFModel.rdf = new RDFModel.RDFEnvironment();
 
 module.exports = RDFModel;
 
-},{"./query_filters":122,"./utils":128}],126:[function(require,module,exports){
+},{"./query_filters":126,"./utils":132}],130:[function(require,module,exports){
 var N3Parser = require('n3').Parser;
 //var N3Parser = require('../node_modules/n3/lib/N3Parser');
 
@@ -73214,7 +73632,7 @@ function convertEntity(entity) {
 module.exports = {
     RVN3Parser: RVN3Parser
 };
-},{"n3":102}],127:[function(require,module,exports){
+},{"n3":106}],131:[function(require,module,exports){
 // imports
 var QueryEngine = require("./query_engine").QueryEngine;
 var InMemoryQuadBackend = require("./quad_backend").QuadBackend;
@@ -74141,7 +74559,7 @@ module.exports.Store = Store;
 module.exports.create = create;
 module.exports.connect = connect;
 
-},{"./lexicon":114,"./persistent_lexicon":117,"./persistent_quad_backend":118,"./quad_backend":119,"./query_engine":121,"./rdf_model":125,"./utils":128}],128:[function(require,module,exports){
+},{"./lexicon":118,"./persistent_lexicon":121,"./persistent_quad_backend":122,"./quad_backend":123,"./query_engine":125,"./rdf_model":129,"./utils":132}],132:[function(require,module,exports){
 (function (process){
 var slowNextTick = (function () {
 
@@ -74654,7 +75072,7 @@ module.exports = {
 };
 
 }).call(this,require('_process'))
-},{"_process":13}],129:[function(require,module,exports){
+},{"_process":13}],133:[function(require,module,exports){
 var XSD_INTEGER = 'http://www.w3.org/2001/XMLSchema#integer';
 
 module.exports = function SparqlGenerator() { return { stringify: toQuery }; };
@@ -74915,7 +75333,7 @@ function mapJoin(array, func, sep) { return array.map(func).join(isString(sep) ?
 // Indents each line of the string
 function indent(text) { return text.replace(/^/gm, '  '); }
 
-},{}],130:[function(require,module,exports){
+},{}],134:[function(require,module,exports){
 (function (process){
 /* parser generated by jison 0.4.15 */
 /*
@@ -76424,7 +76842,7 @@ if (typeof module !== 'undefined' && require.main === module) {
 }
 }
 }).call(this,require('_process'))
-},{"_process":2,"fs":2,"path":2}],131:[function(require,module,exports){
+},{"_process":2,"fs":2,"path":2}],135:[function(require,module,exports){
 var Parser = require('./lib/SparqlParser').Parser;
 var Generator = require('./lib/SparqlGenerator');
 
@@ -76449,7 +76867,7 @@ module.exports = {
   Generator: Generator,
 };
 
-},{"./lib/SparqlGenerator":129,"./lib/SparqlParser":130}],132:[function(require,module,exports){
+},{"./lib/SparqlGenerator":133,"./lib/SparqlParser":134}],136:[function(require,module,exports){
 'use strict';
 var ansiRegex = require('ansi-regex')();
 
@@ -76457,7 +76875,7 @@ module.exports = function (str) {
 	return typeof str === 'string' ? str.replace(ansiRegex, '') : str;
 };
 
-},{"ansi-regex":59}],133:[function(require,module,exports){
+},{"ansi-regex":59}],137:[function(require,module,exports){
 (function (process){
 'use strict';
 var argv = process.argv;
@@ -76511,7 +76929,7 @@ module.exports = (function () {
 })();
 
 }).call(this,require('_process'))
-},{"_process":13}],134:[function(require,module,exports){
+},{"_process":13}],138:[function(require,module,exports){
 function DOMParser(options){
 	this.options = options ||{locator:{}};
 	
@@ -76762,7 +77180,7 @@ if(typeof require == 'function'){
 	exports.DOMParser = DOMParser;
 }
 
-},{"./dom":135,"./sax":136}],135:[function(require,module,exports){
+},{"./dom":139,"./sax":140}],139:[function(require,module,exports){
 /*
  * DOM Level 2
  * Object DOMException
@@ -77911,7 +78329,7 @@ if(typeof require == 'function'){
 	exports.XMLSerializer = XMLSerializer;
 }
 
-},{}],136:[function(require,module,exports){
+},{}],140:[function(require,module,exports){
 //[4]   	NameStartChar	   ::=   	":" | [A-Z] | "_" | [a-z] | [#xC0-#xD6] | [#xD8-#xF6] | [#xF8-#x2FF] | [#x370-#x37D] | [#x37F-#x1FFF] | [#x200C-#x200D] | [#x2070-#x218F] | [#x2C00-#x2FEF] | [#x3001-#xD7FF] | [#xF900-#xFDCF] | [#xFDF0-#xFFFD] | [#x10000-#xEFFFF]
 //[4a]   	NameChar	   ::=   	NameStartChar | "-" | "." | [0-9] | #xB7 | [#x0300-#x036F] | [#x203F-#x2040]
 //[5]   	Name	   ::=   	NameStartChar (NameChar)*
