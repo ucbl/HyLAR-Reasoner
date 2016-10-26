@@ -2,7 +2,7 @@
   "name": "hylar",
   "description": "An OWL 2 RL incremental reasoner for the Web.",
   "version": "1.7.24",
-  "main": "hylar-client",
+  "main": "hylar-client.js",
   "authors": [
     "Mehdi Terdjimi <mehdi.terdjimi@univ-lyon1.fr>"
   ],
