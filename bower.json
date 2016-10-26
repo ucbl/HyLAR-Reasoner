@@ -1,0 +1,32 @@
+{
+  "name": "hylar",
+  "description": "An OWL 2 RL incremental reasoner for the Web.",
+  "version": "1.7.22",
+  "main": "hylar-client",
+  "authors": [
+    "Mehdi Terdjimi <mehdi.terdjimi@univ-lyon1.fr>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "reasoning",
+    "owl",
+    "incremental",
+    "semantic",
+    "web",
+    "incremental",
+    "reasoning",
+    "rdf",
+    "owl",
+    "reasoner"
+  ],
+  "homepage": "https://github.com/ucbl/HyLAR-Reasoner",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "hylar",
+    "package.json"
+  ]
+}
