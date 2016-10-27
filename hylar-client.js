@@ -8715,6 +8715,9 @@ Rule.prototype = {
         for(var key in this.causes) {
             factConj += ' ^ ' + this.causes[key].toString().substring(1);
         }
+        for(var key in this.operatorCauses) {
+            factConj += ' ^ ' + this.operatorCauses[key].toString().substring(1);
+        }
         return factConj.substr(3) + ' -> ' + this.consequences.toString().substring(1);
     },
 
@@ -8918,9 +8921,13 @@ Solver = {
         for (var i = 0; i < mappingList.length; i++) {
             for (var j = 0; j < causes.length; j++) {
                 substitutedFact = this.substituteFactVariables(mappingList[i], causes[j]);
-                operationToEvaluate = Utils.getValueFromDatatype(substitutedFact.subject) +
-                    substitutedFact.predicate +
-                    Utils.getValueFromDatatype('"' + substitutedFact.object + '"');
+                try {
+                    operationToEvaluate = Utils.getValueFromDatatype(substitutedFact.subject) +
+                        substitutedFact.predicate +
+                        Utils.getValueFromDatatype(substitutedFact.object);
+                } catch(e) {
+                    throw e;
+                }
                 if (!eval(operationToEvaluate)) {
                     delete mappingList[i];
                     break;
@@ -10718,7 +10725,6 @@ console.error = function(msg) {
     }
 };
 
-
 /**
  * HyLAR main module.
  * @author Mehdi Terdjimi
@@ -10963,7 +10969,7 @@ Hylar.prototype.setDictionaryContent = function(dict) {
 };
 
 Hylar.prototype.checkConsistency = function() {
-    var __FALSE__ = this.getDictionary().dict['__FALSE__'],
+    var __FALSE__ = this.getDictionary().dict['#default']['__FALSE__'],
         isConsistent = true, inconsistencyReasons;
 
     if (__FALSE__ !== undefined) {
