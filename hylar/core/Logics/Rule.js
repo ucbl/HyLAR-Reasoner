@@ -45,6 +45,9 @@ Rule.prototype = {
         for(var key in this.causes) {
             factConj += ' ^ ' + this.causes[key].toString().substring(1);
         }
+        for(var key in this.operatorCauses) {
+            factConj += ' ^ ' + this.operatorCauses[key].toString().substring(1);
+        }
         return factConj.substr(3) + ' -> ' + this.consequences.toString().substring(1);
     },
 

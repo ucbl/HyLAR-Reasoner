@@ -128,9 +128,13 @@ Solver = {
         for (var i = 0; i < mappingList.length; i++) {
             for (var j = 0; j < causes.length; j++) {
                 substitutedFact = this.substituteFactVariables(mappingList[i], causes[j]);
-                operationToEvaluate = Utils.getValueFromDatatype(substitutedFact.subject) +
-                    substitutedFact.predicate +
-                    Utils.getValueFromDatatype('"' + substitutedFact.object + '"');
+                try {
+                    operationToEvaluate = Utils.getValueFromDatatype(substitutedFact.subject) +
+                        substitutedFact.predicate +
+                        Utils.getValueFromDatatype(substitutedFact.object);
+                } catch(e) {
+                    throw e;
+                }
                 if (!eval(operationToEvaluate)) {
                     delete mappingList[i];
                     break;

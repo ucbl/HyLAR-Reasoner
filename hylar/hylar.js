@@ -43,7 +43,6 @@ console.error = function(msg) {
     }
 };
 
-
 /**
  * HyLAR main module.
  * @author Mehdi Terdjimi
@@ -288,7 +287,7 @@ Hylar.prototype.setDictionaryContent = function(dict) {
 };
 
 Hylar.prototype.checkConsistency = function() {
-    var __FALSE__ = this.getDictionary().dict['__FALSE__'],
+    var __FALSE__ = this.getDictionary().dict['#default']['__FALSE__'],
         isConsistent = true, inconsistencyReasons;
 
     if (__FALSE__ !== undefined) {
