@@ -77,3 +77,8 @@ h3 {
     text-align: center;
 }
 
+.queryhistory:hover {
+    background-color: #ededed;
+    cursor: copy;
+}
+

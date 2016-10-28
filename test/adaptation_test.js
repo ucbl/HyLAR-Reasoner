@@ -109,56 +109,60 @@ var rules = {
 describe('Adaptation tests', function () {
     it('should execute each task on the client side', function () {
         var rsq = rules.queryingLocation,
-            rsc = rules.classifLocation;
-        var qfs1 = Solver.evaluateRuleSet(rsq, fs1),
-            cfs1 = Solver.evaluateRuleSet(rsc, fs1),
-            qfs2 = Solver.evaluateRuleSet(rsq, fs2),
-            cfs2 = Solver.evaluateRuleSet(rsc, fs2),
-            qfs3 = Solver.evaluateRuleSet(rsq, fs3),
-            cfs3 = Solver.evaluateRuleSet(rsc, fs3),
-            qfs4 = Solver.evaluateRuleSet(rsq, fs4),
-            cfs4 = Solver.evaluateRuleSet(rsc, fs4),
-            qfs5 = Solver.evaluateRuleSet(rsq, fs5),
-            cfs5 = Solver.evaluateRuleSet(rsc, fs5),
-            qfs6 = Solver.evaluateRuleSet(rsq, fs6),
-            cfs6 = Solver.evaluateRuleSet(rsc, fs6),
-            qfs7 = Solver.evaluateRuleSet(rsq, fs7),
-            cfs7 = Solver.evaluateRuleSet(rsc, fs7),
-            qfs8 = Solver.evaluateRuleSet(rsq, fs8),
-            cfs8 = Solver.evaluateRuleSet(rsc, fs8);
+            rsc = rules.classifLocation,
+       promises = [Solver.evaluateRuleSet(rsq, fs1),
+            Solver.evaluateRuleSet(rsc, fs1),
+            Solver.evaluateRuleSet(rsq, fs2),
+            Solver.evaluateRuleSet(rsc, fs2),
+            Solver.evaluateRuleSet(rsq, fs3),
+            Solver.evaluateRuleSet(rsc, fs3),
+            Solver.evaluateRuleSet(rsq, fs4),
+            Solver.evaluateRuleSet(rsc, fs4),
+            Solver.evaluateRuleSet(rsq, fs5),
+            Solver.evaluateRuleSet(rsc, fs5),
+            Solver.evaluateRuleSet(rsq, fs6),
+            Solver.evaluateRuleSet(rsc, fs6),
+            Solver.evaluateRuleSet(rsq, fs7),
+            Solver.evaluateRuleSet(rsc, fs7),
+            Solver.evaluateRuleSet(rsq, fs8),
+            Solver.evaluateRuleSet(rsc, fs8)];
+        
+        return Promise.all(promises).then(function(t) {
+            t[0].length.should.equal(1);
+            t[0][0].object.should.equal('server');
+            t[2].length.should.equal(1);
+            t[2][0].object.should.equal('client');
+            t[4].length.should.equal(1);
+            t[4][0].object.should.equal('client');
+            t[6].length.should.equal(1);
+            t[6][0].object.should.equal('client');
+            t[8].length.should.equal(1);
+            t[8][0].object.should.equal('server');
+            t[10].length.should.equal(1);
+            t[10][0].object.should.equal('client');
+            t[12].length.should.equal(1);
+            t[12][0].object.should.equal('client');
+            t[14].length.should.equal(1);
+            t[14][0].object.should.equal('client');
 
-        qfs1.length.should.equal(1);
-        qfs1[0].object.should.equal('server');
-        qfs2.length.should.equal(1);
-        qfs2[0].object.should.equal('client');
-        qfs3.length.should.equal(1);
-        qfs3[0].object.should.equal('client');
-        qfs4.length.should.equal(1);
-        qfs4[0].object.should.equal('client');
-        qfs5.length.should.equal(1);
-        qfs5[0].object.should.equal('server');
-        qfs6.length.should.equal(1);
-        qfs6[0].object.should.equal('client');
-        qfs7.length.should.equal(1);
-        qfs7[0].object.should.equal('client');
-        qfs8.length.should.equal(1);
-        qfs8[0].object.should.equal('client');
+            t[1].length.should.equal(1);
+            t[1][0].object.should.equal('server');
+            t[3].length.should.equal(1);
+            t[3][0].object.should.equal('server');
+            t[5].length.should.equal(1);
+            t[5][0].object.should.equal('client');
+            t[7].length.should.equal(1);
+            t[7][0].object.should.equal('client');
+            t[9].length.should.equal(1);
+            t[9][0].object.should.equal('server');
+            t[11].length.should.equal(1);
+            t[11][0].object.should.equal('server');
+            t[13].length.should.equal(1);
+            t[13][0].object.should.equal('server');
+            t[15].length.should.equal(1);
+            t[15][0].object.should.equal('server');
+        })
 
-        cfs1.length.should.equal(1);
-        cfs1[0].object.should.equal('server');
-        cfs2.length.should.equal(1);
-        cfs2[0].object.should.equal('server');
-        cfs3.length.should.equal(1);
-        cfs3[0].object.should.equal('client');
-        cfs4.length.should.equal(1);
-        cfs4[0].object.should.equal('client');
-        cfs5.length.should.equal(1);
-        cfs5[0].object.should.equal('server');
-        cfs6.length.should.equal(1);
-        cfs6[0].object.should.equal('server');
-        cfs7.length.should.equal(1);
-        cfs7[0].object.should.equal('server');
-        cfs8.length.should.equal(1);
-        cfs8[0].object.should.equal('server');
+        
     });
 });

@@ -477,9 +477,6 @@ Hylar.prototype.classify = function() {
         })
         .then(function() {
             console.notify('Classification succeeded.');
-            for (var i = 0; i < chunks.length; i++) {
-                insertionPromises.push();
-            }
             return Promise.reduce(chunks, function(previous, chunk) {
                 return that.sm.insert(chunk.replace(/(\n|\r)/g, ''));
             }, 0);

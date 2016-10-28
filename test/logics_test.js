@@ -30,8 +30,10 @@ describe('Solver tests', function() {
             new Fact('http://www.w3.org/1999/02/22-rdf-syntax-ns#type', '#parentOf', 'http://www.w3.org/2002/07/owl#TransitiveProperty', [], true)
         ];
 
-        var consequences = ReasoningEngine.incremental(facts, [], [], rules);
-        consequences.additions.length.should.equal(7);
+        return ReasoningEngine.incremental(facts, [], [], rules).then(function(consequences) {
+            consequences.additions.length.should.equal(7);
+        });
+
 
     });
     it('should return inference wrt. transitivity rule', function() {
@@ -40,7 +42,8 @@ describe('Solver tests', function() {
             new Fact('http://www.w3.org/1999/02/22-rdf-syntax-ns#type', '#lion', '#mammal', [], true)
         ];
 
-        var consequences = Solver.evaluateRuleSet(rules, facts)
-        consequences.length.should.equal(1);
+        Solver.evaluateRuleSet(rules, facts).then(function(consequences) {
+            consequences.length.should.equal(1);
+        });
     });
 });

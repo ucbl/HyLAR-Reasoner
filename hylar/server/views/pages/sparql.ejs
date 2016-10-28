@@ -6,6 +6,11 @@
 <body>
 <header>
     <% include ../partials/menu.ejs %>
+    <%
+        function putSparql(query) {
+            sparqlQuery = query;
+        }
+    %>
 </header>
 <div class="container">
     <h3>SPARQL endpoint</h3>
@@ -38,9 +43,9 @@
             <th>Status</th>
         </tr>
         <% for (var i = (history.length-1); i > -1; i--) { %>
-        <tr>
+        <tr class="queryhistory">
             <td><%= history[i].query %></td>
-            <td class="sparqlstatus">
+            <td class="sparqlstatus" onclick="putSparql(<% history[i].query %>)">
                 <% if(history[i].noError) { %>
                     <span class="noerror glyphicon glyphicon-ok"> Passed</span>
                 <% } else { %>

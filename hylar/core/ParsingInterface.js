@@ -24,6 +24,10 @@ var rdfext = require('rdf-ext')(),
  * The SPARQL parser oddly transforms prefixed typed literal without angle brackets (!).
  * This should fix it.
  */
+/**
+ * @deprecated Caused some literals that contain stuff like "blabla\" xsd:string"@en to be replaced with "blabla \" <xsd:string"@en>
+ * @returns {string}
+ */
 String.prototype.format = function() {
     if (this.match(RegularExpressions.LITERAL_UNFORMATTED)) {
         return this.replace(RegularExpressions.LITERAL_UNFORMATTED, "$1<$2>");
@@ -65,7 +69,7 @@ module.exports = {
         if(explicit === undefined) {
             explicit = true;
         }
-        return new Fact(t.predicate.toString(), t.subject.toString(), t.object.toString().format(), [], explicit, [], [], notUsingValid)
+        return new Fact(t.predicate.toString(), t.subject.toString(), t.object.toString()/*.format()*/, [], explicit, [], [], notUsingValid)
     },
 
     triplesToFacts: function(t, explicit, notUsingValid) {
@@ -96,9 +100,9 @@ module.exports = {
             dblQuoteInStrPattern = RegularExpressions.DBLQUOTED_STRING,
             dblQuoteMatch;
 
-        try {
+        /*try {
             entityStr = entityStr.format();
-        } catch(e){}
+        } catch(e){}*/
 
         if (entityStr === undefined) return false;
         if (entityStr.match(literalPattern)) {
