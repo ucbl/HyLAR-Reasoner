@@ -54,7 +54,7 @@ OWL2RL = {
             new Rule([
                     new Fact(SubPropertyOf, '?p1', '?p2', [], true),
                     new Fact(SubPropertyOf, '?p2', '?p3', [], true)],
-                [new Fact(SubClassOf, '?p1', '?p3', [], true)], "Property-Subsumption-1"),
+                [new Fact(SubPropertyOf, '?p1', '?p3', [], true)], "Property-Subsumption-1"),
 
             // prp-spo1
             new Rule([

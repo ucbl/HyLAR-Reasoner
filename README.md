@@ -17,7 +17,7 @@ HyLAR also provides the following inferences, based on the semantics detailed [h
 
 * `(?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2) ^ (?x, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?c1) -> (?x, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?c2)`
 
-* `(?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) ^ (?p2, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p3) -> (?p1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?p3)`
+* `(?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) ^ (?p2, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p3) -> (?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p3)`
 
 * `(?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) ^ (?x, ?p1, ?y) -> (?x, ?p2, ?y)`
 
