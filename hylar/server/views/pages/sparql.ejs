@@ -30,7 +30,8 @@
         <% for (var i = 0; i < prevResults.length; i++) { %>
         <tr>
             <% for (var key in prevResults[i]) { %>
-            <td><small class="sparqlresults"><%- prevResults[i][key].value %></small></td>
+            <td><small class="sparqlresults">
+                    <%- prevResults[i][key] ? prevResults[i][key].value : '' %></small></td>
             <% } %>
         </tr>
         <% } %>
