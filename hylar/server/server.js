@@ -75,6 +75,8 @@ app.get('/explore/resetRules', Controller.resetRules, Controller.renderRules);
 app.post('/explore/rules', Controller.addRules, Controller.renderRules);
 
 // Launching server
+
+app.get('/demo', Controller.geoloc);
 return app.listen(port, function() {
     Utils._instanceid = port;
     console.notify('HyLAR is running on port ' + port + '.');

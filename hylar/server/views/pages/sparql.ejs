@@ -6,18 +6,20 @@
 <body>
 <header>
     <% include ../partials/menu.ejs %>
-    <%
-        function putSparql(query) {
-            sparqlQuery = query;
+    <script>
+        function putSparql(i) {
+            var query = $('#'+i).text();
+            $('#query').val(query);
+            $('html, body').animate({ scrollTop: 0 }, 0);
         }
-    %>
+    </script>
 </header>
 <div class="container">
     <h3>SPARQL endpoint</h3>
     <form method="post" action="">
         <small>Powered by <a href="https://www.npmjs.com/package/rdfstore">rdfstore.js</a></small>
-        <textarea name="query" style="font-family: 'Courier New'; font-size: 16px;" class="form-control" rows="10"><%- sparqlQuery %></textarea>
-        <input type=submit value="Submit query"/>
+        <textarea id="query" name="query" style="font-family: 'Courier New'; font-size: 16px;" class="form-control" rows="10"><%- sparqlQuery %></textarea>
+        <input type="submit" value="Submit query"/>
     </form>
 
     <h3>Results</h3>
@@ -27,6 +29,7 @@
             <th><%= variable %></th>
         <% } %>
         </tr>
+        <% if(prevResults && (prevResults.length == 0)) { %><span class="error">No results found. </span><% } %>
         <% for (var i = 0; i < prevResults.length; i++) { %>
         <tr>
             <% for (var key in prevResults[i]) { %>
@@ -44,9 +47,9 @@
             <th>Status</th>
         </tr>
         <% for (var i = (history.length-1); i > -1; i--) { %>
-        <tr class="queryhistory">
-            <td><%= history[i].query %></td>
-            <td class="sparqlstatus" onclick="putSparql(<% history[i].query %>)">
+        <tr class="queryhistory" onclick="putSparql('q<%- i %>')">
+            <td id="q<%- i %>"><%= history[i].query %></td>
+            <td class="sparqlstatus">
                 <% if(history[i].noError) { %>
                     <span class="noerror glyphicon glyphicon-ok"> Passed</span>
                 <% } else { %>

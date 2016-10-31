@@ -375,5 +375,16 @@ module.exports = {
     resetKB: function(req, res, next) {
         Hylar.clean();
         next();
-    }
+    },
+
+    geoloc: function(req, res) {
+        Hylar.setRules(OWL2RL.rules.classSubsumption
+            .concat(OWL2RL.rules.propertySubsumption)
+            .concat(OWL2RL.rules.transitivity)
+            .concat(OWL2RL.rules.inverse)
+            .concat(OWL2RL.rules.equivalence)
+            .concat(OWL2RL.rules.equality));
+        res.render(htmlDir + '/pages/blend_geoloc', {});
+    },
+
 };

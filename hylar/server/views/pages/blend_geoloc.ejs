@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../partials/head.ejs %>
+    <script type="text/javascript">
+        $('document').ready(function() {
+            checkPos();
+            $('#input-lat').on('input', function() {
+                changeLat($(this).val());
+            });
+            $('#input-long').on('input', function() {
+                changeLong($(this).val());
+            });
+        });
+
+        function checkPos() {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                $('#lat').text(position.coords.latitude);
+                $('#long').text(position.coords.longitude);
+                whichCity();
+            });
+        }
+
+        function changeLat(value) {
+            if (typeof parseInt(value) === 'number') {
+                $('#lat').text(value);
+                whichCity();
+            }
+        }
+
+        function changeLong(value) {
+            if (typeof parseInt(value) === 'number') {
+                $('#long').text(value);
+                whichCity();
+            }
+        }
+
+        function whichCity() {
+            console.log("http://maps.googleapis.com/maps/api/geocode/json?latlng="+$('#lat').text()+","+$('#long').text()+"&sensor=false");
+            $.ajax({
+                type: 'GET',
+                dataType: "json",
+                url: "http://maps.googleapis.com/maps/api/geocode/json?latlng="+$('#lat').text()+","+$('#long').text()+"&sensor=false",
+                data: {},
+                success: function(data) {
+                    $('.city').html(data);
+                    $.each( data['results'],function(i, val) {
+                        $.each( val['address_components'],function(i, val) {
+                            if (val['types'] == "locality,political") {
+                                if (val['long_name'] != "") {
+                                    $('.city').html(val['long_name']);
+                                    $('#cityUri').text('<http://www.cities.com/' + val['long_name'] + '>');
+                                    $('#query').text("" +
+                                            "PREFIX vocab: <http://www.my-online-store.fr/> \n" +
+                                            "PREFIX pv: <http://ns.inria.fr/provoc#> \n" +
+                                            "PREFIX gr: <http://purl.org/goodrelations/v1#> \n" +
+                                            "PREFIX schema: <http://schema.org/> \n\n" +
+                                            "SELECT ?product ?store { \n" +
+                                            "   # Je veux une tablette 4G \n" +
+                                            "   ?product a vocab:Tablet . \n" +
+                                            "   ?product pv:hasComponent <http://components.org/4G> . \n \n" +
+                                            "   # Proposée par un magasin ... \n" +
+                                            "   ?store gr:offers ?offer . \n \n" +
+                                            "   ?offer gr:includes ?product . \n \n" +
+                                            "   # ... localisé à " + val['long_name'] + " \n" +
+                                            "   ?store gr:hasPOS ?location . \n" +
+                                            "   ?location schema:place " + $('#cityUri').text() + " . \n}");
+                                    console.log(i + ", " + val['long_name']);
+                                    console.log(i + ", " + val['types']);
+                                }
+                                else {
+                                    $('.city').html('unknown');
+                                    $('#cityUri').text("");
+                                }
+                            }
+                        });
+                    });
+                    console.log('Success');
+                },
+                error: function () { console.log('error'); }
+            });
+        }
+
+        function generateQuery() {
+
+        }
+    </script>
+</head>
+<body>
+<div class="container">
+    <h1>Current position</h1>
+    Your position: <b id="lat">(please wait)</b> Lat. <b id="long">(please wait)</b> Long.
+    <br/>
+    City is: <b class="city">unknown</b> <code id="cityUri"></code>
+    <br/>
+    <h1>Test position</h1>
+    <input id="input-lat" onkeypress="changeLat($(this).val())" type="text" placeholder="test latitude"/>
+    <input id="input-long" onkeypress="changeLong($(this).val())" type="text" placeholder="test longitude"/>
+    <h2>Search for a 4G tablet near <span class="city">...</span></h2>
+    <form target="_blank" action="sparql" method="POST">
+        <textarea style="font-family: 'Courier New'; white-space: pre; width:100%" name="query" id="query" onclick="$(this).select();" rows="20"></textarea>
+        <input type="submit" value="Search!"/>
+    </form>
+</div>
+</body>
