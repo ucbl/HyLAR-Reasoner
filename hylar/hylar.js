@@ -137,7 +137,18 @@ Hylar.prototype.load = function(ontologyTxt, mimeType, reasoningMethod, graph, k
             return that.treatLoad(ontologyTxt, mimeType, graph);
         });
     } else {
-        return this.treatLoad(ontologyTxt, mimeType, graph);
+        return this.sm.regenerateSideStore()
+            .then(function() {
+                return that.sm.loadOntologyIntoSideStore(ontologyTxt, mimeType);
+            })
+            .then(function() {
+                return that.sm.querySideStore('CONSTRUCT { ?a ?b ?c } WHERE { ?a ?b ?c }');
+            })
+            .then(function(data) {
+                data = ParsingInterface.triplesToTurtle(data.triples).replace(/(\\n)/g, '');
+                return that.query('INSERT DATA { ' + data + ' }');
+            });
+
     }
 };
 
@@ -185,7 +196,7 @@ Hylar.prototype.query = function(query, reasoningMethod) {
     this.updateReasoningMethod(reasoningMethod);
 
     if (this.sm.storage === undefined) {
-        throw Errors.StorageNotInitialized();
+        this.sm.init();
     } else {
         switch (sparql.type) {
             case 'update':

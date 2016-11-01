@@ -93,7 +93,7 @@ module.exports = {
      * @returns {*}
      */
     parseStrEntityToTurtle: function(entityStr) {
-        var literalPattern = RegularExpressions.LITERAL,
+        var literalPattern = RegularExpressions.LITERAL_UNFORMATTED,
             blankNodePattern = RegularExpressions.BLANK_NODE,
             variablePattern = RegularExpressions.VARIABLE,
             typeOfDatatypePattern = RegularExpressions.DATATYPE_TYPE,
@@ -105,13 +105,16 @@ module.exports = {
         } catch(e){}*/
 
         if (entityStr === undefined) return false;
-        if (entityStr.match(literalPattern)) {
-            entityStr = entityStr.replace(literalPattern, '$1$2');
-            dblQuoteMatch = entityStr.match(dblQuoteInStrPattern);
-            return dblQuoteMatch[1] + dblQuoteMatch[2].replace(/"/g, '\\"') + dblQuoteMatch[3];
-        } else if(entityStr.match(blankNodePattern) || entityStr.match(variablePattern) || entityStr.match(typeOfDatatypePattern)) {
-            return entityStr
 
+        if (entityStr.match(dblQuoteInStrPattern)) {
+            dblQuoteMatch = entityStr.match(dblQuoteInStrPattern);
+            entityStr = dblQuoteMatch[1] + dblQuoteMatch[2].replace(/(")/g, '\\"') + dblQuoteMatch[3];
+        }
+
+        if (entityStr.match(literalPattern)) {
+            return entityStr.replace(literalPattern, '$1<$2>');
+        } else if(entityStr.match(blankNodePattern) || entityStr.match(variablePattern) || entityStr.match(typeOfDatatypePattern) || entityStr.match(dblQuoteInStrPattern)) {
+            return entityStr
         } else {
             return '<' + entityStr + '>';
         }
@@ -190,7 +193,7 @@ module.exports = {
     triplesToTurtle: function(triples) {
         var ttl = '';
         for (var i = 0; i < triples.length; i++) {
-            ttl += this.tripleToTurtle(triples[i]);
+            ttl += this.tripleToTurtle(triples[i]).replace(/(\n|\r)/g, '');
         }
         return ttl;
     },
@@ -205,7 +208,7 @@ module.exports = {
         } else if (parsedQuery.queryType == 'CONSTRUCT') {
             isolatedQuery = parsedQuery.queryType + " { ";
             for (var i = 0; i < parsedQuery.template.length; i++) {
-                isolatedQuery += this.tripleToTurtle(parsedQuery.template[i]);
+               isolatedQuery += this.tripleToTurtle(parsedQuery.template[i]);
             }
             isolatedQuery += " } WHERE { ";
         }
@@ -219,7 +222,7 @@ module.exports = {
                 isolatedQuery += " " + this.triplesToTurtle(patterns[i].triples) + " ";
             }
         } else {
-            isolatedQuery += " " + this.triplesToTurtle( parsedQuery.where[whereIndex].triples) + " ";
+            isolatedQuery += " " + this.triplesToTurtle(parsedQuery.where[whereIndex].triples) + " ";
         }
         isolatedQuery += " } ";
 
