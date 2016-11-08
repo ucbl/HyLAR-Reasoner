@@ -17,6 +17,7 @@
     "rdf-ext": "^0.2.6",
     "rdflib": "^0.7.2",
     "rdfstore": "^0.9.14",
+    "sparql": "^0.1.3",
     "sparqljs": "^1.1.3"
   },
   "devDependencies": {

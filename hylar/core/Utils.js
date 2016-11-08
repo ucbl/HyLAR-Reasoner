@@ -171,6 +171,9 @@ module.exports = {
      * @returns {boolean}
      */
     isVariable: function(str) {
+        if (str === undefined) {
+            return false;
+        }
         try {
             return (str.indexOf('?') === 0);
         } catch(e) {
@@ -185,7 +188,7 @@ module.exports = {
      */
     isOperator: function(str) {
         try {
-            return ((str == '>') || (str == '<') || (str == '<=') || (str == '>=') || (str == '='));
+            return ((str == '>') || (str == '<') || (str == '<=') || (str == '>=') || (str == '=='));
         } catch(e) {
             return false;
         }

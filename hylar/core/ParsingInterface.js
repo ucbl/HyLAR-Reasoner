@@ -155,23 +155,7 @@ module.exports = {
     },
 
     updateWhereToConstructWhere: function(query, doParse) {
-        var parsedQuery = SparqlParser.parse(query);
-
-        if (this.isInsert(parsedQuery)) {
-            parsedQuery.template = parsedQuery.updates[0].insert[0].triples;
-        } else {
-            parsedQuery.template = parsedQuery.updates[0].delete[0].triples;
-        }
-
-        parsedQuery.type = "query";
-        parsedQuery.queryType = "CONSTRUCT";
-        parsedQuery.where = parsedQuery.updates[0].where;
-        delete parsedQuery.updates;
-
-        if (doParse) {
-            return parsedQuery;
-        }
-        return SparqlGenerator.stringify(parsedQuery);
+        return query.replace(RegularExpressions.DELETE_OR_INSERT_STATEMENT, 'CONSTRUCT$2');
     },
 
     /**
@@ -254,11 +238,16 @@ module.exports = {
     isUpdateWhere: function(parsedQuery) {
         var res;
         try {
-            res = parsedQuery.updates[0].where.length > 0;
+            if ( (parsedQuery.updates[0].where)
+                || (parsedQuery.updates[0].updateType == "deletewhere")
+                || (parsedQuery.updates[0].updateType == "insertwhere")) {
+                return true;
+            } else {
+                return false;
+            }
         } catch(e) {
             return false;
         }
-        return res;
     },
 
     isInsert: function(parsedQuery) {
@@ -285,6 +274,7 @@ module.exports = {
         switch(this.isInsert(initialQuery)) {
             case true:
                 return "INSERT DATA { " + this.triplesToTurtle(results.triples) + " }";
+                break;
             default:
                 return "DELETE DATA { " + this.triplesToTurtle(results.triples) + " }";
         }
