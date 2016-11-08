@@ -29,7 +29,7 @@ var Class = Prefixes.OWL + 'Class',
     SameAs = Prefixes.OWL + 'sameAs';
 
 /**
- * RDF/OWL entailment rules.
+ * RDFS/OWL entailment rules.
  * @type {{rules: {classSubsumption: *[], propertySubsumption: *[], transitivity: *[], inverse: *[], equivalence: *[], equality: *[]}}}
  */
 
@@ -179,39 +179,39 @@ module.exports = {
         .concat(OWL2RL.rules.inverse)
         .concat(OWL2RL.rules.equivalence)
         .concat(OWL2RL.rules.equality)
-        .concat(Logics.parseRules([
-            "(?x, http://www.w3.org/2002/07/owl#sameAs, ?y) -> (?y, http://www.w3.org/2002/07/owl#sameAs, ?x)",
-            "(?x, http://www.w3.org/2002/07/owl#sameAs, ?y) ^ (?y, http://www.w3.org/2002/07/owl#sameAs, ?z) -> (?x, http://www.w3.org/2002/07/owl#sameAs, ?z)",
-            "(?p, http://www.w3.org/2000/01/rdf-schema#domain, ?c) ^ (?x, ?p, ?y) -> (?x, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?c)",
-            "(?p, http://www.w3.org/2000/01/rdf-schema#range, ?c) ^ (?x, ?p, ?y) -> (?y, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?c)",
-            "(?p, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/2002/07/owl#FunctionalProperty) ^ (?x, ?p, ?y1) ^ (?x, ?p, ?y2)	-> (?y1, http://www.w3.org/2002/07/owl#sameAs, ?y2)",
-            "(?p, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/2002/07/owl#InverseFunctionalProperty) ^ (?x1, ?p, ?y) ^ (?x2, ?p, ?y) -> (?x1, http://www.w3.org/2002/07/owl#sameAs, ?x2)",
-            "(?p, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/2002/07/owl#SymmetricProperty) ^ (?x, ?p, ?y) -> (?y, ?p, ?x)",
-            "(?p, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/2002/07/owl#TransitiveProperty) ^ (?x, ?p, ?y) ^ (?y, ?p, ?z) -> (?x, ?p, ?z)",
-            "(?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) ^ (?x, ?p1, ?y) -> (?x, ?p2, ?y)",
-            "(?x, http://www.w3.org/2002/07/owl#someValuesFrom, ?y) ^ (?x, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?u, ?p, ?v) ^ (?v, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?y) -> (?u, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?x)",
-            "(?x, http://www.w3.org/2002/07/owl#someValuesFrom, http://www.w3.org/2002/07/owl#Thing) ^ (?x, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?u, ?p, ?v)	-> (?u, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?x)",
-            "(?x, http://www.w3.org/2002/07/owl#allValuesFrom, ?y) ^ (?x, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?u, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?x) ^ (?u, ?p, ?v)	-> (?v, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?y)",
-            "(?x, http://www.w3.org/2002/07/owl#hasValue, ?y) ^ (?x, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?u, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?x)	-> (?u, ?p, ?y)",
-            "(?x, http://www.w3.org/2002/07/owl#hasValue, ?y) ^ (?x, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?u, ?p, ?y) -> (?u, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?x)",
-            "(?c, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/2002/07/owl#Class) -> (?c, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c) ^ (?c, http://www.w3.org/2002/07/owl#equivalentClass, ?c) ^ (?c, http://www.w3.org/2000/01/rdf-schema#subClassOf, http://www.w3.org/2002/07/owl#Thing) ^ (http://www.w3.org/2002/07/owl#Nothing, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c)",
-            "(?c1, http://www.w3.org/2002/07/owl#equivalentClass, ?c2) -> (?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2) ^ (?c2, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c1)",
-            "(?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2) ^ (?c2, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c1) -> (?c1, http://www.w3.org/2002/07/owl#equivalentClass, ?c2)",
-            "(?p, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/2002/07/owl#ObjectProperty) -> (?p, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p) ^ (?p, http://www.w3.org/2002/07/owl#equivalentProperty, ?p)",
-            "(?p, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/2002/07/owl#DatatypeProperty) -> (?p, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p) ^ (?p, http://www.w3.org/2002/07/owl#equivalentProperty, ?p)",
-            "(?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) ^ (?p2, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p3) -> (?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p3)",
-            "(?p1, http://www.w3.org/2002/07/owl#equivalentProperty, ?p2) -> (?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) ^ (?p2, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p1)",
-            "(?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) ^ (?p2, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p1) -> (?p1, http://www.w3.org/2002/07/owl#equivalentProperty, ?p2)",
-            "(?p, http://www.w3.org/2000/01/rdf-schema#domain, ?c1) ^ (?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2) -> (?p, http://www.w3.org/2000/01/rdf-schema#domain, ?c2)",
-            "(?p2, http://www.w3.org/2000/01/rdf-schema#domain, ?c) ^ (?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) -> (?p1, http://www.w3.org/2000/01/rdf-schema#domain, ?c)",
-            "(?p, http://www.w3.org/2000/01/rdf-schema#range, ?c1) ^ (?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2) -> (?p, http://www.w3.org/2000/01/rdf-schema#range, ?c2)",
-            "(?p2, http://www.w3.org/2000/01/rdf-schema#range, ?c) ^ (?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2)	-> (?p1, http://www.w3.org/2000/01/rdf-schema#range, ?c)",
-            "(?c1, http://www.w3.org/2002/07/owl#hasValue, ?i) ^ (?c1, http://www.w3.org/2002/07/owl#onProperty, ?p1) ^ (?c2, http://www.w3.org/2002/07/owl#hasValue, ?i) ^ (?c2, http://www.w3.org/2002/07/owl#onProperty, ?p2) ^ (?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) -> (?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2)",
-            "(?c1, http://www.w3.org/2002/07/owl#someValuesFrom, ?y1) ^ (?c1, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?c2, http://www.w3.org/2002/07/owl#someValuesFrom, ?y2) ^ (?c2, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?y1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?y2) -> (?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2)",
-            "(?c1, http://www.w3.org/2002/07/owl#someValuesFrom, ?y) ^ (?c1, http://www.w3.org/2002/07/owl#onProperty, ?p1) ^ (?c2, http://www.w3.org/2002/07/owl#someValuesFrom, ?y) ^ (?c2, http://www.w3.org/2002/07/owl#onProperty, ?p2) ^ (?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) -> (?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2)",
-            "(?c1, http://www.w3.org/2002/07/owl#allValuesFrom, ?y1) ^ (?c1, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?c2, http://www.w3.org/2002/07/owl#allValuesFrom, ?y2) ^ (?c2, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?y1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?y2) -> (?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2)",
-            "(?c1, http://www.w3.org/2002/07/owl#allValuesFrom, ?y) ^ (?c1, http://www.w3.org/2002/07/owl#onProperty, ?p1) ^ (?c2, http://www.w3.org/2002/07/owl#allValuesFrom, ?y) ^ (?c2, http://www.w3.org/2002/07/owl#onProperty, ?p2) ^ (?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) -> (?c2, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c1)"
-        ]))/*
+        /*.concat(Logics.parseRules([
+            "(?x http://www.w3.org/2002/07/owl#sameAs ?y) -> (?y http://www.w3.org/2002/07/owl#sameAs ?x)",
+            "(?x http://www.w3.org/2002/07/owl#sameAs ?y) ^ (?y http://www.w3.org/2002/07/owl#sameAs ?z) -> (?x http://www.w3.org/2002/07/owl#sameAs ?z)",
+            "(?p http://www.w3.org/2000/01/rdf-schema#domain ?c) ^ (?x ?p ?y) -> (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c)",
+            "(?p http://www.w3.org/2000/01/rdf-schema#range ?c) ^ (?x ?p ?y) -> (?y http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c)",
+            "(?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#FunctionalProperty) ^ (?x ?p ?y1) ^ (?x ?p ?y2)	-> (?y1 http://www.w3.org/2002/07/owl#sameAs ?y2)",
+            "(?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#InverseFunctionalProperty) ^ (?x1 ?p ?y) ^ (?x2 ?p ?y) -> (?x1 http://www.w3.org/2002/07/owl#sameAs ?x2)",
+            "(?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#SymmetricProperty) ^ (?x ?p ?y) -> (?y ?p ?x)",
+            "(?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#TransitiveProperty) ^ (?x ?p ?y) ^ (?y ?p ?z) -> (?x ?p ?z)",
+            "(?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) ^ (?x ?p1 ?y) -> (?x ?p2 ?y)",
+            "(?x http://www.w3.org/2002/07/owl#someValuesFrom ?y) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u ?p ?v) ^ (?v http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?y) -> (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x)",
+            "(?x http://www.w3.org/2002/07/owl#someValuesFrom http://www.w3.org/2002/07/owl#Thing) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u ?p ?v)	-> (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x)",
+            "(?x http://www.w3.org/2002/07/owl#allValuesFrom ?y) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x) ^ (?u ?p ?v)	-> (?v http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?y)",
+            "(?x http://www.w3.org/2002/07/owl#hasValue ?y) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x)	-> (?u ?p ?y)",
+            "(?x http://www.w3.org/2002/07/owl#hasValue ?y) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u ?p ?y) -> (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x)",
+            "(?c http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#Class) -> (?c http://www.w3.org/2000/01/rdf-schema#subClassOf ?c) ^ (?c http://www.w3.org/2002/07/owl#equivalentClass ?c) ^ (?c http://www.w3.org/2000/01/rdf-schema#subClassOf http://www.w3.org/2002/07/owl#Thing) ^ (http://www.w3.org/2002/07/owl#Nothing http://www.w3.org/2000/01/rdf-schema#subClassOf ?c)",
+            "(?c1 http://www.w3.org/2002/07/owl#equivalentClass ?c2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2) ^ (?c2 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c1)",
+            "(?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2) ^ (?c2 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c1) -> (?c1 http://www.w3.org/2002/07/owl#equivalentClass ?c2)",
+            "(?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#ObjectProperty) -> (?p http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p) ^ (?p http://www.w3.org/2002/07/owl#equivalentProperty ?p)",
+            "(?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#DatatypeProperty) -> (?p http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p) ^ (?p http://www.w3.org/2002/07/owl#equivalentProperty ?p)",
+            "(?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) ^ (?p2 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p3) -> (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p3)",
+            "(?p1 http://www.w3.org/2002/07/owl#equivalentProperty ?p2) -> (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) ^ (?p2 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p1)",
+            "(?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) ^ (?p2 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p1) -> (?p1 http://www.w3.org/2002/07/owl#equivalentProperty ?p2)",
+            "(?p http://www.w3.org/2000/01/rdf-schema#domain ?c1) ^ (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2) -> (?p http://www.w3.org/2000/01/rdf-schema#domain ?c2)",
+            "(?p2 http://www.w3.org/2000/01/rdf-schema#domain ?c) ^ (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) -> (?p1 http://www.w3.org/2000/01/rdf-schema#domain ?c)",
+            "(?p http://www.w3.org/2000/01/rdf-schema#range ?c1) ^ (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2) -> (?p http://www.w3.org/2000/01/rdf-schema#range ?c2)",
+            "(?p2 http://www.w3.org/2000/01/rdf-schema#range ?c) ^ (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2)	-> (?p1 http://www.w3.org/2000/01/rdf-schema#range ?c)",
+            "(?c1 http://www.w3.org/2002/07/owl#hasValue ?i) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p1) ^ (?c2 http://www.w3.org/2002/07/owl#hasValue ?i) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p2) ^ (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2)",
+            "(?c1 http://www.w3.org/2002/07/owl#someValuesFrom ?y1) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?c2 http://www.w3.org/2002/07/owl#someValuesFrom ?y2) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?y1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?y2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2)",
+            "(?c1 http://www.w3.org/2002/07/owl#someValuesFrom ?y) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p1) ^ (?c2 http://www.w3.org/2002/07/owl#someValuesFrom ?y) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p2) ^ (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2)",
+            "(?c1 http://www.w3.org/2002/07/owl#allValuesFrom ?y1) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?c2 http://www.w3.org/2002/07/owl#allValuesFrom ?y2) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?y1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?y2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2)",
+            "(?c1 http://www.w3.org/2002/07/owl#allValuesFrom ?y) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p1) ^ (?c2 http://www.w3.org/2002/07/owl#allValuesFrom ?y) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p2) ^ (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) -> (?c2 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c1)"
+        ]))
         .concat(OWL2RL.rules.testsFipa)
         .concat(OWL2RL.rules.testsBNode)*/,
 
@@ -220,40 +220,7 @@ module.exports = {
         .concat(OWL2RL.rules.transitivity)
         .concat(OWL2RL.rules.inverse)
         .concat(OWL2RL.rules.equivalence)
-        .concat(OWL2RL.rules.equality)
-        .concat(Logics.parseRules([
-                "(?x, http://www.w3.org/2002/07/owl#sameAs, ?y) -> (?y, http://www.w3.org/2002/07/owl#sameAs, ?x)",
-                "(?x, http://www.w3.org/2002/07/owl#sameAs, ?y) ^ (?y, http://www.w3.org/2002/07/owl#sameAs, ?z) -> (?x, http://www.w3.org/2002/07/owl#sameAs, ?z)",
-                "(?p, http://www.w3.org/2000/01/rdf-schema#domain, ?c) ^ (?x, ?p, ?y) -> (?x, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?c)",
-                "(?p, http://www.w3.org/2000/01/rdf-schema#range, ?c) ^ (?x, ?p, ?y) -> (?y, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?c)",
-                "(?p, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/2002/07/owl#FunctionalProperty) ^ (?x, ?p, ?y1) ^ (?x, ?p, ?y2)	-> (?y1, http://www.w3.org/2002/07/owl#sameAs, ?y2)",
-                "(?p, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/2002/07/owl#InverseFunctionalProperty) ^ (?x1, ?p, ?y) ^ (?x2, ?p, ?y) -> (?x1, http://www.w3.org/2002/07/owl#sameAs, ?x2)",
-                "(?p, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/2002/07/owl#SymmetricProperty) ^ (?x, ?p, ?y) -> (?y, ?p, ?x)",
-                "(?p, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/2002/07/owl#TransitiveProperty) ^ (?x, ?p, ?y) ^ (?y, ?p, ?z) -> (?x, ?p, ?z)",
-                "(?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) ^ (?x, ?p1, ?y) -> (?x, ?p2, ?y)",
-                "(?x, http://www.w3.org/2002/07/owl#someValuesFrom, ?y) ^ (?x, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?u, ?p, ?v) ^ (?v, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?y) -> (?u, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?x)",
-                "(?x, http://www.w3.org/2002/07/owl#someValuesFrom, http://www.w3.org/2002/07/owl#Thing) ^ (?x, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?u, ?p, ?v)	-> (?u, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?x)",
-                "(?x, http://www.w3.org/2002/07/owl#allValuesFrom, ?y) ^ (?x, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?u, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?x) ^ (?u, ?p, ?v)	-> (?v, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?y)",
-                "(?x, http://www.w3.org/2002/07/owl#hasValue, ?y) ^ (?x, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?u, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?x)	-> (?u, ?p, ?y)",
-                "(?x, http://www.w3.org/2002/07/owl#hasValue, ?y) ^ (?x, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?u, ?p, ?y) -> (?u, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?x)",
-                "(?c, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/2002/07/owl#Class) -> (?c, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c) ^ (?c, http://www.w3.org/2002/07/owl#equivalentClass, ?c) ^ (?c, http://www.w3.org/2000/01/rdf-schema#subClassOf, http://www.w3.org/2002/07/owl#Thing) ^ (http://www.w3.org/2002/07/owl#Nothing, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c)",
-                "(?c1, http://www.w3.org/2002/07/owl#equivalentClass, ?c2) -> (?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2) ^ (?c2, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c1)",
-                "(?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2) ^ (?c2, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c1) -> (?c1, http://www.w3.org/2002/07/owl#equivalentClass, ?c2)",
-                "(?p, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/2002/07/owl#ObjectProperty) -> (?p, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p) ^ (?p, http://www.w3.org/2002/07/owl#equivalentProperty, ?p)",
-                "(?p, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/2002/07/owl#DatatypeProperty) -> (?p, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p) ^ (?p, http://www.w3.org/2002/07/owl#equivalentProperty, ?p)",
-                "(?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) ^ (?p2, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p3) -> (?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p3)",
-                "(?p1, http://www.w3.org/2002/07/owl#equivalentProperty, ?p2) -> (?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) ^ (?p2, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p1)",
-                "(?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) ^ (?p2, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p1) -> (?p1, http://www.w3.org/2002/07/owl#equivalentProperty, ?p2)",
-                "(?p, http://www.w3.org/2000/01/rdf-schema#domain, ?c1) ^ (?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2) -> (?p, http://www.w3.org/2000/01/rdf-schema#domain, ?c2)",
-                "(?p2, http://www.w3.org/2000/01/rdf-schema#domain, ?c) ^ (?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) -> (?p1, http://www.w3.org/2000/01/rdf-schema#domain, ?c)",
-                "(?p, http://www.w3.org/2000/01/rdf-schema#range, ?c1) ^ (?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2) -> (?p, http://www.w3.org/2000/01/rdf-schema#range, ?c2)",
-                "(?p2, http://www.w3.org/2000/01/rdf-schema#range, ?c) ^ (?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2)	-> (?p1, http://www.w3.org/2000/01/rdf-schema#range, ?c)",
-                "(?c1, http://www.w3.org/2002/07/owl#hasValue, ?i) ^ (?c1, http://www.w3.org/2002/07/owl#onProperty, ?p1) ^ (?c2, http://www.w3.org/2002/07/owl#hasValue, ?i) ^ (?c2, http://www.w3.org/2002/07/owl#onProperty, ?p2) ^ (?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) -> (?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2)",
-                "(?c1, http://www.w3.org/2002/07/owl#someValuesFrom, ?y1) ^ (?c1, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?c2, http://www.w3.org/2002/07/owl#someValuesFrom, ?y2) ^ (?c2, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?y1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?y2) -> (?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2)",
-                "(?c1, http://www.w3.org/2002/07/owl#someValuesFrom, ?y) ^ (?c1, http://www.w3.org/2002/07/owl#onProperty, ?p1) ^ (?c2, http://www.w3.org/2002/07/owl#someValuesFrom, ?y) ^ (?c2, http://www.w3.org/2002/07/owl#onProperty, ?p2) ^ (?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) -> (?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2)",
-                "(?c1, http://www.w3.org/2002/07/owl#allValuesFrom, ?y1) ^ (?c1, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?c2, http://www.w3.org/2002/07/owl#allValuesFrom, ?y2) ^ (?c2, http://www.w3.org/2002/07/owl#onProperty, ?p) ^ (?y1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?y2) -> (?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2)",
-                "(?c1, http://www.w3.org/2002/07/owl#allValuesFrom, ?y) ^ (?c1, http://www.w3.org/2002/07/owl#onProperty, ?p1) ^ (?c2, http://www.w3.org/2002/07/owl#allValuesFrom, ?y) ^ (?c2, http://www.w3.org/2002/07/owl#onProperty, ?p2) ^ (?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) -> (?c2, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c1)"
-            ])),
+        .concat(OWL2RL.rules.equality),
 
     classSubsumption: OWL2RL.rules.classSubsumption,
 
