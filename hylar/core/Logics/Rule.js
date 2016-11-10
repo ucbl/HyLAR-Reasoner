@@ -17,6 +17,7 @@ Rule = function(slf, srf, name) {
     this.operatorCauses = [];
     this.consequences = srf;
     this.constants = [];
+    this.matches = {};
 
     for (var i = 0; i < slf.length; i++) {
         if (!slf[i].operatorPredicate) {
@@ -106,7 +107,6 @@ Rule.prototype = {
         this.consequences = newRule.consequences;
         this.constants = newRule.constants;
     },
-
 
     // @todo
     getIdbPredicates: function() {

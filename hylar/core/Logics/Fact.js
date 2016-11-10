@@ -20,6 +20,7 @@ Fact = function(pred, sub, obj, originConjs, expl, graphs, implicitCauses, notUs
     if (expl === undefined) expl = true;
     if (graphs === undefined) graphs = [];
     if (implicitCauses === undefined) implicitCauses = [];
+    this.matches = {};
 
     this.predicate = pred;
     this.subject = sub;

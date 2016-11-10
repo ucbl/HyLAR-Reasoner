@@ -23,17 +23,8 @@ Solver = {
      * @returns Array of the evaluation.
      */
     evaluateRuleSet: function(rs, facts, doTagging, resolvedImplicitFactSet) {
-        /*var newCons, cons = [];
-        for (var key in rs) {
-
-            } else {
-                newCons = this.evaluateThroughRestriction(rs[key], facts);
-                cons = Utils.uniques(cons, newCons);
-            }
-        }
-        return cons;*/
-        var deferred = q.defer(), promises = [], cons = [];
-        for (var key in rs) {
+        var deferred = q.defer(), promises = [], cons = [], filteredFacts;
+        for (var key in rs) {            
             if (doTagging) {
                 promises.push(this.evaluateThroughRestrictionWithTagging(rs[key], facts, resolvedImplicitFactSet));
             } else {
@@ -144,7 +135,7 @@ Solver = {
 
     },
 
-    getMappings: function(rule, facts) {
+    getMappings: function(rule, facts, consequences) {
         var i = 0, mappingList, causes;
 
         mappingList = [rule.causes[i]]; // Init with first cause
@@ -154,6 +145,19 @@ Solver = {
             i++;
         }
         return mappingList;
+    },
+
+    excludeKnownMatches: function(rule, facts, consequences) {
+        var match, filteredFacts = [];
+        for (var i = 0; i < facts.length; i++) {
+            match = rule.hasKnownMatchFor(facts[i]);
+            if (match) {
+                consequences.push(match);                
+            } else {
+                filteredFacts.push(facts[i]);
+            }
+        }
+        return filteredFacts;
     },
 
     /**
@@ -219,17 +223,17 @@ Solver = {
      */
     factMatches: function(fact, ruleFact, mapping, constants) {
         var localMapping = {};
-
-        // Checks and update localMapping if matches
-        if (!this.factElemMatches(fact.subject, ruleFact.subject, mapping, localMapping)) {
-            return false;
-        }
+    
+        // Checks and update localMapping if matches     
         if (!this.factElemMatches(fact.predicate, ruleFact.predicate, mapping, localMapping)) {
             return false;
-        }
+        }        
         if (!this.factElemMatches(fact.object, ruleFact.object, mapping, localMapping)) {
             return false;
         }
+        if (!this.factElemMatches(fact.subject, ruleFact.subject, mapping, localMapping)) {
+            return false;
+        }    
 
         // If an already existing uri has been mapped...
         for (var key in localMapping) {
@@ -252,13 +256,6 @@ Solver = {
                 }
                 localMapping[mapKey] = mapping[mapKey];
             }
-        }
-
-        // Updates graph references
-        if (localMapping.graphs) {
-            localMapping.graphs = Utils.uniques(localMapping.graphs, fact.graphs);
-        } else {
-            localMapping.graphs = [];
         }
 
         // The new mapping is updated

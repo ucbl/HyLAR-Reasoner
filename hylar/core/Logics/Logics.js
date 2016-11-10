@@ -229,8 +229,7 @@ module.exports = {
 
     updateValidTags: function(kb, additions, deletions) {
         var newAdditions = [],
-            resolvedAdditions = [],
-            derivations, newCauseConj;
+            resolvedAdditions = [];
         for (var i = 0; i < kb.length; i++) {
             for (var j = 0; j < additions.length; j++) {
                 if (additions[j] !== undefined) {

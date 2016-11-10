@@ -329,7 +329,7 @@ ReasoningEngine = {
         startAlgorithm();
 
         return deferred.promise;
-    }
+    }    
 };
 
 module.exports = {
