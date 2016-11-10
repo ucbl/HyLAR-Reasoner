@@ -137,15 +137,20 @@ module.exports = {
      * @param res
      */
     sendOntology: function(req, res) {
-        res.header('Content-Type', 'text/json');
-        res.status(200).json({
-            data: {
-                ontologyTxt: req.rawOntology,
-                mimeType: req.mimeType
-            },
-            requestDelay: req.requestDelay,
-            serverTime: new Date().getTime()
-        });
+        if (req.headers.accept == 'application/json') {
+            res.header('Content-Type', 'application/json');
+            res.status(200).json({
+                data: {
+                    ontologyTxt: req.rawOntology,
+                    mimeType: req.mimeType
+                },
+                requestDelay: req.requestDelay,
+                serverTime: new Date().getTime()
+            });
+        } else {
+            res.header('Content-Type', req.mimeType);
+            res.status(200).send(req.rawOntology);
+        }
     },
 
     removeOntology: function(req, res, next) {
@@ -175,12 +180,16 @@ module.exports = {
 
             console.notify("Evaluation finished in " + processedTime - receivedReqTime + "ms.");
 
-            res.status(200).send({
-                data : results,
-                processingDelay: processedTime - receivedReqTime,
-                requestDelay : requestDelay,
-                serverTime : new Date().getTime()
-            });
+            if (req.headers.accept == 'application/sparql-results+json') {
+                res.status(200).send(results);
+            } else {
+                res.status(200).send({
+                    data: results,
+                    processingDelay: processedTime - receivedReqTime,
+                    requestDelay: requestDelay,
+                    serverTime: new Date().getTime()
+                });
+            }
         })
         .catch(function(error) {
             console.error(error.stack);

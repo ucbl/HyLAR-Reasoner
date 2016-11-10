@@ -49,6 +49,7 @@ app.get('/time', Controller.time);
 app.get('/ontology', Controller.list);
 app.post('/ontology', upload.single('file'), Controller.upload, Controller.hello);
 app.get('/ontology/:filename', Controller.getOntology, Controller.sendOntology);
+app.delete('/ontology/:filename', Controller.removeOntology, Controller.acknowledgeEnd);
 app.get('/remove/:filename', Controller.removeOntology, Controller.hello);
 
 app.get('/classify/:filename', Controller.getOntology, Controller.loadOntology, Controller.hello);
