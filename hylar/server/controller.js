@@ -118,16 +118,11 @@ module.exports = {
     },
 
     sendHylarContents: function(req, res) {
-        Hylar.getStorage().then(function(hylarStorage) {
-            res.status(200).json({
-                data: {
-                    storage: hylarStorage,
-                    dictionary: Hylar.getDictionary()
-                },
-                processingDelay: req.processingDelay,
-                requestDelay : req.requestDelay,
-                serverTime : new Date().getTime()
-            });
+        res.status(200).json({
+            dictionary: Hylar.getDictionary(),
+            processingDelay: req.processingDelay,
+            requestDelay : req.requestDelay,
+            serverTime : new Date().getTime()
         });
     },
 

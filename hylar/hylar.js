@@ -13,6 +13,7 @@ var Dictionary = require('./core/Dictionary'),
     StorageManager = require('./core/StorageManager'),
     Reasoner = require('./core/Reasoner'),
     OWL2RL = require('./core/OWL2RL'),
+    Fact = require('./core/Logics/Fact'),
     Errors = require('./core/Errors'),
     Utils = require('./core/Utils');
 
@@ -233,7 +234,7 @@ Hylar.prototype.query = function(query, reasoningMethod) {
  * High-level treatUpdate that takes graphs into account.
  * @returns Promise
  */
-Hylar.prototype.treatUpdateWithGraph = function(query) {
+Hylar.prototype.treatUpdateWithGraph = function(query) {    
     var sparql = ParsingInterface.parseSPARQL(query),
         promises = [], updates;
 
@@ -295,6 +296,21 @@ Hylar.prototype.getDictionary = function() {
  */
 Hylar.prototype.setDictionaryContent = function(dict) {
     this.dict.setContent(dict);
+};
+
+Hylar.prototype.import = function(dictContent) {
+    var query = "INSERT DATA { ";
+    for (var graph in dictContent) {
+        for (var triple in dictContent[graph]) {
+            query += triple.replace(/(\n|\r)/g, '');
+            for (var i = 0; i < dictContent[graph][triple].length; i++) {
+                dictContent[graph][triple][i].__proto__ = Fact.prototype;
+            }
+        }
+    }
+    query += " }"
+    this.setDictionaryContent(dictContent);
+    return this.sm.query(query);
 };
 
 Hylar.prototype.checkConsistency = function() {

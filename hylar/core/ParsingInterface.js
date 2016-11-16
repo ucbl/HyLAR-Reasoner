@@ -108,13 +108,13 @@ module.exports = {
 
         if (entityStr.match(dblQuoteInStrPattern)) {
             dblQuoteMatch = entityStr.match(dblQuoteInStrPattern);
-            entityStr = dblQuoteMatch[1] + dblQuoteMatch[2].replace(/(")/g, '\\"') + dblQuoteMatch[3];
+            entityStr = dblQuoteMatch[1] + dblQuoteMatch[2].replace(/(")/g, "'") + dblQuoteMatch[3]; //temporary ; has to be debbuged asap            
         }
 
         if (entityStr.match(literalPattern)) {
             return entityStr.replace(literalPattern, '$1<$2>');
         } else if(entityStr.match(blankNodePattern) || entityStr.match(variablePattern) || entityStr.match(typeOfDatatypePattern) || entityStr.match(dblQuoteInStrPattern)) {
-            return entityStr
+            return entityStr;
         } else {
             return '<' + entityStr + '>';
         }

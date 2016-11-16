@@ -7933,6 +7933,7 @@ Fact = function(pred, sub, obj, originConjs, expl, graphs, implicitCauses, notUs
     if (expl === undefined) expl = true;
     if (graphs === undefined) graphs = [];
     if (implicitCauses === undefined) implicitCauses = [];
+    this.matches = {};
 
     this.predicate = pred;
     this.subject = sub;
@@ -8377,8 +8378,7 @@ module.exports = {
 
     updateValidTags: function(kb, additions, deletions) {
         var newAdditions = [],
-            resolvedAdditions = [],
-            derivations, newCauseConj;
+            resolvedAdditions = [];
         for (var i = 0; i < kb.length; i++) {
             for (var j = 0; j < additions.length; j++) {
                 if (additions[j] !== undefined) {
@@ -8687,6 +8687,7 @@ Rule = function(slf, srf, name) {
     this.operatorCauses = [];
     this.consequences = srf;
     this.constants = [];
+    this.matches = {};
 
     for (var i = 0; i < slf.length; i++) {
         if (!slf[i].operatorPredicate) {
@@ -8777,7 +8778,6 @@ Rule.prototype = {
         this.constants = newRule.constants;
     },
 
-
     // @todo
     getIdbPredicates: function() {
 
@@ -8816,17 +8816,8 @@ Solver = {
      * @returns Array of the evaluation.
      */
     evaluateRuleSet: function(rs, facts, doTagging, resolvedImplicitFactSet) {
-        /*var newCons, cons = [];
-        for (var key in rs) {
-
-            } else {
-                newCons = this.evaluateThroughRestriction(rs[key], facts);
-                cons = Utils.uniques(cons, newCons);
-            }
-        }
-        return cons;*/
-        var deferred = q.defer(), promises = [], cons = [];
-        for (var key in rs) {
+        var deferred = q.defer(), promises = [], cons = [], filteredFacts;
+        for (var key in rs) {            
             if (doTagging) {
                 promises.push(this.evaluateThroughRestrictionWithTagging(rs[key], facts, resolvedImplicitFactSet));
             } else {
@@ -8937,7 +8928,7 @@ Solver = {
 
     },
 
-    getMappings: function(rule, facts) {
+    getMappings: function(rule, facts, consequences) {
         var i = 0, mappingList, causes;
 
         mappingList = [rule.causes[i]]; // Init with first cause
@@ -8947,6 +8938,19 @@ Solver = {
             i++;
         }
         return mappingList;
+    },
+
+    excludeKnownMatches: function(rule, facts, consequences) {
+        var match, filteredFacts = [];
+        for (var i = 0; i < facts.length; i++) {
+            match = rule.hasKnownMatchFor(facts[i]);
+            if (match) {
+                consequences.push(match);                
+            } else {
+                filteredFacts.push(facts[i]);
+            }
+        }
+        return filteredFacts;
     },
 
     /**
@@ -9012,17 +9016,17 @@ Solver = {
      */
     factMatches: function(fact, ruleFact, mapping, constants) {
         var localMapping = {};
-
-        // Checks and update localMapping if matches
-        if (!this.factElemMatches(fact.subject, ruleFact.subject, mapping, localMapping)) {
-            return false;
-        }
+    
+        // Checks and update localMapping if matches     
         if (!this.factElemMatches(fact.predicate, ruleFact.predicate, mapping, localMapping)) {
             return false;
-        }
+        }        
         if (!this.factElemMatches(fact.object, ruleFact.object, mapping, localMapping)) {
             return false;
         }
+        if (!this.factElemMatches(fact.subject, ruleFact.subject, mapping, localMapping)) {
+            return false;
+        }    
 
         // If an already existing uri has been mapped...
         for (var key in localMapping) {
@@ -9045,13 +9049,6 @@ Solver = {
                 }
                 localMapping[mapKey] = mapping[mapKey];
             }
-        }
-
-        // Updates graph references
-        if (localMapping.graphs) {
-            localMapping.graphs = Utils.uniques(localMapping.graphs, fact.graphs);
-        } else {
-            localMapping.graphs = [];
         }
 
         // The new mapping is updated
@@ -9580,13 +9577,13 @@ module.exports = {
 
         if (entityStr.match(dblQuoteInStrPattern)) {
             dblQuoteMatch = entityStr.match(dblQuoteInStrPattern);
-            entityStr = dblQuoteMatch[1] + dblQuoteMatch[2].replace(/(")/g, '\\"') + dblQuoteMatch[3];
+            entityStr = dblQuoteMatch[1] + dblQuoteMatch[2].replace(/(")/g, "'") + dblQuoteMatch[3]; //temporary ; has to be debbuged asap            
         }
 
         if (entityStr.match(literalPattern)) {
             return entityStr.replace(literalPattern, '$1<$2>');
         } else if(entityStr.match(blankNodePattern) || entityStr.match(variablePattern) || entityStr.match(typeOfDatatypePattern) || entityStr.match(dblQuoteInStrPattern)) {
-            return entityStr
+            return entityStr;
         } else {
             return '<' + entityStr + '>';
         }
@@ -10150,7 +10147,7 @@ ReasoningEngine = {
         startAlgorithm();
 
         return deferred.promise;
-    }
+    }    
 };
 
 module.exports = {
@@ -10250,7 +10247,6 @@ StorageManager.prototype.loadRdfXml = function(data) {
  */
 StorageManager.prototype.query = function(query) {
     var deferred = q.defer();
-
     this.storage.execute(query, function (err, r) {
         if(err) {
             deferred.reject(err);
@@ -10675,6 +10671,7 @@ var Dictionary = require('./core/Dictionary'),
     StorageManager = require('./core/StorageManager'),
     Reasoner = require('./core/Reasoner'),
     OWL2RL = require('./core/OWL2RL'),
+    Fact = require('./core/Logics/Fact'),
     Errors = require('./core/Errors'),
     Utils = require('./core/Utils');
 
@@ -10895,7 +10892,7 @@ Hylar.prototype.query = function(query, reasoningMethod) {
  * High-level treatUpdate that takes graphs into account.
  * @returns Promise
  */
-Hylar.prototype.treatUpdateWithGraph = function(query) {
+Hylar.prototype.treatUpdateWithGraph = function(query) {    
     var sparql = ParsingInterface.parseSPARQL(query),
         promises = [], updates;
 
@@ -10957,6 +10954,21 @@ Hylar.prototype.getDictionary = function() {
  */
 Hylar.prototype.setDictionaryContent = function(dict) {
     this.dict.setContent(dict);
+};
+
+Hylar.prototype.import = function(dictContent) {
+    var query = "INSERT DATA { ";
+    for (var graph in dictContent) {
+        for (var triple in dictContent[graph]) {
+            query += triple.replace(/(\n|\r)/g, '');
+            for (var i = 0; i < dictContent[graph][triple].length; i++) {
+                dictContent[graph][triple][i].__proto__ = Fact.prototype;
+            }
+        }
+    }
+    query += " }"
+    this.setDictionaryContent(dictContent);
+    return this.sm.query(query);
 };
 
 Hylar.prototype.checkConsistency = function() {
@@ -11195,7 +11207,7 @@ Hylar.prototype.resetRules = function() {
 
 module.exports = Hylar;
 
-},{"./core/Dictionary":43,"./core/Errors":44,"./core/OWL2RL":50,"./core/ParsingInterface":51,"./core/Reasoner":53,"./core/StorageManager":56,"./core/Utils":57,"bluebird":61,"chalk":62,"fs":1,"q":83}],59:[function(require,module,exports){
+},{"./core/Dictionary":43,"./core/Errors":44,"./core/Logics/Fact":46,"./core/OWL2RL":50,"./core/ParsingInterface":51,"./core/Reasoner":53,"./core/StorageManager":56,"./core/Utils":57,"bluebird":61,"chalk":62,"fs":1,"q":83}],59:[function(require,module,exports){
 'use strict';
 module.exports = function () {
 	return /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;

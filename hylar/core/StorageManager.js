@@ -64,7 +64,6 @@ StorageManager.prototype.loadRdfXml = function(data) {
  */
 StorageManager.prototype.query = function(query) {
     var deferred = q.defer();
-
     this.storage.execute(query, function (err, r) {
         if(err) {
             deferred.reject(err);

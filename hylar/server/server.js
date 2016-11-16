@@ -27,6 +27,8 @@ app.use(function(req, res, next){
         req.on('data', function(chunk){ req.text += chunk });
         req.on('end', next);
     } else {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
         next();
     }
 });
