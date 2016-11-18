@@ -49,7 +49,7 @@
                             if (val['types'] == "locality,political") {
                                 if (val['long_name'] != "") {
                                     $('.city').html(val['long_name']);
-                                    $('#cityUri').text('<http://www.cities.com/' + val['long_name'] + '>');
+                                    $('#cityUri').text('<http://fr.dbpedia.org/page/' + val['long_name'] + '>');
                                     $('#query').text("" +
                                             "PREFIX vocab: <http://www.my-online-store.fr/> \n" +
                                             "PREFIX pv: <http://ns.inria.fr/provoc#> \n" +

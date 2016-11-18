@@ -63,7 +63,7 @@ module.exports = {
      * @param next
      */
     getOntology: function(req, res, next) {
-        var initialTime = req.body.time,
+        var initialTime = req.query.time,
             receivedReqTime = new Date().getTime(),
             filename = req.params.filename,
             absolutePathToFile = ontoDir + '/' + filename,
@@ -154,7 +154,7 @@ module.exports = {
     },
 
     processSPARQL: function(req, res) {
-        var initialTime = req.body.time,
+        var initialTime = req.query.time,
             asString = req.body.asString,
             receivedReqTime = new Date().getTime(),
             requestDelay =  receivedReqTime - initialTime,

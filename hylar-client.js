@@ -8164,7 +8164,8 @@ var md5 = require('md5');
  * All necessary stuff around the Logics module
  * @type {{substractFactSets: Function, mergeFactSets: Function}}
  */
-module.exports = {
+
+Logics = {
     /**
      * True-like merge of two facts sets, which also merges
      * identical facts causedBy properties.
@@ -8667,6 +8668,8 @@ module.exports = {
         return md5(skolem) + elem;
     }
 };
+
+module.exports = Logics;
 },{"../Errors":44,"../RegularExpressions":55,"../Utils":57,"./Fact":46,"./Rule":48,"md5":73}],48:[function(require,module,exports){
 /**
  * Created by mt on 21/12/2015.
@@ -9254,6 +9257,8 @@ var Class = Prefixes.OWL + 'Class',
     TransitiveProperty = Prefixes.OWL + 'TransitiveProperty',
     InverseOf = Prefixes.OWL + 'inverseOf',
     SameAs = Prefixes.OWL + 'sameAs';
+    Domain = Prefixes.RDFS + "domain";
+    Range = Prefixes.RDFS + "range";
 
 /**
  * RDFS/OWL entailment rules.
@@ -9363,6 +9368,41 @@ OWL2RL = {
                     new Fact(SameAs, '?x', '?y', [], true),
                     new Fact(SameAs, '?y', '?z', [], true)],
                 [new Fact(SameAs, '?x', '?z', [], true)], "Equality-4")
+
+        ],
+
+        domainRange: [
+
+            new Rule([
+                    new Fact(Domain, '?p', '?c', [], true),
+                    new Fact('?p', '?x', '?y', [], true)],
+                [new Fact(Type, '?x', '?c', [], true)], "Domain-ClassAssertion"),
+
+            new Rule([
+                    new Fact(Range, '?p', '?c', [], true),
+                    new Fact('?p', '?x', '?y', [], true)],
+                [new Fact(Type, '?y', '?c', [], true)], "Range-ClassAssertion"),
+                
+            new Rule([
+                    new Fact(Domain, '?p', '?c1', [], true),
+                    new Fact(SubClassOf, '?c1', '?c2', [], true)],
+                [new Fact(Domain, '?p', '?c2', [], true)], "Domain-ClassSubsumption"),
+            
+            new Rule([
+                    new Fact(Domain, '?p2', '?c', [], true),
+                    new Fact(SubPropertyOf, '?p1', '?p2', [], true)],
+                [new Fact(Domain, '?p1', '?c', [], true)], "Domain-PropertySubsumption"),
+
+            new Rule([
+                    new Fact(Range, '?p', '?c1', [], true),
+                    new Fact(SubClassOf, '?c1', '?c2', [], true)],
+                [new Fact(Range, '?p', '?c2', [], true)], "Range-ClassSubsumption"),
+            
+            new Rule([
+                    new Fact(Range, '?p2', '?c', [], true),
+                    new Fact(SubPropertyOf, '?p1', '?p2', [], true)],
+                [new Fact(Range, '?p1', '?c', [], true)], "Range-PropertySubsumption")
+        
         ],
 
         testsFipa: [
@@ -9406,11 +9446,10 @@ module.exports = {
         .concat(OWL2RL.rules.inverse)
         .concat(OWL2RL.rules.equivalence)
         .concat(OWL2RL.rules.equality)
+        .concat(OWL2RL.rules.domainRange)
         /*.concat(Logics.parseRules([
             "(?x http://www.w3.org/2002/07/owl#sameAs ?y) -> (?y http://www.w3.org/2002/07/owl#sameAs ?x)",
-            "(?x http://www.w3.org/2002/07/owl#sameAs ?y) ^ (?y http://www.w3.org/2002/07/owl#sameAs ?z) -> (?x http://www.w3.org/2002/07/owl#sameAs ?z)",
-            "(?p http://www.w3.org/2000/01/rdf-schema#domain ?c) ^ (?x ?p ?y) -> (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c)",
-            "(?p http://www.w3.org/2000/01/rdf-schema#range ?c) ^ (?x ?p ?y) -> (?y http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c)",
+            "(?x http://www.w3.org/2002/07/owl#sameAs ?y) ^ (?y http://www.w3.org/2002/07/owl#sameAs ?z) -> (?x http://www.w3.org/2002/07/owl#sameAs ?z)",            
             "(?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#FunctionalProperty) ^ (?x ?p ?y1) ^ (?x ?p ?y2)	-> (?y1 http://www.w3.org/2002/07/owl#sameAs ?y2)",
             "(?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#InverseFunctionalProperty) ^ (?x1 ?p ?y) ^ (?x2 ?p ?y) -> (?x1 http://www.w3.org/2002/07/owl#sameAs ?x2)",
             "(?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#SymmetricProperty) ^ (?x ?p ?y) -> (?y ?p ?x)",
@@ -9429,10 +9468,6 @@ module.exports = {
             "(?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) ^ (?p2 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p3) -> (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p3)",
             "(?p1 http://www.w3.org/2002/07/owl#equivalentProperty ?p2) -> (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) ^ (?p2 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p1)",
             "(?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) ^ (?p2 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p1) -> (?p1 http://www.w3.org/2002/07/owl#equivalentProperty ?p2)",
-            "(?p http://www.w3.org/2000/01/rdf-schema#domain ?c1) ^ (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2) -> (?p http://www.w3.org/2000/01/rdf-schema#domain ?c2)",
-            "(?p2 http://www.w3.org/2000/01/rdf-schema#domain ?c) ^ (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) -> (?p1 http://www.w3.org/2000/01/rdf-schema#domain ?c)",
-            "(?p http://www.w3.org/2000/01/rdf-schema#range ?c1) ^ (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2) -> (?p http://www.w3.org/2000/01/rdf-schema#range ?c2)",
-            "(?p2 http://www.w3.org/2000/01/rdf-schema#range ?c) ^ (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2)	-> (?p1 http://www.w3.org/2000/01/rdf-schema#range ?c)",
             "(?c1 http://www.w3.org/2002/07/owl#hasValue ?i) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p1) ^ (?c2 http://www.w3.org/2002/07/owl#hasValue ?i) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p2) ^ (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2)",
             "(?c1 http://www.w3.org/2002/07/owl#someValuesFrom ?y1) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?c2 http://www.w3.org/2002/07/owl#someValuesFrom ?y2) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?y1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?y2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2)",
             "(?c1 http://www.w3.org/2002/07/owl#someValuesFrom ?y) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p1) ^ (?c2 http://www.w3.org/2002/07/owl#someValuesFrom ?y) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p2) ^ (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2)",
@@ -9447,7 +9482,8 @@ module.exports = {
         .concat(OWL2RL.rules.transitivity)
         .concat(OWL2RL.rules.inverse)
         .concat(OWL2RL.rules.equivalence)
-        .concat(OWL2RL.rules.equality),
+        .concat(OWL2RL.rules.equality)
+        .concat(OWL2RL.rules.domainRange),
 
     classSubsumption: OWL2RL.rules.classSubsumption,
 
@@ -9465,6 +9501,7 @@ module.exports = {
 
     equality: OWL2RL.rules.equality
 };
+
 
 },{"./Logics/Fact":46,"./Logics/Logics":47,"./Logics/Rule":48,"./Prefixes":52}],51:[function(require,module,exports){
 /*

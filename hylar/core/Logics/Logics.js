@@ -15,7 +15,8 @@ var md5 = require('md5');
  * All necessary stuff around the Logics module
  * @type {{substractFactSets: Function, mergeFactSets: Function}}
  */
-module.exports = {
+
+Logics = {
     /**
      * True-like merge of two facts sets, which also merges
      * identical facts causedBy properties.
@@ -518,3 +519,5 @@ module.exports = {
         return md5(skolem) + elem;
     }
 };
+
+module.exports = Logics;

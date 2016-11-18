@@ -41,7 +41,7 @@
     },
     {
       "@id": "http://www.w3.org/wiki/WebSchemas/SchemaDotOrgSources#source_rNews",
-      "rdfs:comment": "This class contains derivatives of IPTC rNews properties. rNews is a data model of publishing metadata with serializations currently available for RDFa as well as HTML5 Microdata. More information about the IPTC and rNews can be found at <a href=\"http://rnews.org\">rnews.org</a>.",
+      "rdfs:comment": "This class contains derivatives of IPTC rNews properties. rNews is a data model of publishing metadata with serializations currently available for RDFa as well as HTML5 Microdata. More information about the IPTC and rNews can be found at <a href='http://rnews.org'>rnews.org</a>.",
       "rdfs:label": "rNews"
     },
     {
@@ -152,7 +152,7 @@
     },
     {
       "@id": "schema:regionsAllowed",
-      "rdfs:comment": "The regions where the media is allowed. If not specified, then it's assumed to be allowed everywhere. Specify the countries in <a href=\"http://en.wikipedia.org/wiki/ISO_3166\">ISO 3166 format</a>.",
+      "rdfs:comment": "The regions where the media is allowed. If not specified, then it's assumed to be allowed everywhere. Specify the countries in <a href='http://en.wikipedia.org/wiki/ISO_3166'>ISO 3166 format</a>.",
       "rdfs:label": "regionsAllowed",
       "schema:rangeIncludes": {
         "@id": "schema:Place"
@@ -413,7 +413,7 @@
     },
     {
       "@id": "schema:accessibilityControl",
-      "rdfs:comment": "Identifies input methods that are sufficient to fully control the described resource (<a href=\"http://www.w3.org/wiki/WebSchemas/Accessibility\">WebSchemas wiki lists possible values</a>).",
+      "rdfs:comment": "Identifies input methods that are sufficient to fully control the described resource (<a href='http://www.w3.org/wiki/WebSchemas/Accessibility'>WebSchemas wiki lists possible values</a>).",
       "rdfs:label": "accessibilityControl"
     },
     {
@@ -433,7 +433,7 @@
     },
     {
       "@id": "schema:salaryCurrency",
-      "rdfs:comment": "The currency (coded using <a href=\"http://en.wikipedia.org/wiki/ISO_4217\">ISO 4217</a> ) used for the main salary information in this job posting or for this employee.",
+      "rdfs:comment": "The currency (coded using <a href='http://en.wikipedia.org/wiki/ISO_4217'>ISO 4217</a> ) used for the main salary information in this job posting or for this employee.",
       "rdfs:label": "salaryCurrency"
     },
     {
@@ -609,7 +609,7 @@
     },
     {
       "@id": "schema:priceCurrency",
-      "rdfs:comment": "The currency (in 3-letter ISO 4217 format) of the price or a price component, when attached to <a class=\"localLink\" href=\"/PriceSpecification\">PriceSpecification</a> and its subtypes.",
+      "rdfs:comment": "The currency (in 3-letter ISO 4217 format) of the price or a price component, when attached to <a class='localLink' href='/PriceSpecification'>PriceSpecification</a> and its subtypes.",
       "rdfs:label": "priceCurrency"
     },
     {
@@ -701,7 +701,7 @@
     },
     {
       "@id": "https://www.w3.org/wiki/WebSchemas/SchemaDotOrgSources#STI_Accommodation_Ontology",
-      "rdfs:comment": "This element is based on the STI Accommodation Ontology, see <a href=\"http://ontologies.sti-innsbruck.at/acco/ns.html\">http://ontologies.sti-innsbruck.at/acco/ns.html</a> for details.\n    Many class and property definitions are inspired by or based on abstracts from Wikipedia, the free encyclopedia.",
+      "rdfs:comment": "This element is based on the STI Accommodation Ontology, see <a href='http://ontologies.sti-innsbruck.at/acco/ns.html'>http://ontologies.sti-innsbruck.at/acco/ns.html</a> for details.\n    Many class and property definitions are inspired by or based on abstracts from Wikipedia, the free encyclopedia.",
       "rdfs:label": "STI Accommodation Ontology"
     },
     {
@@ -801,7 +801,7 @@
     },
     {
       "@id": "schema:latitude",
-      "rdfs:comment": "The latitude of a location. For example <code>37.42242</code> (<a href=\"https://en.wikipedia.org/wiki/World_Geodetic_System\">WGS 84</a>).",
+      "rdfs:comment": "The latitude of a location. For example <code>37.42242</code> (<a href='https://en.wikipedia.org/wiki/World_Geodetic_System'>WGS 84</a>).",
       "rdfs:label": "latitude"
     },
     {
@@ -842,12 +842,12 @@
     },
     {
       "@id": "schema:fuelConsumption",
-      "rdfs:comment": "<p>The amount of fuel consumed for traveling a particular distance or temporal duration with the given vehicle (e.g. liters per 100 km).</p>\n<ul>\n<li>Note 1: There are unfortunately no standard unit codes for liters per 100 km.  Use <a class=\"localLink\" href=\"/unitText\">unitText</a> to indicate the unit of measurement, e.g. L/100 km.</li>\n<li>Note 2: There are two ways of indicating the fuel consumption, <a class=\"localLink\" href=\"/fuelConsumption\">fuelConsumption</a> (e.g. 8 liters per 100 km) and <a class=\"localLink\" href=\"/fuelEfficiency\">fuelEfficiency</a> (e.g. 30 miles per gallon). They are reciprocal.</li>\n<li>Note 3: Often, the absolute value is useful only when related to driving speed (\"at 80 km/h\") or usage pattern (\"city traffic\"). You can use <a class=\"localLink\" href=\"/valueReference\">valueReference</a> to link the value for the fuel consumption to another value.</li>\n</ul>",
+      "rdfs:comment": "<p>The amount of fuel consumed for traveling a particular distance or temporal duration with the given vehicle (e.g. liters per 100 km).</p>\n<ul>\n<li>Note 1: There are unfortunately no standard unit codes for liters per 100 km.  Use <a class='localLink' href='/unitText'>unitText</a> to indicate the unit of measurement, e.g. L/100 km.</li>\n<li>Note 2: There are two ways of indicating the fuel consumption, <a class='localLink' href='/fuelConsumption'>fuelConsumption</a> (e.g. 8 liters per 100 km) and <a class='localLink' href='/fuelEfficiency'>fuelEfficiency</a> (e.g. 30 miles per gallon). They are reciprocal.</li>\n<li>Note 3: Often, the absolute value is useful only when related to driving speed ('at 80 km/h') or usage pattern ('city traffic'). You can use <a class='localLink' href='/valueReference'>valueReference</a> to link the value for the fuel consumption to another value.</li>\n</ul>",
       "rdfs:label": "fuelConsumption"
     },
     {
       "@id": "schema:openingHours",
-      "rdfs:comment": "<p>The general opening hours for a business. Opening hours can be specified as a weekly time range, starting with days, then times per day. Multiple days can be listed with commas ',' separating each day. Day or time ranges are specified using a hyphen '-'.</p>\n<ul>\n<li>Days are specified using the following two-letter combinations: <code>Mo</code>, <code>Tu</code>, <code>We</code>, <code>Th</code>, <code>Fr</code>, <code>Sa</code>, <code>Su</code>.</li>\n<li>Times are specified using 24:00 time. For example, 3pm is specified as <code>15:00</code>. </li>\n<li>Here is an example: <code>&lt;time itemprop=\"openingHours\" datetime=&quot;Tu,Th 16:00-20:00&quot;&gt;Tuesdays and Thursdays 4-8pm&lt;/time&gt;</code>.</li>\n<li>If a business is open 7 days a week, then it can be specified as <code>&lt;time itemprop=&quot;openingHours&quot; datetime=&quot;Mo-Su&quot;&gt;Monday through Sunday, all day&lt;/time&gt;</code>.</li>\n</ul>",
+      "rdfs:comment": "<p>The general opening hours for a business. Opening hours can be specified as a weekly time range, starting with days, then times per day. Multiple days can be listed with commas ',' separating each day. Day or time ranges are specified using a hyphen '-'.</p>\n<ul>\n<li>Days are specified using the following two-letter combinations: <code>Mo</code>, <code>Tu</code>, <code>We</code>, <code>Th</code>, <code>Fr</code>, <code>Sa</code>, <code>Su</code>.</li>\n<li>Times are specified using 24:00 time. For example, 3pm is specified as <code>15:00</code>. </li>\n<li>Here is an example: <code>&lt;time itemprop='openingHours' datetime=&quot;Tu,Th 16:00-20:00&quot;&gt;Tuesdays and Thursdays 4-8pm&lt;/time&gt;</code>.</li>\n<li>If a business is open 7 days a week, then it can be specified as <code>&lt;time itemprop=&quot;openingHours&quot; datetime=&quot;Mo-Su&quot;&gt;Monday through Sunday, all day&lt;/time&gt;</code>.</li>\n</ul>",
       "rdfs:label": "openingHours"
     },
     {
@@ -962,7 +962,7 @@
     },
     {
       "@id": "schema:value",
-      "rdfs:comment": "<p>The value of the quantitative value or property value node.</p>\n<ul>\n<li>For <a class=\"localLink\" href=\"/QuantitativeValue\">QuantitativeValue</a> and <a class=\"localLink\" href=\"/MonetaryAmount\">MonetaryAmount</a>, the recommended type for values is 'Number'.</li>\n<li>For <a class=\"localLink\" href=\"/PropertyValue\">PropertyValue</a>, it can be 'Text;', 'Number', 'Boolean', or 'StructuredValue'.</li>\n</ul>",
+      "rdfs:comment": "<p>The value of the quantitative value or property value node.</p>\n<ul>\n<li>For <a class='localLink' href='/QuantitativeValue'>QuantitativeValue</a> and <a class='localLink' href='/MonetaryAmount'>MonetaryAmount</a>, the recommended type for values is 'Number'.</li>\n<li>For <a class='localLink' href='/PropertyValue'>PropertyValue</a>, it can be 'Text;', 'Number', 'Boolean', or 'StructuredValue'.</li>\n</ul>",
       "rdfs:label": "value"
     },
     {
@@ -1145,7 +1145,7 @@
     },
     {
       "@id": "schema:availableLanguage",
-      "rdfs:comment": "A language someone may use with the item. Please use one of the language codes from the <a href=\"http://tools.ietf.org/html/bcp47\">IETF BCP 47 standard</a>. See also <a class=\"localLink\" href=\"/inLanguage\">inLanguage</a>",
+      "rdfs:comment": "A language someone may use with the item. Please use one of the language codes from the <a href='http://tools.ietf.org/html/bcp47'>IETF BCP 47 standard</a>. See also <a class='localLink' href='/inLanguage'>inLanguage</a>",
       "rdfs:label": "availableLanguage"
     },
     {
@@ -1165,7 +1165,7 @@
     },
     {
       "@id": "schema:PublicHolidays",
-      "rdfs:comment": "This stands for any day that is a public holiday; it is a placeholder for all official public holidays in some particular location. While not technically a \"day of the week\", it can be used with <a class=\"localLink\" href=\"/OpeningHoursSpecification\">OpeningHoursSpecification</a>. In the context of an opening hours specification it can be used to indicate opening hours on public holidays, overriding general opening hours for the day of the week on which a public holiday occurs.",
+      "rdfs:comment": "This stands for any day that is a public holiday; it is a placeholder for all official public holidays in some particular location. While not technically a 'day of the week', it can be used with <a class='localLink' href='/OpeningHoursSpecification'>OpeningHoursSpecification</a>. In the context of an opening hours specification it can be used to indicate opening hours on public holidays, overriding general opening hours for the day of the week on which a public holiday occurs.",
       "rdfs:label": "PublicHolidays"
     },
     {
@@ -1238,7 +1238,7 @@
     },
     {
       "@id": "schema:prepTime",
-      "rdfs:comment": "The length of time it takes to prepare the recipe, in <a href=\"http://en.wikipedia.org/wiki/ISO_8601\">ISO 8601 duration format</a>.",
+      "rdfs:comment": "The length of time it takes to prepare the recipe, in <a href='http://en.wikipedia.org/wiki/ISO_8601'>ISO 8601 duration format</a>.",
       "rdfs:label": "prepTime"
     },
     {
@@ -1275,7 +1275,7 @@
     },
     {
       "@id": "schema:startDate",
-      "rdfs:comment": "The start date and time of the item (in <a href=\"http://en.wikipedia.org/wiki/ISO_8601\">ISO 8601 date format</a>).",
+      "rdfs:comment": "The start date and time of the item (in <a href='http://en.wikipedia.org/wiki/ISO_8601'>ISO 8601 date format</a>).",
       "rdfs:label": "startDate"
     },
     {
@@ -1351,7 +1351,7 @@
     },
     {
       "@id": "schema:specialOpeningHoursSpecification",
-      "rdfs:comment": "The special opening hours of a certain place.</p>\n<p>Use this to explicitly override general opening hours brought in scope by <a class=\"localLink\" href=\"/openingHoursSpecification\">openingHoursSpecification</a> or <a class=\"localLink\" href=\"/openingHours\">openingHours</a>.",
+      "rdfs:comment": "The special opening hours of a certain place.</p>\n<p>Use this to explicitly override general opening hours brought in scope by <a class='localLink' href='/openingHoursSpecification'>openingHoursSpecification</a> or <a class='localLink' href='/openingHours'>openingHours</a>.",
       "rdfs:label": "specialOpeningHoursSpecification",
       "schema:domainIncludes": {
         "@id": "schema:Place"
@@ -1447,7 +1447,7 @@
     },
     {
       "@id": "schema:subtitleLanguage",
-      "rdfs:comment": "Languages in which subtitles/captions are available, in <a href=\"http://tools.ietf.org/html/bcp47\">IETF BCP 47 standard format</a>.",
+      "rdfs:comment": "Languages in which subtitles/captions are available, in <a href='http://tools.ietf.org/html/bcp47'>IETF BCP 47 standard format</a>.",
       "rdfs:label": "subtitleLanguage"
     },
     {
@@ -1521,7 +1521,7 @@
     },
     {
       "@id": "http://www.w3.org/wiki/WebSchemas/SchemaDotOrgSources#MBZ",
-      "rdfs:comment": "This vocabulary was improved through collaboration with the MusicBrainz project\n    (<a href=\"http://www.musicbrainz.org\">www.musicbrainz.org</a>), and is partially inspired by the MusicBrainz and\n    <a href=\"http://musicontology.com/docs/getting-started.html\">Music Ontology</a> schemas.",
+      "rdfs:comment": "This vocabulary was improved through collaboration with the MusicBrainz project\n    (<a href='http://www.musicbrainz.org'>www.musicbrainz.org</a>), and is partially inspired by the MusicBrainz and\n    <a href='http://musicontology.com/docs/getting-started.html'>Music Ontology</a> schemas.",
       "rdfs:label": "MBZ"
     },
     {
@@ -1561,7 +1561,7 @@
     },
     {
       "@id": "schema:itemListElement",
-      "rdfs:comment": "For itemListElement values, you can use simple strings (e.g. \"Peter\", \"Paul\", \"Mary\"), existing entities, or use ListItem.</p>\n<p>Text values are best if the elements in the list are plain strings. Existing entities are best for a simple, unordered list of existing things in your data. ListItem is used with ordered lists when you want to provide additional context about the element in that list or when the same item might be in different places in different lists.</p>\n<p>Note: The order of elements in your mark-up is not sufficient for indicating the order or elements.  Use ListItem with a 'position' property in such cases.",
+      "rdfs:comment": "For itemListElement values, you can use simple strings (e.g. 'Peter', 'Paul', 'Mary'), existing entities, or use ListItem.</p>\n<p>Text values are best if the elements in the list are plain strings. Existing entities are best for a simple, unordered list of existing things in your data. ListItem is used with ordered lists when you want to provide additional context about the element in that list or when the same item might be in different places in different lists.</p>\n<p>Note: The order of elements in your mark-up is not sufficient for indicating the order or elements.  Use ListItem with a 'position' property in such cases.",
       "rdfs:label": "itemListElement"
     },
     {
@@ -1596,7 +1596,7 @@
     },
     {
       "@id": "schema:artEdition",
-      "rdfs:comment": "The number of copies when multiple copies of a piece of artwork are produced - e.g. for a limited edition of 20 prints, 'artEdition' refers to the total number of copies (in this example \"20\").",
+      "rdfs:comment": "The number of copies when multiple copies of a piece of artwork are produced - e.g. for a limited edition of 20 prints, 'artEdition' refers to the total number of copies (in this example '20').",
       "rdfs:label": "artEdition"
     },
     {
@@ -1624,7 +1624,7 @@
     },
     {
       "@id": "schema:pageStart",
-      "rdfs:comment": "The page on which the work starts; for example \"135\" or \"xiii\".",
+      "rdfs:comment": "The page on which the work starts; for example '135' or 'xiii'.",
       "rdfs:label": "pageStart"
     },
     {
@@ -1838,12 +1838,12 @@
     },
     {
       "@id": "schema:currenciesAccepted",
-      "rdfs:comment": "The currency accepted (in <a href=\"http://en.wikipedia.org/wiki/ISO_4217\">ISO 4217 currency format</a>).",
+      "rdfs:comment": "The currency accepted (in <a href='http://en.wikipedia.org/wiki/ISO_4217'>ISO 4217 currency format</a>).",
       "rdfs:label": "currenciesAccepted"
     },
     {
       "@id": "schema:branchCode",
-      "rdfs:comment": "A short textual code (also called \"store code\") that uniquely identifies a place of business. The code is typically assigned by the parentOrganization and used in structured URLs.</p>\n<p>For example, in the URL http://www.starbucks.co.uk/store-locator/etc/detail/3047 the code \"3047\" is a branchCode for a particular branch.",
+      "rdfs:comment": "A short textual code (also called 'store code') that uniquely identifies a place of business. The code is typically assigned by the parentOrganization and used in structured URLs.</p>\n<p>For example, in the URL http://www.starbucks.co.uk/store-locator/etc/detail/3047 the code '3047' is a branchCode for a particular branch.",
       "rdfs:label": "branchCode",
       "schema:domainIncludes": {
         "@id": "schema:Place"
@@ -1939,7 +1939,7 @@
     {
       "@id": "schema:issueNumber",
       "@type": "owl:AnnotationProperty",
-      "rdfs:comment": "Identifies the issue of publication; for example, \"iii\" or \"2\".",
+      "rdfs:comment": "Identifies the issue of publication; for example, 'iii' or '2'.",
       "rdfs:label": "issueNumber",
       "rdfs:subPropertyOf": {
         "@id": "schema:position"
@@ -1952,12 +1952,12 @@
     },
     {
       "@id": "schema:hasDigitalDocumentPermission",
-      "rdfs:comment": "A permission related to the access to this document (e.g. permission to read or write an electronic document). For a public document, specify a grantee with an Audience with audienceType equal to \"public\".",
+      "rdfs:comment": "A permission related to the access to this document (e.g. permission to read or write an electronic document). For a public document, specify a grantee with an Audience with audienceType equal to 'public'.",
       "rdfs:label": "hasDigitalDocumentPermission"
     },
     {
       "@id": "http://www.w3.org/wiki/WebSchemas/SchemaDotOrgSources#source_ActionCollabClass",
-      "rdfs:comment": "The schema.org Actions mechanism benefited from extensive discussions across the Web standards community around W3C, in particular from the <a href=\"http://purl.org/hydra/\">Hydra project</a>'s community group.",
+      "rdfs:comment": "The schema.org Actions mechanism benefited from extensive discussions across the Web standards community around W3C, in particular from the <a href='http://purl.org/hydra/'>Hydra project</a>'s community group.",
       "rdfs:label": "ActionCollabClass"
     },
     {
@@ -2050,12 +2050,12 @@
     },
     {
       "@id": "http://www.w3.org/wiki/WebSchemas/SchemaDotOrgSources#source_QAStackExchange",
-      "rdfs:comment": "The Question/Answer types were <a href=\"https://www.w3.org/wiki/WebSchemas/QASchemaResearch\">based on</a> the Stack Overflow API.",
+      "rdfs:comment": "The Question/Answer types were <a href='https://www.w3.org/wiki/WebSchemas/QASchemaResearch'>based on</a> the Stack Overflow API.",
       "rdfs:label": "Stack Exchange"
     },
     {
       "@id": "schema:gtin8",
-      "rdfs:comment": "The <a href=\"http://apps.gs1.org/GDD/glossary/Pages/GTIN-8.aspx\">GTIN-8</a> code of the product, or the product to which the offer refers. This code is also known as EAN/UCC-8 or 8-digit EAN. See <a href=\"http://www.gs1.org/barcodes/technical/idkeys/gtin\">GS1 GTIN Summary</a> for more details.",
+      "rdfs:comment": "The <a href='http://apps.gs1.org/GDD/glossary/Pages/GTIN-8.aspx'>GTIN-8</a> code of the product, or the product to which the offer refers. This code is also known as EAN/UCC-8 or 8-digit EAN. See <a href='http://www.gs1.org/barcodes/technical/idkeys/gtin'>GS1 GTIN Summary</a> for more details.",
       "rdfs:label": "gtin8"
     },
     {
@@ -2312,7 +2312,7 @@
     {
       "@id": "schema:eligibleRegion",
       "@type": "owl:AnnotationProperty",
-      "rdfs:comment": "The ISO 3166-1 (ISO 3166-1 alpha-2) or ISO 3166-2 code, the place, or the GeoShape for the geo-political region(s) for which the offer or delivery charge specification is valid.</p>\n<p>See also <a class=\"localLink\" href=\"/ineligibleRegion\">ineligibleRegion</a>.",
+      "rdfs:comment": "The ISO 3166-1 (ISO 3166-1 alpha-2) or ISO 3166-2 code, the place, or the GeoShape for the geo-political region(s) for which the offer or delivery charge specification is valid.</p>\n<p>See also <a class='localLink' href='/ineligibleRegion'>ineligibleRegion</a>.",
       "rdfs:label": "eligibleRegion",
       "rdfs:subPropertyOf": {
         "@id": "schema:areaServed"
@@ -2323,7 +2323,7 @@
     },
     {
       "@id": "schema:price",
-      "rdfs:comment": "<p>The offer price of a product, or of a price component when attached to PriceSpecification and its subtypes.</p>\n<p>Usage guidelines:</p>\n<ul>\n<li>Use the <a class=\"localLink\" href=\"/priceCurrency\">priceCurrency</a> property (with <a href=\"http://en.wikipedia.org/wiki/ISO_4217#Active_codes\">ISO 4217 codes</a> e.g. \"USD\") instead of\n      including <a href=\"http://en.wikipedia.org/wiki/Dollar_sign#Currencies_that_use_the_dollar_or_peso_sign\">ambiguous symbols</a> such as '$' in the value.</li>\n<li>Use '.' (Unicode 'FULL STOP' (U+002E)) rather than ',' to indicate a decimal point. Avoid using these symbols as a readability separator.</li>\n<li>Note that both <a href=\"http://www.w3.org/TR/xhtml-rdfa-primer/#using-the-content-attribute\">RDFa</a> and Microdata syntax allow the use of a \"content=\" attribute for publishing simple machine-readable values alongside more human-friendly formatting.</li>\n<li>Use values from 0123456789 (Unicode 'DIGIT ZERO' (U+0030) to 'DIGIT NINE' (U+0039)) rather than superficially similiar Unicode symbols.</li>\n</ul>",
+      "rdfs:comment": "<p>The offer price of a product, or of a price component when attached to PriceSpecification and its subtypes.</p>\n<p>Usage guidelines:</p>\n<ul>\n<li>Use the <a class='localLink' href='/priceCurrency'>priceCurrency</a> property (with <a href='http://en.wikipedia.org/wiki/ISO_4217#Active_codes'>ISO 4217 codes</a> e.g. 'USD') instead of\n      including <a href='http://en.wikipedia.org/wiki/Dollar_sign#Currencies_that_use_the_dollar_or_peso_sign'>ambiguous symbols</a> such as '$' in the value.</li>\n<li>Use '.' (Unicode 'FULL STOP' (U+002E)) rather than ',' to indicate a decimal point. Avoid using these symbols as a readability separator.</li>\n<li>Note that both <a href='http://www.w3.org/TR/xhtml-rdfa-primer/#using-the-content-attribute'>RDFa</a> and Microdata syntax allow the use of a 'content=' attribute for publishing simple machine-readable values alongside more human-friendly formatting.</li>\n<li>Use values from 0123456789 (Unicode 'DIGIT ZERO' (U+0030) to 'DIGIT NINE' (U+0039)) rather than superficially similiar Unicode symbols.</li>\n</ul>",
       "rdfs:label": "price"
     },
     {
@@ -2333,12 +2333,12 @@
     },
     {
       "@id": "schema:productID",
-      "rdfs:comment": "The product identifier, such as ISBN. For example: <code>meta itemprop=\"productID\" content=\"isbn:123-456-789\"</code>.",
+      "rdfs:comment": "The product identifier, such as ISBN. For example: <code>meta itemprop='productID' content='isbn:123-456-789'</code>.",
       "rdfs:label": "productID"
     },
     {
       "@id": "schema:fuelEfficiency",
-      "rdfs:comment": "<p>The distance traveled per unit of fuel used; most commonly miles per gallon (mpg) or kilometers per liter (km/L).</p>\n<ul>\n<li>Note 1: There are unfortunately no standard unit codes for miles per gallon or kilometers per liter. Use <a class=\"localLink\" href=\"/unitText\">unitText</a> to indicate the unit of measurement, e.g. mpg or km/L.</li>\n<li>Note 2: There are two ways of indicating the fuel consumption, <a class=\"localLink\" href=\"/fuelConsumption\">fuelConsumption</a> (e.g. 8 liters per 100 km) and <a class=\"localLink\" href=\"/fuelEfficiency\">fuelEfficiency</a> (e.g. 30 miles per gallon). They are reciprocal.</li>\n<li>Note 3: Often, the absolute value is useful only when related to driving speed (\"at 80 km/h\") or usage pattern (\"city traffic\"). You can use <a class=\"localLink\" href=\"/valueReference\">valueReference</a> to link the value for the fuel economy to another value.</li>\n</ul>",
+      "rdfs:comment": "<p>The distance traveled per unit of fuel used; most commonly miles per gallon (mpg) or kilometers per liter (km/L).</p>\n<ul>\n<li>Note 1: There are unfortunately no standard unit codes for miles per gallon or kilometers per liter. Use <a class='localLink' href='/unitText'>unitText</a> to indicate the unit of measurement, e.g. mpg or km/L.</li>\n<li>Note 2: There are two ways of indicating the fuel consumption, <a class='localLink' href='/fuelConsumption'>fuelConsumption</a> (e.g. 8 liters per 100 km) and <a class='localLink' href='/fuelEfficiency'>fuelEfficiency</a> (e.g. 30 miles per gallon). They are reciprocal.</li>\n<li>Note 3: Often, the absolute value is useful only when related to driving speed ('at 80 km/h') or usage pattern ('city traffic'). You can use <a class='localLink' href='/valueReference'>valueReference</a> to link the value for the fuel economy to another value.</li>\n</ul>",
       "rdfs:label": "fuelEfficiency"
     },
     {
@@ -2348,12 +2348,12 @@
     },
     {
       "@id": "schema:elevation",
-      "rdfs:comment": "The elevation of a location (<a href=\"https://en.wikipedia.org/wiki/World_Geodetic_System\">WGS 84</a>).",
+      "rdfs:comment": "The elevation of a location (<a href='https://en.wikipedia.org/wiki/World_Geodetic_System'>WGS 84</a>).",
       "rdfs:label": "elevation"
     },
     {
       "@id": "schema:temporalCoverage",
-      "rdfs:comment": "The temporalCoverage of a CreativeWork indicates the period that the content applies to, i.e. that it describes, either as a DateTime or as a textual string indicating a time period in <a href=\"https://en.wikipedia.org/wiki/ISO_8601#Time_intervals\">ISO 8601 time interval format</a>. In\n      the case of a Dataset it will typically indicate the relevant time period in a precise notation (e.g. for a 2011 census dataset, the year 2011 would be written \"2011/2012\"). Other forms of content e.g. ScholarlyArticle, Book, TVSeries or TVEpisode may indicate their temporalCoverage in broader terms - textually or via well-known URL.\n      Written works such as books may sometimes have precise temporal coverage too, e.g. a work set in 1939 - 1945 can be indicated in ISO 8601 interval format format via \"1939/1945\".",
+      "rdfs:comment": "The temporalCoverage of a CreativeWork indicates the period that the content applies to, i.e. that it describes, either as a DateTime or as a textual string indicating a time period in <a href='https://en.wikipedia.org/wiki/ISO_8601#Time_intervals'>ISO 8601 time interval format</a>. In\n      the case of a Dataset it will typically indicate the relevant time period in a precise notation (e.g. for a 2011 census dataset, the year 2011 would be written '2011/2012'). Other forms of content e.g. ScholarlyArticle, Book, TVSeries or TVEpisode may indicate their temporalCoverage in broader terms - textually or via well-known URL.\n      Written works such as books may sometimes have precise temporal coverage too, e.g. a work set in 1939 - 1945 can be indicated in ISO 8601 interval format format via '1939/1945'.",
       "rdfs:label": "temporalCoverage"
     },
     {
@@ -2378,7 +2378,7 @@
     },
     {
       "@id": "schema:globalLocationNumber",
-      "rdfs:comment": "The <a href=\"http://www.gs1.org/gln\">Global Location Number</a> (GLN, sometimes also referred to as International Location Number or ILN) of the respective organization, person, or place. The GLN is a 13-digit number used to identify parties and physical locations.",
+      "rdfs:comment": "The <a href='http://www.gs1.org/gln'>Global Location Number</a> (GLN, sometimes also referred to as International Location Number or ILN) of the respective organization, person, or place. The GLN is a 13-digit number used to identify parties and physical locations.",
       "rdfs:label": "globalLocationNumber",
       "schema:domainIncludes": {
         "@id": "schema:Place"
@@ -2411,7 +2411,7 @@
     },
     {
       "@id": "schema:priceComponent",
-      "rdfs:comment": "This property links to all <a class=\"localLink\" href=\"/UnitPriceSpecification\">UnitPriceSpecification</a> nodes that apply in parallel for the <a class=\"localLink\" href=\"/CompoundPriceSpecification\">CompoundPriceSpecification</a> node.",
+      "rdfs:comment": "This property links to all <a class='localLink' href='/UnitPriceSpecification'>UnitPriceSpecification</a> nodes that apply in parallel for the <a class='localLink' href='/CompoundPriceSpecification'>CompoundPriceSpecification</a> node.",
       "rdfs:label": "priceComponent"
     },
     {
@@ -2429,7 +2429,7 @@
     },
     {
       "@id": "schema:pageEnd",
-      "rdfs:comment": "The page on which the work ends; for example \"138\" or \"xvi\".",
+      "rdfs:comment": "The page on which the work ends; for example '138' or 'xvi'.",
       "rdfs:label": "pageEnd"
     },
     {
@@ -2467,7 +2467,7 @@
     },
     {
       "@id": "schema:broadcastTimezone",
-      "rdfs:comment": "The timezone in <a href=\"http://en.wikipedia.org/wiki/ISO_8601\">ISO 8601 format</a> for which the service bases its broadcasts",
+      "rdfs:comment": "The timezone in <a href='http://en.wikipedia.org/wiki/ISO_8601'>ISO 8601 format</a> for which the service bases its broadcasts",
       "rdfs:label": "broadcastTimezone"
     },
     {
@@ -2589,7 +2589,7 @@
     },
     {
       "@id": "schema:pagination",
-      "rdfs:comment": "Any description of pages that is not separated into pageStart and pageEnd; for example, \"1-6, 9, 55\" or \"10-12, 46-49\".",
+      "rdfs:comment": "Any description of pages that is not separated into pageStart and pageEnd; for example, '1-6, 9, 55' or '10-12, 46-49'.",
       "rdfs:label": "pagination"
     },
     {
@@ -2634,7 +2634,7 @@
     },
     {
       "@id": "schema:accessibilityAPI",
-      "rdfs:comment": "Indicates that the resource is compatible with the referenced accessibility API (<a href=\"http://www.w3.org/wiki/WebSchemas/Accessibility\">WebSchemas wiki lists possible values</a>).",
+      "rdfs:comment": "Indicates that the resource is compatible with the referenced accessibility API (<a href='http://www.w3.org/wiki/WebSchemas/Accessibility'>WebSchemas wiki lists possible values</a>).",
       "rdfs:label": "accessibilityAPI"
     },
     {
@@ -2793,7 +2793,7 @@
     },
     {
       "@id": "http://www.w3.org/wiki/WebSchemas/SchemaDotOrgSources#FIBO",
-      "rdfs:comment": "This element is based on the work of the Financial Industry Business Ontology project (see <a href=\"http://www.fibo.org/schema\">http://www.fibo.org/schema</a> for details), in support of the W3C Financial Industry Business Ontology Community Group (<a href=\"http://www.fibo.org/community\">http://www.fibo.org/community</a>). Many class and property definitions are inspired by or based on <a href=\"http://www.fibo.org\">http://www.fibo.org</a>.",
+      "rdfs:comment": "This element is based on the work of the Financial Industry Business Ontology project (see <a href='http://www.fibo.org/schema'>http://www.fibo.org/schema</a> for details), in support of the W3C Financial Industry Business Ontology Community Group (<a href='http://www.fibo.org/community'>http://www.fibo.org/community</a>). Many class and property definitions are inspired by or based on <a href='http://www.fibo.org'>http://www.fibo.org</a>.",
       "rdfs:label": "FIBO"
     },
     {
@@ -2960,7 +2960,7 @@
     },
     {
       "@id": "schema:creditedTo",
-      "rdfs:comment": "The group the release is credited to if different than the byArtist. For example, Red and Blue is credited to \"Stefani Germanotta Band\", but by Lady Gaga.",
+      "rdfs:comment": "The group the release is credited to if different than the byArtist. For example, Red and Blue is credited to 'Stefani Germanotta Band', but by Lady Gaga.",
       "rdfs:label": "creditedTo"
     },
     {
@@ -3109,7 +3109,7 @@
     },
     {
       "@id": "http://www.w3.org/wiki/WebSchemas/SchemaDotOrgSources#source_GoodRelationsTerms",
-      "rdfs:comment": "This term <a href=\"http://blog.schema.org/2012/11/good-relations-and-schemaorg.html\">uses</a> terminology from the GoodRelations Vocabulary for E-Commerce, created by Martin Hepp. GoodRelations is a data model for sharing e-commerce data on the Web. More information about GoodRelations can be found at <a href=\"http://purl.org/goodrelations/\">http://purl.org/goodrelations/</a>.",
+      "rdfs:comment": "This term <a href='http://blog.schema.org/2012/11/good-relations-and-schemaorg.html'>uses</a> terminology from the GoodRelations Vocabulary for E-Commerce, created by Martin Hepp. GoodRelations is a data model for sharing e-commerce data on the Web. More information about GoodRelations can be found at <a href='http://purl.org/goodrelations/'>http://purl.org/goodrelations/</a>.",
       "rdfs:label": "GoodRelationsTerms"
     },
     {
@@ -3160,12 +3160,12 @@
     },
     {
       "@id": "schema:accessibilityHazard",
-      "rdfs:comment": "A characteristic of the described resource that is physiologically dangerous to some users. Related to WCAG 2.0 guideline 2.3 (<a href=\"http://www.w3.org/wiki/WebSchemas/Accessibility\">WebSchemas wiki lists possible values</a>).",
+      "rdfs:comment": "A characteristic of the described resource that is physiologically dangerous to some users. Related to WCAG 2.0 guideline 2.3 (<a href='http://www.w3.org/wiki/WebSchemas/Accessibility'>WebSchemas wiki lists possible values</a>).",
       "rdfs:label": "accessibilityHazard"
     },
     {
       "@id": "schema:gtin13",
-      "rdfs:comment": "The <a href=\"http://apps.gs1.org/GDD/glossary/Pages/GTIN-13.aspx\">GTIN-13</a> code of the product, or the product to which the offer refers. This is equivalent to 13-digit ISBN codes and EAN UCC-13. Former 12-digit UPC codes can be converted into a GTIN-13 code by simply adding a preceeding zero. See <a href=\"http://www.gs1.org/barcodes/technical/idkeys/gtin\">GS1 GTIN Summary</a> for more details.",
+      "rdfs:comment": "The <a href='http://apps.gs1.org/GDD/glossary/Pages/GTIN-13.aspx'>GTIN-13</a> code of the product, or the product to which the offer refers. This is equivalent to 13-digit ISBN codes and EAN UCC-13. Former 12-digit UPC codes can be converted into a GTIN-13 code by simply adding a preceeding zero. See <a href='http://www.gs1.org/barcodes/technical/idkeys/gtin'>GS1 GTIN Summary</a> for more details.",
       "rdfs:label": "gtin13"
     },
     {
@@ -3180,7 +3180,7 @@
     },
     {
       "@id": "schema:reviewRating",
-      "rdfs:comment": "The rating given in this review. Note that reviews can themselves be rated. The <code>reviewRating</code> applies to rating given by the review. The <a class=\"localLink\" href=\"/aggregateRating\">aggregateRating</a> property applies to the review itself, as a creative work.",
+      "rdfs:comment": "The rating given in this review. Note that reviews can themselves be rated. The <code>reviewRating</code> applies to rating given by the review. The <a class='localLink' href='/aggregateRating'>aggregateRating</a> property applies to the review itself, as a creative work.",
       "rdfs:label": "reviewRating"
     },
     {
@@ -3205,7 +3205,7 @@
     },
     {
       "@id": "schema:currency",
-      "rdfs:comment": "The currency in which the monetary amount is expressed (in 3-letter <a href=\"http://en.wikipedia.org/wiki/ISO_4217\">ISO 4217</a> format).",
+      "rdfs:comment": "The currency in which the monetary amount is expressed (in 3-letter <a href='http://en.wikipedia.org/wiki/ISO_4217'>ISO 4217</a> format).",
       "rdfs:label": "currency"
     },
     {
@@ -3360,7 +3360,7 @@
     },
     {
       "@id": "schema:branchOf",
-      "rdfs:comment": "The larger organization that this local business is a branch of, if any. Not to be confused with (anatomical)<a class=\"localLink\" href=\"/branch\">branch</a>.",
+      "rdfs:comment": "The larger organization that this local business is a branch of, if any. Not to be confused with (anatomical)<a class='localLink' href='/branch'>branch</a>.",
       "rdfs:label": "branchOf",
       "schema:supersededBy": {
         "@id": "schema:parentOrganization"
@@ -3440,7 +3440,7 @@
     },
     {
       "@id": "schema:productSupported",
-      "rdfs:comment": "The product or service this support contact point is related to (such as product support for a particular product line). This can be a specific product or product line (e.g. \"iPhone\") or a general category of products or services (e.g. \"smartphones\").",
+      "rdfs:comment": "The product or service this support contact point is related to (such as product support for a particular product line). This can be a specific product or product line (e.g. 'iPhone') or a general category of products or services (e.g. 'smartphones').",
       "rdfs:label": "productSupported"
     },
     {
@@ -3550,7 +3550,7 @@
     },
     {
       "@id": "schema:ineligibleRegion",
-      "rdfs:comment": "The ISO 3166-1 (ISO 3166-1 alpha-2) or ISO 3166-2 code, the place, or the GeoShape for the geo-political region(s) for which the offer or delivery charge specification is not valid, e.g. a region where the transaction is not allowed.</p>\n<p>See also <a class=\"localLink\" href=\"/eligibleRegion\">eligibleRegion</a>.",
+      "rdfs:comment": "The ISO 3166-1 (ISO 3166-1 alpha-2) or ISO 3166-2 code, the place, or the GeoShape for the geo-political region(s) for which the offer or delivery charge specification is not valid, e.g. a region where the transaction is not allowed.</p>\n<p>See also <a class='localLink' href='/eligibleRegion'>eligibleRegion</a>.",
       "rdfs:label": "ineligibleRegion",
       "schema:rangeIncludes": {
         "@id": "schema:Place"
@@ -3606,7 +3606,7 @@
     },
     {
       "@id": "schema:longitude",
-      "rdfs:comment": "The longitude of a location. For example <code>-122.08585</code> (<a href=\"https://en.wikipedia.org/wiki/World_Geodetic_System\">WGS 84</a>).",
+      "rdfs:comment": "The longitude of a location. For example <code>-122.08585</code> (<a href='https://en.wikipedia.org/wiki/World_Geodetic_System'>WGS 84</a>).",
       "rdfs:label": "longitude"
     },
     {
@@ -3683,7 +3683,7 @@
     },
     {
       "@id": "schema:endDate",
-      "rdfs:comment": "The end date and time of the item (in <a href=\"http://en.wikipedia.org/wiki/ISO_8601\">ISO 8601 date format</a>).",
+      "rdfs:comment": "The end date and time of the item (in <a href='http://en.wikipedia.org/wiki/ISO_8601'>ISO 8601 date format</a>).",
       "rdfs:label": "endDate"
     },
     {
@@ -3854,7 +3854,7 @@
     },
     {
       "@id": "schema:interactionType",
-      "rdfs:comment": "The Action representing the type of interaction. For up votes, +1s, etc. use <a class=\"localLink\" href=\"/LikeAction\">LikeAction</a>. For down votes use <a class=\"localLink\" href=\"/DislikeAction\">DislikeAction</a>. Otherwise, use the most specific Action.",
+      "rdfs:comment": "The Action representing the type of interaction. For up votes, +1s, etc. use <a class='localLink' href='/LikeAction'>LikeAction</a>. For down votes use <a class='localLink' href='/DislikeAction'>DislikeAction</a>. Otherwise, use the most specific Action.",
       "rdfs:label": "interactionType"
     },
     {
@@ -3966,7 +3966,7 @@
     },
     {
       "@id": "schema:inLanguage",
-      "rdfs:comment": "The language of the content or performance or used in an action. Please use one of the language codes from the <a href=\"http://tools.ietf.org/html/bcp47\">IETF BCP 47 standard</a>. See also <a class=\"localLink\" href=\"/availableLanguage\">availableLanguage</a>.",
+      "rdfs:comment": "The language of the content or performance or used in an action. Please use one of the language codes from the <a href='http://tools.ietf.org/html/bcp47'>IETF BCP 47 standard</a>. See also <a class='localLink' href='/availableLanguage'>availableLanguage</a>.",
       "rdfs:label": "inLanguage"
     },
     {
@@ -3984,7 +3984,7 @@
     },
     {
       "@id": "http://www.w3.org/wiki/WebSchemas/SchemaDotOrgSources#source_bibex",
-      "rdfs:comment": "The W3C <a href=\"http://www.w3.org/community/schemabibex/\">Schema Bib Extend</a> (BibEx) group led the work to improve schema.org for bibliographic information, including terms for periodicals, articles and multi-volume works. The design was inspired in places (e.g. <a class=\"localLink\" href=\"/pageStart\">pageStart</a>, <a class=\"localLink\" href=\"/pageEnd\">pageEnd</a>, <a class=\"localLink\" href=\"/pagination\">pagination</a>) by the <a href=\"http://bibliontology.com/\">Bibliographic Ontology</a>, 'bibo'.",
+      "rdfs:comment": "The W3C <a href='http://www.w3.org/community/schemabibex/'>Schema Bib Extend</a> (BibEx) group led the work to improve schema.org for bibliographic information, including terms for periodicals, articles and multi-volume works. The design was inspired in places (e.g. <a class='localLink' href='/pageStart'>pageStart</a>, <a class='localLink' href='/pageEnd'>pageEnd</a>, <a class='localLink' href='/pagination'>pagination</a>) by the <a href='http://bibliontology.com/'>Bibliographic Ontology</a>, 'bibo'.",
       "rdfs:label": "BibExTerm"
     },
     {
@@ -4033,7 +4033,7 @@
     },
     {
       "@id": "schema:addressCountry",
-      "rdfs:comment": "The country. For example, USA. You can also provide the two-letter <a href=\"http://en.wikipedia.org/wiki/ISO_3166-1\">ISO 3166-1 alpha-2 country code</a>.",
+      "rdfs:comment": "The country. For example, USA. You can also provide the two-letter <a href='http://en.wikipedia.org/wiki/ISO_3166-1'>ISO 3166-1 alpha-2 country code</a>.",
       "rdfs:label": "addressCountry"
     },
     {
@@ -4130,12 +4130,12 @@
     },
     {
       "@id": "schema:vehicleTransmission",
-      "rdfs:comment": "The type of component used for transmitting the power from a rotating power source to the wheels or other relevant component(s) (\"gearbox\" for cars).",
+      "rdfs:comment": "The type of component used for transmitting the power from a rotating power source to the wheels or other relevant component(s) ('gearbox' for cars).",
       "rdfs:label": "vehicleTransmission"
     },
     {
       "@id": "schema:aircraft",
-      "rdfs:comment": "The kind of aircraft (e.g., \"Boeing 747\").",
+      "rdfs:comment": "The kind of aircraft (e.g., 'Boeing 747').",
       "rdfs:label": "aircraft"
     },
     {
@@ -4145,7 +4145,7 @@
     },
     {
       "@id": "schema:fileFormat",
-      "rdfs:comment": "Media type, typically MIME format (see <a href=\"http://www.iana.org/assignments/media-types/media-types.xhtml\">IANA site</a>) of the content e.g. application/zip of a SoftwareApplication binary. In cases where a CreativeWork has several media type representations, 'encoding' can be used to indicate each MediaObject alongside particular fileFormat information. Unregistered or niche file formats can be indicated instead via the most appropriate URL, e.g. defining Web page or a Wikipedia entry.",
+      "rdfs:comment": "Media type, typically MIME format (see <a href='http://www.iana.org/assignments/media-types/media-types.xhtml'>IANA site</a>) of the content e.g. application/zip of a SoftwareApplication binary. In cases where a CreativeWork has several media type representations, 'encoding' can be used to indicate each MediaObject alongside particular fileFormat information. Unregistered or niche file formats can be indicated instead via the most appropriate URL, e.g. defining Web page or a Wikipedia entry.",
       "rdfs:label": "fileFormat"
     },
     {
@@ -4186,7 +4186,7 @@
     {
       "@id": "schema:volumeNumber",
       "@type": "owl:AnnotationProperty",
-      "rdfs:comment": "Identifies the volume of publication or multi-part work; for example, \"iii\" or \"2\".",
+      "rdfs:comment": "Identifies the volume of publication or multi-part work; for example, 'iii' or '2'.",
       "rdfs:label": "volumeNumber",
       "rdfs:subPropertyOf": {
         "@id": "schema:position"
@@ -4259,7 +4259,7 @@
     },
     {
       "@id": "schema:gamePlatform",
-      "rdfs:comment": "The electronic systems used to play <a href=\"http://en.wikipedia.org/wiki/Category:Video_game_platforms\">video games</a>.",
+      "rdfs:comment": "The electronic systems used to play <a href='http://en.wikipedia.org/wiki/Category:Video_game_platforms'>video games</a>.",
       "rdfs:label": "gamePlatform"
     },
     {
@@ -4380,7 +4380,7 @@
     },
     {
       "@id": "schema:gtin14",
-      "rdfs:comment": "The <a href=\"http://apps.gs1.org/GDD/glossary/Pages/GTIN-14.aspx\">GTIN-14</a> code of the product, or the product to which the offer refers. See <a href=\"http://www.gs1.org/barcodes/technical/idkeys/gtin\">GS1 GTIN Summary</a> for more details.",
+      "rdfs:comment": "The <a href='http://apps.gs1.org/GDD/glossary/Pages/GTIN-14.aspx'>GTIN-14</a> code of the product, or the product to which the offer refers. See <a href='http://www.gs1.org/barcodes/technical/idkeys/gtin'>GS1 GTIN Summary</a> for more details.",
       "rdfs:label": "gtin14"
     },
     {
@@ -4390,7 +4390,7 @@
     },
     {
       "@id": "schema:gtin12",
-      "rdfs:comment": "The <a href=\"http://apps.gs1.org/GDD/glossary/Pages/GTIN-12.aspx\">GTIN-12</a> code of the product, or the product to which the offer refers. The GTIN-12 is the 12-digit GS1 Identification Key composed of a U.P.C. Company Prefix, Item Reference, and Check Digit used to identify trade items. See <a href=\"http://www.gs1.org/barcodes/technical/idkeys/gtin\">GS1 GTIN Summary</a> for more details.",
+      "rdfs:comment": "The <a href='http://apps.gs1.org/GDD/glossary/Pages/GTIN-12.aspx'>GTIN-12</a> code of the product, or the product to which the offer refers. The GTIN-12 is the 12-digit GS1 Identification Key composed of a U.P.C. Company Prefix, Item Reference, and Check Digit used to identify trade items. See <a href='http://www.gs1.org/barcodes/technical/idkeys/gtin'>GS1 GTIN Summary</a> for more details.",
       "rdfs:label": "gtin12"
     },
     {
@@ -4609,7 +4609,7 @@
     },
     {
       "@id": "schema:mainEntityOfPage",
-      "rdfs:comment": "Indicates a page (or other CreativeWork) for which this thing is the main entity being described. See <a href=\"/docs/datamodel.html#mainEntityBackground\">background notes</a> for details.",
+      "rdfs:comment": "Indicates a page (or other CreativeWork) for which this thing is the main entity being described. See <a href='/docs/datamodel.html#mainEntityBackground'>background notes</a> for details.",
       "rdfs:label": "mainEntityOfPage",
       "schema:inverseOf": {
         "@id": "schema:mainEntity"
@@ -4668,7 +4668,7 @@
     },
     {
       "@id": "schema:accessibilityFeature",
-      "rdfs:comment": "Content features of the resource, such as accessible media, alternatives and supported enhancements for accessibility (<a href=\"http://www.w3.org/wiki/WebSchemas/Accessibility\">WebSchemas wiki lists possible values</a>).",
+      "rdfs:comment": "Content features of the resource, such as accessible media, alternatives and supported enhancements for accessibility (<a href='http://www.w3.org/wiki/WebSchemas/Accessibility'>WebSchemas wiki lists possible values</a>).",
       "rdfs:label": "accessibilityFeature"
     },
     {
@@ -4693,7 +4693,7 @@
     },
     {
       "@id": "schema:cookTime",
-      "rdfs:comment": "The time it takes to actually cook the dish, in <a href=\"http://en.wikipedia.org/wiki/ISO_8601\">ISO 8601 duration format</a>.",
+      "rdfs:comment": "The time it takes to actually cook the dish, in <a href='http://en.wikipedia.org/wiki/ISO_8601'>ISO 8601 duration format</a>.",
       "rdfs:label": "cookTime"
     },
     {
@@ -4702,7 +4702,7 @@
     },
     {
       "@id": "schema:totalTime",
-      "rdfs:comment": "The total time it takes to prepare and cook the recipe, in <a href=\"http://en.wikipedia.org/wiki/ISO_8601\">ISO 8601 duration format</a>.",
+      "rdfs:comment": "The total time it takes to prepare and cook the recipe, in <a href='http://en.wikipedia.org/wiki/ISO_8601'>ISO 8601 duration format</a>.",
       "rdfs:label": "totalTime"
     },
     {
@@ -4795,7 +4795,7 @@
     },
     {
       "@id": "schema:cargoVolume",
-      "rdfs:comment": "The available volume for cargo or luggage. For automobiles, this is usually the trunk volume.</p>\n<p>Typical unit code(s): LTR for liters, FTQ for cubic foot/feet</p>\n<p>Note: You can use <a class=\"localLink\" href=\"/minValue\">minValue</a> and <a class=\"localLink\" href=\"/maxValue\">maxValue</a> to indicate ranges.",
+      "rdfs:comment": "The available volume for cargo or luggage. For automobiles, this is usually the trunk volume.</p>\n<p>Typical unit code(s): LTR for liters, FTQ for cubic foot/feet</p>\n<p>Note: You can use <a class='localLink' href='/minValue'>minValue</a> and <a class='localLink' href='/maxValue'>maxValue</a> to indicate ranges.",
       "rdfs:label": "cargoVolume"
     },
     {
@@ -4805,7 +4805,7 @@
     },
     {
       "@id": "schema:readonlyValue",
-      "rdfs:comment": "Whether or not a property is mutable.  Default is false. Specifying this for a property that also has a value makes it act similar to a \"hidden\" input in an HTML form.",
+      "rdfs:comment": "Whether or not a property is mutable.  Default is false. Specifying this for a property that also has a value makes it act similar to a 'hidden' input in an HTML form.",
       "rdfs:label": "readonlyValue"
     },
     {
@@ -4983,7 +4983,7 @@
     },
     {
       "@id": "http://www.w3.org/wiki/WebSchemas/SchemaDotOrgSources#source_GoodRelationsClass",
-      "rdfs:comment": "This class is derived from the GoodRelations Vocabulary for E-Commerce, created by Martin Hepp. GoodRelations is a data model for sharing e-commerce data on the Web that can be expressed in a variety of syntaxes, including RDFa and HTML5 Microdata. More information about GoodRelations can be found at <a href=\"http://purl.org/goodrelations/\">http://purl.org/goodrelations/</a>.",
+      "rdfs:comment": "This class is derived from the GoodRelations Vocabulary for E-Commerce, created by Martin Hepp. GoodRelations is a data model for sharing e-commerce data on the Web that can be expressed in a variety of syntaxes, including RDFa and HTML5 Microdata. More information about GoodRelations can be found at <a href='http://purl.org/goodrelations/'>http://purl.org/goodrelations/</a>.",
       "rdfs:label": "GoodRelationsClass"
     },
     {
@@ -5128,7 +5128,7 @@
     },
     {
       "@id": "http://www.w3.org/wiki/WebSchemas/SchemaDotOrgSources#source_WikiDoc",
-      "rdfs:comment": "This class contains information contributed by <a href=\"http://wikidoc.org&gt;WikiDoc\">http://wikidoc.org&gt;WikiDoc</a>.",
+      "rdfs:comment": "This class contains information contributed by <a href='http://wikidoc.org&gt;WikiDoc'>http://wikidoc.org&gt;WikiDoc</a>.",
       "rdfs:label": "WikiDoc"
     },
     {
@@ -5156,7 +5156,7 @@
     },
     {
       "@id": "http://www.w3.org/wiki/WebSchemas/SchemaDotOrgSources#Automotive_Ontology_Working_Group",
-      "rdfs:comment": "This element is based on the work of the Automotive Ontology Working Group, see <a href=\"http://www.automotive-ontology.org\">www.automotive-ontology.org</a> for details. Many class and property definitions are inspired by or based on abstracts from Wikipedia, the free encyclopedia.",
+      "rdfs:comment": "This element is based on the work of the Automotive Ontology Working Group, see <a href='http://www.automotive-ontology.org'>www.automotive-ontology.org</a> for details. Many class and property definitions are inspired by or based on abstracts from Wikipedia, the free encyclopedia.",
       "rdfs:label": "AutomotiveOntologyWGClass"
     },
     {
