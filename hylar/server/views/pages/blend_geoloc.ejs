@@ -96,10 +96,9 @@
     <h1>Test position</h1>
     <input id="input-lat" onkeypress="changeLat($(this).val())" type="text" placeholder="test latitude"/>
     <input id="input-long" onkeypress="changeLong($(this).val())" type="text" placeholder="test longitude"/>
-    <h2>Search for a 4G tablet near <span class="city">...</span></h2>
+    <h2>SELECT query for a 4G tablet near <span class="city">...</span></h2>
     <form target="_blank" action="sparql" method="POST">
         <textarea style="font-family: 'Courier New'; white-space: pre; width:100%" name="query" id="query" onclick="$(this).select();" rows="20"></textarea>
-        <input type="submit" value="Search!"/>
     </form>
 </div>
 </body>
