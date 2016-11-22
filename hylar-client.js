@@ -7925,7 +7925,7 @@ var Utils = require('../Utils');
  * @param originFacts array of facts causing this
  * @constructor
  */
-Fact = function(pred, sub, obj, originConjs, expl, graphs, implicitCauses, notUsingValidity) {
+Fact = function(pred, sub, obj, originConjs, expl, graphs, implicitCauses, notUsingValidity, fromTriple) {
     if(pred == 'FALSE') {
         this.falseFact = 'true'
     }
@@ -7939,6 +7939,7 @@ Fact = function(pred, sub, obj, originConjs, expl, graphs, implicitCauses, notUs
     this.subject = sub;
     this.object = obj;
     this.implicitCauses = implicitCauses;
+    this.fromTriple = fromTriple;
 
     this.causedBy = originConjs;
     this.explicit = expl;
@@ -9575,7 +9576,7 @@ module.exports = {
         if(explicit === undefined) {
             explicit = true;
         }
-        return new Fact(t.predicate.toString(), t.subject.toString(), t.object.toString()/*.format()*/, [], explicit, [], [], notUsingValid)
+        return new Fact(t.predicate.toString(), t.subject.toString(), t.object.toString()/*.format()*/, [], explicit, [], [], notUsingValid, t.toString())
     },
 
     triplesToFacts: function(t, explicit, notUsingValid) {
@@ -9634,6 +9635,10 @@ module.exports = {
     factToTurtle: function(fact) {
         var subject, predicate, object;
 
+        /*if (fact.fromTriple !== undefined) {
+            return fact.fromTriple;
+        }*/
+
         subject = this.parseStrEntityToTurtle(fact.subject);
         predicate = this.parseStrEntityToTurtle(fact.predicate);
         object = this.parseStrEntityToTurtle(fact.object);
@@ -9683,7 +9688,7 @@ module.exports = {
     triplesToTurtle: function(triples) {
         var ttl = '';
         for (var i = 0; i < triples.length; i++) {
-            ttl += this.tripleToTurtle(triples[i]).replace(/(\n|\r)/g, '');
+            ttl += this.tripleToTurtle(triples[i]).replace(/(\n|\r)/g, '').replace(/\\&/g, '&');
         }
         return ttl;
     },
@@ -10283,7 +10288,8 @@ StorageManager.prototype.loadRdfXml = function(data) {
  * @returns {*}
  */
 StorageManager.prototype.query = function(query) {
-    var deferred = q.defer();
+    var deferred = q.defer();    
+    query = query.replace(/\\/g, '').replace(/(\n|\r)/g, '');
     this.storage.execute(query, function (err, r) {
         if(err) {
             deferred.reject(err);
@@ -11162,7 +11168,7 @@ Hylar.prototype.registerDerivations = function(derivations, graph) {
  * @returns {*}
  */
 Hylar.prototype.classify = function() {
-    var that = this, factsChunk, chunks = [], chunksNb = 5000, insertionPromises = [];
+    var that = this, factsChunk, chunks = [], chunksNb = 10, insertionPromises = [];
     console.notify('Classification started.');
 
     return this.sm.query('CONSTRUCT { ?a ?b ?c } WHERE { ?a ?b ?c }')
@@ -11200,7 +11206,7 @@ Hylar.prototype.classify = function() {
         .then(function() {
             console.notify('Classification succeeded.');
             return Promise.reduce(chunks, function(previous, chunk) {
-                return that.sm.insert(chunk.replace(/(\n|\r)/g, ''));
+                return that.sm.insert(chunk);
             }, 0);
         })
         .then(function() {
