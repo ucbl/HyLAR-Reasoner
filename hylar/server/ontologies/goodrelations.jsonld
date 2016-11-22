@@ -1,0 +1,5580 @@
+{
+  "@context": {
+    "dc": "http://purl.org/dc/elements/1.1/",
+    "dcterms": "http://purl.org/dc/terms/",
+    "foaf": "http://xmlns.com/foaf/0.1/",
+    "gr": "http://purl.org/goodrelations/v1#",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "schema": "http://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "@graph": [
+    {
+      "@id": "gr:availableAtOrFrom",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This states that a particular gr:Offering is available at or from the given gr:Location (e.g. shop or branch)."
+      },
+      "rdfs:domain": {
+        "@id": "_:Nd7fa8dec3df74f93aa4a4036825da1f3"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "available at or from (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "gr:Location"
+      }
+    },
+    {
+      "@id": "gr:DirectDebit",
+      "@type": "gr:PaymentMethod",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "Payment by direct debit, i.e., the buying party will inform the offering gr:BusinessEntity about its bank account details and authorizes the gr:BusinessEntity to collect the agreed amount directly from that account."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Direct debit (payment method)"
+      }
+    },
+    {
+      "@id": "_:N9a8a1ecf4fcf4c7d9db1e6030644e5f4",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:ProductOrService"
+          },
+          {
+            "@id": "schema:Product"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "owl:deprecated",
+      "@type": "owl:AnnotationProperty"
+    },
+    {
+      "@id": "gr:LocationOfSalesOrServiceProvisioning",
+      "@type": "owl:Class",
+      "owl:deprecated": true,
+      "owl:equivalentClass": {
+        "@id": "gr:Location"
+      },
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "DEPRECATED - This class is superseded by gr:Location. Replace all occurrences of gr:LocationOfSalesOrServiceProvisioning by gr:Location, if possible."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Location of sales or service provisioning (DEPRECATED)"
+      }
+    },
+    {
+      "@id": "gr:VISA",
+      "@type": "gr:PaymentMethodCreditCard",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "Payment by credit or debit cards issued by the VISA network."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "VISA (payment method)"
+      }
+    },
+    {
+      "@id": "_:N522aa1be384f4d59ab19499bbf998e83",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "owl:Thing"
+          },
+          {
+            "@id": "gr:Brand"
+          },
+          {
+            "@id": "gr:BusinessEntity"
+          },
+          {
+            "@id": "gr:BusinessEntityType"
+          },
+          {
+            "@id": "gr:BusinessFunction"
+          },
+          {
+            "@id": "gr:DayOfWeek"
+          },
+          {
+            "@id": "gr:DeliveryChargeSpecification"
+          },
+          {
+            "@id": "gr:DeliveryMethod"
+          },
+          {
+            "@id": "gr:DeliveryModeParcelService"
+          },
+          {
+            "@id": "gr:Individual"
+          },
+          {
+            "@id": "gr:Location"
+          },
+          {
+            "@id": "gr:Offering"
+          },
+          {
+            "@id": "gr:OpeningHoursSpecification"
+          },
+          {
+            "@id": "gr:PaymentChargeSpecification"
+          },
+          {
+            "@id": "gr:PaymentMethod"
+          },
+          {
+            "@id": "gr:PaymentMethodCreditCard"
+          },
+          {
+            "@id": "gr:PriceSpecification"
+          },
+          {
+            "@id": "gr:ProductOrService"
+          },
+          {
+            "@id": "gr:ProductOrServiceModel"
+          },
+          {
+            "@id": "gr:QualitativeValue"
+          },
+          {
+            "@id": "gr:QuantitativeValue"
+          },
+          {
+            "@id": "gr:QuantitativeValueFloat"
+          },
+          {
+            "@id": "gr:QuantitativeValueInteger"
+          },
+          {
+            "@id": "gr:SomeItems"
+          },
+          {
+            "@id": "gr:TypeAndQuantityNode"
+          },
+          {
+            "@id": "gr:UnitPriceSpecification"
+          },
+          {
+            "@id": "gr:WarrantyPromise"
+          },
+          {
+            "@id": "gr:WarrantyScope"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:hasMaxValueFloat",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This property captures the upper limit of a gr:QuantitativeValueFloat instance."
+      },
+      "rdfs:domain": {
+        "@id": "gr:QuantitativeValueFloat"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has max value float (1..1)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:float"
+      },
+      "rdfs:subPropertyOf": {
+        "@id": "gr:hasMaxValue"
+      }
+    },
+    {
+      "@id": "schema:Place",
+      "@type": "owl:Class",
+      "owl:equivalentClass": {
+        "@id": "gr:Location"
+      }
+    },
+    {
+      "@id": "_:N5c6394fe52c0413e9779c8af3583f288",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:BusinessEntity"
+          },
+          {
+            "@id": "schema:Organization"
+          },
+          {
+            "@id": "schema:Person"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "schema:Person",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": {
+        "@id": "gr:BusinessEntity"
+      }
+    },
+    {
+      "@id": "_:Nc035e0a00abf49dcb3e11327069578a7",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:ProductOrService"
+          },
+          {
+            "@id": "gr:Offering"
+          },
+          {
+            "@id": "gr:Location"
+          },
+          {
+            "@id": "gr:BusinessEntity"
+          },
+          {
+            "@id": "schema:Offer"
+          },
+          {
+            "@id": "schema:Product"
+          },
+          {
+            "@id": "schema:Place"
+          },
+          {
+            "@id": "schema:Organization"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:Business",
+      "@type": "gr:BusinessEntityType",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The gr:BusinessEntityType representing such agents that are themselves offering commercial services or products on the market. Usually, businesses are characterized by the fact that they are officially registered with the public administration and strive for profits by their activities."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Business (business entity type)"
+      }
+    },
+    {
+      "@id": "dc:subject",
+      "@type": "owl:AnnotationProperty"
+    },
+    {
+      "@id": "_:N84cddf2fb7524270aef4e2e2fb98e6a1",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "schema:Person"
+          },
+          {
+            "@id": "schema:Organization"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:Monday",
+      "@type": "gr:DayOfWeek",
+      "gr:displayPosition": 1,
+      "gr:hasNext": {
+        "@id": "gr:Tuesday"
+      },
+      "gr:hasPrevious": {
+        "@id": "gr:Sunday"
+      },
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "Monday as a day of the week."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Monday (day of week)"
+      }
+    },
+    {
+      "@id": "_:N264a8e452b9a438b94fbc6a6317e4d65",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:Offering"
+          },
+          {
+            "@id": "gr:OpeningHoursSpecification"
+          },
+          {
+            "@id": "gr:PriceSpecification"
+          },
+          {
+            "@id": "gr:License"
+          },
+          {
+            "@id": "schema:Offer"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:equal",
+      "@type": [
+        "owl:ObjectProperty",
+        "owl:TransitiveProperty",
+        "owl:SymmetricProperty"
+      ],
+      "owl:inverseOf": {
+        "@id": "gr:equal"
+      },
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This ordering relation for qualitative values indicates that the subject is equal to the object."
+      },
+      "rdfs:domain": {
+        "@id": "gr:QualitativeValue"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "equal (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "gr:QualitativeValue"
+      }
+    },
+    {
+      "@id": "_:Naa09afdf8e7e4c8a88ae7ce534cf6f52",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:Offering"
+          },
+          {
+            "@id": "schema:Offer"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "dc:creator",
+      "@type": "owl:AnnotationProperty"
+    },
+    {
+      "@id": "gr:Thursday",
+      "@type": "gr:DayOfWeek",
+      "gr:displayPosition": 4,
+      "gr:hasNext": {
+        "@id": "gr:Friday"
+      },
+      "gr:hasPrevious": {
+        "@id": "gr:Wednesday"
+      },
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "Thursday as a day of the week."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Thursday (day of week)"
+      }
+    },
+    {
+      "@id": "_:Ndf56bf9322b84f4bb4408881c5eb187d",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:Individual"
+          },
+          {
+            "@id": "gr:SomeItems"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:validThrough",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This property specifies the end of the validity of the gr:Offering, gr:PriceSpecification, gr:License, or gr:OpeningHoursSpecification. A time-zone should be specified. For a time in GMT/UTC, simply add a 'Z' following the time:  2008-05-30T09:30:10Z.  Alternatively, you can specify an offset from the UTC time by adding a positive or negative time following the time:  2008-05-30T09:30:10-09:00  or 2008-05-30T09:30:10+09:00.  Note 1: If multiple contradicting instances of a gr:Offering, gr:PriceSpecification, or gr:OpeningHoursSpecification exist, it is a good heuristics to assume that 1. Information with validity information for the respective period of time ranks higher than information without validity information. 2. Among conflicting nodes both having validity information, the one with the shorter validity span ranks higher. Note 2: For Google, attaching a gr:validThrough statement to a gr:UnitPriceSpecification is mandatory.  "
+      },
+      "rdfs:domain": {
+        "@id": "_:N4974403cd7be49339843ab668fb2130f"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "valid through (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:dateTime"
+      }
+    },
+    {
+      "@id": "gr:ProductOrService",
+      "@type": "owl:Class",
+      "owl:disjointWith": [
+        {
+          "@id": "gr:WarrantyScope"
+        },
+        {
+          "@id": "gr:OpeningHoursSpecification"
+        },
+        {
+          "@id": "gr:PriceSpecification"
+        },
+        {
+          "@id": "gr:TypeAndQuantityNode"
+        },
+        {
+          "@id": "gr:QuantitativeValue"
+        },
+        {
+          "@id": "gr:BusinessEntityType"
+        },
+        {
+          "@id": "gr:BusinessFunction"
+        },
+        {
+          "@id": "gr:Brand"
+        },
+        {
+          "@id": "gr:Offering"
+        },
+        {
+          "@id": "gr:WarrantyPromise"
+        },
+        {
+          "@id": "gr:DeliveryMethod"
+        },
+        {
+          "@id": "gr:DayOfWeek"
+        }
+      ],
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The superclass of all classes describing products or services types, either by nature or purpose. Examples for such subclasses are 'TV set', 'vacuum cleaner', etc. An instance of this class can be either an actual product or service (gr:Individual), a placeholder instance for unknown instances of a mass-produced commodity (gr:SomeItems), or a model / prototype specification (gr:ProductOrServiceModel). When in doubt, use gr:SomeItems.  Examples:  a) MyCellphone123, i.e. my personal, tangible cell phone (gr:Individual) b) Siemens1234, i.e. the Siemens cell phone make and model 1234 (gr:ProductOrServiceModel) c) dummyCellPhone123 as a placeholder for actual instances of a certain kind of cell phones (gr:SomeItems)   Note: Your first choice for specializations of gr:ProductOrService should be http://www.productontology.org.  Compatibility with schema.org: This class is (approximately) equivalent to http://schema.org/Product."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Product or service"
+      }
+    },
+    {
+      "@id": "gr:ProductOrServiceModel",
+      "@type": "owl:Class",
+      "owl:disjointWith": [
+        {
+          "@id": "gr:BusinessEntity"
+        },
+        {
+          "@id": "gr:Brand"
+        },
+        {
+          "@id": "gr:SomeItems"
+        },
+        {
+          "@id": "gr:Individual"
+        }
+      ],
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "A product or service model is a intangible entity that specifies some characteristics of a group of similar, usually mass-produced products, in the sense of a prototype. In case of mass-produced products, there exists a relation gr:hasMakeAndModel between the actual product or service (gr:Individual or gr:SomeItems) and the prototype (gr:ProductOrServiceModel). GoodRelations treats product or service models as 'prototypes' instead of a completely separate kind of entities, because this allows using the same domain-specific properties (e.g. gr:weight) for describing makes and models and for describing actual products.  Examples: Ford T, Volkswagen Golf, Sony Ericsson W123 cell phone  Note: An actual product or service (gr:Individual) by default shares the features of its model (e.g. the weight). However, this requires non-standard reasoning. See http://wiki.goodrelations-vocabulary.org/Axioms for respective rule sets.   Compatibility with schema.org: This class is (approximately) a subclass of http://schema.org/Product."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Product or service model"
+      },
+      "rdfs:subClassOf": [
+        {
+          "@id": "schema:Product"
+        },
+        {
+          "@id": "gr:ProductOrService"
+        }
+      ]
+    },
+    {
+      "@id": "gr:hasValue",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This subproperty specifies that the upper and lower limit of the given gr:QuantitativeValue are identical and have the respective value. It is a shortcut for such cases where a quantitative property is (at least practically) a single point value and not an interval."
+      },
+      "rdfs:domain": {
+        "@id": "gr:QuantitativeValue"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has value (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "rdfs:Literal"
+      },
+      "rdfs:subPropertyOf": [
+        {
+          "@id": "gr:hasMinValue"
+        },
+        {
+          "@id": "gr:hasMaxValue"
+        }
+      ]
+    },
+    {
+      "@id": "gr:hasManufacturer",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This object property links a gr:ProductOrService to the gr:BusinessEntity that produces it. Mostly used with gr:ProductOrServiceModel."
+      },
+      "rdfs:domain": {
+        "@id": "_:N99f9551a47534cd6980005aa481fa285"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has manufacturer (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "gr:BusinessEntity"
+      }
+    },
+    {
+      "@id": "gr:UnitPriceSpecification",
+      "@type": "owl:Class",
+      "owl:disjointWith": [
+        {
+          "@id": "gr:DeliveryChargeSpecification"
+        },
+        {
+          "@id": "gr:PaymentChargeSpecification"
+        }
+      ],
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "A unit price specification is a conceptual entity that specifies the price asked for a given gr:Offering by the respective gr:Business Entity. An offering may be linked to multiple unit price specifications that specify alternative prices for non-overlapping sets of conditions (e.g. quantities or sales regions) or with differing validity periods.   A unit price specification is characterized by (1) the lower and upper limits and the unit of measurement of the eligible quantity, (2) by a monetary amount per unit of the product or service, and (3)  whether this prices includes local sales taxes, namely VAT.   Example: The price, including VAT, for 1 kg of a given material is 5 Euros per kg for 0 - 5 kg and 4 Euros for quantities above 5 kg.  The eligible quantity interval for a given price is specified using the object property gr:hasEligibleQuantity, which points to an instance of gr:QuantitativeValue. The currency is specified using the gr:hasCurrency property, which points to an ISO 4217 currency code. The unit of measurement for the eligible quantity is specified using the gr:hasUnitOfMeasurement datatype property, which points to an UN/CEFACT Common Code (3 characters).   In most cases, the appropriate unit of measurement is the UN/CEFACT Common Code 'C62' for 'Unit or piece', since a gr:Offering is defined by the quantity and unit of measurement of all items included (e.g. '1 kg of bananas plus a 2 kg of apples'). As long at the offering consists of only one item, it is also possible to use an unit of measurement of choice for specifying the price per unit. For bundles, however, only  'C62' for 'Unit or piece' is a valid unit of measurement.  You can assume that the price is given per unit or piece if there is no gr:hasUnitOfMeasurement property attached to the price.   Whether VAT and sales taxes are included in this price is specified using the property gr:valueAddedTaxIncluded (xsd:boolean).   The price per unit of measurement is specified as a float value of the gr:hasCurrencyValue property. The currency is specified via the gr:hasCurrency datatype property. Whether the price includes VAT or not is indicated by the gr:valueAddedTaxIncluded datatype property.  The property priceType can be used to indicate that the price is a retail price recommendation only (i.e. a list price).   If the price can only be given as a range, use gr:hasMaxCurrencyValue and gr:hasMinCurrencyValue for the upper and lower bounds.  Important: When querying for the price, always use gr:hasMaxCurrencyValue and gr:hasMinCurrencyValue.  Note 1: Due to the complexity of pricing scenarios in various industries, it may be necessary to create extensions of this fundamental model of price specifications. Such can be done easily by importing and refining the GoodRelations ontology.  Note 2: For Google, attaching a gr:validThrough statement to a gr:UnitPriceSpecification is mandatory.  "
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Unit price specification"
+      },
+      "rdfs:subClassOf": {
+        "@id": "gr:PriceSpecification"
+      }
+    },
+    {
+      "@id": "gr:Wednesday",
+      "@type": "gr:DayOfWeek",
+      "gr:displayPosition": 3,
+      "gr:hasNext": {
+        "@id": "gr:Thursday"
+      },
+      "gr:hasPrevious": {
+        "@id": "gr:Tuesday"
+      },
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "Wednesday as a day of the week."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Wednesday (day of week)"
+      }
+    },
+    {
+      "@id": "gr:hasMinValue",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This property captures the lower limit of a gr:QuantitativeValue instance."
+      },
+      "rdfs:domain": {
+        "@id": "gr:QuantitativeValue"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has min value (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "rdfs:Literal"
+      }
+    },
+    {
+      "@id": "gr:DeliveryMethod",
+      "@type": "owl:Class",
+      "owl:disjointWith": [
+        {
+          "@id": "gr:PriceSpecification"
+        },
+        {
+          "@id": "gr:QuantitativeValue"
+        },
+        {
+          "@id": "gr:Offering"
+        },
+        {
+          "@id": "gr:ProductOrService"
+        },
+        {
+          "@id": "gr:WarrantyScope"
+        },
+        {
+          "@id": "gr:DayOfWeek"
+        },
+        {
+          "@id": "gr:BusinessFunction"
+        },
+        {
+          "@id": "gr:Brand"
+        },
+        {
+          "@id": "gr:BusinessEntity"
+        },
+        {
+          "@id": "gr:BusinessEntityType"
+        },
+        {
+          "@id": "gr:Location"
+        },
+        {
+          "@id": "gr:TypeAndQuantityNode"
+        },
+        {
+          "@id": "gr:WarrantyPromise"
+        },
+        {
+          "@id": "gr:OpeningHoursSpecification"
+        },
+        {
+          "@id": "gr:PaymentMethod"
+        }
+      ],
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "A delivery method is a standardized procedure for transferring the product or service to the destination of fulfilment chosen by the customer. Delivery methods are characterized by the means of transportation used, and by the organization or group that is the contracting party for the sending gr:BusinessEntity (this is important, since the contracted party may subcontract the fulfilment to smaller, regional businesses).  Examples: Delivery by mail, delivery by direct download, delivery by UPS"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Delivery method"
+      }
+    },
+    {
+      "@id": "_:N6a97da3134394243900a09f5ffa558d9",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:BusinessEntity"
+          },
+          {
+            "@id": "schema:Organization"
+          },
+          {
+            "@id": "schema:Person"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:eligibleDuration",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The minimal and maximal duration for which the given gr:Offering or gr:License is valid. This is mostly used for offers regarding accommodation, the rental of objects, or software licenses. The duration is specified by attaching an instance of gr:QuantitativeValue. The lower and upper boundaries are specified using the properties gr:hasMinValue and gr:hasMaxValue to that instance. If they are the same, use the gr:hasValue property. The unit of measurement is specified using the property gr:hasUnitOfMeasurement with a string holding a UN/CEFACT code suitable for durations, e.g. MON (months), DAY (days), HUR (hours), or MIN (minutes).  The difference to the gr:validFrom and gr:validThrough properties is that those specify the absiolute interval during which the gr:Offering or gr:License is valid, while gr:eligibleDuration specifies the acceptable duration of the contract or usage."
+      },
+      "rdfs:domain": {
+        "@id": "_:N3d4cda33160d466098f64fdb201ebfc3"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "eligible duration (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "gr:QuantitativeValue"
+      }
+    },
+    {
+      "@id": "gr:Friday",
+      "@type": "gr:DayOfWeek",
+      "gr:displayPosition": 5,
+      "gr:hasNext": {
+        "@id": "gr:Saturday"
+      },
+      "gr:hasPrevious": {
+        "@id": "gr:Thursday"
+      },
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "Friday as a day of the week."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Friday (day of week)"
+      }
+    },
+    {
+      "@id": "gr:hasOpeningHoursSpecification",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This property links a gr:Location to a gr:OpeningHoursSpecification."
+      },
+      "rdfs:domain": {
+        "@id": "_:N56bfa617a37d4ff28da4bfc4ea9ba344"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has opening hours specification (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "gr:OpeningHoursSpecification"
+      }
+    },
+    {
+      "@id": "gr:availableDeliveryMethods",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This specifies the gr:DeliveryMethod or methods available for a given gr:Offering."
+      },
+      "rdfs:domain": {
+        "@id": "_:Na159c7c4134b429fbf40c673d8bf2ade"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "available delivery methods (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "gr:DeliveryMethod"
+      }
+    },
+    {
+      "@id": "_:N2868b2d20adf42a689cf471c5d2a86ad",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:BusinessEntity"
+          },
+          {
+            "@id": "gr:Location"
+          },
+          {
+            "@id": "schema:Place"
+          },
+          {
+            "@id": "schema:Organization"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "_:Nb0b481ddd620426d87d9b70c93e1f05c",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:Offering"
+          },
+          {
+            "@id": "schema:Offer"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:DeliveryModeFreight",
+      "@type": "gr:DeliveryMethod",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "Delivery by an unspecified air, sea, or ground freight carrier or cargo company."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Delivery mode freight (delivery method)"
+      }
+    },
+    {
+      "@id": "_:Nd6ff87e2133b4561aecc1222cf865d56",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:QuantitativeValue"
+          },
+          {
+            "@id": "gr:TypeAndQuantityNode"
+          },
+          {
+            "@id": "gr:UnitPriceSpecification"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:valueReference",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The superclass of properties that link a gr:QuantitativeValue or a gr:QualitativeValue to a second gr:QuantitativeValue or a gr:QualitativeValue that provides additional information on the original value. A good modeling practice is to define specializations of this property (e.g. foo:referenceTemperature) for your particular domain."
+      },
+      "rdfs:domain": {
+        "@id": "_:N55f7497889f64fd29e371ad4107acb18"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "value reference (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "_:N64a86c0f9fc74b06b019ebd25af129ca"
+      }
+    },
+    {
+      "@id": "gr:isSimilarTo",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This states that a given gr:ProductOrService is similar to another product or service. Of course, this is a subjective statement; when interpreting it, the trust in the origin of the statement should be taken into account."
+      },
+      "rdfs:domain": {
+        "@id": "_:N20b0f41ef5fb4557bb547d419c0ddde2"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "is similar to (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "gr:ProductOrService"
+      }
+    },
+    {
+      "@id": "gr:hasBrand",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This specifies the brand or brands (gr:Brand) associated with a gr:ProductOrService, or the brand or brands maintained by a gr:BusinessEntity."
+      },
+      "rdfs:domain": {
+        "@id": "_:Nd3f2258c59bb44efbb340a703e2db190"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has brand (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "gr:Brand"
+      }
+    },
+    {
+      "@id": "gr:typeOfGood",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This specifies the gr:ProductOrService that the gr:TypeAndQuantityNode is referring to."
+      },
+      "rdfs:domain": {
+        "@id": "gr:TypeAndQuantityNode"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "type of good (1..1)"
+      },
+      "rdfs:range": {
+        "@id": "_:Ndf56bf9322b84f4bb4408881c5eb187d"
+      }
+    },
+    {
+      "@id": "gr:hasMinValueFloat",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This property captures the lower limit of a gr:QuantitativeValueFloat instance."
+      },
+      "rdfs:domain": {
+        "@id": "gr:QuantitativeValueFloat"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has min value float (1..1)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:float"
+      },
+      "rdfs:subPropertyOf": {
+        "@id": "gr:hasMinValue"
+      }
+    },
+    {
+      "@id": "gr:DinersClub",
+      "@type": "gr:PaymentMethodCreditCard",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "Payment by credit or debit cards issued by the Diner's Club network."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Diners Club (payment method)"
+      }
+    },
+    {
+      "@id": "gr:successorOf",
+      "@type": [
+        "owl:ObjectProperty",
+        "owl:TransitiveProperty"
+      ],
+      "owl:inverseOf": {
+        "@id": "gr:predecessorOf"
+      },
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This property indicates that the subject is a newer, often updated or improved variant of the gr:ProductOrServiceModel used as the object.  Example: Golf III successorOf Golf II  This relation is transitive."
+      },
+      "rdfs:domain": {
+        "@id": "gr:ProductOrServiceModel"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "successor of (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "gr:ProductOrServiceModel"
+      }
+    },
+    {
+      "@id": "gr:height",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The height of the product. Typical unit code(s): CMT for centimeters, INH for inches"
+      },
+      "rdfs:domain": {
+        "@id": "_:N72b117a04c4340659693a9bde731c30b"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "height (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "gr:QuantitativeValue"
+      },
+      "rdfs:subPropertyOf": {
+        "@id": "gr:quantitativeProductOrServiceProperty"
+      }
+    },
+    {
+      "@id": "gr:offers",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This links a gr:BusinessEntity to the offers (gr:Offering) it makes. If you want to express interest in receiving offers, use gr:seeks instead."
+      },
+      "rdfs:domain": {
+        "@id": "_:Nc6b6ce508d8d4f2ab97d765cf21c1d30"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "offers (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "gr:Offering"
+      }
+    },
+    {
+      "@id": "gr:closes",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The closing  hour of the gr:Location on the given gr:DayOfWeek. If no time-zone suffix is included, the time is given in the local time valid at the gr:Location.  For a time in GMT/UTC, simply add a 'Z' following the time:  09:30:10Z.  Alternatively, you can specify an offset from the UTC time by adding a positive or negative time following the time:  09:30:10-09:00  09:30:10+09:00.  Note 1: Use 00:00:00 for the first second of the respective day and 23:59:59 for the last second of that day. Note 2: If a store opens at 17:00 on Saturdays and closes at 03:00:00 a.m. next morning, use two instances of this class, one with 17:00:00 - 23:59:59 for Saturday and another one with 00:00:00 - 03:00:00 for Sunday. Note 3: If the shop re-opens on the same day of the week or set of days of the week, you must create a second instance of gr:OpeningHoursSpecification."
+      },
+      "rdfs:domain": {
+        "@id": "gr:OpeningHoursSpecification"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "closes (1..1)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:time"
+      }
+    },
+    {
+      "@id": "gr:Sunday",
+      "@type": "gr:DayOfWeek",
+      "gr:displayPosition": 7,
+      "gr:hasNext": {
+        "@id": "gr:Monday"
+      },
+      "gr:hasPrevious": {
+        "@id": "gr:Saturday"
+      },
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "Sunday as a day of the week."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Sunday (day of week)"
+      }
+    },
+    {
+      "@id": "gr:hasMakeAndModel",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This states that an actual product instance (gr:Individual) or a placeholder instance for multiple, unidentified such instances (gr:SomeItems) is one occurence of a particular gr:ProductOrServiceModel.  Example: myFordT hasMakeAndModel FordT."
+      },
+      "rdfs:domain": {
+        "@id": "_:N8d437393e0594065bda3cb5e1b2a943c"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has make and model (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "gr:ProductOrServiceModel"
+      }
+    },
+    {
+      "@id": "_:N62abbc6df02e49e3b481a89ee0c60935",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:ProductOrService"
+          },
+          {
+            "@id": "schema:Product"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "_:N99f9551a47534cd6980005aa481fa285",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:ProductOrService"
+          },
+          {
+            "@id": "schema:Product"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "_:N55f7497889f64fd29e371ad4107acb18",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:QualitativeValue"
+          },
+          {
+            "@id": "gr:QuantitativeValue"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "_:N8278c3e50a5f46d78f614643d0563c17",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:Offering"
+          },
+          {
+            "@id": "gr:PriceSpecification"
+          },
+          {
+            "@id": "schema:Offer"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:PublicInstitution",
+      "@type": "gr:BusinessEntityType",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The gr:BusinessEntityType representing such agents that are part of the adminstration or owned by the public."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Public institution (business entity type)"
+      }
+    },
+    {
+      "@id": "gr:validFrom",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This property specifies the beginning of the validity of the gr:Offering, gr:PriceSpecification, gr:License, or gr:OpeningHoursSpecification. A time-zone should be specified. For a time in GMT/UTC, simply add a 'Z' following the time:  2008-05-30T09:30:10Z.  Alternatively, you can specify an offset from the UTC time by adding a positive or negative time following the time:  2008-05-30T09:30:10-09:00  or  2008-05-30T09:30:10+09:00.  Note: If multiple contradicting instances of a gr:Offering, gr:PriceSpecification, or gr:OpeningHoursSpecification exist, it is a good heuristics to assume that 1. Information with validity information for the respective period of time ranks higher than information without validity information. 2. Among conflicting nodes both having validity information, the one with the shorter validity span ranks higher."
+      },
+      "rdfs:domain": {
+        "@id": "_:N264a8e452b9a438b94fbc6a6317e4d65"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "valid from (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:dateTime"
+      }
+    },
+    {
+      "@id": "gr:hasNext",
+      "@type": "owl:ObjectProperty",
+      "owl:inverseOf": {
+        "@id": "gr:hasPrevious"
+      },
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This ordering relation for gr:DayOfWeek indicates that the subject is directly followed by the object.  Example: Monday hasNext Tuesday  Since days of the week are a cycle, this property is not transitive."
+      },
+      "rdfs:domain": {
+        "@id": "gr:DayOfWeek"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has next (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "gr:DayOfWeek"
+      }
+    },
+    {
+      "@id": "gr:eligibleRegions",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This property specifies the geo-political region or regions for which the gr:Offering, gr:License, or gr:DeliveryChargeSpecification is valid using the two-character version of ISO 3166-1 (ISO 3166-1 alpha-2)  for regions or ISO 3166-2 , which breaks down the countries from ISO 3166-1 into administrative subdivisions.  Important: Do NOT use 3-letter ISO 3166-1 codes!"
+      },
+      "rdfs:domain": {
+        "@id": "_:N997c9fa42ba54b9e9ecc7ed15d38b44a"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "eligible regions (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "gr:addOn",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This property points from a gr:Offering to additional offerings that can only be obtained in combination with the first offering. This can be used to model supplements and extensions that are available for a surcharge. Any gr:PriceSpecification attached to the secondary offering is to be understood as an additional charge."
+      },
+      "rdfs:domain": {
+        "@id": "_:N09ae989bfb2e42e18abab02c0bfe0dd5"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "add-on (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "gr:Offering"
+      }
+    },
+    {
+      "@id": "schema:Product",
+      "@type": "owl:Class",
+      "owl:equivalentClass": {
+        "@id": "gr:ProductOrService"
+      }
+    },
+    {
+      "@id": "gr:deliveryLeadTime",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This property can be used to indicate the promised delay between the receipt of the order and the goods leaving the warehouse.  The duration is specified by attaching an instance of gr:QuantitativeValueInteger. The lower and upper boundaries are specified using the properties gr:hasMinValueInteger and gr:hasMaxValueInteger to that instance. A point value can be modeled with the gr:hasValueInteger property. The unit of measurement is specified using the property gr:hasUnitOfMeasurement with a string holding a UN/CEFACT code suitable for durations, e.g. MON (months), DAY (days), HUR (hours), or MIN (minutes)."
+      },
+      "rdfs:domain": {
+        "@id": "_:N61d8d6f973734da39f1bd9c04e85468d"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "delivery lead time (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "gr:QuantitativeValueInteger"
+      }
+    },
+    {
+      "@id": "_:Ne348c7f6fb7d41c19bef4d5a48b8d81c",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:Offering"
+          },
+          {
+            "@id": "gr:ProductOrService"
+          },
+          {
+            "@id": "schema:Product"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:DHL",
+      "@type": "gr:DeliveryModeParcelService",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "Delivery via the parcel service DHL."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "DHL (delivery method)"
+      }
+    },
+    {
+      "@id": "_:N4a75fc9ce295498b8c34630ecf154b75",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:ProductOrService"
+          },
+          {
+            "@id": "schema:Product"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:advanceBookingRequirement",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The minimal and maximal amount of time that is required between accepting the gr:Offering and the actual usage of the resource or service. This is mostly relevant for offers regarding hotel rooms, the rental of objects, or the provisioning of services. The duration is specified relatively to the beginning of the usage of the contracted object. It is represented by attaching an instance of the class gr:QuantitativeValueInteger. The lower and upper boundaries are specified using the properties gr:hasMinValueInteger and gr:hasMaxValueInteger to that instance. The unit of measurement is specified using the property gr:hasUnitOfMeasurement with a string holding a UN/CEFACT code suitable for durations, e.g. MON (months), DAY (days), HUR (hours), or MIN (minutes).  The difference to the gr:validFrom and gr:validThrough properties is that those specify the interval during which the gr:Offering is valid, while gr:advanceBookingRequirement specifies the acceptable relative amount of time between accepting the offer and the fulfilment or usage."
+      },
+      "rdfs:domain": {
+        "@id": "_:Naa09afdf8e7e4c8a88ae7ce534cf6f52"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "advance booking requirement (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "gr:QuantitativeValueInteger"
+      }
+    },
+    {
+      "@id": "gr:Dispose",
+      "@type": "gr:BusinessFunction",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This gr:BusinessFunction indicates that the gr:BusinessEntity offers (or seeks) the acceptance of the specified gr:ProductOrService for proper disposal, recycling, or any other kind of allowed usages, freeing the current owner from all rights and obligations of ownership."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Dispose (business function)"
+      }
+    },
+    {
+      "@id": "gr:Buy",
+      "@type": "gr:BusinessFunction",
+      "owl:deprecated": true,
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This gr:BusinessFunction indicates that the gr:BusinessEntity is in general interested in purchasing the specified gr:ProductOrService. DEPRECATED. Use gr:seeks instead."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Buy (business function, DEPRECATED)"
+      }
+    },
+    {
+      "@id": "gr:name",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "A short text describing the respective resource.  This property is semantically equivalent to dcterms:title and rdfs:label and just meant as a handy shortcut for marking up data."
+      },
+      "rdfs:domain": {
+        "@id": "_:N522aa1be384f4d59ab19499bbf998e83"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "name (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "rdfs:Literal"
+      }
+    },
+    {
+      "@id": "gr:qualitativeProductOrServiceProperty",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This is the super property of all qualitative properties for products and services. All properties in product or service ontologies for which gr:QualitativeValue instances are specified are subproperties of this property."
+      },
+      "rdfs:domain": {
+        "@id": "_:N9ab20893b0234139a6cbfe7b9caca778"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "qualitative product or service property (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "gr:QualitativeValue"
+      }
+    },
+    {
+      "@id": "_:N9ccdb33362044d4ab4d10b7afca3b7e2",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:Offering"
+          },
+          {
+            "@id": "schema:Offer"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:relatedWebService",
+      "@type": "owl:AnnotationProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The URI of a SOAP or REST Web Service from which additional information about the gr:BusinessEntity, gr:Offering, gr:PriceSpecification, or gr:ProductOrService, or any other element,  can be obtained. The recommended range is xsd:anyURI i.e., the URI of a SOAP or REST Web Service.  In principle, any existing or upcoming vocabulary for Web Services can be used in combination with GoodRelations, because the association between (a) the service description and (b) the GoodRelations description can be found via the Web Service URI value used with this gr:relatedWebService property."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "related Web Service (0..*)"
+      }
+    },
+    {
+      "@id": "gr:PublicHolidays",
+      "@type": "gr:DayOfWeek",
+      "gr:displayPosition": 8,
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "A placeholder for all official public holidays at the gr:Location. This allows specifying the opening hours on public holidays. If a given day is a public holiday, this specification supersedes the opening hours for the respective day of the week."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Public holidays (day of week)"
+      }
+    },
+    {
+      "@id": "schema:Offer",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": {
+        "@id": "gr:Offering"
+      }
+    },
+    {
+      "@id": "gr:PayPal",
+      "@type": "gr:PaymentMethod",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "Payment via the PayPal payment service."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "PayPal (payment method)"
+      }
+    },
+    {
+      "@id": "_:N181fdb1eb29b49b6acf4e23ce3b1ff23",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:Offering"
+          },
+          {
+            "@id": "gr:ProductOrService"
+          },
+          {
+            "@id": "schema:Product"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:hasValueFloat",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This subproperty specifies that the upper and lower limit of the given gr:QuantitativeValueFloat are identical and have the respective float value. It is a shortcut for such cases where a quantitative property is (at least practically) a single point value and not an interval."
+      },
+      "rdfs:domain": {
+        "@id": "gr:QuantitativeValueFloat"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has value float (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:float"
+      },
+      "rdfs:subPropertyOf": [
+        {
+          "@id": "gr:hasMaxValueFloat"
+        },
+        {
+          "@id": "gr:hasMinValueFloat"
+        }
+      ]
+    },
+    {
+      "@id": "gr:hasISICv4",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The International Standard of Industrial Classification of All Economic Activities (ISIC), Revision 4 code for a particular gr:BusinessEntity or gr:Location. See http://unstats.un.org/unsd/cr/registry/isic-4.asp for more information.  Note: While ISIC codes are sometimes misused for classifying products or services, they are designed and suited only for classifying business establishments."
+      },
+      "rdfs:domain": {
+        "@id": "_:N1d286dde9f7249c4b4a8073143c6a0c1"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has ISIC v4 (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:int"
+      }
+    },
+    {
+      "@id": "gr:isConsumableFor",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This states that a particular gr:ProductOrService is a consumable for another product or service."
+      },
+      "rdfs:domain": {
+        "@id": "_:N4a83a46bf286434c88c69a6c368ada6e"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "is consumable for (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "gr:ProductOrService"
+      }
+    },
+    {
+      "@id": "gr:ProductOrServicesSomeInstancesPlaceholder",
+      "@type": "owl:Class",
+      "owl:deprecated": true,
+      "owl:equivalentClass": {
+        "@id": "gr:SomeItems"
+      },
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "DEPRECATED - This class is superseded by gr:SomeItems. Replace all occurrences of gr:ProductOrServicesSomeInstancesPlaceholder by gr:SomeItems, if possible."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Product or services some instances placeholder (DEPRECATED)"
+      },
+      "rdfs:subClassOf": {
+        "@id": "gr:ProductOrService"
+      }
+    },
+    {
+      "@id": "gr:PaySwarm",
+      "@type": "gr:PaymentMethod",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "Payment via the PaySwarm distributed micropayment service."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "PaySwarm (payment method)"
+      }
+    },
+    {
+      "@id": "schema:manufacturer",
+      "@type": "owl:ObjectProperty",
+      "owl:equivalentProperty": {
+        "@id": "gr:hasManufacturer"
+      }
+    },
+    {
+      "@id": "gr:COD",
+      "@type": "gr:PaymentMethod",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "Collect on delivery / Cash on delivery - A payment method where the recipient of goods pays at the time of delivery. Usually, the amount of money is collected by the transportation company handling the goods."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "COD (payment method)"
+      }
+    },
+    {
+      "@id": "gr:Location",
+      "@type": "owl:Class",
+      "owl:disjointWith": [
+        {
+          "@id": "gr:BusinessFunction"
+        },
+        {
+          "@id": "gr:PaymentMethod"
+        },
+        {
+          "@id": "gr:DeliveryMethod"
+        },
+        {
+          "@id": "gr:PriceSpecification"
+        },
+        {
+          "@id": "gr:WarrantyScope"
+        },
+        {
+          "@id": "gr:DayOfWeek"
+        },
+        {
+          "@id": "gr:BusinessEntity"
+        },
+        {
+          "@id": "gr:OpeningHoursSpecification"
+        },
+        {
+          "@id": "gr:BusinessEntityType"
+        },
+        {
+          "@id": "gr:TypeAndQuantityNode"
+        },
+        {
+          "@id": "gr:WarrantyPromise"
+        },
+        {
+          "@id": "gr:Brand"
+        },
+        {
+          "@id": "gr:QuantitativeValue"
+        },
+        {
+          "@id": "gr:Offering"
+        }
+      ],
+      "owl:equivalentClass": {
+        "@id": "gr:LocationOfSalesOrServiceProvisioning"
+      },
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "A location is a point or area of interest from which a particular product or service is available, e.g. a store, a bus stop, a gas station, or a ticket booth. The difference to gr:BusinessEntity is that the gr:BusinessEntity is the legal entity (e.g. a person or corporation) making the offer, while gr:Location is the store, office, or place. A chain restaurant will e.g. have one legal entity but multiple restaurant locations. Locations are characterized by an address or geographical position and a set of opening hour specifications for various days of the week.    Example: A rental car company may offer the Business Function Lease Out of cars from two locations, one in Fort Myers, Florida, and one in Boston, Massachussetts. Both stations are open 7:00 - 23:00 Mondays through Saturdays.  Note: Typical address standards (vcard) and location data (geo, WGC84) should be attached to a gr:Location node. Since there already exist established vocabularies for this, the GoodRelations ontology does not provide respective attributes. Instead, the use of respective vocabularies is recommended. However, the gr:hasGlobalLocationNumber property is  provided for linking to public identifiers for business locations.    Compatibility with schema.org: This class is equivalent to http://schema.org/Place."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Location"
+      }
+    },
+    {
+      "@id": "gr:serialNumber",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The serial number or any alphanumeric identifier of a particular product. Note that serial number are unique only for the same brand or the same model, so you cannot infer from two occurrences of the same serial number that the objects to which they are attached are identical.  This property can also be attached to a gr:Offering in cases where the included products are not modeled in more detail."
+      },
+      "rdfs:domain": {
+        "@id": "_:Ndff3847bee2347019b1416b322801e19"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "serial number (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "_:N99da1d4b44654c77b178a561af751451",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:ProductOrService"
+          },
+          {
+            "@id": "schema:Product"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "foaf:depiction",
+      "@type": "owl:ObjectProperty"
+    },
+    {
+      "@id": "_:Nd39c2f09c7ec4aeca4251d4438200dba",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:BusinessEntity"
+          },
+          {
+            "@id": "schema:Organization"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "_:Na159c7c4134b429fbf40c673d8bf2ade",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:Offering"
+          },
+          {
+            "@id": "schema:Offer"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "_:N1d286dde9f7249c4b4a8073143c6a0c1",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:BusinessEntity"
+          },
+          {
+            "@id": "gr:Location"
+          },
+          {
+            "@id": "schema:Organization"
+          },
+          {
+            "@id": "schema:Place"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:N-Ary-Relations",
+      "@type": "owl:Class",
+      "owl:deprecated": true,
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This is the superclass for all classes that are placeholders for n-ary relations, which OWL cannot represent. DEPRECATED. Do not use this class in data or queries."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "N-ary relations (DEPRECATED)"
+      }
+    },
+    {
+      "@id": "gr:hasMinValueInteger",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This property captures the lower limit of a gr:QuantitativeValueInteger instance."
+      },
+      "rdfs:domain": {
+        "@id": "gr:QuantitativeValueInteger"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has min value integer (1..1)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:int"
+      },
+      "rdfs:subPropertyOf": {
+        "@id": "gr:hasMinValue"
+      }
+    },
+    {
+      "@id": "_:N20b0f41ef5fb4557bb547d419c0ddde2",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:ProductOrService"
+          },
+          {
+            "@id": "schema:Product"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:Tuesday",
+      "@type": "gr:DayOfWeek",
+      "gr:displayPosition": 2,
+      "gr:hasNext": {
+        "@id": "gr:Wednesday"
+      },
+      "gr:hasPrevious": {
+        "@id": "gr:Monday"
+      },
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "Tuesday as a day of the week."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Tuesday (day of week)"
+      }
+    },
+    {
+      "@id": "gr:eligibleCustomerTypes",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The types of customers (gr:BusinessEntityType) for which the given gr:Offering is valid."
+      },
+      "rdfs:domain": {
+        "@id": "_:N695da29eecfc44e4831238b1d2b7dde2"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "eligible customer types (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "gr:BusinessEntityType"
+      }
+    },
+    {
+      "@id": "gr:hasCurrency",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The currency for all prices in the gr:PriceSpecification given using the ISO 4217 standard (3 characters)."
+      },
+      "rdfs:domain": {
+        "@id": "gr:PriceSpecification"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has currency (1..1)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "_:N695da29eecfc44e4831238b1d2b7dde2",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:Offering"
+          },
+          {
+            "@id": "schema:Offer"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:vatID",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The Value-added Tax ID of the gr:BusinessEntity. See http://en.wikipedia.org/wiki/Value_added_tax_identification_number for details."
+      },
+      "rdfs:domain": {
+        "@id": "_:N126d18822072475eb80454c3ca41ff64"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "VAT ID (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "gr:taxID",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The Tax / Fiscal ID of the gr:BusinessEntity, e.g. the TIN in the US or the CIF/NIF in Spain. It is usually assigned by the country of residence"
+      },
+      "rdfs:domain": {
+        "@id": "_:N3522a98127394963a511ecae4830e4da"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Tax ID (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "dc:rights",
+      "@type": "owl:AnnotationProperty"
+    },
+    {
+      "@id": "gr:hasWarrantyScope",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This states the gr:WarrantyScope of a given gr:WarrantyPromise."
+      },
+      "rdfs:domain": {
+        "@id": "gr:WarrantyPromise"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has warranty scope (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "gr:WarrantyScope"
+      }
+    },
+    {
+      "@id": "gr:weight",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The weight of the gr:ProductOrService. Typical unit code(s): GRM for gram, KGM for kilogram, LBR for pound"
+      },
+      "rdfs:domain": {
+        "@id": "_:N8e11f326defe45c59e1f580e1dc7cf7b"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "weight (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "gr:QuantitativeValue"
+      },
+      "rdfs:subPropertyOf": {
+        "@id": "gr:quantitativeProductOrServiceProperty"
+      }
+    },
+    {
+      "@id": "gr:hasMinCurrencyValue",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This property specifies the LOWER BOUND of the amount of money for a price RANGE per unit, shipping charges, or payment charges. The currency and other relevant details are attached to the respective gr:PriceSpecification etc. For a gr:UnitPriceSpecification, this is the LOWER BOUND for the price for one unit or bundle (as specified in the unit of measurement of the unit price specification) of the respective gr:ProductOrService. For a gr:DeliveryChargeSpecification or a gr:PaymentChargeSpecification, it is the LOWER BOUND of the price per delivery or payment.  Using gr:hasCurrencyValue sets the upper and lower bounds to the same given value, i.e., x gr:hasCurrencyValue y implies x gr:hasMinCurrencyValue y, x gr:hasMaxCurrencyValue y."
+      },
+      "rdfs:domain": {
+        "@id": "gr:PriceSpecification"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has min currency value (1..1)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:float"
+      }
+    },
+    {
+      "@id": "gr:hasWarrantyPromise",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This specifies the gr:WarrantyPromise made by the gr:BusinessEntity for the given gr:Offering."
+      },
+      "rdfs:domain": {
+        "@id": "_:N50173437170247a1876b14e5d274f04a"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has warranty promise (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "gr:WarrantyPromise"
+      }
+    },
+    {
+      "@id": "_:Nd3f2258c59bb44efbb340a703e2db190",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:BusinessEntity"
+          },
+          {
+            "@id": "gr:ProductOrService"
+          },
+          {
+            "@id": "schema:Organization"
+          },
+          {
+            "@id": "schema:Product"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:quantitativeProductOrServiceProperty",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This is the super property of all quantitative  properties for products and services. All properties in product or service ontologies that specify quantitative characteristics, for which an interval is at least theoretically an appropriate value, are subproperties of this property."
+      },
+      "rdfs:domain": {
+        "@id": "_:N6ee89d98dca042be8121df3ba7c048dc"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "quantitative product or service property (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "gr:QuantitativeValue"
+      }
+    },
+    {
+      "@id": "gr:eligibleTransactionVolume",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This property can be used to indicate the transaction volume, in a monetary unit, for which the gr:Offering or gr:PriceSpecification is valid. This is mostly used to specify a minimal purchasing volume, to express free shipping above a certain order volume, or to limit the acceptance of credit cards to purchases above a certain amount.  The object is a gr:PriceSpecification that uses the properties gr:hasMaxCurrencyValue and gr:hasMinCurrencyValue to indicate the lower and upper boundaries and gr:hasCurrency to indicate the currency using the ISO 4217 standard (3 characters)."
+      },
+      "rdfs:domain": {
+        "@id": "_:N8278c3e50a5f46d78f614643d0563c17"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "eligible transaction volume (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "gr:PriceSpecification"
+      }
+    },
+    {
+      "@id": "gr:PaymentChargeSpecification",
+      "@type": "owl:Class",
+      "owl:disjointWith": [
+        {
+          "@id": "gr:DeliveryChargeSpecification"
+        },
+        {
+          "@id": "gr:UnitPriceSpecification"
+        }
+      ],
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "A payment charge specification is a conceptual entity that specifies the additional costs asked for settling the payment after accepting a given gr:Offering using a particular gr:PaymentMethod. A payment charge specification is characterized by (1) a monetary amount per order specified as a literal value of type float in combination with a Currency, (2) the payment method, and (3) a whether this charge includes local sales taxes, namely VAT. A gr:Offering may be linked to multiple payment charge specifications that specify alternative charges for various payment methods.  Examples: Payment by VISA or Mastercard costs a fee of 3 Euros including VAT, payment by bank transfer in advance is free of charge.  The total amount of this surcharge is specified as a float value of the gr:hasCurrencyValue property. The currency is specified via the gr:hasCurrency datatype property. Whether the price includes VAT or not is indicated by the gr:valueAddedTaxIncluded datatype property. The gr:PaymentMethod to which this charge applies is specified using the gr:appliesToPaymentMethod object property.  If the price can only be given as a range, use gr:hasMaxCurrencyValue and gr:hasMinCurrencyValue for the upper and lower bounds.  Important: When querying for the price, always use gr:hasMaxCurrencyValue and gr:hasMinCurrencyValue."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Payment charge specification"
+      },
+      "rdfs:subClassOf": {
+        "@id": "gr:PriceSpecification"
+      }
+    },
+    {
+      "@id": "_:N8b54629143b344f981ce8ec0f34396f8",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:Offering"
+          },
+          {
+            "@id": "schema:Offer"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:greaterOrEqual",
+      "@type": [
+        "owl:ObjectProperty",
+        "owl:TransitiveProperty"
+      ],
+      "owl:inverseOf": {
+        "@id": "gr:lesserOrEqual"
+      },
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This ordering relation for qualitative values indicates that the subject is greater than or equal to the object."
+      },
+      "rdfs:domain": {
+        "@id": "gr:QualitativeValue"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "greater or equal (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "gr:QualitativeValue"
+      }
+    },
+    {
+      "@id": "gr:Offering",
+      "@type": "owl:Class",
+      "owl:disjointWith": [
+        {
+          "@id": "gr:DayOfWeek"
+        },
+        {
+          "@id": "gr:BusinessFunction"
+        },
+        {
+          "@id": "gr:PriceSpecification"
+        },
+        {
+          "@id": "gr:DeliveryMethod"
+        },
+        {
+          "@id": "gr:TypeAndQuantityNode"
+        },
+        {
+          "@id": "gr:QuantitativeValue"
+        },
+        {
+          "@id": "gr:ProductOrService"
+        },
+        {
+          "@id": "gr:Location"
+        },
+        {
+          "@id": "gr:BusinessEntity"
+        },
+        {
+          "@id": "gr:BusinessEntityType"
+        },
+        {
+          "@id": "gr:OpeningHoursSpecification"
+        },
+        {
+          "@id": "gr:WarrantyPromise"
+        },
+        {
+          "@id": "gr:WarrantyScope"
+        },
+        {
+          "@id": "gr:QualitativeValue"
+        },
+        {
+          "@id": "gr:Brand"
+        },
+        {
+          "@id": "gr:PaymentMethod"
+        }
+      ],
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "An offering represents the public, not necessarily binding, not necessarily exclusive, announcement by a gr:BusinessEntity to provide (or seek) a certain gr:BusinessFunction for a certain gr:ProductOrService to a specified target audience. An offering is specified by the type of product or service or bundle it refers to, what business function is being offered (sales, rental, ...), and a set of commercial properties. It can either refer to  (1) a clearly specified instance (gr:Individual), (2) to a set of anonymous instances of a given type (gr:SomeItems), (3) a product model specification (gr:ProductOrServiceModel), see also section 3.3.3 of the GoodRelations Technical Report.   An offering may be constrained in terms of the eligible type of business partner, countries, quantities, and other commercial properties. The definition of the commercial properties, the type of product offered, and the business function are explained in other parts of this vocabulary in more detail.  Example: Peter Miller offers to repair TV sets made by Siemens, Volkswagen Innsbruck sells a particular instance of a Volkswagen Golf at $10,000.  Compatibility with schema.org: This class is a superclass to http://schema.org/Offer, since gr:Offering can also represent demand."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Offering"
+      }
+    },
+    {
+      "@id": "_:N0de169eec45f43ffb46557fa66a36b9b",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:BusinessEntity"
+          },
+          {
+            "@id": "schema:Organization"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "schema:image",
+      "@type": "owl:ObjectProperty",
+      "owl:equivalentProperty": {
+        "@id": "foaf:depiction"
+      }
+    },
+    {
+      "@id": "gr:hasMaxValue",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This property captures the upper limit of a gr:QuantitativeValue instance."
+      },
+      "rdfs:domain": {
+        "@id": "gr:QuantitativeValue"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has max value (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "rdfs:Literal"
+      }
+    },
+    {
+      "@id": "_:N99fdf2890f43478a8774289d9ad3a372",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:Offering"
+          },
+          {
+            "@id": "gr:ProductOrService"
+          },
+          {
+            "@id": "schema:Offer"
+          },
+          {
+            "@id": "schema:Product"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:Cash",
+      "@type": "gr:PaymentMethod",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "Payment by cash upon delivery or pickup."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Cash (payment method)"
+      }
+    },
+    {
+      "@id": "gr:DeliveryModePickUp",
+      "@type": "gr:DeliveryMethod",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "Delivery of the goods by picking them up at one of the stores etc. (gr:Location) during the opening hours as specified by respective instances of gr:OpeningHoursSpecification."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Delivery mode pick up (delivery method)"
+      }
+    },
+    {
+      "@id": "gr:priceType",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This attribute can be used to distinguish multiple different price specifications for the same gr:Offering. It supersedes the former gr:isListPrice property. The following values are recommended:  The absence of this property marks the actual sales price.  SRP: 'suggested retail price' - applicable for all sorts of a non-binding retail price recommendations, e.g. such published by the manufacturer or the distributor. This value replaces the former gr:isListPrice property.  INVOICE: The invoice price, mostly used in the car industry - this is the price a dealer pays to the manufacturer, excluding rebates and charges."
+      },
+      "rdfs:domain": {
+        "@id": "gr:UnitPriceSpecification"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "price type (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "gr:hasPriceSpecification",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This links a gr:Offering to a gr:PriceSpecification or specifications. There can be unit price specifications, payment charge specifications, and delivery charge specifications. For each type, multiple specifications for the same gr:Offering are possible, e.g. for different quantity ranges or for different currencies, or for different combinations of gr:DeliveryMethod and target destinations.  Recommended retail prices etc. can be marked by the gr:priceType property of the gr:UnitPriceSpecification."
+      },
+      "rdfs:domain": {
+        "@id": "_:N9ccdb33362044d4ab4d10b7afca3b7e2"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has price specification (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "gr:PriceSpecification"
+      }
+    },
+    {
+      "@id": "gr:QuantitativeValueFloat",
+      "@type": "owl:Class",
+      "owl:disjointWith": {
+        "@id": "gr:QuantitativeValueInteger"
+      },
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "An instance of this class is an actual float value for a quantitative property of a product. This instance is usually characterized by a minimal value, a maximal value, and a unit of measurement.  Examples: The intervals 'between 10.0  and 25.4 kilogramms' or '10.2 and 15.5 milimeters'.  Compatibility with schema.org: This class is a subclass of http://schema.org/Quantity."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Quantitative value float"
+      },
+      "rdfs:subClassOf": {
+        "@id": "gr:QuantitativeValue"
+      }
+    },
+    {
+      "@id": "gr:hasBusinessFunction",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This specifies the business function of the gr:Offering, i.e. whether the gr:BusinessEntity is offering to sell, to lease, or to repair the particular type of product. In the case of bundles, it is also possible to attach individual business functions to each gr:TypeAndQuantityNode. The business function of the main gr:Offering determines the business function for all included objects or services, unless a business function attached to a gr:TypeAndQuantityNode overrides it.   Note: While it is possible that an entity is offering multiple types of business functions for the same set of objects (e.g. rental and sales), this should usually not be stated by attaching multiple business functions to the same gr:Offering, since the gr:UnitPriceSpecification for the varying business functions will typically be very different."
+      },
+      "rdfs:domain": {
+        "@id": "_:N6bff98f71b7147a38c74b7130c0614e5"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has business function (1..*)"
+      },
+      "rdfs:range": {
+        "@id": "gr:BusinessFunction"
+      }
+    },
+    {
+      "@id": "_:Nf75ce9343bf84527aab2794696772cf3",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:Offering"
+          },
+          {
+            "@id": "schema:Offer"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "_:N72b117a04c4340659693a9bde731c30b",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:ProductOrService"
+          },
+          {
+            "@id": "schema:Product"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:BusinessFunction",
+      "@type": "owl:Class",
+      "owl:disjointWith": [
+        {
+          "@id": "gr:PaymentMethod"
+        },
+        {
+          "@id": "gr:Offering"
+        },
+        {
+          "@id": "gr:QuantitativeValue"
+        },
+        {
+          "@id": "gr:ProductOrService"
+        },
+        {
+          "@id": "gr:OpeningHoursSpecification"
+        },
+        {
+          "@id": "gr:DayOfWeek"
+        },
+        {
+          "@id": "gr:PriceSpecification"
+        },
+        {
+          "@id": "gr:Location"
+        },
+        {
+          "@id": "gr:BusinessEntityType"
+        },
+        {
+          "@id": "gr:DeliveryMethod"
+        },
+        {
+          "@id": "gr:TypeAndQuantityNode"
+        },
+        {
+          "@id": "gr:BusinessEntity"
+        },
+        {
+          "@id": "gr:Brand"
+        },
+        {
+          "@id": "gr:WarrantyPromise"
+        },
+        {
+          "@id": "gr:WarrantyScope"
+        }
+      ],
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The business function specifies the type of activity or access (i.e., the bundle of rights) offered by the gr:BusinessEntity on the gr:ProductOrService through the gr:Offering. Typical are sell, rental or lease, maintenance or repair, manufacture / produce, recycle / dispose, engineering / construction, or installation.  Licenses and other proprietary specifications of access rights are also instances of this class.  Examples: A particular offering made by Miller Rentals Ltd. says that they (1) sell Volkswagen Golf convertibles, (2) lease out a particular Ford pick-up truck, and (3) dispose car wrecks of any make and model."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Business function"
+      }
+    },
+    {
+      "@id": "gr:isAccessoryOrSparePartFor",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This states that a particular gr:ProductOrService is an accessory or spare part for another product or service."
+      },
+      "rdfs:domain": {
+        "@id": "_:N4a75fc9ce295498b8c34630ecf154b75"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "is accessory or spare part for (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "gr:ProductOrService"
+      }
+    },
+    {
+      "@id": "gr:description",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "A short textual description of the resource.   This property is semantically equivalent to rdfs:comment and just meant as a handy shortcut for marking up data."
+      },
+      "rdfs:domain": {
+        "@id": "_:Nbe756db8f07449238f029ce4303a39f7"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "description (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "rdfs:Literal"
+      }
+    },
+    {
+      "@id": "gr:Individual",
+      "@type": "owl:Class",
+      "owl:disjointWith": [
+        {
+          "@id": "gr:ProductOrServiceModel"
+        },
+        {
+          "@id": "gr:SomeItems"
+        }
+      ],
+      "owl:equivalentClass": {
+        "@id": "gr:ActualProductOrServiceInstance"
+      },
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "A gr:Individual is an actual product or service instance, i.e., a single identifiable object or action that creates some increase in utility (in the economic sense) for the individual possessing or using this very object (product) or for the individual in whose favor this very action is being taken (service). Products or services are types of goods in the economic sense. For an overview of goods and commodities in economics, see Milgate (1987).  Examples: MyThinkpad T60, the pint of beer standing in front of me, my Volkswagen Golf, the haircut that I received or will be receiving at a given date and time.  Note 1: In many cases, product or service instances are not explicitly exposed on the Web but only claimed to exist (i.e. existentially quantified). In this case, use gr:SomeItems. Note 2: This class is the new, shorter form of the former gr:ActualProductOrServiceInstance.  Compatibility with schema.org: This class is a subclass of http://schema.org/Product."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Individual"
+      },
+      "rdfs:subClassOf": [
+        {
+          "@id": "gr:ProductOrService"
+        },
+        {
+          "@id": "schema:Product"
+        }
+      ]
+    },
+    {
+      "@id": "gr:hasValueInteger",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This subproperty specifies that the upper and lower limit of the given gr:QuantitativeValueInteger are identical and have the respective integer value. It is a shortcut for such cases where a quantitative property is (at least practically) a single point value and not an interval."
+      },
+      "rdfs:domain": {
+        "@id": "gr:QuantitativeValueInteger"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has value integer (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:int"
+      },
+      "rdfs:subPropertyOf": [
+        {
+          "@id": "gr:hasMaxValueInteger"
+        },
+        {
+          "@id": "gr:hasMinValueInteger"
+        }
+      ]
+    },
+    {
+      "@id": "gr:CheckInAdvance",
+      "@type": "gr:PaymentMethod",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "Payment by sending a check in advance, i.e., the offering gr:BusinessEntity will deliver the goods upon receipt of a check over the due amount. There are variations in handling payment by check - sometimes, shipment will be upon receipt of the check as a document, sometimes the shipment will take place only upon successful crediting of the check."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Check in advance (payment method)"
+      }
+    },
+    {
+      "@id": "gr:LeaseOut",
+      "@type": "gr:BusinessFunction",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This gr:BusinessFunction indicates that the gr:BusinessEntity offers (or seeks) the temporary right to use the specified gr:ProductOrService."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Lease Out (business function)"
+      }
+    },
+    {
+      "@id": "gr:DeliveryModeOwnFleet",
+      "@type": "gr:DeliveryMethod",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "Delivery of the goods by using a fleet of vehicles either owned and operated or subcontracted by the gr:BusinessEntity."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Delivery mode own fleet (delivery method)"
+      }
+    },
+    {
+      "@id": "gr:condition",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "A textual description of the condition of the product or service, or the products or services included in the offer (when attached to a gr:Offering)"
+      },
+      "rdfs:domain": {
+        "@id": "_:Ne348c7f6fb7d41c19bef4d5a48b8d81c"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "condition (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "rdfs:Literal"
+      }
+    },
+    {
+      "@id": "schema:Organization",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": {
+        "@id": "gr:BusinessEntity"
+      }
+    },
+    {
+      "@id": "gr:datatypeProductOrServiceProperty",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This property is the super property for all pure datatype properties that can be used to describe a gr:ProductOrService.  In products and services ontologies, only such properties that are no quantitative properties and that have no predefined gr:QualitativeValue instances are subproperties of this property. In practice, this refers to a few integer properties for which the integer value represents qualitative aspects, for string datatypes (as long as no predefined values exist), for boolean datatype properties, and for dates and times."
+      },
+      "rdfs:domain": {
+        "@id": "_:N99da1d4b44654c77b178a561af751451"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "datatype product or service property (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "rdfs:Literal"
+      }
+    },
+    {
+      "@id": "gr:AmericanExpress",
+      "@type": "gr:PaymentMethodCreditCard",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "Payment by credit or debit cards issued by the American Express network."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "American Express (payment method)"
+      }
+    },
+    {
+      "@id": "gr:amountOfThisGood",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This property specifies the quantity of the goods included in the gr:Offering via this gr:TypeAndQuantityNode. The quantity is given in the unit of measurement attached to the gr:TypeAndQuantityNode."
+      },
+      "rdfs:domain": {
+        "@id": "gr:TypeAndQuantityNode"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "amount of this good (1..1)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:float"
+      }
+    },
+    {
+      "@id": "gr:seeks",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This links a gr:BusinessEntity to gr:Offering nodes that describe what the business entity is interested in (i.e., the buy side). If you want to express interest in offering something, use gr:offers instead. Note that this substitutes the former gr:BusinessFunction gr:Buy, which is now deprecated."
+      },
+      "rdfs:domain": {
+        "@id": "_:N5c6394fe52c0413e9779c8af3583f288"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "seeks (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "gr:Offering"
+      }
+    },
+    {
+      "@id": "gr:hasMaxCurrencyValue",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This property specifies the UPPER BOUND of the amount of money for a price RANGE per unit, shipping charges, or payment charges. The currency and other relevant details are attached to the respective gr:PriceSpecification etc. For a gr:UnitPriceSpecification, this is the UPPER BOUND for the price for one unit or bundle (as specified in the unit of measurement of the unit price specification) of the respective gr:ProductOrService. For a gr:DeliveryChargeSpecification or a gr:PaymentChargeSpecification, it is the UPPER BOUND of the price per delivery or payment.  Using gr:hasCurrencyValue sets the upper and lower bounds to the same given value, i.e., x gr:hasCurrencyValue y implies x gr:hasMinCurrencyValue y, x gr:hasMaxCurrencyValue y."
+      },
+      "rdfs:domain": {
+        "@id": "gr:PriceSpecification"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has max currency value (1..1)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:float"
+      }
+    },
+    {
+      "@id": "gr:Maintain",
+      "@type": "gr:BusinessFunction",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This gr:BusinessFunction indicates that the gr:BusinessEntity offers (or seeks) typical maintenance tasks for the specified gr:ProductOrService. Maintenance tasks are actions that undo or compensate for wear or other deterioriation caused by regular usage, in order to restore the originally intended function of the product, or to prevent outage or malfunction."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Maintain (business function)"
+      }
+    },
+    {
+      "@id": "_:N3d4cda33160d466098f64fdb201ebfc3",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:Offering"
+          },
+          {
+            "@id": "gr:License"
+          },
+          {
+            "@id": "schema:Offer"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:ConstructionInstallation",
+      "@type": "gr:BusinessFunction",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This gr:BusinessFunction indicates that the gr:BusinessEntity offers (or seeks) the construction and/or installation of the specified gr:ProductOrService at the customer's location."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Construction / installation (business function)"
+      }
+    },
+    {
+      "@id": "gr:PartsAndLabor-BringIn",
+      "@type": "gr:WarrantyScope",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "In case of a defect or malfunction, the buying party has the right to transport the good to a service location determined by the the selling gr:BusinessEntity and will not be be charged for labor, parts, and materials needed to fix the problem. All those costs will be covered by the selling business entity or one of its partnering business entities.  Note: This is just a rough classification for filtering offers. It is up to the buying party to check the exact scope and terms and conditions of the gr:WarrantyPromise."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Parts and labor / bring-in (warranty scope)"
+      }
+    },
+    {
+      "@id": "gr:nonEqual",
+      "@type": [
+        "owl:SymmetricProperty",
+        "owl:ObjectProperty"
+      ],
+      "owl:inverseOf": {
+        "@id": "gr:nonEqual"
+      },
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This ordering relation for gr:QualitativeValue pairs indicates that the subject is not equal to the object."
+      },
+      "rdfs:domain": {
+        "@id": "gr:QualitativeValue"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "non equal (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "gr:QualitativeValue"
+      }
+    },
+    {
+      "@id": "gr:Enduser",
+      "@type": "gr:BusinessEntityType",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The gr:BusinessEntityType representing such agents that are purchasing the good or service for private consumption, in particular not for resale or for usage within an industrial enterprise. By default, a Business Entity is an Enduser."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Enduser (business entity type)"
+      }
+    },
+    {
+      "@id": "_:Na80ca1faacdf458e952e6be26899a1c3",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:Offering"
+          },
+          {
+            "@id": "gr:ProductOrService"
+          },
+          {
+            "@id": "schema:Product"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:owns",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This property indicates that a particular person or business owns a particular product. It can be used to expose the products in one's posession in order to empower recommender systems to suggest matching offers.  Note that the product must be an instance of the class gr:Individual.  This property can also be safely applied to foaf:Agent instances."
+      },
+      "rdfs:domain": {
+        "@id": "_:N6a97da3134394243900a09f5ffa558d9"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "owns (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "gr:Individual"
+      }
+    },
+    {
+      "@id": "_:N9d6c85d468d444d78baeba21a835f8ab",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:ProductOrService"
+          },
+          {
+            "@id": "schema:Product"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "_:N997c9fa42ba54b9e9ecc7ed15d38b44a",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:DeliveryChargeSpecification"
+          },
+          {
+            "@id": "gr:Offering"
+          },
+          {
+            "@id": "gr:License"
+          },
+          {
+            "@id": "schema:Offer"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "_:N50173437170247a1876b14e5d274f04a",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:Offering"
+          },
+          {
+            "@id": "schema:Offer"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "_:Nbe756db8f07449238f029ce4303a39f7",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "owl:Thing"
+          },
+          {
+            "@id": "gr:Brand"
+          },
+          {
+            "@id": "gr:BusinessEntity"
+          },
+          {
+            "@id": "gr:BusinessEntityType"
+          },
+          {
+            "@id": "gr:BusinessFunction"
+          },
+          {
+            "@id": "gr:DayOfWeek"
+          },
+          {
+            "@id": "gr:DeliveryChargeSpecification"
+          },
+          {
+            "@id": "gr:DeliveryMethod"
+          },
+          {
+            "@id": "gr:DeliveryModeParcelService"
+          },
+          {
+            "@id": "gr:Individual"
+          },
+          {
+            "@id": "gr:Location"
+          },
+          {
+            "@id": "gr:Offering"
+          },
+          {
+            "@id": "gr:OpeningHoursSpecification"
+          },
+          {
+            "@id": "gr:PaymentChargeSpecification"
+          },
+          {
+            "@id": "gr:PaymentMethod"
+          },
+          {
+            "@id": "gr:PaymentMethodCreditCard"
+          },
+          {
+            "@id": "gr:PriceSpecification"
+          },
+          {
+            "@id": "gr:ProductOrService"
+          },
+          {
+            "@id": "gr:ProductOrServiceModel"
+          },
+          {
+            "@id": "gr:QualitativeValue"
+          },
+          {
+            "@id": "gr:QuantitativeValue"
+          },
+          {
+            "@id": "gr:QuantitativeValueFloat"
+          },
+          {
+            "@id": "gr:QuantitativeValueInteger"
+          },
+          {
+            "@id": "gr:SomeItems"
+          },
+          {
+            "@id": "gr:TypeAndQuantityNode"
+          },
+          {
+            "@id": "gr:UnitPriceSpecification"
+          },
+          {
+            "@id": "gr:WarrantyPromise"
+          },
+          {
+            "@id": "gr:WarrantyScope"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "_:N8d437393e0594065bda3cb5e1b2a943c",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:Individual"
+          },
+          {
+            "@id": "gr:SomeItems"
+          },
+          {
+            "@id": "schema:Product"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:durationOfWarrantyInMonths",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This property specifies the duration of the gr:WarrantyPromise in months."
+      },
+      "rdfs:domain": {
+        "@id": "gr:WarrantyPromise"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "duration of warranty in months (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:int"
+      }
+    },
+    {
+      "@id": "gr:WarrantyScope",
+      "@type": "owl:Class",
+      "owl:disjointWith": [
+        {
+          "@id": "gr:ProductOrService"
+        },
+        {
+          "@id": "gr:PriceSpecification"
+        },
+        {
+          "@id": "gr:TypeAndQuantityNode"
+        },
+        {
+          "@id": "gr:BusinessEntityType"
+        },
+        {
+          "@id": "gr:BusinessEntity"
+        },
+        {
+          "@id": "gr:OpeningHoursSpecification"
+        },
+        {
+          "@id": "gr:BusinessFunction"
+        },
+        {
+          "@id": "gr:Location"
+        },
+        {
+          "@id": "gr:Brand"
+        },
+        {
+          "@id": "gr:Offering"
+        },
+        {
+          "@id": "gr:QuantitativeValue"
+        },
+        {
+          "@id": "gr:WarrantyPromise"
+        },
+        {
+          "@id": "gr:DeliveryMethod"
+        },
+        {
+          "@id": "gr:PaymentMethod"
+        },
+        {
+          "@id": "gr:DayOfWeek"
+        }
+      ],
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The warranty scope represents types of services that will be provided free of charge by the vendor or manufacturer in the case of a defect (e.g. labor and parts, just parts), as part of the warranty included in an gr:Offering. The actual services may be provided by the gr:BusinessEntity making the offering, by the manufacturer of the product, or by a third party.   Examples: Parts and Labor, Parts"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Warranty scope"
+      }
+    },
+    {
+      "@id": "gr:hasInventoryLevel",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This property specifies the current approximate inventory level for gr:SomeItems. The unit of measurement and the point value or interval are indicated using the attached gr:QuantitativeValueFloat instance.  This property can also be attached to a gr:Offering in cases where the included products are not modeled in more detail."
+      },
+      "rdfs:domain": {
+        "@id": "_:Nbad96ffb4e76418289912261153acd99"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has inventory level (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "gr:QuantitativeValueFloat"
+      }
+    },
+    {
+      "@id": "gr:DeliveryChargeSpecification",
+      "@type": "owl:Class",
+      "owl:disjointWith": [
+        {
+          "@id": "gr:PaymentChargeSpecification"
+        },
+        {
+          "@id": "gr:UnitPriceSpecification"
+        }
+      ],
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "A delivery charge specification is a conceptual entity that specifies the additional costs asked for the delivery of a given gr:Offering using a particular gr:DeliveryMethod by the respective gr:BusinessEntity. A delivery charge specification is characterized by (1) a monetary amount per order, specified as a literal value of type float in combination with a currency, (2) the delivery method, (3) the target country or region, and (4)  whether this charge includes local sales taxes, namely VAT. A gr:Offering may be linked to multiple gr:DeliveryChargeSpecification nodes that specify alternative charges for disjoint combinations of target countries or regions, and delivery methods.  Examples: Delivery by direct download is free of charge worldwide, delivery by UPS to Germany is 10 Euros per order, delivery by mail within the US is 5 Euros per order.  The total amount of this charge is specified as a float value of the gr:hasCurrencyValue property. The currency is specified via the gr:hasCurrency datatype property. Whether the price includes VAT or not is indicated by the gr:valueAddedTaxIncluded property. The gr:DeliveryMethod to which this charge applies is specified using the gr:appliesToDeliveryMethod object property. The region or regions to which this charge applies is specified using the gr:eligibleRegions property, which uses ISO 3166-1 and ISO 3166-2 codes.  If the price can only be given as a range, use gr:hasMaxCurrencyValue and gr:hasMinCurrencyValue for the upper and lower bounds.  Important: When querying for the price, always use gr:hasMaxCurrencyValue and gr:hasMinCurrencyValue."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Delivery charge specification"
+      },
+      "rdfs:subClassOf": {
+        "@id": "gr:PriceSpecification"
+      }
+    },
+    {
+      "@id": "_:Nc8f1b6c2dfea4cb38d3048d8615b9a1c",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:Offering"
+          },
+          {
+            "@id": "gr:PriceSpecification"
+          },
+          {
+            "@id": "schema:Offer"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:greater",
+      "@type": [
+        "owl:TransitiveProperty",
+        "owl:ObjectProperty"
+      ],
+      "owl:inverseOf": {
+        "@id": "gr:lesser"
+      },
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This ordering relation for qualitative values indicates that the subject is greater than the object."
+      },
+      "rdfs:domain": {
+        "@id": "gr:QualitativeValue"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "greater (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "gr:QualitativeValue"
+      }
+    },
+    {
+      "@id": "gr:hasStockKeepingUnit",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The Stock Keeping Unit, or SKU is a unique identifier for a product, service, or bundle from the perspective of a particular supplier, i.e. SKUs are mostly assigned and serialized at the merchant level.  Examples of SKUs are the ordering or parts numbers used by a particular Web shop or catalog.  Consequently, the domain of gr:hasStockKeepingUnit is the union of the classes gr:Offering and gr:ProductOrService.  If attached to a gr:Offering, the SKU will usually reflect a merchant-specific identifier, i.e. one valid only for that particular retailer or shop.  If attached to a gr:ProductOrServiceModel, the SKU can reflect either the identifier used by the merchant or the part number used by the official manufacturer of that part. For the latter, gr:hasMPN is a better choice.  Important: Be careful when assuming two products or services instances or offering instances to be identical based on the SKU. Since SKUs are unique only for the same gr:BusinessEntity, this can be assumed only when you are sure that the two SKU values refer to the same business entity. Such can be done by taking into account the provenance of the data. As long as instances of gr:Offering are concerned, you can also check that the offerings are being offered by the same gr:Business Entity.  Usually, the properties gr:hasEAN_UCC-13 and gr:hasGTIN-14 are much more reliable identifiers, because they are globally unique.  See also http://en.wikipedia.org/wiki/Stock_Keeping_Unit."
+      },
+      "rdfs:domain": {
+        "@id": "_:N99fdf2890f43478a8774289d9ad3a372"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has Stock Keeping Unit (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:string"
+      },
+      "rdfs:subPropertyOf": {
+        "@id": "schema:productID"
+      }
+    },
+    {
+      "@id": "schema:name",
+      "@type": "owl:DatatypeProperty",
+      "owl:equivalentProperty": {
+        "@id": "gr:name"
+      }
+    },
+    {
+      "@id": "gr:lesser",
+      "@type": [
+        "owl:TransitiveProperty",
+        "owl:ObjectProperty"
+      ],
+      "owl:inverseOf": {
+        "@id": "gr:greater"
+      },
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This ordering relation for gr:QualitativeValue pairs indicates that the subject is lesser than the object."
+      },
+      "rdfs:domain": {
+        "@id": "gr:QualitativeValue"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "lesser (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "gr:QualitativeValue"
+      }
+    },
+    {
+      "@id": "dcterms:license",
+      "@type": "owl:AnnotationProperty"
+    },
+    {
+      "@id": "gr:Reseller",
+      "@type": "gr:BusinessEntityType",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The gr:BusinessEntityType representing such agents that are purchasing the scope of products included in the gr:Offering for resale on the market. Resellers are also businesses, i.e., they are officially registered with the public administration and strive for profits by their activities."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Reseller (business entity type)"
+      }
+    },
+    {
+      "@id": "gr:Labor-BringIn",
+      "@type": "gr:WarrantyScope",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "In case of a defect or malfunction, the buying party has the right to transport the good to a service location determined by the the selling gr:BusinessEntity and will be charged only for parts and materials needed to fix the problem. Labor will be covered by the selling business entity or one of its partnering business entities.  Note: This is just a rough classification for filtering offers. It is up to the buying party to check the exact scope and terms and conditions of the gr:WarrantyPromise."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Labor / bring-in (warranty scope)"
+      }
+    },
+    {
+      "@id": "gr:legalName",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The legal name of the gr:BusinessEntity."
+      },
+      "rdfs:domain": {
+        "@id": "_:Nd39c2f09c7ec4aeca4251d4438200dba"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "legal name (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "rdfs:Literal"
+      }
+    },
+    {
+      "@id": "gr:hasGTIN-8",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The 8-digit Global Trade Item Number (GTIN-8) of the given gr:ProductOrService or gr:Offering, also known as EAN/UCC-8 (8-digit EAN)."
+      },
+      "rdfs:domain": {
+        "@id": "_:N181fdb1eb29b49b6acf4e23ce3b1ff23"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has GTIN-8 (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:string"
+      },
+      "rdfs:subPropertyOf": {
+        "@id": "schema:productID"
+      }
+    },
+    {
+      "@id": "http://purl.org/goodrelations/v1",
+      "@type": "owl:Ontology",
+      "dc:contributor": {
+        "@language": "en",
+        "@value": "Work on the GoodRelations ontology and related research and development has been partly supported by the Austrian BMVIT/FFG under the FIT-IT Semantic Systems project myOntology (grant no. 812515/9284), by a Young Researcher's Grant (Nachwuchsfoerderung 2005-2006) from the Leopold-Franzens-Universitaet Innsbruck, by the European Commission under the project SUPER (FP6-026850), and by the German Federal Ministry of Research (BMBF) by a grant under the KMU Innovativ program as part of the Intelligent Match project (FKZ 01IS10022B). The"
+      },
+      "dc:creator": {
+        "@language": "en",
+        "@value": "Martin Hepp"
+      },
+      "dc:rights": {
+        "@language": "en",
+        "@value": "The GoodRelations ontology is available under the Creative Commons Attribution 3.0 Unported license; see http://creativecommons.org/licenses/by/3.0/. In a nutshell, you are free to copy, distribute and transmit the work; to remix/adapt the work (e.g. to import the ontology and create specializations of its elements), as long as you attribute the work in the manner specified by the author or licensor (but not in any way that suggests that they endorse you or your use of the work). Proper Attribution: Simply include the statement 'This work is based on the GoodRelations ontology, developed by Martin Hepp' and link back to http://purl.org/goodrelations/"
+      },
+      "dc:subject": {
+        "@language": "en",
+        "@value": "E-Commerce, E-Business, GoodRelations, Microdata, Ontology, Semantic SEO, RDFa, Linked Data, RDF, Semantic Web, Recommender Systems"
+      },
+      "dc:title": {
+        "@language": "en",
+        "@value": "The GoodRelations Vocabulary for Semantic Web-based E-Commerce"
+      },
+      "dcterms:license": {
+        "@id": "http://creativecommons.org/licenses/by/3.0/"
+      },
+      "foaf:homepage": {
+        "@id": "http://purl.org/goodrelations/"
+      },
+      "owl:versionInfo": {
+        "@language": "en",
+        "@value": "V 1.0, Release 2011-10-01"
+      },
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The GoodRelations ontology provides the vocabulary for annotating e-commerce offerings (1) to sell, lease, repair, dispose, or maintain commodity products and (2) to provide commodity services.  GoodRelations allows describing the relationship between (1) Web resources, (2) offerings made by those Web resources, (3) legal entities, (4) prices, (5) terms and conditions, and the aforementioned ontologies for products and services (6).   For more information, see http://purl.org/goodrelations/  Note: The base URI of GoodRelations is http://purl.org/goodrelations/v1. Please make sure you are only using element identifiers in this namespace, e.g. http://purl.org/goodrelations/v1#BusinessEntity. There may be copies of the ontology file on the Web which can be retrieved from other locations, BUT THOSE LOCATIONS MUST NOT BE USED AS THE BASIS OF IDENTIFIERS.  If you use GoodRelations for scientific purposes, please cite our paper:  Hepp, Martin: GoodRelations: An Ontology for Describing Products and Services Offers on the Web, Proceedings of the 16th International Conference on Knowledge Engineering and Knowledge Management (EKAW2008), September 29 - October 3, 2008, Acitrezza, Italy, Springer LNCS, Vol. 5268, pp. 332-347.  PDF at http://www.heppnetz.de/publications/"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "GoodRelations Ontology"
+      }
+    },
+    {
+      "@id": "gr:displayPosition",
+      "@type": "owl:AnnotationProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The position at which the option or element should be listed in a menu or user dialog, lower numbers come first.  The main usage of this property are the days of the week (gr:DayOfWeek), but it is also possible to apply it e.g. to product features or any other conceptual element. Note: Rely on this property only for data originating from a single RDF graph; otherwise, unpredictable results are possible."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "display position (0..1)"
+      }
+    },
+    {
+      "@id": "gr:width",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The width of the gr:ProductOrService. Typical unit code(s): CMT for centimeters, INH for inches"
+      },
+      "rdfs:domain": {
+        "@id": "_:N9d6c85d468d444d78baeba21a835f8ab"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "width (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "gr:QuantitativeValue"
+      },
+      "rdfs:subPropertyOf": {
+        "@id": "gr:quantitativeProductOrServiceProperty"
+      }
+    },
+    {
+      "@id": "_:Ndff3847bee2347019b1416b322801e19",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:Individual"
+          },
+          {
+            "@id": "gr:Offering"
+          },
+          {
+            "@id": "schema:Product"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:Sell",
+      "@type": "gr:BusinessFunction",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This gr:BusinessFunction indicates that the gr:BusinessEntity offers to permanently transfer all property rights on the specified gr:ProductOrService."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Sell (business function)"
+      }
+    },
+    {
+      "@id": "gr:hasOpeningHoursDayOfWeek",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This specifies the gr:DayOfWeek to which the gr:OpeningHoursSpecification is related.  Note: Use multiple instances of gr:OpeningHoursSpecification for specifying the opening hours for multiple days if the opening hours differ."
+      },
+      "rdfs:domain": {
+        "@id": "gr:OpeningHoursSpecification"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has opening hours day of week (1..*)"
+      },
+      "rdfs:range": {
+        "@id": "gr:DayOfWeek"
+      }
+    },
+    {
+      "@id": "_:N6bff98f71b7147a38c74b7130c0614e5",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:Offering"
+          },
+          {
+            "@id": "gr:TypeAndQuantityNode"
+          },
+          {
+            "@id": "schema:Offer"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:DayOfWeek",
+      "@type": "owl:Class",
+      "owl:disjointWith": [
+        {
+          "@id": "gr:OpeningHoursSpecification"
+        },
+        {
+          "@id": "gr:BusinessEntity"
+        },
+        {
+          "@id": "gr:TypeAndQuantityNode"
+        },
+        {
+          "@id": "gr:BusinessEntityType"
+        },
+        {
+          "@id": "gr:Location"
+        },
+        {
+          "@id": "gr:WarrantyPromise"
+        },
+        {
+          "@id": "gr:QuantitativeValue"
+        },
+        {
+          "@id": "gr:Offering"
+        },
+        {
+          "@id": "gr:PaymentMethod"
+        },
+        {
+          "@id": "gr:BusinessFunction"
+        },
+        {
+          "@id": "gr:DeliveryMethod"
+        },
+        {
+          "@id": "gr:PriceSpecification"
+        },
+        {
+          "@id": "gr:ProductOrService"
+        },
+        {
+          "@id": "gr:Brand"
+        },
+        {
+          "@id": "gr:WarrantyScope"
+        }
+      ],
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The day of the week, used to specify  to which day the opening hours of a gr:OpeningHoursSpecification refer.  Examples: Monday, Tuesday, Wednesday,..."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Day of week"
+      }
+    },
+    {
+      "@id": "gr:ByInvoice",
+      "@type": "gr:PaymentMethod",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "Payment by bank transfer after delivery, i.e., the offering gr:BusinessEntity will deliver first, inform the buying party about the due amount and their bank account details, and expect payment shortly after delivery."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "By invoice (payment method)"
+      }
+    },
+    {
+      "@id": "gr:availabilityEnds",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This property specifies the end of the availability of the gr:ProductOrService included in the gr:Offering. The difference to the properties gr:validFrom and gr:validThrough is that those specify the period of time during which the offer is valid and can be accepted.  Example: I offer to lease my boat for the period of August 1 - August 31, 2010, but you must accept by offer no later than July 15.  A time-zone should be specified. For a time in GMT/UTC, simply add a 'Z' following the time:  2008-05-30T09:30:10Z.  Alternatively, you can specify an offset from the UTC time by adding a positive or negative time following the time:  2008-05-30T09:30:10-09:00  or  2008-05-30T09:30:10+09:00.  Note: There is another property gr:availableAtOrFrom, which is used to indicate the gr:Location (e.g. store or shop) from which the goods would be available."
+      },
+      "rdfs:domain": {
+        "@id": "_:Nbc11e03999594c23a5cc40d58d247a21"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "availability ends (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:dateTime"
+      }
+    },
+    {
+      "@id": "gr:QualitativeValue",
+      "@type": "owl:Class",
+      "owl:disjointWith": [
+        {
+          "@id": "gr:TypeAndQuantityNode"
+        },
+        {
+          "@id": "gr:QuantitativeValue"
+        },
+        {
+          "@id": "gr:Offering"
+        }
+      ],
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "A qualitative value is a predefined value for a product characteristic.    Examples: the color 'green' or the power cord plug type 'US'; the garment sizes 'S', 'M', 'L', and 'XL'.   Note: Value sets are supported by creating subclasses of this class. Ordinal relations between values (gr:greater, gr:lesser, ...) are provided directly by GoodRelations.  Compatibility with schema.org: This class is equivalent to http://schema.org/Enumeration."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Qualitative value"
+      }
+    },
+    {
+      "@id": "gr:lesserOrEqual",
+      "@type": [
+        "owl:TransitiveProperty",
+        "owl:ObjectProperty"
+      ],
+      "owl:inverseOf": {
+        "@id": "gr:greaterOrEqual"
+      },
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This ordering relation for gr:QualitativeValue pairs indicates that the subject is lesser than or equal to the object."
+      },
+      "rdfs:domain": {
+        "@id": "gr:QualitativeValue"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "lesser or equal (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "gr:QualitativeValue"
+      }
+    },
+    {
+      "@id": "gr:PartsAndLabor-PickUp",
+      "@type": "gr:WarrantyScope",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "In case of a defect or malfunction, the buying party has the right to request from the selling gr:Business Entity to pick-up the good from its current location to a suitable service location, where the functionality of the good will be restored. All transportation, labor, parts, and materials needed to fix the problem will be covered by the selling business entity or one of its partnering business entities.    Note: This is just a rough classification for filtering offers. It is up to the buying party to check the exact scope and terms and conditions of the gr:WarrantyPromise."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Parts and labor / pick up (warranty scope)"
+      }
+    },
+    {
+      "@id": "gr:GoogleCheckout",
+      "@type": "gr:PaymentMethod",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "Payment via the Google Checkout payment service."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Google Checkout (payment method)"
+      }
+    },
+    {
+      "@id": "gr:DeliveryModeDirectDownload",
+      "@type": "gr:DeliveryMethod",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "Delivery of the goods via direct download from the Internet, i.e., the offering gr:BusinessEntity provides the buying party with details on how to retrieve the goods online. Connection fees and other costs of using the infrastructure are to be carried by the buying party."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Delivery mode direct download (delivery method)"
+      }
+    },
+    {
+      "@id": "gr:opens",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The opening hour of the gr:Location on the given gr:DayOfWeek. If no time-zone suffix is included, the time is given in the local time valid at the gr:Location.  For a time in GMT/UTC, simply add a 'Z' following the time:  09:30:10Z.  Alternatively, you can specify an offset from the UTC time by adding a positive or negative time following the time:  09:30:10-09:00  or  09:30:10+09:00.  Note 1: Use 00:00:00 for the first second of the respective day and 23:59:59 for the last second of that day. Note 2: If a store opens at 17:00 on Saturdays and closes at 03:00:00 a.m. next morning, use 17:00:00 - 23:59:59 for Saturday and 00:00:00 - 03:00:00 for Sunday. Note 3: If the shop re-opens on the same day of the week or set of days of the week, you must create a second instance of gr:OpeningHoursSpecification."
+      },
+      "rdfs:domain": {
+        "@id": "gr:OpeningHoursSpecification"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "opens (1..1)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:time"
+      }
+    },
+    {
+      "@id": "gr:hasMaxValueInteger",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This property captures the upper limit of a gr:QuantitativeValueInteger instance."
+      },
+      "rdfs:domain": {
+        "@id": "gr:QuantitativeValueInteger"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has max value integer (1..1)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:int"
+      },
+      "rdfs:subPropertyOf": {
+        "@id": "gr:hasMaxValue"
+      }
+    },
+    {
+      "@id": "schema:productID",
+      "@type": "owl:DatatypeProperty"
+    },
+    {
+      "@id": "gr:hasDUNS",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The Dun & Bradstreet DUNS number for identifying a gr:BusinessEntity. The Dun & Bradstreet DUNS is a nine-digit number used to identify legal entities (but usually not branches or locations of logistical importance only)."
+      },
+      "rdfs:domain": {
+        "@id": "_:N904f31845f42474e90230d1c557bf069"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has DUNS (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "_:N1badbdda5f5c492abdca01ede16a15d2",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:Offering"
+          },
+          {
+            "@id": "gr:ProductOrService"
+          },
+          {
+            "@id": "schema:Product"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:depth",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The depth of the product. Typical unit code(s): CMT for centimeters, INH for inches"
+      },
+      "rdfs:domain": {
+        "@id": "_:N9a8a1ecf4fcf4c7d9db1e6030644e5f4"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "depth (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "gr:QuantitativeValue"
+      },
+      "rdfs:subPropertyOf": {
+        "@id": "gr:quantitativeProductOrServiceProperty"
+      }
+    },
+    {
+      "@id": "gr:DeliveryModeParcelService",
+      "@type": "owl:Class",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "A private parcel service as the delivery mode available for a certain offering.  Examples: UPS, DHL"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Delivery mode parcel service"
+      },
+      "rdfs:subClassOf": {
+        "@id": "gr:DeliveryMethod"
+      }
+    },
+    {
+      "@id": "gr:valueAddedTaxIncluded",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This property specifies whether the applicable value-added tax (VAT)  is included in the price of the gr:PriceSpecification or not.  Note: This is a simple representation which may not properly reflect all details of local taxation."
+      },
+      "rdfs:domain": {
+        "@id": "gr:PriceSpecification"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "value added tax included (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:boolean"
+      }
+    },
+    {
+      "@id": "gr:hasUnitOfMeasurement",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The unit of measurement for a gr:QuantitativeValue, a gr:UnitPriceSpecification, or a gr:TypeAndQuantityNode given using the UN/CEFACT Common Code (3 characters)."
+      },
+      "rdfs:domain": {
+        "@id": "_:Nd6ff87e2133b4561aecc1222cf865d56"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has unit of measurement (1..1)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "gr:WarrantyPromise",
+      "@type": "owl:Class",
+      "owl:disjointWith": [
+        {
+          "@id": "gr:BusinessEntity"
+        },
+        {
+          "@id": "gr:DayOfWeek"
+        },
+        {
+          "@id": "gr:BusinessEntityType"
+        },
+        {
+          "@id": "gr:Offering"
+        },
+        {
+          "@id": "gr:WarrantyScope"
+        },
+        {
+          "@id": "gr:PriceSpecification"
+        },
+        {
+          "@id": "gr:BusinessFunction"
+        },
+        {
+          "@id": "gr:ProductOrService"
+        },
+        {
+          "@id": "gr:QuantitativeValue"
+        },
+        {
+          "@id": "gr:PaymentMethod"
+        },
+        {
+          "@id": "gr:OpeningHoursSpecification"
+        },
+        {
+          "@id": "gr:Brand"
+        },
+        {
+          "@id": "gr:TypeAndQuantityNode"
+        },
+        {
+          "@id": "gr:DeliveryMethod"
+        },
+        {
+          "@id": "gr:Location"
+        }
+      ],
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This is a conceptual entity that holds together all aspects of the n-ary relation gr:hasWarrantyPromise.  A Warranty promise is an entity representing the duration and scope of services that will be provided to a customer free of charge in case of a defect or malfunction of the gr:ProductOrService. A warranty promise is characterized by its temporal duration (usually starting with the date of purchase) and its gr:WarrantyScope. The warranty scope represents the types of services provided (e.g. labor and parts, just parts) of the warranty included in an gr:Offering. The actual services may be provided by the gr:BusinessEntity making the offering, by the manufacturer of the product, or by a third party. There may be multiple warranty promises associated with a particular offering, which differ in duration and scope (e.g. pick-up service during the first 12 months, just parts and labor for 36 months).  Examples: 12 months parts and labor, 36 months parts"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Warranty promise"
+      }
+    },
+    {
+      "@id": "gr:isVariantOf",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This states that a particular gr:ProductOrServiceModel is a variant of another product or service model. It is pretty safe to infer that the variant inherits all gr:quantitativeProductOrServiceProperty, gr:qualitativeProductOrServiceProperty, and gr:datatypeProductOrServiceProperty values that are defined for the first gr:ProductOrServiceModel.  Example: foo:Red_Ford_T_Model gr:isVariantOf foo:Ford_T_Model"
+      },
+      "rdfs:domain": {
+        "@id": "gr:ProductOrServiceModel"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "is variant of (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "gr:ProductOrServiceModel"
+      }
+    },
+    {
+      "@id": "gr:License",
+      "@type": "owl:Class",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "A license is the specification of a bundle of rights that determines the type of activity or access offered by the gr:BusinessEntity on the gr:ProductOrService through the gr:Offering.   Licenses can be standardized (e.g. LPGL, Creative Commons, ...), vendor-specific, or individually defined for a single offer or product. Whether there is a fee for obtaining the license is specified using the gr:UnitPriceSpecification attached to the gr:Offering. Use foaf:page for linking to a document containing the license, e.g. in PDF or HTML."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "License"
+      },
+      "rdfs:subClassOf": {
+        "@id": "gr:BusinessFunction"
+      }
+    },
+    {
+      "@id": "foaf:homepage",
+      "@type": "owl:AnnotationProperty"
+    },
+    {
+      "@id": "gr:hasMPN",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The Manufacturer Part Number or MPN is a unique identifier for a product, service, or bundle from the perspective of a particular manufacturer. MPNs can be assigned to products or product datasheets, or bundles. Accordingly, the domain of this property is the union of gr:ProductOrService (the common superclass of goods and datasheets), and gr:Offering.  Important: Be careful when assuming two products or services instances or offering instances to be identical based on the MPN. Since MPNs are unique only for the same gr:BusinessEntity, this holds only when the two MPN values refer to the same gr:BusinessEntity. Such can be done by taking into account the provenance of the data.   Usually, the properties gr:hasEAN_UCC-13 and gr:hasGTIN-14 are much more reliable identifiers, because they are globally unique.  See also http://en.wikipedia.org/wiki/Part_number"
+      },
+      "rdfs:domain": {
+        "@id": "_:N99b0752007ab491697e4c254afd8faff"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has MPN (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:string"
+      },
+      "rdfs:subPropertyOf": {
+        "@id": "schema:productID"
+      }
+    },
+    {
+      "@id": "gr:PaymentMethodCreditCard",
+      "@type": "owl:Class",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The subclass of gr:PaymentMethod represents all variants and brands of credit or debit cards as a standardized procedure for transferring the monetary amount for a purchase. It is mostly used for specifying the types of payment accepted by a gr:Business Entity.  Examples: VISA, MasterCard, or American Express."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Payment method credit card"
+      },
+      "rdfs:subClassOf": {
+        "@id": "gr:PaymentMethod"
+      }
+    },
+    {
+      "@id": "gr:ByBankTransferInAdvance",
+      "@type": "gr:PaymentMethod",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "Payment by bank transfer in advance, i.e., the offering gr:BusinessEntity will inform the buying party about their bank account details and will deliver the goods upon receipt of the due amount. This is equivalent to payment by wire transfer."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "By bank transfer in advance (payment method)"
+      }
+    },
+    {
+      "@id": "gr:acceptedPaymentMethods",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The gr:PaymentMethod or methods accepted by the gr:BusinessEntity for the given gr:Offering."
+      },
+      "rdfs:domain": {
+        "@id": "_:Nf75ce9343bf84527aab2794696772cf3"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "accepted payment methods (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "gr:PaymentMethod"
+      }
+    },
+    {
+      "@id": "gr:hasGlobalLocationNumber",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The Global Location Number (GLN, sometimes also referred to as International Location Number or ILN) of the respective gr:BusinessEntity or gr:Location. The Global Location Number is a thirteen-digit number used to identify parties and physical locations."
+      },
+      "rdfs:domain": {
+        "@id": "_:N2868b2d20adf42a689cf471c5d2a86ad"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has Global Location Number (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "_:Nd399e9d0ec994acfa9154283affa517c",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:BusinessEntity"
+          },
+          {
+            "@id": "schema:Organization"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "dc:title",
+      "@type": "owl:AnnotationProperty"
+    },
+    {
+      "@id": "gr:PriceSpecification",
+      "@type": "owl:Class",
+      "owl:disjointWith": [
+        {
+          "@id": "gr:ProductOrService"
+        },
+        {
+          "@id": "gr:Location"
+        },
+        {
+          "@id": "gr:TypeAndQuantityNode"
+        },
+        {
+          "@id": "gr:BusinessEntity"
+        },
+        {
+          "@id": "gr:BusinessEntityType"
+        },
+        {
+          "@id": "gr:OpeningHoursSpecification"
+        },
+        {
+          "@id": "gr:Offering"
+        },
+        {
+          "@id": "gr:WarrantyScope"
+        },
+        {
+          "@id": "gr:BusinessFunction"
+        },
+        {
+          "@id": "gr:WarrantyPromise"
+        },
+        {
+          "@id": "gr:QuantitativeValue"
+        },
+        {
+          "@id": "gr:DeliveryMethod"
+        },
+        {
+          "@id": "gr:PaymentMethod"
+        },
+        {
+          "@id": "gr:DayOfWeek"
+        },
+        {
+          "@id": "gr:Brand"
+        }
+      ],
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The superclass of all price specifications."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Price specification"
+      }
+    },
+    {
+      "@id": "gr:OpeningHoursSpecification",
+      "@type": "owl:Class",
+      "owl:disjointWith": [
+        {
+          "@id": "gr:ProductOrService"
+        },
+        {
+          "@id": "gr:WarrantyPromise"
+        },
+        {
+          "@id": "gr:Brand"
+        },
+        {
+          "@id": "gr:BusinessEntity"
+        },
+        {
+          "@id": "gr:BusinessEntityType"
+        },
+        {
+          "@id": "gr:Location"
+        },
+        {
+          "@id": "gr:TypeAndQuantityNode"
+        },
+        {
+          "@id": "gr:DeliveryMethod"
+        },
+        {
+          "@id": "gr:PriceSpecification"
+        },
+        {
+          "@id": "gr:WarrantyScope"
+        },
+        {
+          "@id": "gr:QuantitativeValue"
+        },
+        {
+          "@id": "gr:Offering"
+        },
+        {
+          "@id": "gr:DayOfWeek"
+        },
+        {
+          "@id": "gr:PaymentMethod"
+        },
+        {
+          "@id": "gr:BusinessFunction"
+        }
+      ],
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This is a conceptual entity that holds together all information about the opening hours on a given day (gr:DayOfWeek)."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Opening hours specification"
+      }
+    },
+    {
+      "@id": "gr:BusinessEntity",
+      "@type": "owl:Class",
+      "owl:disjointWith": [
+        {
+          "@id": "gr:BusinessEntityType"
+        },
+        {
+          "@id": "gr:DayOfWeek"
+        },
+        {
+          "@id": "gr:PriceSpecification"
+        },
+        {
+          "@id": "gr:BusinessFunction"
+        },
+        {
+          "@id": "gr:WarrantyScope"
+        },
+        {
+          "@id": "gr:QuantitativeValue"
+        },
+        {
+          "@id": "gr:Brand"
+        },
+        {
+          "@id": "gr:PaymentMethod"
+        },
+        {
+          "@id": "gr:OpeningHoursSpecification"
+        },
+        {
+          "@id": "gr:Offering"
+        },
+        {
+          "@id": "gr:WarrantyPromise"
+        },
+        {
+          "@id": "gr:Location"
+        },
+        {
+          "@id": "gr:TypeAndQuantityNode"
+        },
+        {
+          "@id": "gr:DeliveryMethod"
+        }
+      ],
+      "owl:equivalentClass": {
+        "@id": "_:N84cddf2fb7524270aef4e2e2fb98e6a1"
+      },
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "An instance of this class represents the legal agent making (or seeking) a particular offering. This can be a legal body or a person. A business entity has at least a primary mailing address and contact details. For this, typical address standards (vCard) and location data (geo, WGS84) can be attached. Note that the location of the business entity is not necessarily the location from which the product or service is being available (e.g. the branch or store). Use gr:Location for stores and branches.    Example: Siemens Austria AG, Volkswagen Ltd., Peter Miller's Cell phone Shop LLC  Compatibility with schema.org: This class is equivalent to the union of http://schema.org/Person and http://schema.org/Organization.   "
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Business entity"
+      }
+    },
+    {
+      "@id": "gr:TypeAndQuantityNode",
+      "@type": "owl:Class",
+      "owl:disjointWith": [
+        {
+          "@id": "gr:Location"
+        },
+        {
+          "@id": "gr:PriceSpecification"
+        },
+        {
+          "@id": "gr:DayOfWeek"
+        },
+        {
+          "@id": "gr:QualitativeValue"
+        },
+        {
+          "@id": "gr:ProductOrService"
+        },
+        {
+          "@id": "gr:QuantitativeValue"
+        },
+        {
+          "@id": "gr:Offering"
+        },
+        {
+          "@id": "gr:PaymentMethod"
+        },
+        {
+          "@id": "gr:BusinessFunction"
+        },
+        {
+          "@id": "gr:WarrantyScope"
+        },
+        {
+          "@id": "gr:OpeningHoursSpecification"
+        },
+        {
+          "@id": "gr:WarrantyPromise"
+        },
+        {
+          "@id": "gr:Brand"
+        },
+        {
+          "@id": "gr:BusinessEntity"
+        },
+        {
+          "@id": "gr:DeliveryMethod"
+        },
+        {
+          "@id": "gr:BusinessEntityType"
+        }
+      ],
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This class collates all the information about a gr:ProductOrService included in a bundle. If a gr:Offering contains just one item, you can directly link from the gr:Offering to the gr:ProductOrService using gr:includes. If the offering contains multiple items, use an instance of this class for each component to indicate the quantity, unit of measurement, and type of product, and link from the gr:Offering via gr:includesObject.  Example: An offering may include of 100g of Butter and 1 kg of potatoes, or 1 cell phone and 2 headsets."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Type and quantity node"
+      }
+    },
+    {
+      "@id": "_:N61d8d6f973734da39f1bd9c04e85468d",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:Offering"
+          },
+          {
+            "@id": "schema:Offer"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "_:N4a83a46bf286434c88c69a6c368ada6e",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:ProductOrService"
+          },
+          {
+            "@id": "schema:Product"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:isListPrice",
+      "@type": "owl:DatatypeProperty",
+      "owl:deprecated": true,
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This boolean attribute indicates whether a gr:UnitPriceSpecification is a list price (usually a vendor recommendation) or not. 'true'  indicates it is a list price, 'false' indicates it is not. DEPRECATED. Use the gr:priceType property instead."
+      },
+      "rdfs:domain": {
+        "@id": "gr:UnitPriceSpecification"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "is list price (DEPRECATED)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:boolean"
+      }
+    },
+    {
+      "@id": "_:N904f31845f42474e90230d1c557bf069",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:BusinessEntity"
+          },
+          {
+            "@id": "schema:Organization"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:BusinessEntityType",
+      "@type": "owl:Class",
+      "owl:disjointWith": [
+        {
+          "@id": "gr:BusinessEntity"
+        },
+        {
+          "@id": "gr:BusinessFunction"
+        },
+        {
+          "@id": "gr:DayOfWeek"
+        },
+        {
+          "@id": "gr:WarrantyScope"
+        },
+        {
+          "@id": "gr:Offering"
+        },
+        {
+          "@id": "gr:QuantitativeValue"
+        },
+        {
+          "@id": "gr:PriceSpecification"
+        },
+        {
+          "@id": "gr:Brand"
+        },
+        {
+          "@id": "gr:ProductOrService"
+        },
+        {
+          "@id": "gr:PaymentMethod"
+        },
+        {
+          "@id": "gr:OpeningHoursSpecification"
+        },
+        {
+          "@id": "gr:WarrantyPromise"
+        },
+        {
+          "@id": "gr:TypeAndQuantityNode"
+        },
+        {
+          "@id": "gr:DeliveryMethod"
+        },
+        {
+          "@id": "gr:Location"
+        }
+      ],
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "A business entity type is a conceptual entity representing the legal form, the size, the main line of business, the position in the value chain, or any combination thereof, of a gr:BusinessEntity. From the ontological point of view, business entity types are mostly roles that a business entity has in the market. Business entity types are important for specifying eligible customers, since a gr:Offering is often valid only for business entities of a certain size, legal structure, or role in the value chain.   Examples: Consumers, Retailers, Wholesalers, or Public Institutions"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Business entity type"
+      }
+    },
+    {
+      "@id": "_:Nbad96ffb4e76418289912261153acd99",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:Offering"
+          },
+          {
+            "@id": "gr:SomeItems"
+          },
+          {
+            "@id": "schema:Offer"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "_:N64a86c0f9fc74b06b019ebd25af129ca",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:QualitativeValue"
+          },
+          {
+            "@id": "gr:QuantitativeValue"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:billingIncrement",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This property specifies the minimal quantity and rounding increment that will be the basis for the billing.  The unit of measurement is specified by the UN/CEFACT code attached to the gr:UnitPriceSpecification via the gr:hasUnitOfMeasurement property.  Examples:  - The price for gasoline is 4 USD per gallon at the pump, but you will be charged in units of 0.1 gallons. - The price for legal consulting is 100 USD per hour, but you will be charged in units of 15 minutes.  This property makes sense only for instances of gr:Offering that include not more than one type of good or service."
+      },
+      "rdfs:domain": {
+        "@id": "gr:UnitPriceSpecification"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "billing increment (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:float"
+      }
+    },
+    {
+      "@id": "gr:appliesToDeliveryMethod",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This property specifies the gr:DeliveryMethod to which the gr:DeliveryChargeSpecification applies."
+      },
+      "rdfs:domain": {
+        "@id": "gr:DeliveryChargeSpecification"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "applies to delivery method (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "gr:DeliveryMethod"
+      }
+    },
+    {
+      "@id": "gr:ProvideService",
+      "@type": "gr:BusinessFunction",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This gr:BusinessFunction indicates that the gr:BusinessEntity offers (or seeks) the respective type of service.  Note: Maintain and Repair are also types of Services. However, products and services ontologies often provide classes for tangible products as well as for types of services. The business function gr:ProvideService is to be used with such goods that are services, while gr:Maintain and gr:Repair can be used with goods for which only the class of product exists in the ontology, but not the respective type of service.  Example: Car maintenance could be expressed both as 'provide the service car maintenance' or 'maintain cars'."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Provide service (business function)"
+      }
+    },
+    {
+      "@id": "gr:ActualProductOrServiceInstance",
+      "@type": "owl:Class",
+      "owl:deprecated": true,
+      "owl:equivalentClass": {
+        "@id": "gr:Individual"
+      },
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "DEPRECATED - This class is superseded by gr:Individual. Replace all occurrences of gr:ActualProductOrServiceInstance by gr:Individual, if possible."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Actual product or service instance (DEPRECATED)"
+      },
+      "rdfs:subClassOf": {
+        "@id": "gr:ProductOrService"
+      }
+    },
+    {
+      "@id": "_:N9ab20893b0234139a6cbfe7b9caca778",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:ProductOrService"
+          },
+          {
+            "@id": "schema:Product"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:hasCurrencyValue",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This property specifies the amount of money for a price per unit, shipping charges, or payment charges. The currency and other relevant details are attached to the respective gr:PriceSpecification etc.  For a gr:UnitPriceSpecification, this is the price for one unit or bundle (as specified in the unit of measurement of the unit price specification) of the respective gr:ProductOrService. For a gr:DeliveryChargeSpecification or a gr:PaymentChargeSpecification, it is the price per delivery or payment.  GoodRelations also supports giving price information as intervals only. If this is needed, use gr:hasMaxCurrencyValue for the upper bound and gr:hasMinCurrencyValue for the lower bound.   Using gr:hasCurrencyValue sets the upper and lower bounds to the same given value, i.e., x gr:hasCurrencyValue y implies x gr:hasMinCurrencyValue y, x gr:hasMaxCurrencyValue y."
+      },
+      "rdfs:domain": {
+        "@id": "gr:PriceSpecification"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has currency value (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:float"
+      },
+      "rdfs:subPropertyOf": [
+        {
+          "@id": "gr:hasMaxCurrencyValue"
+        },
+        {
+          "@id": "gr:hasMinCurrencyValue"
+        }
+      ]
+    },
+    {
+      "@id": "gr:QuantitativeValue",
+      "@type": "owl:Class",
+      "owl:disjointWith": [
+        {
+          "@id": "gr:Location"
+        },
+        {
+          "@id": "gr:DeliveryMethod"
+        },
+        {
+          "@id": "gr:TypeAndQuantityNode"
+        },
+        {
+          "@id": "gr:WarrantyPromise"
+        },
+        {
+          "@id": "gr:OpeningHoursSpecification"
+        },
+        {
+          "@id": "gr:PaymentMethod"
+        },
+        {
+          "@id": "gr:QualitativeValue"
+        },
+        {
+          "@id": "gr:ProductOrService"
+        },
+        {
+          "@id": "gr:WarrantyScope"
+        },
+        {
+          "@id": "gr:BusinessFunction"
+        },
+        {
+          "@id": "gr:PriceSpecification"
+        },
+        {
+          "@id": "gr:Offering"
+        },
+        {
+          "@id": "gr:BusinessEntityType"
+        },
+        {
+          "@id": "gr:DayOfWeek"
+        },
+        {
+          "@id": "gr:BusinessEntity"
+        },
+        {
+          "@id": "gr:Brand"
+        }
+      ],
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "A quantitative value is a numerical interval that represents the range of a certain gr:quantitativeProductOrServiceProperty in terms of the lower and upper bounds for a particular gr:ProductOrService. It is to be interpreted in combination with the respective unit of measurement. Most quantitative values are intervals even if they are in practice often treated as a single point value.   Example: a weight between 10 and 25 kilogramms, a length between 10 and 15 milimeters.  Compatibility with schema.org: This class is equivalent to http://schema.org/Quantity."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Quantitative value"
+      }
+    },
+    {
+      "@id": "_:N6ee89d98dca042be8121df3ba7c048dc",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:ProductOrService"
+          },
+          {
+            "@id": "schema:Product"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:SomeItems",
+      "@type": "owl:Class",
+      "owl:disjointWith": [
+        {
+          "@id": "gr:Individual"
+        },
+        {
+          "@id": "gr:ProductOrServiceModel"
+        }
+      ],
+      "owl:equivalentClass": {
+        "@id": "gr:ProductOrServicesSomeInstancesPlaceholder"
+      },
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "A placeholder instance for unknown instances of a mass-produced commodity. This is used as a computationally cheap work-around for such instances that are not individually exposed on the Web but just stated to exist (i.e., which are existentially quantified).  Example: An instance of this class can represent an anonymous set of green Siemens1234 phones. It is different from the gr:ProductOrServiceModel Siemens1234, since this refers to the make and model, and it is different from a particular instance of this make and model (e.g. my individual phone) since the latter can be sold only once.  Note: This class is the new, shorter form of the former gr:ProductOrServicesSomeInstancesPlaceholder.    Compatibility with schema.org: This class is (approximately) a subclass of http://schema.org/Product."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Some items"
+      },
+      "rdfs:subClassOf": [
+        {
+          "@id": "schema:Product"
+        },
+        {
+          "@id": "gr:ProductOrService"
+        }
+      ]
+    },
+    {
+      "@id": "gr:predecessorOf",
+      "@type": [
+        "owl:ObjectProperty",
+        "owl:TransitiveProperty"
+      ],
+      "owl:inverseOf": {
+        "@id": "gr:successorOf"
+      },
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This property indicates that the subject is a previous, often discontinued variant of the gr:ProductOrServiceModel used as the object.  Example: Golf III predecessorOf Golf IV  This relation is transitive."
+      },
+      "rdfs:domain": {
+        "@id": "gr:ProductOrServiceModel"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "predecessor of (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "gr:ProductOrServiceModel"
+      }
+    },
+    {
+      "@id": "gr:availabilityStarts",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This property specifies the beginning of the availability of the gr:ProductOrService included in the gr:Offering. The difference to the properties gr:validFrom and gr:validThrough is that those specify the period of time during which the offer is valid and can be accepted.  Example: I offer to lease my boat for the period of August 1 - August 31, 2010, but you must accept by offer no later than July 15.  A time-zone should be specified. For a time in GMT/UTC, simply add a 'Z' following the time:  2008-05-30T09:30:10Z.  Alternatively, you can specify an offset from the UTC time by adding a positive or negative time following the time:  2008-05-30T09:30:10-09:00  or  2008-05-30T09:30:10+09:00.  Note: There is another property gr:availableAtOrFrom, which is used to indicate the gr:Location (e.g. store or shop) from which the goods would be available."
+      },
+      "rdfs:domain": {
+        "@id": "_:Nb0b481ddd620426d87d9b70c93e1f05c"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "availability starts (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:dateTime"
+      }
+    },
+    {
+      "@id": "_:Nff599a41dcaf49b39769463613291d45",
+      "@type": "gr:Offering",
+      "gr:category": "42",
+      "gr:description": "VGhlIFNldmVuIE5vYWhpZGUgTGF3cw0KMS4gQmVsaWVmIGluIEctZA0KMi4gUmVzcGVjdCBHLWQgYW5kIHByYWlzZSBoaW0NCjMuIFJlc3BlY3QgaHVtYW4gbGlmZQ0KNC4gUmVzcGVjdCB0aGUgZmFtaWx5DQo1LiBSZXNwZWN0IGh1bWFuIGJlaW5ncw0KNi4gSGF2ZSBhIGp1ZGljaWFsIHN5c3RlbQ0KNy4gUmVzcGVjdCBhbGwgY3JlYXR1cmVz"
+    },
+    {
+      "@id": "_:N56bfa617a37d4ff28da4bfc4ea9ba344",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:Location"
+          },
+          {
+            "@id": "schema:Place"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:hasPOS",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This property states that the respective gr:Location is a point of sale for the respective gr:BusinessEntity. It allows linking those two types of entities without the need for a particular gr:Offering."
+      },
+      "rdfs:domain": {
+        "@id": "_:Nd399e9d0ec994acfa9154283affa517c"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has POS (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "gr:Location"
+      }
+    },
+    {
+      "@id": "gr:hasEligibleQuantity",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This specifies the interval and unit of measurement of ordering quantities for which the gr:Offering or gr:PriceSpecification is valid. This allows e.g. specifying that a certain freight charge is valid only for a certain quantity. Note that if an offering is a bundle, i.e. it consists of more than one unit of a single type of good, or if the unit of measurement for the good is different from unit (Common Code C62), then gr:hasEligibleQuantity refers to units of this bundle. In other words, 'C62' for 'Units or pieces' is usually the appropriate unit of measurement."
+      },
+      "rdfs:domain": {
+        "@id": "_:Nc8f1b6c2dfea4cb38d3048d8615b9a1c"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has eligible quantity (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "gr:QuantitativeValue"
+      }
+    },
+    {
+      "@id": "gr:JCB",
+      "@type": "gr:PaymentMethodCreditCard",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "Payment by credit or debit cards issued by the JCB network."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "JCB (payment method)"
+      }
+    },
+    {
+      "@id": "gr:includes",
+      "@type": "owl:ObjectProperty",
+      "rdfs:domain": {
+        "@id": "gr:Offering"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "includes (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "gr:ProductOrService"
+      }
+    },
+    {
+      "@id": "gr:color",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The color of the product."
+      },
+      "rdfs:domain": {
+        "@id": "_:N62abbc6df02e49e3b481a89ee0c60935"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "color (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "rdfs:Literal"
+      },
+      "rdfs:subPropertyOf": {
+        "@id": "gr:datatypeProductOrServiceProperty"
+      }
+    },
+    {
+      "@id": "_:Nc6b6ce508d8d4f2ab97d765cf21c1d30",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:BusinessEntity"
+          },
+          {
+            "@id": "schema:Organization"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "_:N8e11f326defe45c59e1f580e1dc7cf7b",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:ProductOrService"
+          },
+          {
+            "@id": "schema:Product"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:appliesToPaymentMethod",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This property specifies the gr:PaymentMethod to which the gr:PaymentChargeSpecification applies."
+      },
+      "rdfs:domain": {
+        "@id": "gr:PaymentChargeSpecification"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "applies to payment method (1..*)"
+      },
+      "rdfs:range": {
+        "@id": "gr:PaymentMethod"
+      }
+    },
+    {
+      "@id": "gr:Repair",
+      "@type": "gr:BusinessFunction",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This gr:BusinessFunction indicates that the gr:BusinessEntity offers (or seeks) the evaluation of the chances for repairing, and, if positive, repair of the specified gr:ProductOrService. Repairing means actions that restore the originally intended function of a product that suffers from outage or malfunction."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Repair (business function)"
+      }
+    },
+    {
+      "@id": "gr:includesObject",
+      "@type": "owl:ObjectProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This object property links a gr:Offering to one or multiple gr:TypeAndQuantityNode or nodes that specify the components that are included in the respective offer."
+      },
+      "rdfs:domain": {
+        "@id": "_:N8b54629143b344f981ce8ec0f34396f8"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "includes object (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "gr:TypeAndQuantityNode"
+      }
+    },
+    {
+      "@id": "_:N126d18822072475eb80454c3ca41ff64",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:BusinessEntity"
+          },
+          {
+            "@id": "schema:Organization"
+          },
+          {
+            "@id": "schema:Person"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "dc:contributor",
+      "@type": "owl:AnnotationProperty"
+    },
+    {
+      "@id": "_:N99b0752007ab491697e4c254afd8faff",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:Offering"
+          },
+          {
+            "@id": "gr:ProductOrService"
+          },
+          {
+            "@id": "schema:Product"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:Discover",
+      "@type": "gr:PaymentMethodCreditCard",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "Payment by credit or debit cards issued by the Discover network."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Discover (payment method)"
+      }
+    },
+    {
+      "@id": "schema:description",
+      "@type": "owl:DatatypeProperty",
+      "owl:equivalentProperty": {
+        "@id": "gr:description"
+      }
+    },
+    {
+      "@id": "_:N4974403cd7be49339843ab668fb2130f",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:Offering"
+          },
+          {
+            "@id": "gr:OpeningHoursSpecification"
+          },
+          {
+            "@id": "gr:PriceSpecification"
+          },
+          {
+            "@id": "gr:License"
+          },
+          {
+            "@id": "schema:Offer"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:UPS",
+      "@type": "gr:DeliveryModeParcelService",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "Delivery via the parcel service UPS."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "UPS (delivery method)"
+      }
+    },
+    {
+      "@id": "gr:Saturday",
+      "@type": "gr:DayOfWeek",
+      "gr:displayPosition": 6,
+      "gr:hasNext": {
+        "@id": "gr:Sunday"
+      },
+      "gr:hasPrevious": {
+        "@id": "gr:Friday"
+      },
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "Saturday as a day of the week."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Saturday (day of week)"
+      }
+    },
+    {
+      "@id": "gr:Brand",
+      "@type": "owl:Class",
+      "owl:disjointWith": [
+        {
+          "@id": "gr:ProductOrService"
+        },
+        {
+          "@id": "gr:WarrantyPromise"
+        },
+        {
+          "@id": "gr:OpeningHoursSpecification"
+        },
+        {
+          "@id": "gr:BusinessEntity"
+        },
+        {
+          "@id": "gr:BusinessEntityType"
+        },
+        {
+          "@id": "gr:Location"
+        },
+        {
+          "@id": "gr:TypeAndQuantityNode"
+        },
+        {
+          "@id": "gr:DeliveryMethod"
+        },
+        {
+          "@id": "gr:PriceSpecification"
+        },
+        {
+          "@id": "gr:WarrantyScope"
+        },
+        {
+          "@id": "gr:QuantitativeValue"
+        },
+        {
+          "@id": "gr:Offering"
+        },
+        {
+          "@id": "gr:DayOfWeek"
+        },
+        {
+          "@id": "gr:BusinessFunction"
+        },
+        {
+          "@id": "gr:PaymentMethod"
+        }
+      ],
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "A brand is the identity of a specific product, service, or business. Use foaf:logo for attaching a brand logo and gr:name or rdfs:label for attaching the brand name.   (Source: Wikipedia, the free encyclopedia, see http://en.wikipedia.org/wiki/Brand)"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Brand"
+      }
+    },
+    {
+      "@id": "gr:hasNAICS",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The North American Industry Classification System (NAICS) code for a particular gr:BusinessEntity. See http://www.census.gov/eos/www/naics/ for more details.  Note: While NAICS codes are sometimes misused for classifying products or services, they are designed and suited only for classifying business establishments."
+      },
+      "rdfs:domain": {
+        "@id": "_:N0de169eec45f43ffb46557fa66a36b9b"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has NAICS (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:int"
+      }
+    },
+    {
+      "@id": "_:Nbc11e03999594c23a5cc40d58d247a21",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:Offering"
+          },
+          {
+            "@id": "schema:Offer"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "_:N09ae989bfb2e42e18abab02c0bfe0dd5",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:Offering"
+          },
+          {
+            "@id": "schema:Offer"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:FederalExpress",
+      "@type": "gr:DeliveryModeParcelService",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "Delivery via the parcel service Federal Express."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Federal Express (delivery method)"
+      }
+    },
+    {
+      "@id": "_:Nd7fa8dec3df74f93aa4a4036825da1f3",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:Offering"
+          },
+          {
+            "@id": "schema:Offer"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:QuantitativeValueInteger",
+      "@type": "owl:Class",
+      "owl:disjointWith": {
+        "@id": "gr:QuantitativeValueFloat"
+      },
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "An instance of this class is an actual integer value for a quantitative property of a product. This instance is usually characterized by a minimal value, a maximal value, and a unit of measurement.   Example: A seating capacity between 1 and 8 persons.  Note: Users must keep in mind that ranges in here mean that ALL possible values in this interval are covered. (Sometimes, the actual commitment may be less than that: 'We sell cars from 2 - 12 seats' does often not really mean that they have cars with 2,3,4,...12 seats.). Someone renting out two types of rowing boats, one that fits for 1 or 2 people, and another that must be operated by 4 people cannot claim to rent boats with a seating capacity between 1 and 4 people. He or she is offering two boat types for 1-2 and 4 persons.    Compatibility with schema.org: This class is a subclass of http://schema.org/Quantity."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Quantitative value integer"
+      },
+      "rdfs:subClassOf": {
+        "@id": "gr:QuantitativeValue"
+      }
+    },
+    {
+      "@id": "_:N3522a98127394963a511ecae4830e4da",
+      "@type": "owl:Class",
+      "owl:unionOf": {
+        "@list": [
+          {
+            "@id": "gr:BusinessEntity"
+          },
+          {
+            "@id": "schema:Organization"
+          },
+          {
+            "@id": "schema:Person"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "gr:DeliveryModeMail",
+      "@type": "gr:DeliveryMethod",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "Delivery via regular mail service (private or public postal services)."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Delivery mode mail (delivery method)"
+      }
+    },
+    {
+      "@id": "gr:MasterCard",
+      "@type": "gr:PaymentMethodCreditCard",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "Payment by credit or debit cards issued by the MasterCard network."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "MasterCard (payment method)"
+      }
+    },
+    {
+      "@id": "gr:PaymentMethod",
+      "@type": "owl:Class",
+      "owl:disjointWith": [
+        {
+          "@id": "gr:BusinessFunction"
+        },
+        {
+          "@id": "gr:DeliveryMethod"
+        },
+        {
+          "@id": "gr:QuantitativeValue"
+        },
+        {
+          "@id": "gr:OpeningHoursSpecification"
+        },
+        {
+          "@id": "gr:DayOfWeek"
+        },
+        {
+          "@id": "gr:PriceSpecification"
+        },
+        {
+          "@id": "gr:TypeAndQuantityNode"
+        },
+        {
+          "@id": "gr:WarrantyScope"
+        },
+        {
+          "@id": "gr:Location"
+        },
+        {
+          "@id": "gr:BusinessEntity"
+        },
+        {
+          "@id": "gr:BusinessEntityType"
+        },
+        {
+          "@id": "gr:Brand"
+        },
+        {
+          "@id": "gr:Offering"
+        },
+        {
+          "@id": "gr:WarrantyPromise"
+        }
+      ],
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "A payment method is a standardized procedure for transferring the monetary amount for a purchase. Payment methods are characterized by the legal and technical structures used, and by the organization or group carrying out the transaction. This element is mostly used for specifying the types of payment accepted by a gr:BusinessEntity.  Examples: VISA, MasterCard, Diners, cash, or bank transfer in advance."
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Payment method"
+      }
+    },
+    {
+      "@id": "gr:category",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The name of a category to which this gr:ProductOrService, gr:Offering, gr:BusinessEntity, or gr:Location belongs.   Note 1: For products, it is better to add an rdf:type statement referring to a GoodRelations-compliant ontology for vertical industries instead, but if you just have a short text label, gr:category is simpler. Note 2: You can use greater signs or slashes to informally indicate a category hierarchy, e.g. 'restaurants/asian_restaurants' or 'cables > usb_cables' "
+      },
+      "rdfs:domain": {
+        "@id": "_:Nc035e0a00abf49dcb3e11327069578a7"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "category (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "rdfs:Literal"
+      }
+    },
+    {
+      "@id": "gr:hasPrevious",
+      "@type": "owl:ObjectProperty",
+      "owl:inverseOf": {
+        "@id": "gr:hasNext"
+      },
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This ordering relation for gr:DayOfWeek indicates that the subject is directly preceeded by the object.  Example: Tuesday hasPrevious Monday  Since days of the week are a cycle, this property is not transitive."
+      },
+      "rdfs:domain": {
+        "@id": "gr:DayOfWeek"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has previous (0..1)"
+      },
+      "rdfs:range": {
+        "@id": "gr:DayOfWeek"
+      }
+    },
+    {
+      "@id": "gr:hasGTIN-14",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The Global Trade Item Number (GTIN-14) of the given gr:ProductOrService or gr:Offering."
+      },
+      "rdfs:domain": {
+        "@id": "_:N1badbdda5f5c492abdca01ede16a15d2"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has GTIN-14 (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:string"
+      },
+      "rdfs:subPropertyOf": {
+        "@id": "schema:productID"
+      }
+    },
+    {
+      "@id": "gr:hasEAN_UCC-13",
+      "@type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The EAN·UCC-13 code of the given gr:ProductOrService or gr:Offering. This code is now officially called GTIN-13 (Global Trade Identifier Number) or EAN·UCC-13. Former 12-digit UPC codes can be converted into EAN·UCC-13 code by simply adding a preceeding zero.  Note 1: When using this property for searching by 12-digit UPC codes, you must add a preceeding zero digit. Note 2: As of January 1, 2007, the former ISBN numbers for books etc. have been integrated into the EAN·UCC-13 code. For each old ISBN-10 code, there exists a proper translation into EAN·UCC-13 by adding '978' or '979' as prefix. Since the old ISBN-10 is now deprecated, GoodRelations does not provide a property for ISBNs."
+      },
+      "rdfs:domain": {
+        "@id": "_:Na80ca1faacdf458e952e6be26899a1c3"
+      },
+      "rdfs:isDefinedBy": {
+        "@id": "http://purl.org/goodrelations/v1"
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "has EAN/UCC-13 (0..*)"
+      },
+      "rdfs:range": {
+        "@id": "xsd:string"
+      },
+      "rdfs:subPropertyOf": {
+        "@id": "schema:productID"
+      }
+    }
+  ]
+}
+

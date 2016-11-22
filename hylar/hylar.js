@@ -467,7 +467,7 @@ Hylar.prototype.registerDerivations = function(derivations, graph) {
  * @returns {*}
  */
 Hylar.prototype.classify = function() {
-    var that = this, factsChunk, chunks = [], chunksNb = 5000, insertionPromises = [];
+    var that = this, factsChunk, chunks = [], chunksNb = 10, insertionPromises = [];
     console.notify('Classification started.');
 
     return this.sm.query('CONSTRUCT { ?a ?b ?c } WHERE { ?a ?b ?c }')
@@ -505,7 +505,7 @@ Hylar.prototype.classify = function() {
         .then(function() {
             console.notify('Classification succeeded.');
             return Promise.reduce(chunks, function(previous, chunk) {
-                return that.sm.insert(chunk.replace(/(\n|\r)/g, ''));
+                return that.sm.insert(chunk);
             }, 0);
         })
         .then(function() {

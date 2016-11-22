@@ -69,7 +69,7 @@ module.exports = {
         if(explicit === undefined) {
             explicit = true;
         }
-        return new Fact(t.predicate.toString(), t.subject.toString(), t.object.toString()/*.format()*/, [], explicit, [], [], notUsingValid)
+        return new Fact(t.predicate.toString(), t.subject.toString(), t.object.toString()/*.format()*/, [], explicit, [], [], notUsingValid, t.toString())
     },
 
     triplesToFacts: function(t, explicit, notUsingValid) {
@@ -128,6 +128,10 @@ module.exports = {
     factToTurtle: function(fact) {
         var subject, predicate, object;
 
+        /*if (fact.fromTriple !== undefined) {
+            return fact.fromTriple;
+        }*/
+
         subject = this.parseStrEntityToTurtle(fact.subject);
         predicate = this.parseStrEntityToTurtle(fact.predicate);
         object = this.parseStrEntityToTurtle(fact.object);
@@ -177,7 +181,7 @@ module.exports = {
     triplesToTurtle: function(triples) {
         var ttl = '';
         for (var i = 0; i < triples.length; i++) {
-            ttl += this.tripleToTurtle(triples[i]).replace(/(\n|\r)/g, '');
+            ttl += this.tripleToTurtle(triples[i]).replace(/(\n|\r)/g, '').replace(/\\&/g, '&');
         }
         return ttl;
     },

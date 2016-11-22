@@ -12,7 +12,7 @@ var Utils = require('../Utils');
  * @param originFacts array of facts causing this
  * @constructor
  */
-Fact = function(pred, sub, obj, originConjs, expl, graphs, implicitCauses, notUsingValidity) {
+Fact = function(pred, sub, obj, originConjs, expl, graphs, implicitCauses, notUsingValidity, fromTriple) {
     if(pred == 'FALSE') {
         this.falseFact = 'true'
     }
@@ -26,6 +26,7 @@ Fact = function(pred, sub, obj, originConjs, expl, graphs, implicitCauses, notUs
     this.subject = sub;
     this.object = obj;
     this.implicitCauses = implicitCauses;
+    this.fromTriple = fromTriple;
 
     this.causedBy = originConjs;
     this.explicit = expl;
