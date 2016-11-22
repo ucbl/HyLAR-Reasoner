@@ -2,14 +2,22 @@
 
 An OWL 2 RL incremental reasoner for the Web.
 
+## Table of contents
+
+- [Description](#description)
+- [Use HyLAR locally](#use-hylar-locally)
+- [Use HyLAR in a browser](#use-hylar-in-a-browser)
+- [Use HyLAR as a server](#use-hylar-as-a-server)
+- [Supported Inferences](#supported-inferences)
+
 ## Description
 
-HyLAR-Reasoner is an OWL 2 RL reasoner that uses known rdf-based librairies such as rdfstore.js, sparqljs and rdf-ext while providing an additional incremental reasoning engine. The framework implementation of HyLAR can be [tested online](http://dataconf.liris.cnrs.fr/hylar/). HyLAR can be either used locally as a npm module or globally as a server, and comes with a browserified version. 
+HyLAR is a **Hy**brid **L**ocation-**A**gnostic OWL 2 RL incremental **R**easoner that uses known rdf-based librairies such as rdfstore.js, sparqljs and rdf-ext while providing an additional incremental reasoning engine. HyLAR can be either used locally as a npm module or globally as a server, and comes with a browserified version.
 
 HyLAR relies on the rdfstore.js triplestore as well as rdf-ext parsing librairies, and therefore supports JSON-LD, RDF/XML, N3 and Turtle serializations.
-SPARQL support is detailed [here](https://github.com/antoniogarrote/rdfstore-js#sparql-support). The inferences initially supported by HyLAR are described at the bottom of this page.
+SPARQL support is detailed [here](https://github.com/antoniogarrote/rdfstore-js#sparql-support). The inferences initially supported by HyLAR are described [at the bottom of this page](#supported-inferences). HyLAR supports custom business rules.
 
-## Use HyLAR's reasoner module locally
+## Use HyLAR locally
 
 ### Installation
 
@@ -22,12 +30,13 @@ Import HyLAR, then classify your ontology and query it using `load()`,
 which takes three parameters:
 - rawOntology: A string, the raw ontology.
 - mimeType: A string, either `application/rdf+xml`, `text/turtle`, `text/n3` or `application/ld+json`.
+- keepOldValues: A boolean: true to keep old values while classfying, false to overwrite the KB. Default is **false**.
 
 ```javascript
 var H = require('hylar'),
     Hylar = new H();
     
-Hylar.load(rawOntology, mimeType)
+Hylar.load(rawOntology, mimeType, keepOldValues)
     .then(function(reponse) {
         console.log(response) // outputs true if succeeded
     });
@@ -63,9 +72,9 @@ Each subject/predicate/object can be one of the following:
 
 A predicate can also be any of these comparison operators: `<`, `>`, `=`, `<=`, `=>`.
 
-## Use HyLAR's reasoner in a browser
+## Use HyLAR in a browser
 
-HyLAR comes with a browserified version. Include the file `hylar-client.js` as a script in your page with this line:
+HyLAR comes with a browserified version, available using bower: `bower install hylar`. Include the file `hylar-client.js` as a script in your page with this line:
 ```html
 <script src="path-to/hylar-client.js"></script>
 ```
@@ -110,7 +119,7 @@ Puts an list of custom rules and adds it to the reasoner.
 > **Body parameters**
 > `rules` the array of conjunctive rules.
 
-## Supported inferences ##
+## Supported inferences
 
 The following OWL 2 rules are currently supported by HyLAR, based on the semantics detailed [here](https://www.w3.org/TR/owl2-profiles/#Reasoning_in_OWL_2_RL_and_RDF_Graphs_using_Rules):
 
