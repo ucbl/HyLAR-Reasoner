@@ -10830,7 +10830,7 @@ Hylar.prototype.updateReasoningMethod = function(method) {
  * @param keepOldValues (optional - default: false) Avoid storage cleaning if set to true.
  * @returns {*}
  */
-Hylar.prototype.load = function(ontologyTxt, mimeType, reasoningMethod, graph, keepOldValues) {
+Hylar.prototype.load = function(ontologyTxt, mimeType, keepOldValues, graph, reasoningMethod) {
     var that = this;
     this.updateReasoningMethod(reasoningMethod);
 
