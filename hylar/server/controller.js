@@ -94,7 +94,7 @@ module.exports = {
             graph = req.graph,
             initialTime = new Date().getTime();
 
-            Hylar.load(rawOntology, mimeType, req.body.reasoningMethod, graph, req.query.keepoldvalues)
+            Hylar.load(rawOntology, mimeType, req.query.keepoldvalues, graph, req.body.reasoningMethod)
                 .then(function() {
                     req.processingDelay  = new Date().getTime() - initialTime;
                     console.notify("Classification finished in " + req.processingDelay + "ms.");

@@ -9441,7 +9441,7 @@ OWL2RL = {
 };
 
 module.exports = {
-    test: OWL2RL.rules.classSubsumption
+    test:OWL2RL.rules.classSubsumption
         .concat(OWL2RL.rules.propertySubsumption)
         .concat(OWL2RL.rules.transitivity)
         .concat(OWL2RL.rules.inverse)
@@ -9834,6 +9834,7 @@ module.exports = {
      * @returns {*}
      */
     evaluate: function(fI, fD, F, alg, rules) {
+        
         if (!alg) alg = ReasoningEngine.incremental;
         return alg(fI, fD, F, rules);
     },
@@ -10839,18 +10840,7 @@ Hylar.prototype.load = function(ontologyTxt, mimeType, reasoningMethod, graph, k
             return that.treatLoad(ontologyTxt, mimeType, graph);
         });
     } else {
-        return this.sm.regenerateSideStore()
-            .then(function() {
-                return that.sm.loadOntologyIntoSideStore(ontologyTxt, mimeType);
-            })
-            .then(function() {
-                return that.sm.querySideStore('CONSTRUCT { ?a ?b ?c } WHERE { ?a ?b ?c }');
-            })
-            .then(function(data) {
-                data = ParsingInterface.triplesToTurtle(data.triples).replace(/(\\n)/g, '');
-                return that.query('INSERT DATA { ' + data + ' }');
-            });
-
+        return this.treatLoad(ontologyTxt, mimeType, graph);
     }
 };
 

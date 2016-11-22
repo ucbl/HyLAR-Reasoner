@@ -128,7 +128,7 @@ Hylar.prototype.updateReasoningMethod = function(method) {
  * @param keepOldValues (optional - default: false) Avoid storage cleaning if set to true.
  * @returns {*}
  */
-Hylar.prototype.load = function(ontologyTxt, mimeType, reasoningMethod, graph, keepOldValues) {
+Hylar.prototype.load = function(ontologyTxt, mimeType, keepOldValues, graph, reasoningMethod) {
     var that = this;
     this.updateReasoningMethod(reasoningMethod);
 
@@ -138,18 +138,7 @@ Hylar.prototype.load = function(ontologyTxt, mimeType, reasoningMethod, graph, k
             return that.treatLoad(ontologyTxt, mimeType, graph);
         });
     } else {
-        return this.sm.regenerateSideStore()
-            .then(function() {
-                return that.sm.loadOntologyIntoSideStore(ontologyTxt, mimeType);
-            })
-            .then(function() {
-                return that.sm.querySideStore('CONSTRUCT { ?a ?b ?c } WHERE { ?a ?b ?c }');
-            })
-            .then(function(data) {
-                data = ParsingInterface.triplesToTurtle(data.triples).replace(/(\\n)/g, '');
-                return that.query('INSERT DATA { ' + data + ' }');
-            });
-
+        return this.treatLoad(ontologyTxt, mimeType, graph);
     }
 };
 
