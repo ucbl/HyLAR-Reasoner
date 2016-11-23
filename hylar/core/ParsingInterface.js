@@ -36,13 +36,14 @@ String.prototype.format = function() {
     }
 };
 
-module.exports = {
+
 
     /**
      * Parses rdf/xml to turtle using rdf ext.
      * @param data Raw rdf/xml data (str)
      * @returns {*}
      */
+ParsingInterface = {
     rdfXmlToTurtle: function(data) {
         var deferred = q.defer(), triple;
         RdfXmlParser.parse(data, function(parsed, err) {
@@ -284,3 +285,5 @@ module.exports = {
         }
     }
 };
+
+module.exports = ParsingInterface;

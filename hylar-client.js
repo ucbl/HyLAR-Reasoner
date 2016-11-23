@@ -9543,13 +9543,14 @@ String.prototype.format = function() {
     }
 };
 
-module.exports = {
+
 
     /**
      * Parses rdf/xml to turtle using rdf ext.
      * @param data Raw rdf/xml data (str)
      * @returns {*}
      */
+ParsingInterface = {
     rdfXmlToTurtle: function(data) {
         var deferred = q.defer(), triple;
         RdfXmlParser.parse(data, function(parsed, err) {
@@ -9791,6 +9792,8 @@ module.exports = {
         }
     }
 };
+
+module.exports = ParsingInterface;
 
 },{"./Errors":44,"./Logics/Fact":46,"./RegularExpressions":55,"./Utils":57,"q":83,"rdf-ext":102,"sparqljs":135}],52:[function(require,module,exports){
 /**
