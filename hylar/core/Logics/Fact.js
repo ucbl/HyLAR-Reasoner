@@ -73,6 +73,26 @@ Fact.prototype = {
         return e + spo;
     },
 
+    toCHR: function(mapping) {
+        var chrized;
+
+        if(mapping === undefined) {
+            mapping = {};
+        }
+
+        if(this.falseFact) {
+            chrized = 'FALSE()';
+        } else {
+            chrized = 't(' + 
+                Utils.asCHRAtom(this.subject, mapping) + ', ' + 
+                Utils.asCHRAtom(this.predicate, mapping) + ', ' + 
+                Utils.asCHRAtom(this.object, mapping) + 
+            ')';
+        }
+
+        return chrized;
+    },
+
     truncatedString: function() {
         var e, spo;
 
