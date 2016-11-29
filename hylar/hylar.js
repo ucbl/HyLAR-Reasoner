@@ -57,6 +57,14 @@ Hylar = function() {
     this.rules = OWL2RL.test;
     this.queryHistory = [];
     this.sm.init();
+    this.status = {
+        classifying: false,
+        querying: false
+    };
+};
+
+Hylar.prototype.toggleClassifyingStatus = function() {
+    this.status.classifying = !(this.status.classifying);
 };
 
 Hylar.prototype.clean = function() {
@@ -130,6 +138,7 @@ Hylar.prototype.updateReasoningMethod = function(method) {
  */
 Hylar.prototype.load = function(ontologyTxt, mimeType, keepOldValues, graph, reasoningMethod) {
     var that = this;
+    this.toggleClassifyingStatus();
     this.updateReasoningMethod(reasoningMethod);
 
     if (!keepOldValues) {
@@ -168,6 +177,7 @@ Hylar.prototype.treatLoad = function(ontologyTxt, mimeType, graph) {
                 .then(function() {
                     return that.classify();
                 }, function(error) {
+                    that.toggleClassifyingStatus();
                     console.error(error);
                     throw error;
                 });
@@ -498,6 +508,7 @@ Hylar.prototype.classify = function() {
             }, 0);
         })
         .then(function() {
+            that.toggleClassifyingStatus();
             return true;
         });
 };

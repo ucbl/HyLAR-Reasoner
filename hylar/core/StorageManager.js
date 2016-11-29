@@ -54,7 +54,7 @@ StorageManager.prototype.loadRdfXml = function(data) {
         }, function(error) {
             console.error(error);
             throw error;
-        })
+        });
 };
 
 /**
