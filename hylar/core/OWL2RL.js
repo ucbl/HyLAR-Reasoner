@@ -26,8 +26,8 @@ var Class = Prefixes.OWL + 'Class',
     SubPropertyOf = Prefixes.RDFS + 'subPropertyOf',
     TransitiveProperty = Prefixes.OWL + 'TransitiveProperty',
     InverseOf = Prefixes.OWL + 'inverseOf',
-    SameAs = Prefixes.OWL + 'sameAs';
-    Domain = Prefixes.RDFS + "domain";
+    SameAs = Prefixes.OWL + 'sameAs',
+    Domain = Prefixes.RDFS + "domain",
     Range = Prefixes.RDFS + "range";
 
 /**

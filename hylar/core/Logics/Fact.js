@@ -84,13 +84,25 @@ Fact.prototype = {
             chrized = 'FALSE()';
         } else {
             chrized = 't(' + 
-                Utils.asCHRAtom(this.subject, mapping) + ', ' + 
-                Utils.asCHRAtom(this.predicate, mapping) + ', ' + 
-                Utils.asCHRAtom(this.object, mapping) + 
+                this.subjectCHR(mapping) + ', ' + 
+                this.predicateCHR(mapping) + ', ' + 
+                this.objectCHR(mapping) + 
             ')';
         }
 
         return chrized;
+    },
+
+    subjectCHR: function(mapping) {
+        return Utils.asCHRAtom(this.subject, mapping);
+    },
+
+    predicateCHR: function(mapping) {
+        return Utils.asCHRAtom(this.predicate, mapping);
+    },
+
+    objectCHR: function(mapping) {
+        return Utils.asCHRAtom(this.object, mapping);
     },
 
     truncatedString: function() {

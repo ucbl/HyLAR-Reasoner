@@ -6,6 +6,9 @@ var Logics = require('./Logics/Logics'),
     Solver = require('./Logics/Solver'),
     Utils = require('./Utils');
 
+var EventEmitter = require('events').EventEmitter;
+var emitter = new EventEmitter();
+
 var q = require('q');
 
 /**
@@ -109,14 +112,15 @@ ReasoningEngine = {
                     });
             },
 
-            insertionEvaluationLoop = function() {
+            insertionEvaluationLoop = function() {         
                 FiAdd = Utils.uniques(FiAdd, FiAddNew);
                 superSet = Utils.uniques(Utils.uniques(Utils.uniques(Fe, Fi), FeAdd), FiAdd);
                 Rins = Logics.restrictRuleSet(R, superSet);
                 Solver.evaluateRuleSet(Rins, superSet)
-                    .then(function(values) {
+                    .then(function(values) {                        
                         FiAddNew = values;
-                        if (!Utils.containsSubset(FiAdd, FiAddNew)) {
+                        time = new Date().getTime();
+                        if (!Utils.containsSubset(FiAdd, FiAddNew)) {                            
                             setTimeout(insertionEvaluationLoop, 1);
                         } else {
                             additions = Utils.uniques(FeAdd, FiAdd);
@@ -339,3 +343,11 @@ module.exports = {
     tagging: ReasoningEngine.tagging,
     tagFilter: ReasoningEngine.tagFilter
 };
+
+emitter.on('started', function(task) {
+    console.log('started ' + task);
+});
+
+emitter.on('finished', function(task) {
+    console.log('processed ' + task);
+});

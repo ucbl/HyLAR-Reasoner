@@ -8,6 +8,8 @@ var Utils = require('../Utils');
 var AnnotatedQuery = require('./AnnotatedQuery');
 
 var q = require('q');
+var CHR = require('chr');
+var chr = CHR();
 
 /**
  * Core solver used to evaluate rules against facts
@@ -42,6 +44,28 @@ Solver = {
             deferred.reject(e);
         }
         return deferred.promise;
+    },
+
+    evaluateRuleSetThroughCHR: function(rs, facts) {
+        var promises = [];
+        for (var key in rs) {
+            chr(rs[key].toCHR());
+        }
+        for (key in facts) {
+            try {
+                promises.push(
+                    chr.t(
+                        facts[key].subjectCHR(), 
+                        facts[key].predicateCHR(), 
+                        facts[key].objectCHR()
+                    ));
+            } catch (e) {}
+        }
+        Promise.all(promises).then(function(r) {
+            1;//
+        }).catch(function(e) {
+            2;//
+        });
     },
 
     /**
@@ -259,7 +283,7 @@ Solver = {
         }
 
         // The new mapping is updated
-        return localMapping;
+        return localMapping;    
     },
 
     factElemMatches: function(factElem, causeElem, globalMapping, localMapping) {
