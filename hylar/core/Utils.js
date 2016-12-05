@@ -5,6 +5,19 @@
 var q = require('q');
 
 var RegularExpressions = require('./RegularExpressions');
+var EventEmitter = require('events').EventEmitter;
+
+/** Event emitter */
+
+var emitter = new EventEmitter();
+
+emitter.on('started', function(task) {
+    console.log('started ' + task);
+});
+
+emitter.on('finished', function(task) {
+    console.log('processed ' + task);
+});
 
 /**
  * Utility functions.
@@ -61,6 +74,8 @@ IterableStructure.prototype.toArray = function() {
 module.exports = {
 
     _instanceid: 1,
+
+    emitter: emitter,
 
     IterableStructure: IterableStructure,
 

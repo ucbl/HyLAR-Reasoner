@@ -85,8 +85,9 @@ Solver = {
             for (var i = 0; i < mappingList.length; i++) {
                 if (mappingList[i]) {
                     // Replace mappings on all consequences
-                    for (var j = 0; j < rule.consequences.length; j++) {
+                    for (var j = 0; j < rule.consequences.length; j++) {                        
                         consequences.push(this.substituteFactVariables(mappingList[i], rule.consequences[j], []));
+                        
                     }
                 }
             }
@@ -165,9 +166,9 @@ Solver = {
         mappingList = [rule.causes[i]]; // Init with first cause
 
         while (i < rule.causes.length) {
-            mappingList = this.substituteNextCauses(mappingList, rule.causes[i+1], facts, rule.constants);
+            mappingList = this.substituteNextCauses(mappingList, rule.causes[i+1], facts, rule.constants);            
             i++;
-        }
+        }        
         return mappingList;
     },
 
@@ -334,10 +335,9 @@ Solver = {
         if (mapping == {}) {
             return notYetSubstitutedFact;
         }
-
         subject = this.substituteElementVariablesWithMapping(notYetSubstitutedFact.subject, mapping);
         predicate = this.substituteElementVariablesWithMapping(notYetSubstitutedFact.predicate, mapping);
-        object = this.substituteElementVariablesWithMapping(notYetSubstitutedFact.object, mapping);
+        object = this.substituteElementVariablesWithMapping(notYetSubstitutedFact.object, mapping);        
 
         substitutedFact = new Fact(predicate, subject, object);
 

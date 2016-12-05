@@ -6,9 +6,6 @@ var Logics = require('./Logics/Logics'),
     Solver = require('./Logics/Solver'),
     Utils = require('./Utils');
 
-var EventEmitter = require('events').EventEmitter;
-var emitter = new EventEmitter();
-
 var q = require('q');
 
 /**
@@ -343,11 +340,3 @@ module.exports = {
     tagging: ReasoningEngine.tagging,
     tagFilter: ReasoningEngine.tagFilter
 };
-
-emitter.on('started', function(task) {
-    console.log('started ' + task);
-});
-
-emitter.on('finished', function(task) {
-    console.log('processed ' + task);
-});

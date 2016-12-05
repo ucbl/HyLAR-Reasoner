@@ -21,14 +21,16 @@ var univ1 = baseOntoTxt + fs.readFileSync(path.resolve(__dirname + '/ontologies/
 var univ2 = baseOntoTxt + fs.readFileSync(path.resolve(__dirname + '/ontologies/University0_5.ttl')).toString();
 var univ3 = baseOntoTxt + fs.readFileSync(path.resolve(__dirname + '/ontologies/University0_14.ttl')).toString();
 
+Hylar.setRules(OWL2RL.equality.concat(OWL2RL.transitivityInverse, OWL2RL.equivalence, OWL2RL.subsumption));
 //Hylar.setRules(OWL2RL.equality);
 //Hylar.setRules(OWL2RL.equivalence);
 //Hylar.setRules(OWL2RL.subsumption);
 //Hylar.setRules(OWL2RL.transitivityInverse);
 
+
 describe('CLASSIFICATION UNIV 1', function () {
     it('should parse and classify the ontology', function () {
-        return Hylar.load(univ1, 'text/turtle', reasoningMethod)
+        return Hylar.load(univ1, 'text/turtle', false, false, reasoningMethod);
     });
 });
 
@@ -67,7 +69,7 @@ describe('SELECT', function () {
 
 describe('CLASSIFICATION UNIV 2', function () {
     it('should parse and classify the ontology', function () {
-        return Hylar.load(univ2, 'text/turtle', reasoningMethod)
+        return Hylar.load(univ2, 'text/turtle', false, false, reasoningMethod);
     });
 });
 
@@ -106,7 +108,7 @@ describe('SELECT', function () {
 
 describe('CLASSIFICATION UNIV 3', function () {
     it('should parse and classify the ontology', function () {
-        return Hylar.load(univ3, 'text/turtle', reasoningMethod)
+        return Hylar.load(univ3, 'text/turtle', false, false, reasoningMethod);
     });
 });
 

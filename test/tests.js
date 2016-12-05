@@ -44,7 +44,7 @@ describe('Ontology Parsing and classification', function () {
         console.notify('\nSTARTING TESTS -----------------------------------------\n')
         console.notify('File: ' + ontologyFilename);
 
-        return Hylar.load(owl, mimeType, reasoningMethod)
+        return Hylar.load(owl, mimeType, false, false, reasoningMethod)
         .then(function() {
             return Hylar.query(
                 'CONSTRUCT { ?a ?b ?c } WHERE { ?a ?b ?c }');
