@@ -60,7 +60,7 @@ Hylar = function() {
     this.status = {
         classifying: false,
         querying: false
-    };
+    };    
 };
 
 Hylar.prototype.toggleClassifyingStatus = function() {

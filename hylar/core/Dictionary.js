@@ -185,11 +185,15 @@ Dictionary.prototype.findKeys = function(values, graph) {
     for (var i = 0; i< values.length; i++) {
         value = values[i];
         for (var key in this.dict[graph]) {
-            if (this.dict[graph][key].toString().indexOf(value.toString()) !== -1) {
-                keys.push(key);
-                break;
-            } else {
-                notfound.push(value);
+            try {
+                if (this.dict[graph][key].toString().indexOf(value.toString()) !== -1) {
+                    keys.push(key);
+                    break;
+                } else {
+                    notfound.push(value);
+                }
+            } catch(e) {
+                throw e;
             }
         }
     }

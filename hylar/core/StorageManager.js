@@ -194,6 +194,7 @@ StorageManager.prototype.loadIntoSideStore = function(ttl, graph) {
             });
     } catch(e) {
         deferred.reject(e + "\n@" + this.constructor.name);
+        throw e;
     }
 
     return deferred.promise;

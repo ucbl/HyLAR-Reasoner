@@ -105,6 +105,8 @@ ParsingInterface = {
             entityStr = entityStr.format();
         } catch(e){}*/
 
+        entityStr = entityStr.replace(/(\n|\r)/g, '');
+
         if (entityStr === undefined) return false;
 
         if (entityStr.match(dblQuoteInStrPattern)) {
