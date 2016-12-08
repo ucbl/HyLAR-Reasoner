@@ -47,7 +47,6 @@ StorageManager.prototype.init = function() {
      */
 StorageManager.prototype.loadRdfXml = function(data) {
         var that = this;
-
         return ParsingInterface.rdfXmlToTurtle(data)
         .then(function(ttl) {
             return that.load(ttl, 'text/turtle');
@@ -64,9 +63,9 @@ StorageManager.prototype.loadRdfXml = function(data) {
  */
 StorageManager.prototype.query = function(query) {
     var deferred = q.defer();    
-    query = query.replace(/\\/g, '').replace(/(\n|\r)/g, '');
+    query = query.replace(/\\/g, '').replace(/(\n|\r)/g, '');          
     this.storage.execute(query, function (err, r) {
-        if(err) {
+        if(err) {            
             deferred.reject(err);
         } else {
             deferred.resolve(r);

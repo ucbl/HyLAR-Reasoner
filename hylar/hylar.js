@@ -466,13 +466,12 @@ Hylar.prototype.registerDerivations = function(derivations, graph) {
  * @returns {*}
  */
 Hylar.prototype.classify = function() {
-    var that = this, factsChunk, chunks = [], chunksNb = 10, insertionPromises = [];
+    var that = this, factsChunk, chunks = [], chunksNb = 5000, insertionPromises = [];
     console.notify('Classification started.');
 
     return this.sm.query('CONSTRUCT { ?a ?b ?c } WHERE { ?a ?b ?c }')
         .then(function(r) {
-            var facts = [], triple, fs, f;
-
+            var facts = [], triple, _fs, f;
             for (var i = 0; i <  r.triples.length; i++) {
                 triple = r.triples[i];
                 if(!(
@@ -480,20 +479,20 @@ Hylar.prototype.classify = function() {
                         triple.predicate.interfaceName == "BlankNode" ||
                         triple.object.interfaceName == "BlankNode"
                     )) {
-                    fs = that.dict.get(triple);
-                    if(!fs) {
+                    _fs = that.dict.get(triple);
+                    if(!_fs) {
                         f = ParsingInterface.tripleToFact(triple, true, (that.rMethod == Reasoner.process.it.incrementally));
                         that.dict.put(f);
                         facts.push(f);
                     } else {
-                        facts = facts.concat(fs);
+                        facts = facts.concat(_fs);
                     }
                 }
 
             }
             return Reasoner.evaluate(facts, [], [], that.rMethod, that.rules);
         })
-        .then(function(r) {
+        .then(function(r) {                                   
             that.registerDerivations(r);
             for (var i = 0, j = r.additions.length; i < j; i += chunksNb) {
                 factsChunk = r.additions.slice(i,i+chunksNb);
@@ -503,7 +502,7 @@ Hylar.prototype.classify = function() {
         })
         .then(function() {
             console.notify('Classification succeeded.');
-            return Promise.reduce(chunks, function(previous, chunk) {
+            return Promise.reduce(chunks, function(previous, chunk) {                
                 return that.sm.insert(chunk);
             }, 0);
         })
