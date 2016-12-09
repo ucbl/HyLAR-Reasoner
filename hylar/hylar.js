@@ -466,7 +466,7 @@ Hylar.prototype.registerDerivations = function(derivations, graph) {
  * @returns {*}
  */
 Hylar.prototype.classify = function() {
-    var that = this, factsChunk, chunks = [], chunksNb = 5000, insertionPromises = [];
+    var that = this, factsChunk, chunks = [], chunksNb = 4000, insertionPromises = [];
     console.notify('Classification started.');
 
     return this.sm.query('CONSTRUCT { ?a ?b ?c } WHERE { ?a ?b ?c }')
@@ -524,7 +524,7 @@ Hylar.prototype.addRules = function(ruleSet) {
 Hylar.prototype.addRule = function(rule, name) {
     this.rules.push(rule);
     this.rules[this.rules.length-1].setName(name);
-}
+};
 
 Hylar.prototype.removeRule = function(index) {
     var newRules = [];
@@ -544,6 +544,10 @@ Hylar.prototype.addToQueryHistory = function(query, noError) {
 
 Hylar.prototype.resetRules = function() {
     this.rules = OWL2RL.rules;
-}
+};
+
+Hylar.prototype.quiet = function() {
+    console.notify = function(){};
+};
 
 module.exports = Hylar;
