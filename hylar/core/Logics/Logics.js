@@ -240,20 +240,20 @@ Logics = {
                         delete additions[j];
                     // If the added facts already exists as implicit, mark is as 'resolved' (= not to be evaluated)
                     // and update other facts it derives by adding a new (equivalent) cause with the explicit version.
-                    } else if(kb[i].isAlternativeEquivalentOf(additions[j])) {
+                    }/* else if(kb[i].isAlternativeEquivalentOf(additions[j])) {
                         this.addAlternativeDerivationAsCausedByFromExplicit(kb, kb[i], additions[j]);
                         resolvedAdditions.push(additions[j]);
                         delete additions[j];
-                    }
+                    }*/
                 }
             }
-            for (var j = 0; j < deletions.length; j++) {
+            for (j = 0; j < deletions.length; j++) {
                 if (kb[i].equivalentTo(deletions[j])) {
                     kb[i].valid = false;
                 }
             }
         }
-        for (var i = 0; i < additions.length; i++) {
+        for (i = 0; i < additions.length; i++) {
             if (additions[i] !== undefined) {
                 kb.push(additions[i]);
                 newAdditions.push(additions[i]);
@@ -291,7 +291,7 @@ Logics = {
                 derivConj = derivations[i].causedBy[j];
                 for (var k = 0; k < kbFact.causedBy.length; k++) {
                     kbConj = kbFact.causedBy[k];
-                    if (newConj = Utils.removeSubset(derivConj, kbConj)) {
+                    if (newConj == Utils.removeSubset(derivConj, kbConj)) {
                         newConj.push(altFact);
                         derivations[i].causedBy = this.uniquesCausedBy(derivations[i].causedBy, [newConj]);
                     }
