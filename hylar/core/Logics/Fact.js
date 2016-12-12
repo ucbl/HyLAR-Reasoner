@@ -243,6 +243,7 @@ Fact.prototype = {
     },
 
     isAlternativeEquivalentOf: function(fact) {
+        if(!fact.explicit) return false;
         return (
             (fact.subject == this.subject) &&
             (fact.predicate == this.predicate) &&

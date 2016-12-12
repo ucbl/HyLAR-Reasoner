@@ -240,11 +240,11 @@ Logics = {
                         delete additions[j];
                     // If the added facts already exists as implicit, mark is as 'resolved' (= not to be evaluated)
                     // and update other facts it derives by adding a new (equivalent) cause with the explicit version.
-                    }/* else if(kb[i].isAlternativeEquivalentOf(additions[j])) {
+                    } else if(kb[i].isAlternativeEquivalentOf(additions[j])) {
                         this.addAlternativeDerivationAsCausedByFromExplicit(kb, kb[i], additions[j]);
                         resolvedAdditions.push(additions[j]);
                         delete additions[j];
-                    }*/
+                    }
                 }
             }
             for (j = 0; j < deletions.length; j++) {
