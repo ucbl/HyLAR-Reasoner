@@ -230,39 +230,29 @@ Logics = {
 
     updateValidTags: function(kb, additions, deletions) {
         var newAdditions = [],
-            resolvedAdditions = [];
-        for (var i = 0; i < kb.length; i++) {
-            for (var j = 0; j < additions.length; j++) {
-                if (additions[j] !== undefined) {
-                    // If the added fact already exists (exactly the same), just update the tag.
-                    if(kb[i].equivalentTo(additions[j])) {
-                        kb[i].valid = true;
-                        delete additions[j];
-                    // If the added facts already exists as implicit, mark is as 'resolved' (= not to be evaluated)
-                    // and update other facts it derives by adding a new (equivalent) cause with the explicit version.
-                    } else if(kb[i].isAlternativeEquivalentOf(additions[j])) {
-                        this.addAlternativeDerivationAsCausedByFromExplicit(kb, kb[i], additions[j]);
-                        resolvedAdditions.push(additions[j]);
-                        delete additions[j];
-                    }
+            resolvedAdditions = [],
+            kbMap = kb.map(function(x) { return x.toString(); }), index;
+        for (var i = 0; i < additions.length; i++) {
+            index = kbMap.indexOf(additions[i].toString());
+            if (index !== -1) {
+                if (kb[index].explicit) {
+                    kb[index].valid = true;
+                } else {
+                    this.addAlternativeDerivationAsCausedByFromExplicit(kb, kb[index], additions[i]);
                 }
-            }
-            for (j = 0; j < deletions.length; j++) {
-                if (kb[i].equivalentTo(deletions[j])) {
-                    kb[i].valid = false;
-                }
-            }
-        }
-        for (i = 0; i < additions.length; i++) {
-            if (additions[i] !== undefined) {
-                kb.push(additions[i]);
+            } else {
                 newAdditions.push(additions[i]);
             }
         }
-        return {
-            __new__: newAdditions,
-            __resolved__: resolvedAdditions
-        };
+        
+        for (i= 0; i < deletions.length; i++) {
+            index = kbMap.indexOf(deletions[i].toString());
+            if (index !== -1 && kb[index].explicit) {
+                kb[index].valid = false;                
+            }
+        }
+
+        return newAdditions;
     },
 
     /*addAlternativeDerivationAsCausedBy: function(kb, kbFact, altFact) {

@@ -339,7 +339,7 @@ Solver = {
         predicate = this.substituteElementVariablesWithMapping(notYetSubstitutedFact.predicate, mapping);
         object = this.substituteElementVariablesWithMapping(notYetSubstitutedFact.object, mapping);        
 
-        substitutedFact = new Fact(predicate, subject, object);
+        substitutedFact = new Fact(predicate, subject, object, [], false);
 
         if (causedBy) {
             substitutedFact.causedBy = causedBy;

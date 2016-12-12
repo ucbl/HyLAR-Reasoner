@@ -14,7 +14,7 @@ var Utils = require('../Utils');
  */
 Fact = function(pred, sub, obj, originConjs, expl, graphs, implicitCauses, notUsingValidity, fromTriple) {
     if(pred == 'FALSE') {
-        this.falseFact = 'true'
+        this.falseFact = 'true';
     }
     if (originConjs === undefined) originConjs = [];
     if (expl === undefined) expl = true;
@@ -31,9 +31,7 @@ Fact = function(pred, sub, obj, originConjs, expl, graphs, implicitCauses, notUs
     this.causedBy = originConjs;
     this.explicit = expl;
     this.graphs = graphs;
-    if (notUsingValidity || this.explicit == false) {
-        this.valid = undefined;
-    } else {
+    if (!notUsingValidity && this.explicit) {
         this.valid = true;
     }
 
