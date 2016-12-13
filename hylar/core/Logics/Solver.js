@@ -108,7 +108,7 @@ Solver = {
      */
     evaluateThroughRestrictionWithTagging: function(rule, kb) {
         var mappingList = this.getMappings(rule, kb), deferred = q.defer(),
-            consequences = [], consequence, causes, implicitCauses;
+            consequences = [], consequence, causes, iterationConsequences;
 
         this.checkOperators(rule, mappingList);
 
@@ -117,13 +117,18 @@ Solver = {
                 if (mappingList[i]) {
                     // Replace mappings on all consequences
                     causes = Logics.buildCauses(mappingList[i].__facts__);
-                    // Retrieves implicit causes
-                    implicitCauses = Logics.getOnlyImplicitFacts(mappingList[i].__facts__);
+                    iterationConsequences = [];
                     for (var j = 0; j < rule.consequences.length; j++) {
-                        consequence = this.substituteFactVariables(mappingList[i], rule.consequences[j], causes, implicitCauses);
+                        consequence = this.substituteFactVariables(mappingList[i], rule.consequences[j], causes);
                         //if (Logics.filterKnownOrAlternativeImplicitFact(consequence, kb, resolvedImplicitFacts)) {
                         consequences.push(consequence);
+                        iterationConsequences.push(consequence);
                         //}
+                    }
+                    try {
+                        Logics.addConsequences(mappingList[i].__facts__, iterationConsequences);
+                    } catch(e) {
+                        throw "Error when trying to add consequences on the implicit fact.";
                     }
                 }
             }
@@ -329,11 +334,8 @@ Solver = {
      * @param graphs
      * @returns {*}
      */
-    substituteFactVariables: function(mapping, notYetSubstitutedFact, causedBy, implicitCauses, graphs) {
+    substituteFactVariables: function(mapping, notYetSubstitutedFact, causedBy, graphs) {
         var subject, predicate, object, substitutedFact;
-        if(notYetSubstitutedFact.falseFact) {
-            1//
-        }
         if (mapping == {}) {
             return notYetSubstitutedFact;
         }
@@ -345,11 +347,6 @@ Solver = {
 
         if (causedBy) {
             substitutedFact.causedBy = causedBy;
-            substitutedFact.explicit = false;
-        }
-
-        if (implicitCauses && implicitCauses.length > 0) {
-            substitutedFact.implicitCauses = implicitCauses;
             substitutedFact.explicit = false;
         }
 

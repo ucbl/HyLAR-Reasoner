@@ -2,7 +2,7 @@
  The provided value 'moz-chunked-arraybuffer' is not a valid enum value of type XMLHttpRequestResponseType.checkTypeSupport @ (anonymous function) @  @ s @ (anonymous function) @ (anonymous function) @ ../capability @ s @ (anonymous function) @ ../lib/request @ s @ (anonymous function) @ .http @ s @ (anonymous function) @ ../jsonld_parser @ s @ (anonymous function) @ ../abstract_query_tree @ s @ (anonymous function) @ (anonymous function) @ ../lexicon @ s @ (anonymous function) @ ../ParsingInterface @ s @ (anonymous function) @ ../core/Dictionary @ s @ (anonymous function) @ (anonymous function) @ .../hylar/core/Logics/Logics @ s @ e @ (anonymous function) @ 
  incremental
  CLASSIFICATION UNIV 1
- 1782
+ 1760
  INSERT UNIV 1
  374
  DELETE UNIV 1
@@ -35,7 +35,7 @@
  18
  tagBased
  CLASSIFICATION UNIV 1
- 1760
+ 1782
  INSERT UNIV 1
  263
  DELETE UNIV 1

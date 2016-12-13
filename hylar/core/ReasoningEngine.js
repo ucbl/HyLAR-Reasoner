@@ -298,7 +298,7 @@ ReasoningEngine = {
                     evaluationLoop(F);
                 } else {
                     deferred.resolve({
-                        additions: [],
+                        additions: resolvedExplicitFacts,
                         deletions: []
                     });
                 }
@@ -314,7 +314,7 @@ ReasoningEngine = {
                             setTimeout(evaluationLoop, 1);
                         } else {
                             deferred.resolve({
-                                additions: Utils.uniques(newExplicitFacts, Fi),
+                                additions: newExplicitFacts.concat(resolvedExplicitFacts, Fi),
                                 deletions: []
                             });
                         }
@@ -322,7 +322,9 @@ ReasoningEngine = {
             };
 
         // Returns new explicit facts to be added
-        newExplicitFacts = Logics.updateValidTags(F, FeAdd, FeDel);
+        validUpdateResults = Logics.updateValidTags(F, FeAdd, FeDel);
+        newExplicitFacts = validUpdateResults.new;
+        resolvedExplicitFacts = validUpdateResults.resolved;
         F = F.concat(newExplicitFacts);
         startAlgorithm();
 

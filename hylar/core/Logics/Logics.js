@@ -28,12 +28,13 @@ Logics = {
             for (var j = 0; j < subset.length; j++) {
                 if ((subset[j] !== undefined) && (fs[i].equivalentTo(subset[j]))) {
                     fs[i].causedBy = this.uniquesCausedBy(fs[i].causedBy, subset[j].causedBy);
-                    fs[i].implicitCauses = Utils.uniques(fs[i].implicitCauses, subset[j].implicitCauses);
+                    fs[i].consequences = Utils.uniques(fs[i].consequences, subset[j].consequences);
+                    subset[j].doPropagate(fs[i]);                                                            
                     delete subset[j];
                 }
             }
         }
-        for (var i = 0; i < subset.length; i++) {
+        for (i = 0; i < subset.length; i++) {
             if (subset[i] !== undefined) fs.push(subset[i]);
         }
     },
@@ -239,6 +240,7 @@ Logics = {
                     kb[index].valid = true;
                 } else {
                     this.addAlternativeDerivationAsCausedByFromExplicit(kb, kb[index], additions[i]);
+                    resolvedAdditions.push(additions[i]);
                 }
             } else {
                 newAdditions.push(additions[i]);
@@ -252,27 +254,24 @@ Logics = {
             }
         }
 
-        return newAdditions;
+        return {
+            new: newAdditions,
+            resolved: resolvedAdditions
+        };
     },
 
-    /*addAlternativeDerivationAsCausedBy: function(kb, kbFact, altFact) {
-        var derivations = kbFact.derives(kb),
-            newCauseConj, allCauses;
-        for (var k = 0; k < derivations.length; k++) {
-            for (var l = 0; l < derivations[k].causedBy.length; l++) {
-                newCauseConj = derivations[k].causedBy[l].slice();
-                for (var m = 0; m < newCauseConj.length; m++) {
-                    if(newCauseConj[m].toString() == altFact) {
-                        newCauseConj[m] = altFact;
-                    }
-                }
-                derivations[k].causedBy = Utils.uniques(derivations[k].causedBy, [newCauseConj]);
+    addAlternativeDerivationAsCausedByFromExplicit: function(kb, kbFact, altFact) {
+        var derivations = kbFact.consequences;
+
+        for (var i = 0; i < derivations.length; i++) {
+            derivations[i].causedBy = Utils.insertUnique(derivations[i].causedBy, [altFact]);
+            for (var j = 0; j < derivations[i].consequences.length; j++) {
+                this.addAlternativeDerivationAsCausedByFromExplicit(kb, derivations[i].consequences[j], altFact);
             }
         }
-        kb.push(altFact);
-    },*/
+    },
 
-    addAlternativeDerivationAsCausedByFromExplicit: function(kb, kbFact, altFact) {
+    /*addAlternativeDerivationAsCausedByFromExplicit: function(kb, kbFact, altFact) {
         var derivations = kbFact.implicitlyDerives(kb),
             derivConj, kbConj, newConj, alternativeConjs = [];
 
@@ -290,8 +289,9 @@ Logics = {
 
         }
         kb.push(altFact);
-    },
+    },*/
 
+    /*
     addAlternativeDerivationAsCausedByFromImplicit: function(kb, kbFact, altFact) {
         var derivations = kbFact.explicitlyDerives(kb),
             derivConj, kbConj, newConj, alternativeConjs = [];
@@ -314,7 +314,7 @@ Logics = {
         kb.push(altFact);
     },
 
-    /*filterKnownOrAlternativeImplicitFact: function(derivedFact, kb, implicitFactsSubset) {
+    filterKnownOrAlternativeImplicitFact: function(derivedFact, kb, implicitFactsSubset) {
         for (var i = 0; i < kb.length; i++) {
             if (kb[i].equivalentTo(derivedFact)) {
                 return false;
@@ -350,6 +350,17 @@ Logics = {
         }
     },
 
+    addConsequences: function(facts, consequences) {
+        for (var i = 0; i < facts.length; i++) {
+            if (!facts[i].explicit) {
+                facts[i].consequences = facts[i].consequences.concat(consequences);
+                for (var j = 0; j < consequences.length; j++) {
+                    consequences[j].__propagate__ = facts[i];
+                }
+            }
+        }
+    },
+
     combineImplicitCauses: function(implicitFacts) {
         var combination = implicitFacts[0].causedBy;
         for (var i = 1; i < implicitFacts.length; i++) {
@@ -381,9 +392,9 @@ Logics = {
             if (fs[i] !== undefined) {
                 if (foundFactIndex = fs[i].appearsIn(unifiedSet)) {
                     unifiedSet[foundFactIndex].causedBy = this.uniquesCausedBy(fs[i].causedBy, unifiedSet[foundFactIndex].causedBy);//Utils.uniques(fs[i].causedBy, unifiedSet[foundFactIndex].causedBy);
-                    unifiedSet[foundFactIndex].implicitCauses = Utils.uniques(fs[i].implicitCauses, unifiedSet[foundFactIndex].implicitCauses);
-                    delete fs[i];
-                } else {
+                    unifiedSet[foundFactIndex].consequences = Utils.uniques(fs[i].consequences, unifiedSet[foundFactIndex].consequences);                    
+                    fs[i].doPropagate(unifiedSet[foundFactIndex]);
+            } else {
                     unifiedSet.push(fs[i]);
                 }
             }
