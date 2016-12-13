@@ -238,6 +238,9 @@ module.exports = {
         if (s1.toString() == s2.toString()) {
             return true;
         }
+        if (s1.length != s2.length) {
+            return false;
+        }
         for (var i = 0; i < s1.length; i++) {
             if (this.notInSet(s2, s1[i])) {
                 return false;

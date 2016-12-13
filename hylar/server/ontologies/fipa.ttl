@@ -1,0 +1,381 @@
+# baseURI: http://sites.google.com/site/smartappliancesproject/ontologies/fipa
+
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix fipa: <http://sites.google.com/site/smartappliancesproject/ontologies/fipa#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://sites.google.com/site/smartappliancesproject/ontologies/fipa>
+  rdf:type owl:Ontology ;
+  dcterms:created "14-11-2014"^^xsd:string ;
+  dcterms:creator "Laura Daniele (laura.daniele@tno.nl)"^^xsd:string ;
+  dcterms:description "The Fipa ontology describes a device ontology that aims at enabling interoperability between software agents, as defined by the FIPA Device Ontology Specification. This ontology can be used by agents when communicating about devices: when agents pass profiles of devices to each other, these profiles can be validated using the information contained in this ontology. "^^xsd:string ;
+  dcterms:issued "01-04-2015"^^xsd:string ;
+  dcterms:publisher "TNO"^^xsd:string ;
+  dcterms:source "'FIPA Device Ontology Specification', document number SC00091E , 3 December 2002, available at http://www.fipa.org/specs/fipa00091/SI00091E.pdf"^^xsd:string ;
+  dcterms:title "Fipa: FIPA (Foundation for Intelligent Physical Agents) Device Ontology "^^xsd:string ;
+  owl:versionInfo "1.0"^^xsd:string ;
+.
+fipa:AgentPlatformDescription
+  rdf:type owl:Class ;
+  rdfs:comment "The class AgentPlatformDescription is part of the FIPA-Nomadic-Application ontology that can be found in [FIPA00023]"^^xsd:string ;
+  rdfs:label "Agent Platform description"^^xsd:string ;
+.
+fipa:ConnectionDescription
+  rdf:type owl:Class ;
+  rdfs:comment "description that can be used to define the connection-related details of a given device."^^xsd:string ;
+  rdfs:label "Connection description"^^xsd:string ;
+.
+fipa:Device
+  rdf:type owl:Class ;
+  rdfs:comment "Description that can be used to define the device with its most general properties"^^xsd:string ;
+  rdfs:label "Device"^^xsd:string ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:onClass fipa:InfoDescription ;
+      owl:onProperty fipa:hasDeviceInfo ;
+      owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+    ] ;
+.
+fipa:Function
+  rdf:type owl:Class ;
+  rdfs:label "Function"^^xsd:string ;
+.
+fipa:HwDescription
+  rdf:type owl:Class ;
+  rdfs:comment "Description that can be used to define the hardware capabilities of a given device"^^xsd:string ;
+  rdfs:label "Hardware Description"^^xsd:string ;
+.
+fipa:InfoDescription
+  rdf:type owl:Class ;
+  rdfs:comment "The description that can be used to define the name, vendor and version of some product."^^xsd:string ;
+  rdfs:label "Info description"^^xsd:string ;
+.
+fipa:MemoryDescription
+  rdf:type owl:Class ;
+  rdfs:comment "Description that can be used to define the maximum memory of a given device, as well as the memory available at the time of query."^^xsd:string ;
+  rdfs:label "Memory description"^^xsd:string ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:minQualifiedCardinality "0"^^xsd:nonNegativeInteger ;
+      owl:onClass fipa:MemoryTypeDescription ;
+      owl:onProperty fipa:hasAvailable ;
+    ] ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:minQualifiedCardinality "0"^^xsd:nonNegativeInteger ;
+      owl:onClass fipa:MemoryTypeDescription ;
+      owl:onProperty fipa:hasMaximum ;
+    ] ;
+.
+fipa:MemoryTypeDescription
+  rdf:type owl:Class ;
+  rdfs:label "Memory type description"^^xsd:string ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:minCardinality "0"^^xsd:nonNegativeInteger ;
+      owl:onProperty fipa:hasAmount ;
+    ] ;
+.
+fipa:QoS
+  rdf:type owl:Class ;
+  rdfs:comment "The class QoS is part of the FIPA-Agent-Management ontology that can be found in [FIPA00014]"^^xsd:string ;
+  rdfs:label "QoS"^^xsd:string ;
+  rdfs:subClassOf owl:Thing ;
+.
+fipa:RequestDeviceInfo
+  rdf:type owl:Class ;
+  rdfs:comment "An agent can make a query in order to request the device information."^^xsd:string ;
+  rdfs:label "Request device info"^^xsd:string ;
+  rdfs:subClassOf fipa:Function ;
+.
+fipa:ResolutionDescription
+  rdf:type owl:Class ;
+  rdfs:comment "description that can be used to define the resolution details of a given display"^^xsd:string ;
+  rdfs:label "Resolution description"^^xsd:string ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:minCardinality "0"^^xsd:nonNegativeInteger ;
+      owl:onProperty fipa:hasHeight ;
+    ] ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:minCardinality "0"^^xsd:nonNegativeInteger ;
+      owl:onProperty fipa:hasWidth ;
+    ] ;
+.
+fipa:ScreenDescription
+  rdf:type owl:Class ;
+  rdfs:comment "description that can be used to define the screen of a given device."^^xsd:string ;
+  rdfs:label "Screen description"^^xsd:string ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:minCardinality "0"^^xsd:nonNegativeInteger ;
+      owl:onProperty fipa:hasHeight ;
+    ] ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:minCardinality "0"^^xsd:nonNegativeInteger ;
+      owl:onProperty fipa:hasWidth ;
+    ] ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:onProperty fipa:hasResolution ;
+      owl:someValuesFrom fipa:ResolutionDescription ;
+    ] ;
+.
+fipa:SwDescription
+  rdf:type owl:Class ;
+  rdfs:comment "Description that can be used to define the software capabilities of a given device."^^xsd:string ;
+  rdfs:label "Software Description"^^xsd:string ;
+.
+fipa:UIDescription
+  rdf:type owl:Class ;
+  rdfs:comment "description that can be used to define the user interface(s) of a given device"^^xsd:string ;
+  rdfs:label "UIDescription"^^xsd:string ;
+.
+fipa:hasAP
+  rdf:type owl:ObjectProperty ;
+  rdfs:comment "Description of the agent platform the device in question has. Can be used only if agent-compliancy of device level is either true or unspecified."^^xsd:string ;
+  rdfs:domain fipa:SwDescription ;
+  rdfs:label "has AP"^^xsd:string ;
+  rdfs:range fipa:AgentPlatformDescription ;
+.
+fipa:hasAgentCompliancy
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "Capability to host a FIPA-agent platform or participate in a distributed one."^^xsd:string ;
+  rdfs:domain fipa:Device ;
+  rdfs:label "has agent compliancy"^^xsd:string ;
+  rdfs:range xsd:boolean ;
+.
+fipa:hasAmount
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "The amount of memory. This value must not be negative."^^xsd:string ;
+  rdfs:label "has amount"^^xsd:string ;
+  rdfs:range xsd:integer ;
+.
+fipa:hasAudioInput
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "Specifies whether the device in question is capable of receiving audio input."^^xsd:string ;
+  rdfs:domain fipa:UIDescription ;
+  rdfs:label "has audio input"^^xsd:string ;
+  rdfs:range xsd:boolean ;
+.
+fipa:hasAudioOutput
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "Specifies whether the device in question is capable of producing audio output."^^xsd:string ;
+  rdfs:domain fipa:UIDescription ;
+  rdfs:label "has audio output"^^xsd:string ;
+  rdfs:range xsd:boolean ;
+.
+fipa:hasAvailable
+  rdf:type owl:ObjectProperty ;
+  rdfs:comment "The amount of memory available."^^xsd:string ;
+  rdfs:label "has available"^^xsd:string ;
+.
+fipa:hasBpp
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "Bits per pixel."^^xsd:string ;
+  rdfs:domain fipa:ResolutionDescription ;
+  rdfs:label "has bpp"^^xsd:string ;
+  rdfs:range xsd:integer ;
+.
+fipa:hasCPU
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "The type of the central processing unit that the device has."^^xsd:string ;
+  rdfs:domain fipa:HwDescription ;
+  rdfs:label "has CPU"^^xsd:string ;
+  rdfs:range xsd:string ;
+.
+fipa:hasColor
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "Has the value true if the device has a color screen; false if it has a monochrome screen."^^xsd:string ;
+  rdfs:domain fipa:ScreenDescription ;
+  rdfs:label "has color"^^xsd:string ;
+  rdfs:range xsd:boolean ;
+.
+fipa:hasConnection
+  rdf:type owl:ObjectProperty ;
+  rdfs:comment "The type of the connection the device uses."^^xsd:string ;
+  rdfs:domain fipa:HwDescription ;
+  rdfs:label "has connection"^^xsd:string ;
+  rdfs:range fipa:ConnectionDescription ;
+.
+fipa:hasConnectionInfo
+  rdf:type owl:ObjectProperty ;
+  rdfs:comment "General information for the connection."^^xsd:string ;
+  rdfs:domain fipa:ConnectionDescription ;
+  rdfs:label "has info"^^xsd:string ;
+  rdfs:range fipa:InfoDescription ;
+.
+fipa:hasDeviceInfo
+  rdf:type owl:ObjectProperty ;
+  rdfs:comment "General information for the device."^^xsd:string ;
+  rdfs:domain fipa:Device ;
+  rdfs:label "has info"^^xsd:string ;
+  rdfs:range fipa:InfoDescription ;
+.
+fipa:hasGraphics
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "Has the value true if the device is capable of displaying graphics; false if the device is capable of displaying only characters."^^xsd:string ;
+  rdfs:domain fipa:ResolutionDescription ;
+  rdfs:label "has graphics"^^xsd:string ;
+  rdfs:range xsd:boolean ;
+.
+fipa:hasHeight
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "The height of the screen or the number of resolution units vertically. This value must be positive."^^xsd:string ;
+  rdfs:label "has height "^^xsd:string ;
+  rdfs:range xsd:integer ;
+.
+fipa:hasHwProperties
+  rdf:type owl:ObjectProperty ;
+  rdfs:comment "List of properties describing the hardware features of the device in question."^^xsd:string ;
+  rdfs:domain fipa:Device ;
+  rdfs:label "has hw properties"^^xsd:string ;
+  rdfs:range fipa:HwDescription ;
+.
+fipa:hasMaximum
+  rdf:type owl:ObjectProperty ;
+  rdfs:comment "The maximum amount of memory "^^xsd:string ;
+  rdfs:label "has maximum"^^xsd:string ;
+.
+fipa:hasMemory
+  rdf:type owl:ObjectProperty ;
+  rdfs:comment "The amount of memory that the device has."^^xsd:string ;
+  rdfs:domain fipa:HwDescription ;
+  rdfs:label "has memory"^^xsd:string ;
+  rdfs:range fipa:MemoryDescription ;
+.
+fipa:hasMemoryUnit
+  rdf:type owl:DatatypeProperty ;
+  rdfs:domain fipa:MemoryTypeDescription ;
+  rdfs:label "has memory unit"^^xsd:string ;
+  rdfs:range [
+      rdf:type rdfs:Datatype ;
+      owl:oneOf (
+          "B"^^xsd:string
+          "KB"^^xsd:string
+          "MB"^^xsd:string
+        ) ;
+    ] ;
+.
+fipa:hasMemoryUsageType
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "The usage type of the memory. Either application, storage, or both."^^xsd:string ;
+  rdfs:domain fipa:MemoryTypeDescription ;
+  rdfs:label "has memory usage type"^^xsd:string ;
+  rdfs:range [
+      rdf:type rdfs:Datatype ;
+      owl:oneOf (
+          "application"^^xsd:string
+          "storage"^^xsd:string
+          "application & storage"^^xsd:string
+        ) ;
+    ] ;
+.
+fipa:hasName
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "The name of the product in question."^^xsd:string ;
+  rdfs:domain fipa:InfoDescription ;
+  rdfs:label "has name"^^xsd:string ;
+  rdfs:range xsd:string ;
+.
+fipa:hasOperatingSystem
+  rdf:type owl:ObjectProperty ;
+  rdfs:comment "Details of the operating system that the device has."^^xsd:string ;
+  rdfs:domain fipa:SwDescription ;
+  rdfs:label "has operating system"^^xsd:string ;
+  rdfs:range fipa:InfoDescription ;
+.
+fipa:hasQoS
+  rdf:type owl:ObjectProperty ;
+  rdfs:comment "Detailed information about the Quality of Service of this connection type"^^xsd:string ;
+  rdfs:domain fipa:ConnectionDescription ;
+  rdfs:label "has QoS"^^xsd:string ;
+  rdfs:range fipa:QoS ;
+.
+fipa:hasResolution
+  rdf:type owl:ObjectProperty ;
+  rdfs:comment "The resolution description for the screen."^^xsd:string ;
+  rdfs:domain fipa:ScreenDescription ;
+  rdfs:label "has resolution"^^xsd:string ;
+  rdfs:range fipa:ResolutionDescription ;
+.
+fipa:hasResolutionUnit
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "The unit for the resolution."^^xsd:string ;
+  rdfs:domain fipa:ResolutionDescription ;
+  rdfs:label "has resolution unit"^^xsd:string ;
+  rdfs:range [
+      rdf:type rdfs:Datatype ;
+      owl:oneOf (
+          "pixels"^^xsd:string
+          "characters"^^xsd:string
+        ) ;
+    ] ;
+.
+fipa:hasScreen
+  rdf:type owl:ObjectProperty ;
+  rdfs:comment "Information characterizing the screen of the device."^^xsd:string ;
+  rdfs:domain fipa:UIDescription ;
+  rdfs:label "has screen"^^xsd:string ;
+  rdfs:range fipa:ScreenDescription ;
+.
+fipa:hasSwProperties
+  rdf:type owl:ObjectProperty ;
+  rdfs:comment "List of properties describing the software features of the device in question."^^xsd:string ;
+  rdfs:domain fipa:Device ;
+  rdfs:label "has sw properties"^^xsd:string ;
+  rdfs:range fipa:SwDescription ;
+.
+fipa:hasType
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "The type(s) of the device. General type(s) of devices like 3G phones, PDA's etc. To be used as a sequence from general to more specific types."^^xsd:string ;
+  rdfs:domain fipa:Device ;
+  rdfs:label "has type"^^xsd:string ;
+  rdfs:range xsd:string ;
+.
+fipa:hasUserInterface
+  rdf:type owl:ObjectProperty ;
+  rdfs:comment "List of the user interfaces that the device offers."^^xsd:string ;
+  rdfs:domain fipa:HwDescription ;
+  rdfs:label "has user interface"^^xsd:string ;
+  rdfs:range fipa:UIDescription ;
+.
+fipa:hasVendor
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "The vendor of the product in question"^^xsd:string ;
+  rdfs:domain fipa:InfoDescription ;
+  rdfs:label "has vendor"^^xsd:string ;
+  rdfs:range xsd:string ;
+.
+fipa:hasVersion
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "The version of the product in question"^^xsd:string ;
+  rdfs:domain fipa:InfoDescription ;
+  rdfs:label "has version"^^xsd:string ;
+  rdfs:range xsd:string ;
+.
+fipa:hasWidth
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "The width of the screen or the number of resolution units horizontally. This value must be positive."^^xsd:string ;
+  rdfs:label "has width"^^xsd:string ;
+  rdfs:range xsd:integer ;
+.
+fipa:hasWidthHeightUnit
+  rdf:type owl:DatatypeProperty ;
+  rdfs:comment "The unit for the width and height parameters of the Screen Description class."^^xsd:string ;
+  rdfs:domain fipa:ScreenDescription ;
+  rdfs:label "has width height unit"^^xsd:string ;
+  rdfs:range [
+      rdf:type rdfs:Datatype ;
+      owl:oneOf (
+          "mm"^^xsd:string
+          "cm"^^xsd:string
+          "inch"^^xsd:string
+        ) ;
+    ] ;
+.

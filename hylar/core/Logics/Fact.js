@@ -91,6 +91,18 @@ Fact.prototype = {
         return chrized;
     },
 
+    toRaw: function() {
+        var spo;
+
+        if(this.falseFact) {
+            spo = 'FALSE';
+        } else {
+            spo = '(' + this.subject + ' ' + this.predicate + ' ' + this.object + ')'
+        }
+
+        return spo;
+    },
+
     subjectCHR: function(mapping) {
         return Utils.asCHRAtom(this.subject, mapping);
     },

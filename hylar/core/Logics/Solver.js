@@ -36,7 +36,7 @@ Solver = {
         try {
             q.all(promises).then(function (consTab) {
                 for (var i = 0; i < consTab.length; i++) {
-                    cons = Utils.uniques(cons, consTab[i]);
+                    cons = cons.concat(consTab[i]);
                 }
                 deferred.resolve(cons);
             });
@@ -331,7 +331,9 @@ Solver = {
      */
     substituteFactVariables: function(mapping, notYetSubstitutedFact, causedBy, implicitCauses, graphs) {
         var subject, predicate, object, substitutedFact;
-
+        if(notYetSubstitutedFact.falseFact) {
+            1//
+        }
         if (mapping == {}) {
             return notYetSubstitutedFact;
         }

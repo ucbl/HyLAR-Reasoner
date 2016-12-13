@@ -14,12 +14,13 @@ var H = require('../hylar/hylar');
 var owl, ontology, Hylar = new H();
 
 var reasoningMethod = process.env.rm;
+var prefix = 'PREFIX ub: <http://swat.cse.lehigh.edu/onto/univ-bench.owl#> ';
 var triples = fs.readFileSync(path.resolve(__dirname + '/ontologies/University0_14.nt')).toString();
 var baseOntoTxt = fs.readFileSync(path.resolve(__dirname + '/ontologies/univ-bench-base-onto.ttl')).toString();
 
-var univ1 = baseOntoTxt + fs.readFileSync(path.resolve(__dirname + '/ontologies/University0_0.ttl')).toString();
-var univ2 = baseOntoTxt + fs.readFileSync(path.resolve(__dirname + '/ontologies/University0_5.ttl')).toString();
-var univ3 = baseOntoTxt + fs.readFileSync(path.resolve(__dirname + '/ontologies/University0_14.ttl')).toString();
+var univ1 = triples + ' ' + fs.readFileSync(path.resolve(__dirname + '/ontologies/University0_0.ttl')).toString();
+var univ2 = triples + ' ' + fs.readFileSync(path.resolve(__dirname + '/ontologies/University0_5.ttl')).toString();
+var univ3 = triples + ' ' + fs.readFileSync(path.resolve(__dirname + '/ontologies/University0_14.ttl')).toString();
 
 Hylar.setRules(OWL2RL.equality.concat(OWL2RL.transitivityInverse, OWL2RL.equivalence, OWL2RL.subsumption));
 //Hylar.setRules(OWL2RL.equivalence);
@@ -39,9 +40,9 @@ function delay() {
 }
 
 
-describe('CLASSIFICATION UNIV 1', function () {
+describe('CLASSIFICATION', function () {
     it('should parse and classify the ontology', function () {
-        return Hylar.load(univ1, 'text/turtle', false, false, reasoningMethod)
+        return Hylar.load(baseOntoTxt, 'text/turtle', false, false, reasoningMethod)
         .then(function() {
             delay();
         });
@@ -51,7 +52,7 @@ describe('CLASSIFICATION UNIV 1', function () {
 describe('INSERT UNIV 1', function () {
     var query, results;
     it('insert data and derivations', function () {
-        var queryText = 'INSERT DATA { ' + triples + ' }';
+        var queryText = prefix + 'INSERT DATA { ' + univ1 + ' }';
         return Hylar.query(queryText).then(function() {
             delay();
         });
@@ -61,7 +62,7 @@ describe('INSERT UNIV 1', function () {
 describe('DELETE UNIV 1', function () {
     var query, results;
     it('insert data and derivations', function () {
-        var queryText = 'DELETE DATA { ' + triples + ' }';
+        var queryText = prefix + 'DELETE DATA { ' + univ1 + ' }';
         return Hylar.query(queryText).then(function() {
             delay();
         });
@@ -71,7 +72,7 @@ describe('DELETE UNIV 1', function () {
 describe('REINSERT UNIV 1', function () {
     var query, results;
     it('insert data and derivations', function () {
-        var queryText = 'INSERT DATA { ' + triples + ' }';
+        var queryText = prefix + 'INSERT DATA { ' + triples + ' }';
         return Hylar.query(queryText).then(function() {
             delay();
         });
@@ -89,9 +90,9 @@ describe('SELECT', function () {
 
 // ------------------------------------------------------------------------
 
-describe('CLASSIFICATION UNIV 2', function () {
+describe('CLASSIFICATION', function () {
     it('should parse and classify the ontology', function () {
-        return Hylar.load(univ2, 'text/turtle', false, false, reasoningMethod).then(function() {
+        return Hylar.load(baseOntoTxt, 'text/turtle', false, false, reasoningMethod).then(function() {
             delay();
         });
     });
@@ -100,7 +101,7 @@ describe('CLASSIFICATION UNIV 2', function () {
 describe('INSERT UNIV 2', function () {
     var query, results;
     it('insert data and derivations', function () {
-        var queryText = 'INSERT DATA { ' + triples + ' }';
+        var queryText = prefix + 'INSERT DATA { ' + univ2 + ' }';
         return Hylar.query(queryText).then(function() {
             delay();
         });
@@ -110,7 +111,7 @@ describe('INSERT UNIV 2', function () {
 describe('DELETE UNIV 2', function () {
     var query, results;
     it('insert data and derivations', function () {
-        var queryText = 'DELETE DATA { ' + triples + ' }';
+        var queryText = prefix + 'DELETE DATA { ' + univ2 + ' }';
         return Hylar.query(queryText).then(function() {
             delay();
         });
@@ -120,7 +121,7 @@ describe('DELETE UNIV 2', function () {
 describe('REINSERT UNIV 2', function () {
     var query, results;
     it('insert data and derivations', function () {
-        var queryText = 'INSERT DATA { ' + triples + ' }';
+        var queryText = prefix + 'INSERT DATA { ' + univ2 + ' }';
         return Hylar.query(queryText).then(function() {
             delay();
         });
@@ -138,9 +139,9 @@ describe('SELECT', function () {
 
 // ------------------------------------------------------------------------
 
-describe('CLASSIFICATION UNIV 3', function () {
+describe('CLASSIFICATION', function () {
     it('should parse and classify the ontology', function () {
-        return Hylar.load(univ3, 'text/turtle', false, false, reasoningMethod).then(function() {
+        return Hylar.load(baseOntoTxt, 'text/turtle', false, false, reasoningMethod).then(function() {
             delay();
         });
     });
@@ -150,7 +151,7 @@ describe('CLASSIFICATION UNIV 3', function () {
 describe('INSERT UNIV 3', function () {
     var query, results;
     it('insert data and derivations', function () {
-        var queryText = 'INSERT DATA { ' + triples + ' }';
+        var queryText = prefix + 'INSERT DATA { ' + univ3 + ' }';
         return Hylar.query(queryText).then(function() {
             delay();
         });
@@ -160,7 +161,7 @@ describe('INSERT UNIV 3', function () {
 describe('DELETE UNIV 3', function () {
     var query, results;
     it('insert data and derivations', function () {
-        var queryText = 'DELETE DATA { ' + triples + ' }';
+        var queryText = prefix + 'DELETE DATA { ' + univ3 + ' }';
         return Hylar.query(queryText).then(function() {
             delay();
         });
@@ -170,7 +171,7 @@ describe('DELETE UNIV 3', function () {
 describe('REINSERT UNIV 3', function () {
     var query, results;
     it('insert data and derivations', function () {
-        var queryText = 'INSERT DATA { ' + triples + ' }';
+        var queryText = prefix + 'INSERT DATA { ' + univ3 + ' }';
         return Hylar.query(queryText).then(function() {
             delay();
         });
