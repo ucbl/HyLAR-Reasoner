@@ -28,7 +28,7 @@ Logics = {
             for (var j = 0; j < subset.length; j++) {
                 if ((subset[j] !== undefined) && (fs[i].equivalentTo(subset[j]))) {
                     fs[i].causedBy = this.uniquesCausedBy(fs[i].causedBy, subset[j].causedBy);
-                    fs[i].consequences = Utils.uniques(fs[i].consequences, subset[j].consequences);
+                    fs[i].consequences = fs[i].consequences.concat(subset[j].consequences);
                     subset[j].doPropagate(fs[i]);                                                            
                     delete subset[j];
                 }
@@ -393,8 +393,8 @@ Logics = {
                 if (foundFactIndex = fs[i].appearsIn(unifiedSet)) {
                     unifiedSet[foundFactIndex].causedBy = this.uniquesCausedBy(fs[i].causedBy, unifiedSet[foundFactIndex].causedBy);//Utils.uniques(fs[i].causedBy, unifiedSet[foundFactIndex].causedBy);
                     unifiedSet[foundFactIndex].consequences = Utils.uniques(fs[i].consequences, unifiedSet[foundFactIndex].consequences);                    
-                    fs[i].doPropagate(unifiedSet[foundFactIndex]);
-            } else {
+                    fs[i].doPropagate(unifiedSet[foundFactIndex]);                   
+                } else {
                     unifiedSet.push(fs[i]);
                 }
             }
