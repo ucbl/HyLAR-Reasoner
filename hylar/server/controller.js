@@ -18,7 +18,8 @@ var appDir = path.dirname(require.main.filename),
     ontoDir = appDir + '/ontologies',
     htmlDir = appDir + '/views',
     port = 3000,
-    parsedPort;
+    parsedPort,
+    contextPath = "";
 
 process.argv.forEach(function(value, index) {
     if ((value == '-od') || (value == '--ontology-directory')) {
@@ -42,6 +43,13 @@ process.argv.forEach(function(value, index) {
         } else {
             Hylar.setIncremental();
         }
+    }
+});
+
+process.argv.forEach(function(value, index) {
+    if((value=='-cp') || (value=='--context-path')) {
+        contextPath = "/" + process.argv[index + 1];
+        console.log(contextPath);
     }
 });
 
@@ -234,7 +242,8 @@ module.exports = {
             ontologies: ontologies,
             nbExplicit: nbExplicit,
             nbImplicit: nbImplicit,
-            consistent: consistent
+            consistent: consistent,
+            contextPath: contextPath
         });
     },
 
@@ -298,7 +307,8 @@ module.exports = {
             factName: factName,
             factTriple: escape(key),
             derivations: derivations,
-            graph: graph
+            graph: graph,
+            contextPath: contextPath
         });
     },
 
@@ -330,14 +340,16 @@ module.exports = {
             sparqlQuery: (req.sparqlQuery ? req.sparqlQuery : 'SELECT * { ?s ?p ?o . }'),
             prevResults: (req.sparqlResults ? req.sparqlResults : ''),
             history: Hylar.queryHistory,
-            error: (req.error ? req.error: '')
+            error: (req.error ? req.error: ''),
+            contextPath: contextPath
         });
     },
 
     renderRules: function(req, res) {
         res.render(htmlDir + '/pages/rules', {
             rules: Hylar.getRulesAsStringArray(),
-            error: req.error
+            error: req.error,
+            contextPath: contextPath
         });
     },
 
