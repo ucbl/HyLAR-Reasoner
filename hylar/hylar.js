@@ -287,19 +287,20 @@ Hylar.prototype.setDictionaryContent = function(dict) {
     this.dict.setContent(dict);
 };
 
-Hylar.prototype.import = function(dictContent) {
-    var query = "INSERT DATA { ";
+Hylar.prototype.import = function(dictionary) {
+    var importedTriples = "",
+        dictContent = dictionary.dict;
     for (var graph in dictContent) {
         for (var triple in dictContent[graph]) {
-            query += triple.replace(/(\n|\r)/g, '');
+            importedTriples += triple.replace(/(\n|\r|\\)/g, '') + "\n";
             for (var i = 0; i < dictContent[graph][triple].length; i++) {
                 dictContent[graph][triple][i].__proto__ = Fact.prototype;
             }
         }
     }
-    query += " }"
+    fs.appendFileSync("export_results.txt", importedTriples);
     this.setDictionaryContent(dictContent);
-    return this.sm.query(query);
+    return this.sm.load(importedTriples, "text/turtle");
 };
 
 Hylar.prototype.checkConsistency = function() {

@@ -134,6 +134,22 @@ module.exports = {
         });
     },
 
+    importHylarContents: function(req, res) {
+        var importedData;
+        fs.readFile(ontoDir + "/export.json", function(err, data) {
+            if(err) {
+                res.status(500).send(err.toString());
+            } else {
+                importedData = data.toString();
+                Hylar.import(JSON.parse(importedData).dictionary).then(function(value) {
+                    res.send({status: value});
+                }).fail(function(err) {
+                    res.status(500).json({err: err.toString});
+                });
+            };
+        });        
+    },
+
     /**
      * End-method returning an ontology
      * @param req
