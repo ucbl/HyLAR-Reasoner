@@ -47,6 +47,8 @@ app.use(bodyParser.json());
 app.get('/', Controller.hello);
 app.get('/time', Controller.time);
 
+app.get('/export', Controller.sendHylarContents);
+
 // OWL ontology uploading, parsing, getting, classifying
 app.get('/ontology', Controller.list);
 app.post('/ontology', upload.single('file'), Controller.upload, Controller.hello);
