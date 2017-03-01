@@ -11409,7 +11409,6 @@ Hylar.prototype.import = function(dictionary) {
             }
         }
     }
-    fs.appendFileSync("export_results.txt", importedTriples);
     this.setDictionaryContent(dictContent);
     return this.sm.load(importedTriples, "text/turtle");
 };
