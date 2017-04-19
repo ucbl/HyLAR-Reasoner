@@ -8,6 +8,8 @@ var Utils = require('../Utils');
 var AnnotatedQuery = require('./AnnotatedQuery');
 
 var q = require('q');
+var CHR = require('chr');
+var chr = CHR();
 
 var ruleDeps;
 
@@ -41,7 +43,7 @@ Solver = {
         try {
             q.all(promises).then(function (consTab) {
                 for (var i = 0; i < consTab.length; i++) {
-                    cons = Utils.uniques(cons, consTab[i]);
+                    cons = cons.concat(consTab[i]);
                 }
                 deferred.resolve({cons: cons, ruleDeps: ruleDeps});
             });
@@ -49,6 +51,28 @@ Solver = {
             deferred.reject(e);
         }
         return deferred.promise;
+    },
+
+    evaluateRuleSetThroughCHR: function(rs, facts) {
+        var promises = [];
+        for (var key in rs) {
+            chr(rs[key].toCHR());
+        }
+        for (key in facts) {
+            try {
+                promises.push(
+                    chr.t(
+                        facts[key].subjectCHR(), 
+                        facts[key].predicateCHR(), 
+                        facts[key].objectCHR()
+                    ));
+            } catch (e) {}
+        }
+        Promise.all(promises).then(function(r) {
+            1;//
+        }).catch(function(e) {
+            2;//
+        });
     },
 
     /**
@@ -68,8 +92,9 @@ Solver = {
             for (var i = 0; i < mappingList.length; i++) {
                 if (mappingList[i]) {
                     // Replace mappings on all consequences
-                    for (var j = 0; j < rule.consequences.length; j++) {
+                    for (var j = 0; j < rule.consequences.length; j++) {                        
                         consequences.push(this.substituteFactVariables(mappingList[i], rule.consequences[j], []));
+                        
                     }
                 }
             }
@@ -90,7 +115,7 @@ Solver = {
      */
     evaluateThroughRestrictionWithTagging: function(rule, kb) {
         var mappingList = this.getMappings(rule, kb), deferred = q.defer(),
-            consequences = [], consequence, causes, implicitCauses;
+            consequences = [], consequence, causes, iterationConsequences;
 
         this.checkOperators(rule, mappingList);
 
@@ -99,13 +124,18 @@ Solver = {
                 if (mappingList[i]) {
                     // Replace mappings on all consequences
                     causes = Logics.buildCauses(mappingList[i].__facts__);
-                    // Retrieves implicit causes
-                    implicitCauses = Logics.getOnlyImplicitFacts(mappingList[i].__facts__);
+                    iterationConsequences = [];
                     for (var j = 0; j < rule.consequences.length; j++) {
-                        consequence = this.substituteFactVariables(mappingList[i], rule.consequences[j], causes, implicitCauses);
+                        consequence = this.substituteFactVariables(mappingList[i], rule.consequences[j], causes);
                         //if (Logics.filterKnownOrAlternativeImplicitFact(consequence, kb, resolvedImplicitFacts)) {
                         consequences.push(consequence);
+                        iterationConsequences.push(consequence);
                         //}
+                    }
+                    try {
+                        Logics.addConsequences(mappingList[i].__facts__, iterationConsequences);
+                    } catch(e) {
+                        throw "Error when trying to add consequences on the implicit fact.";
                     }
                 }
             }
@@ -150,7 +180,7 @@ Solver = {
         while (i < rule.causes.length) {
             mappingList = this.substituteNextCauses(mappingList, rule.causes[i+1], facts, rule.constants, rule);
             i++;
-        }
+        }        
         return mappingList;
     },
 
@@ -271,7 +301,7 @@ Solver = {
         }
 
         // The new mapping is updated
-        return localMapping;
+        return localMapping;    
     },
 
     factElemMatches: function(factElem, causeElem, globalMapping, localMapping) {
@@ -316,26 +346,19 @@ Solver = {
      * @param graphs
      * @returns {*}
      */
-    substituteFactVariables: function(mapping, notYetSubstitutedFact, causedBy, implicitCauses, graphs) {
+    substituteFactVariables: function(mapping, notYetSubstitutedFact, causedBy, graphs) {
         var subject, predicate, object, substitutedFact;
-
         if (mapping == {}) {
             return notYetSubstitutedFact;
         }
-
         subject = this.substituteElementVariablesWithMapping(notYetSubstitutedFact.subject, mapping);
         predicate = this.substituteElementVariablesWithMapping(notYetSubstitutedFact.predicate, mapping);
-        object = this.substituteElementVariablesWithMapping(notYetSubstitutedFact.object, mapping);
+        object = this.substituteElementVariablesWithMapping(notYetSubstitutedFact.object, mapping);        
 
-        substitutedFact = new Fact(predicate, subject, object);
+        substitutedFact = new Fact(predicate, subject, object, [], false);
 
         if (causedBy) {
             substitutedFact.causedBy = causedBy;
-            substitutedFact.explicit = false;
-        }
-
-        if (implicitCauses && implicitCauses.length > 0) {
-            substitutedFact.implicitCauses = implicitCauses;
             substitutedFact.explicit = false;
         }
 

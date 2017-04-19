@@ -53,25 +53,13 @@
             <% } %>
         <% } %>
 
-        <!-- Analyzing implicit causes -->
-        <% if (fact.implicitCauses.length > 0) { %>
-            <h3>Implicit causes</h3>
-            <ul>
-            <% for (var i = 0; i < fact.implicitCauses.length; i++) { %>
-                <li>
-                    <a class="fact fact-valid-<%- fact.implicitCauses[i].isValid() %>" href="<%- contextPath %>/explore/<%- encodeURIComponent(fact.implicitCauses[i].toString()) %>"><%- fact.implicitCauses[i].truncatedString() %></a>
-                </li>
-            <% } %>
-            </ul>
-        <% } %>
-
         <!-- Analyzing consequences -->
-        <% if (derivations.length > 0) { %>
+        <% if (fact.consequences.length > 0) { %>
             <h3>Derives</h3>
             <ul>
-            <% for (var j = 0; j < derivations.length; j++) { %>
+            <% for (var j = 0; j < fact.consequences.length; j++) { %>
                 <li>
-                    <a class="fact fact-valid-<%- derivations[j].isValid() %>" href="<%- contextPath %>/explore/<%- encodeURIComponent(derivations[j].toString()) %>"><%- derivations[j].truncatedString() %></a>
+                    <a class="fact fact-valid-<%- fact.consequences[j].isValid() %>" href="/explore/<%- encodeURIComponent(fact.consequences[j].toString()) %>"><%- fact.consequences[j].truncatedString() %></a>
                 </li>
             <% } %>
             </ul>

@@ -62,7 +62,7 @@ ReasoningEngine = {
      * @param FeAdd set of assertions to be added
      * @param FeDel set of assertions to be deleted
      */
-    incremental: function (FeAdd, FeDel, F, R) {
+    incremental: function (FeAdd, FeDel, F, R) {        
         var Rdel = [], Rred, Rins = [],
             FiDel = [], FiAdd = [],
             FiDelNew = [], FiAddNew = [],
@@ -76,7 +76,7 @@ ReasoningEngine = {
             deferred = q.defer(),
 
             startAlgorithm = function() {
-                overDeletionEvaluationLoop(FiDelNew);
+                overDeletionEvaluationLoop();
             },
 
             overDeletionEvaluationLoop = function() {
@@ -86,11 +86,11 @@ ReasoningEngine = {
                     .then(function(values) {
                         FiDelNew = values.cons;
                         if (Utils.uniques(FiDel, FiDelNew).length > FiDel.length) {
-                            setTimeout(overDeletionEvaluationLoop, 1);
+                            overDeletionEvaluationLoop();
                         } else {
                             Fe = Logics.minus(Fe, FeDel);
                             Fi = Logics.minus(Fi, FiDel);
-                            setTimeout(rederivationEvaluationLoop, 1);
+                            rederivationEvaluationLoop();
                         }
                     });
             },
@@ -102,14 +102,14 @@ ReasoningEngine = {
                     .then(function(values) {
                         FiAddNew = values.cons;
                         if (Utils.uniques(FiAdd, FiAddNew).length > FiAdd.length) {
-                            setTimeout(rederivationEvaluationLoop, 1);
+                            rederivationEvaluationLoop();
                         } else {
-                            setTimeout(insertionEvaluationLoop, 1);
+                            insertionEvaluationLoop();
                         }
                     });
             },
 
-            insertionEvaluationLoop = function() {
+            insertionEvaluationLoop = function() {         
                 FiAdd = Utils.uniques(FiAdd, FiAddNew);
                 superSet = Utils.uniques(Utils.uniques(Utils.uniques(Fe, Fi), FeAdd), FiAdd);
                 Rins = Logics.restrictRuleSet(R, superSet);
@@ -119,10 +119,10 @@ ReasoningEngine = {
                         R = values.ruleDeps;
                         console.log(R.length);
                         if (!Utils.containsSubset(FiAdd, FiAddNew)) {
-                            setTimeout(insertionEvaluationLoop, 1);
-                        } else {
+                            insertionEvaluationLoop();
+                        } else {                
                             additions = Utils.uniques(FeAdd, FiAdd);
-                            deletions = Utils.uniques(FeDel, FiDel);
+                            deletions = Utils.uniques(FeDel, FiDel);                            
                             deferred.resolve({
                                 additions: additions,
                                 deletions: deletions
@@ -300,7 +300,7 @@ ReasoningEngine = {
                     evaluationLoop(F);
                 } else {
                     deferred.resolve({
-                        additions: Utils.uniques(newExplicitFacts.concat(resolvedExplicitFacts), Fi),
+                        additions: resolvedExplicitFacts,
                         deletions: []
                     });
                 }
@@ -316,7 +316,7 @@ ReasoningEngine = {
                             setTimeout(evaluationLoop, 1);
                         } else {
                             deferred.resolve({
-                                additions: Utils.uniques(newExplicitFacts.concat(resolvedExplicitFacts), Fi),
+                                additions: newExplicitFacts.concat(resolvedExplicitFacts, Fi),
                                 deletions: []
                             });
                         }
@@ -325,9 +325,9 @@ ReasoningEngine = {
 
         // Returns new explicit facts to be added
         validUpdateResults = Logics.updateValidTags(F, FeAdd, FeDel);
-        newExplicitFacts = validUpdateResults.__new__;
-        resolvedExplicitFacts = validUpdateResults.__resolved__;
-
+        newExplicitFacts = validUpdateResults.new;
+        resolvedExplicitFacts = validUpdateResults.resolved;
+        F = F.concat(newExplicitFacts);
         startAlgorithm();
 
         return deferred.promise;

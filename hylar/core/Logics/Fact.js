@@ -12,28 +12,26 @@ var Utils = require('../Utils');
  * @param originFacts array of facts causing this
  * @constructor
  */
-Fact = function(pred, sub, obj, originConjs, expl, graphs, implicitCauses, notUsingValidity, fromTriple) {
+Fact = function(pred, sub, obj, originConjs, expl, graphs, consequences, notUsingValidity, fromTriple) {
     if(pred == 'FALSE') {
-        this.falseFact = 'true'
+        this.falseFact = 'true';
     }
     if (originConjs === undefined) originConjs = [];
     if (expl === undefined) expl = true;
     if (graphs === undefined) graphs = [];
-    if (implicitCauses === undefined) implicitCauses = [];
+    if (consequences === undefined) consequences = [];
     this.matches = {};
 
     this.predicate = pred;
     this.subject = sub;
     this.object = obj;
-    this.implicitCauses = implicitCauses;
+    this.consequences = consequences;
     this.fromTriple = fromTriple;
 
     this.causedBy = originConjs;
     this.explicit = expl;
     this.graphs = graphs;
-    if (notUsingValidity || this.explicit == false) {
-        this.valid = undefined;
-    } else {
+    if (!notUsingValidity && this.explicit) {
         this.valid = true;
     }
 
@@ -71,6 +69,50 @@ Fact.prototype = {
 
         this.explicit ? e = 'E' : e = 'I';
         return e + spo;
+    },
+
+    toCHR: function(mapping) {
+        var chrized;
+
+        if(mapping === undefined) {
+            mapping = {};
+        }
+
+        if(this.falseFact) {
+            chrized = 'FALSE()';
+        } else {
+            chrized = 't(' + 
+                this.subjectCHR(mapping) + ', ' + 
+                this.predicateCHR(mapping) + ', ' + 
+                this.objectCHR(mapping) + 
+            ')';
+        }
+
+        return chrized;
+    },
+
+    toRaw: function() {
+        var spo;
+
+        if(this.falseFact) {
+            spo = 'FALSE';
+        } else {
+            spo = '(' + this.subject + ' ' + this.predicate + ' ' + this.object + ')';
+        }
+
+        return spo;
+    },
+
+    subjectCHR: function(mapping) {
+        return Utils.asCHRAtom(this.subject, mapping);
+    },
+
+    predicateCHR: function(mapping) {
+        return Utils.asCHRAtom(this.predicate, mapping);
+    },
+
+    objectCHR: function(mapping) {
+        return Utils.asCHRAtom(this.object, mapping);
     },
 
     truncatedString: function() {
@@ -219,6 +261,7 @@ Fact.prototype = {
     },
 
     isAlternativeEquivalentOf: function(fact) {
+        if(!fact.explicit) return false;
         return (
             (fact.subject == this.subject) &&
             (fact.predicate == this.predicate) &&
@@ -236,6 +279,16 @@ Fact.prototype = {
             }
         }
         return false;
+    },
+
+    doPropagate: function(keptFact) {        
+        if (this.__propagate__) {
+            for (var i = 0; i < this.__propagate__.consequences.length; i++) {
+                if (this.__propagate__.consequences[i] == this) {
+                    this.__propagate__.consequences[i] = keptFact;         
+                }
+            }
+        }
     }
 };
 

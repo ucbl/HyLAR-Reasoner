@@ -36,13 +36,14 @@ String.prototype.format = function() {
     }
 };
 
-module.exports = {
+
 
     /**
      * Parses rdf/xml to turtle using rdf ext.
      * @param data Raw rdf/xml data (str)
      * @returns {*}
      */
+ParsingInterface = {
     rdfXmlToTurtle: function(data) {
         var deferred = q.defer(), triple;
         RdfXmlParser.parse(data, function(parsed, err) {
@@ -104,6 +105,8 @@ module.exports = {
             entityStr = entityStr.format();
         } catch(e){}*/
 
+        entityStr = entityStr.replace(/(\n|\r)/g, '');
+
         if (entityStr === undefined) return false;
 
         if (entityStr.match(dblQuoteInStrPattern)) {
@@ -131,6 +134,10 @@ module.exports = {
         /*if (fact.fromTriple !== undefined) {
             return fact.fromTriple;
         }*/
+
+        if(fact.falseFact) {
+            return '';
+        }
 
         subject = this.parseStrEntityToTurtle(fact.subject);
         predicate = this.parseStrEntityToTurtle(fact.predicate);
@@ -284,3 +291,5 @@ module.exports = {
         }
     }
 };
+
+module.exports = ParsingInterface;

@@ -5,6 +5,19 @@
 var q = require('q');
 
 var RegularExpressions = require('./RegularExpressions');
+var EventEmitter = require('events').EventEmitter;
+
+/** Event emitter */
+
+var emitter = new EventEmitter();
+
+emitter.on('started', function(task) {
+    console.log('started ' + task);
+});
+
+emitter.on('finished', function(task) {
+    console.log('processed ' + task);
+});
 
 /**
  * Utility functions.
@@ -61,6 +74,8 @@ IterableStructure.prototype.toArray = function() {
 module.exports = {
 
     _instanceid: 1,
+
+    emitter: emitter,
 
     IterableStructure: IterableStructure,
 
@@ -223,6 +238,9 @@ module.exports = {
         if (s1.toString() == s2.toString()) {
             return true;
         }
+        if (s1.length != s2.length) {
+            return false;
+        }
         for (var i = 0; i < s1.length; i++) {
             if (this.notInSet(s2, s1[i])) {
                 return false;
@@ -258,5 +276,43 @@ module.exports = {
             return true;
         }
         return false;
+    },    
+
+    asCHRAtom: function(elem, mapping) {
+        if(Logics.isVariable(elem)) {
+            if(mapping[elem] === undefined) {
+                if (mapping.__lastCHRVar) {
+                    mapping.__lastCHRVar = String.fromCharCode(mapping.__lastCHRVar.charCodeAt(0)+1);                                        
+                } else {
+                    mapping.__lastCHRVar = 'A';                    
+                }
+                mapping[elem] = mapping.__lastCHRVar;
+            }
+            return mapping[elem];
+        } else {
+            return '"' + elem.replace(/[^a-zA-Z]/g,'') + '"';
+        }        
+    },
+
+    arrDiff: function(a1, a2) {
+        var a = [], diff = [];
+
+        for (var i = 0; i < a1.length; i++) {
+            a[a1[i]] = true;
+        }
+
+        for (var i = 0; i < a2.length; i++) {
+            if (a[a2[i]]) {
+                delete a[a2[i]];
+            } else {
+                a[a2[i]] = true;
+            }
+        }
+
+        for (var k in a) {
+            diff.push(k);
+        }
+
+        return diff;
     }
 };

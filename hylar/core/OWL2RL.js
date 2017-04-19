@@ -26,8 +26,8 @@ var Class = Prefixes.OWL + 'Class',
     SubPropertyOf = Prefixes.RDFS + 'subPropertyOf',
     TransitiveProperty = Prefixes.OWL + 'TransitiveProperty',
     InverseOf = Prefixes.OWL + 'inverseOf',
-    SameAs = Prefixes.OWL + 'sameAs';
-    Domain = Prefixes.RDFS + "domain";
+    SameAs = Prefixes.OWL + 'sameAs',
+    Domain = Prefixes.RDFS + "domain",
     Range = Prefixes.RDFS + "range";
 
 /**
@@ -216,7 +216,7 @@ module.exports = {
         .concat(OWL2RL.rules.inverse)
         .concat(OWL2RL.rules.equivalence)
         .concat(OWL2RL.rules.equality)
-        .concat(OWL2RL.rules.domainRange)
+        .concat(OWL2RL.rules.domainRange).concat(OWL2RL.rules.testsFipa)
         /*.concat(Logics.parseRules([
             "(?x http://www.w3.org/2002/07/owl#sameAs ?y) -> (?y http://www.w3.org/2002/07/owl#sameAs ?x)",
             "(?x http://www.w3.org/2002/07/owl#sameAs ?y) ^ (?y http://www.w3.org/2002/07/owl#sameAs ?z) -> (?x http://www.w3.org/2002/07/owl#sameAs ?z)",            
