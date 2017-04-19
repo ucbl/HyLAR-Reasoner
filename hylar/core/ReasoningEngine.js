@@ -84,7 +84,7 @@ ReasoningEngine = {
                 Rdel = Logics.restrictRuleSet(R, Utils.uniques(FeDel, FiDel));
                 Solver.evaluateRuleSet(Rdel, Utils.uniques(Utils.uniques(Fi, Fe), FeDel))
                     .then(function(values) {
-                        FiDelNew = values;
+                        FiDelNew = values.cons;
                         if (Utils.uniques(FiDel, FiDelNew).length > FiDel.length) {
                             setTimeout(overDeletionEvaluationLoop, 1);
                         } else {
@@ -100,7 +100,7 @@ ReasoningEngine = {
                 Rred = Logics.restrictRuleSet(R, FiDel);
                 Solver.evaluateRuleSet(Rred, Utils.uniques(Fe, Fi))
                     .then(function(values) {
-                        FiAddNew = values;
+                        FiAddNew = values.cons;
                         if (Utils.uniques(FiAdd, FiAddNew).length > FiAdd.length) {
                             setTimeout(rederivationEvaluationLoop, 1);
                         } else {
@@ -115,7 +115,9 @@ ReasoningEngine = {
                 Rins = Logics.restrictRuleSet(R, superSet);
                 Solver.evaluateRuleSet(Rins, superSet)
                     .then(function(values) {
-                        FiAddNew = values;
+                        FiAddNew = values.cons;
+                        R = values.ruleDeps;
+                        console.log(R.length);
                         if (!Utils.containsSubset(FiAdd, FiAddNew)) {
                             setTimeout(insertionEvaluationLoop, 1);
                         } else {

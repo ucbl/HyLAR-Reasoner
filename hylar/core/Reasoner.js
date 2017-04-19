@@ -13,6 +13,18 @@ var q = require('q');
 
 module.exports = {
 
+    updateRuleDependencies: function(ruleSet) {
+        for (var i = 0; i < ruleSet.length; i++) {
+            var rule = ruleSet[i];
+            for (var j = 0; j < ruleSet.length; j++) {
+                var depRule = ruleSet[j];
+                if (rule.dependsOn(depRule)) {
+                    rule.addDependency(depRule);
+                }
+            }
+        }
+    },
+
     /**
      * Evaluates knowledge base update using
      * advanced reasoning algorithms (incremental, tag-based).
@@ -22,8 +34,7 @@ module.exports = {
      * @param alg The reasoning algorithm (function)
      * @returns {*}
      */
-    evaluate: function(fI, fD, F, alg, rules) {
-        
+    evaluate: function(fI, fD, F, alg, rules) {        
         if (!alg) alg = ReasoningEngine.incremental;
         return alg(fI, fD, F, rules);
     },

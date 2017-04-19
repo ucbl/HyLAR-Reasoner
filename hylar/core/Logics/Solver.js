@@ -9,12 +9,18 @@ var AnnotatedQuery = require('./AnnotatedQuery');
 
 var q = require('q');
 
+var ruleDeps;
+
 /**
  * Core solver used to evaluate rules against facts
  * using pattern matching mechanisms.
  */
 
 Solver = {
+
+    initRuleDeps: function() {
+        ruleDeps = [];
+    },
 
     /**
      * Evaluates a set of rules over a set of facts.
@@ -24,6 +30,7 @@ Solver = {
      */
     evaluateRuleSet: function(rs, facts, doTagging, resolvedImplicitFactSet) {
         var deferred = q.defer(), promises = [], cons = [], filteredFacts;
+        this.initRuleDeps();
         for (var key in rs) {            
             if (doTagging) {
                 promises.push(this.evaluateThroughRestrictionWithTagging(rs[key], facts, resolvedImplicitFactSet));
@@ -36,7 +43,7 @@ Solver = {
                 for (var i = 0; i < consTab.length; i++) {
                     cons = Utils.uniques(cons, consTab[i]);
                 }
-                deferred.resolve(cons);
+                deferred.resolve({cons: cons, ruleDeps: ruleDeps});
             });
         } catch(e) {
             deferred.reject(e);
@@ -141,7 +148,7 @@ Solver = {
         mappingList = [rule.causes[i]]; // Init with first cause
 
         while (i < rule.causes.length) {
-            mappingList = this.substituteNextCauses(mappingList, rule.causes[i+1], facts, rule.constants);
+            mappingList = this.substituteNextCauses(mappingList, rule.causes[i+1], facts, rule.constants, rule);
             i++;
         }
         return mappingList;
@@ -169,7 +176,7 @@ Solver = {
      * @param facts
      * @returns {Array}
      */
-    substituteNextCauses: function(currentCauses, nextCause, facts, constants) {
+    substituteNextCauses: function(currentCauses, nextCause, facts, constants, rule) {
         var substitutedNextCauses = [],
             mappings = [];
 
@@ -188,7 +195,7 @@ Solver = {
                 }
 
                 // Update the mapping using pattern matching
-                newMapping = this.factMatches(facts[j], currentCauses[i], mapping, constants);
+                newMapping = this.factMatches(facts[j], currentCauses[i], mapping, constants, rule);
 
                 // If the current fact matches the current cause ...
                 if (newMapping) {
@@ -221,7 +228,7 @@ Solver = {
      * @param mapping
      * @returns {*}
      */
-    factMatches: function(fact, ruleFact, mapping, constants) {
+    factMatches: function(fact, ruleFact, mapping, constants, rule) {
         var localMapping = {};
     
         // Checks and update localMapping if matches     
@@ -233,7 +240,12 @@ Solver = {
         }
         if (!this.factElemMatches(fact.subject, ruleFact.subject, mapping, localMapping)) {
             return false;
-        }    
+        }
+
+        if (!rule in ruleDeps) {
+            ruleDeps.push(rule);
+        }
+        
 
         // If an already existing uri has been mapped...
         for (var key in localMapping) {
@@ -346,9 +358,9 @@ Solver = {
         }
 
         return substitutedFacts;
-    },
+    }
 
-    matchHead: function(ruleSet, fact) {
+    /*matchHead: function(ruleSet, fact) {
         var tuples = [],
             atom;
 
@@ -427,7 +439,7 @@ Solver = {
             }
 
         return mappings;
-    }
+    }*/
 };
 
 module.exports = Solver;

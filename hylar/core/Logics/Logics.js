@@ -137,6 +137,21 @@ Logics = {
     },
 
     /**
+     * Return true if the two atoms are either both variables, or
+     * identical URIs.
+     * @returns {boolean}
+     */
+    similarAtoms: function(atom1, atom2) {
+        if (this.isVariable(atom1) && this.isVariable(atom2) ) {
+            return true;
+        } else if(atom1 == atom2) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+
+    /**
      * Checks if a set of facts is a subset of another set of facts.
      * @param fs1 the superset
      * @param fs2 the potential subset

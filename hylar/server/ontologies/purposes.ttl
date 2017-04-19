@@ -1,0 +1,54 @@
+@prefix asawoo-ctx: <http://liris.cnrs.fr/asawoo/vocab/context/>.
+@prefix asawoo-vocab: <http://liris.cnrs.fr/asawoo/vocab#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+
+# Functionality Exposition
+
+asawoo-ctx:Exp rdf:type asawoo-ctx:AdaptationPurpose .
+asawoo-ctx:Exp asawoo-ctx:purposePredicate asawoo-ctx:hasExposability .
+asawoo-ctx:hasExposability rdfs:domain asawoo-vocab:Functionality .
+asawoo-ctx:hasExposability rdfs:range asawoo-vocab:Exposability .
+
+asawoo-ctx:Exposable rdf:type asawoo-vocab:Exposability .
+asawoo-ctx:hasExposability asawoo-vocab:requires owl:Nothing .
+
+# Functionality Implementation
+
+asawoo-ctx:Imp rdf:type asawoo-ctx:AdaptationPurpose .
+asawoo-ctx:Imp asawoo-ctx:purposePredicate asawoo-ctx:suitableCapabilityToImplement .
+asawoo-ctx:suitableCapabilityToImplement rdfs:domain asawoo-vocab:Capability .
+asawoo-ctx:suitableCapabilityToImplement rdfs:range asawoo-vocab:Functionality .
+
+asawoo-ctx:suitableCapabilityToImplement asawoo-vocab:requires asawoo-vocab:isImplementedBy .
+
+# Functionality Composition
+
+asawoo-ctx:Comp rdf:type asawoo-ctx:AdaptationPurpose .
+asawoo-ctx:Comp asawoo-ctx:purposePredicate asawoo-ctx:suitableFunctionalityToCompose .
+asawoo-ctx:suitableFunctionalityToCompose rdfs:domain asawoo-vocab:Functionality .
+asawoo-ctx:suitableFunctionalityToCompose rdfs:range asawoo-vocab:Functionality .
+
+asawoo-ctx:suitableFunctionalityToCompose asawoo-vocab:requires asawoo-vocab:isComposedOf .
+
+# Protocol
+
+asawoo-ctx:Prtcl rdf:type asawoo-ctx:AdaptationPurpose .
+asawoo-ctx:Prtcl asawoo-ctx:purposePredicate asawoo-ctx:preferredProtocol .
+asawoo-ctx:preferredProtocol rdfs:domain asawoo-vocab:Functionality .
+asawoo-ctx:preferredProtocol rdfs:range asawoo-vocab:CommunicationProtocol .
+
+asawoo-vocab:Wifi a asawoo-vocab:CommunicationProtocol .
+asawoo-vocab:Bluetooth a asawoo-vocab:CommunicationProtocol .
+asawoo-ctx:preferredProtocol asawoo-vocab:requires owl:Nothing .
+
+# Code Location
+
+asawoo-ctx:Code rdf:type asawoo-ctx:AdaptationPurpose .
+asawoo-ctx:Code asawoo-ctx:purposePredicate asawoo-ctx:preferredCodeLocation .
+asawoo-ctx:preferredCodeLocation rdfs:domain asawoo-vocab:Functionality .
+asawoo-ctx:preferredCodeLocation rdfs:range asawoo-vocab:CodeLocation .
+
+asawoo-ctx:preferredCodeLocation asawoo-vocab:requires owl:Nothing .
+

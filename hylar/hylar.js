@@ -57,7 +57,12 @@ Hylar = function() {
     this.rules = OWL2RL.test;
     this.queryHistory = [];
     this.sm.init();
+    this.computeRuleDependencies();
 };
+
+Hylar.prototype.computeRuleDependencies = function() {
+    Reasoner.updateRuleDependencies(this.rules);        
+};      
 
 Hylar.prototype.clean = function() {
     this.dict = new Dictionary();

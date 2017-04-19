@@ -1,0 +1,167 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix asawoo-ctx: <http://liris.cnrs.fr/asawoo/vocab/context/>.
+
+# Generic vocabulary
+
+asawoo-ctx:instanceFromDimension rdfs:domain asawoo-ctx:ContextualInstance .
+asawoo-ctx:instanceFromDimension rdfs:range asawoo-ctx:ContextualDimension .
+
+asawoo-ctx:instanceForPurpose rdfs:domain asawoo-ctx:ContextualInstance .
+asawoo-ctx:instanceForPurpose rdfs:range asawoo-ctx:AdaptationPurpose .
+
+# Dimensions & Instances
+
+# Wind
+asawoo-ctx:Wind a asawoo-ctx:ContextualDimension .
+
+asawoo-ctx:NoWind a asawoo-ctx:ContextualInstance .
+asawoo-ctx:NoWind asawoo-ctx:instanceFromDimension asawoo-ctx:Wind .
+asawoo-ctx:NoWind asawoo-ctx:instanceForPurpose asawoo-ctx:Exp .
+
+asawoo-ctx:Breeze a asawoo-ctx:ContextualInstance .
+asawoo-ctx:Breeze asawoo-ctx:instanceFromDimension asawoo-ctx:Wind .
+asawoo-ctx:Breeze asawoo-ctx:instanceForPurpose asawoo-ctx:Exp .
+
+asawoo-ctx:StrongWind a asawoo-ctx:ContextualInstance .
+asawoo-ctx:StrongWind asawoo-ctx:instanceFromDimension asawoo-ctx:Wind .
+asawoo-ctx:StrongWind asawoo-ctx:instanceForPurpose asawoo-ctx:Exp .
+
+# Dryness
+asawoo-ctx:Dryness a asawoo-ctx:ContextualDimension .
+
+asawoo-ctx:Dry a asawoo-ctx:ContextualInstance .
+asawoo-ctx:Dry asawoo-ctx:instanceFromDimension asawoo-ctx:Dryness .
+asawoo-ctx:Dry asawoo-ctx:instanceForPurpose asawoo-ctx:Exp .
+
+asawoo-ctx:Rainy a asawoo-ctx:ContextualInstance .
+asawoo-ctx:Rainy asawoo-ctx:instanceFromDimension asawoo-ctx:Dryness .
+asawoo-ctx:Rainy asawoo-ctx:instanceForPurpose asawoo-ctx:Exp .
+
+asawoo-ctx:Flooded a asawoo-ctx:ContextualInstance .
+asawoo-ctx:Flooded asawoo-ctx:instanceFromDimension asawoo-ctx:Dryness .
+asawoo-ctx:Flooded asawoo-ctx:instanceForPurpose asawoo-ctx:Exp .
+
+# Temperature
+asawoo-ctx:Temperature a asawoo-ctx:ContextualDimension .
+
+asawoo-ctx:Hot a asawoo-ctx:ContextualInstance .
+asawoo-ctx:Hot asawoo-ctx:instanceFromDimension asawoo-ctx:Temperature .
+asawoo-ctx:Hot asawoo-ctx:instanceForPurpose asawoo-ctx:Exp .
+
+asawoo-ctx:Warm a asawoo-ctx:ContextualInstance .
+asawoo-ctx:Warm asawoo-ctx:instanceFromDimension asawoo-ctx:Temperature .
+asawoo-ctx:Warm asawoo-ctx:instanceForPurpose asawoo-ctx:Exp .
+
+asawoo-ctx:Cold a asawoo-ctx:ContextualInstance .
+asawoo-ctx:Cold asawoo-ctx:instanceFromDimension asawoo-ctx:Temperature .
+asawoo-ctx:Cold asawoo-ctx:instanceForPurpose asawoo-ctx:Exp .
+
+# Location
+asawoo-ctx:Location a asawoo-ctx:ContextualDimension .
+
+asawoo-ctx:FarFromField a asawoo-ctx:ContextualInstance .
+asawoo-ctx:FarFromField asawoo-ctx:instanceFromDimension asawoo-ctx:Location .
+asawoo-ctx:FarFromField asawoo-ctx:instanceForPurpose asawoo-ctx:Comp .
+
+asawoo-ctx:CloseToField a asawoo-ctx:ContextualInstance .
+asawoo-ctx:CloseToField asawoo-ctx:instanceFromDimension asawoo-ctx:Location .
+asawoo-ctx:CloseToField asawoo-ctx:instanceForPurpose asawoo-ctx:Comp .
+
+asawoo-ctx:Far a asawoo-ctx:ContextualInstance .
+asawoo-ctx:Far asawoo-ctx:instanceFromDimension asawoo-ctx:Location .
+asawoo-ctx:Far asawoo-ctx:instanceForPurpose asawoo-ctx:Prtcl .
+
+asawoo-ctx:Close a asawoo-ctx:ContextualInstance .
+asawoo-ctx:Close asawoo-ctx:instanceFromDimension asawoo-ctx:Location .
+asawoo-ctx:Close asawoo-ctx:instanceForPurpose asawoo-ctx:Prtcl .
+
+# Battery
+asawoo-ctx:Battery a asawoo-ctx:ContextualDimension .
+
+asawoo-ctx:HighBatteryPrtcl a asawoo-ctx:ContextualInstance .
+asawoo-ctx:HighBatteryPrtcl asawoo-ctx:instanceFromDimension asawoo-ctx:Battery .
+asawoo-ctx:HighBatteryPrtcl asawoo-ctx:instanceForPurpose asawoo-ctx:Prtcl .
+
+asawoo-ctx:LowBatteryPrtcl a asawoo-ctx:ContextualInstance .
+asawoo-ctx:LowBatteryPrtcl asawoo-ctx:instanceFromDimension asawoo-ctx:Battery .
+asawoo-ctx:LowBatteryPrtcl asawoo-ctx:instanceForPurpose asawoo-ctx:Prtcl .
+
+asawoo-ctx:HighBatteryComp a asawoo-ctx:ContextualInstance .
+asawoo-ctx:HighBatteryComp asawoo-ctx:instanceFromDimension asawoo-ctx:Battery .
+asawoo-ctx:HighBatteryComp asawoo-ctx:instanceForPurpose asawoo-ctx:Comp .
+
+asawoo-ctx:LowBatteryComp a asawoo-ctx:ContextualInstance .
+asawoo-ctx:LowBatteryComp asawoo-ctx:instanceFromDimension asawoo-ctx:Battery .
+asawoo-ctx:LowBatteryComp asawoo-ctx:instanceForPurpose asawoo-ctx:Comp .
+
+asawoo-ctx:HighBatteryCode a asawoo-ctx:ContextualInstance .
+asawoo-ctx:HighBatteryCode asawoo-ctx:instanceFromDimension asawoo-ctx:Battery .
+asawoo-ctx:HighBatteryCode asawoo-ctx:instanceForPurpose asawoo-ctx:Code .
+
+asawoo-ctx:LowBatteryCode a asawoo-ctx:ContextualInstance .
+asawoo-ctx:LowBatteryCode asawoo-ctx:instanceFromDimension asawoo-ctx:Battery .
+asawoo-ctx:LowBatteryCode asawoo-ctx:instanceForPurpose asawoo-ctx:Code .
+
+# Memory
+asawoo-ctx:Memory a asawoo-ctx:ContextualDimension .
+
+asawoo-ctx:HighMemoryImp a asawoo-ctx:ContextualInstance .
+asawoo-ctx:HighMemoryImp asawoo-ctx:instanceFromDimension asawoo-ctx:Memory .
+asawoo-ctx:HighMemoryImp asawoo-ctx:instanceForPurpose asawoo-ctx:Imp .
+
+asawoo-ctx:LowMemoryImp a asawoo-ctx:ContextualInstance .
+asawoo-ctx:LowMemoryImp asawoo-ctx:instanceFromDimension asawoo-ctx:Memory .
+asawoo-ctx:LowMemoryImp asawoo-ctx:instanceForPurpose asawoo-ctx:Imp .
+
+asawoo-ctx:HighMemoryComp a asawoo-ctx:ContextualInstance .
+asawoo-ctx:HighMemoryComp asawoo-ctx:instanceFromDimension asawoo-ctx:Memory .
+asawoo-ctx:HighMemoryComp asawoo-ctx:instanceForPurpose asawoo-ctx:Comp .
+
+asawoo-ctx:LowMemoryComp a asawoo-ctx:ContextualInstance .
+asawoo-ctx:LowMemoryComp asawoo-ctx:instanceFromDimension asawoo-ctx:Memory .
+asawoo-ctx:LowMemoryComp asawoo-ctx:instanceForPurpose asawoo-ctx:Comp .
+
+asawoo-ctx:HighMemoryCode a asawoo-ctx:ContextualInstance .
+asawoo-ctx:HighMemoryCode asawoo-ctx:instanceFromDimension asawoo-ctx:Memory .
+asawoo-ctx:HighMemoryCode asawoo-ctx:instanceForPurpose asawoo-ctx:Code .
+
+asawoo-ctx:LowMemoryCode a asawoo-ctx:ContextualInstance .
+asawoo-ctx:LowMemoryCode asawoo-ctx:instanceFromDimension asawoo-ctx:Memory .
+asawoo-ctx:LowMemoryCode asawoo-ctx:instanceForPurpose asawoo-ctx:Code .
+
+# CPU
+asawoo-ctx:CPU a asawoo-ctx:ContextualDimension .
+
+asawoo-ctx:HighCPUPict a asawoo-ctx:ContextualInstance .
+asawoo-ctx:HighCPUPict asawoo-ctx:instanceFromDimension asawoo-ctx:CPU .
+asawoo-ctx:HighCPUPict asawoo-ctx:instanceForPurpose asawoo-ctx:Imp .
+
+asawoo-ctx:LowCPUPict a asawoo-ctx:ContextualInstance .
+asawoo-ctx:LowCPUPict asawoo-ctx:instanceFromDimension asawoo-ctx:CPU .
+asawoo-ctx:LowCPUPict asawoo-ctx:instanceForPurpose asawoo-ctx:Imp .
+
+asawoo-ctx:HighCPUCode a asawoo-ctx:ContextualInstance .
+asawoo-ctx:HighCPUCode asawoo-ctx:instanceFromDimension asawoo-ctx:CPU .
+asawoo-ctx:HighCPUCode asawoo-ctx:instanceForPurpose asawoo-ctx:Code .
+
+asawoo-ctx:LowCPUCode a asawoo-ctx:ContextualInstance .
+asawoo-ctx:LowCPUCode asawoo-ctx:instanceFromDimension asawoo-ctx:CPU .
+asawoo-ctx:LowCPUCode asawoo-ctx:instanceForPurpose asawoo-ctx:Code .
+
+# Resolution
+
+asawoo-ctx:Resolution a asawoo-ctx:ContextualDimension .
+
+asawoo-ctx:HD a asawoo-ctx:ContextualInstance .
+asawoo-ctx:HD asawoo-ctx:instanceFromDimension asawoo-ctx:Resolution .
+asawoo-ctx:HD asawoo-ctx:instanceForPurpose asawoo-ctx:Imp .
+
+asawoo-ctx:AvgQuality a asawoo-ctx:ContextualInstance .
+asawoo-ctx:AvgQuality asawoo-ctx:instanceFromDimension asawoo-ctx:Resolution .
+asawoo-ctx:AvgQuality asawoo-ctx:instanceForPurpose asawoo-ctx:Imp .
+
+asawoo-ctx:LowQuality a asawoo-ctx:ContextualInstance .
+asawoo-ctx:LowQuality asawoo-ctx:instanceFromDimension asawoo-ctx:Resolution .
+asawoo-ctx:LowQuality asawoo-ctx:instanceForPurpose asawoo-ctx:Imp .
