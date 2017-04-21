@@ -194,7 +194,7 @@ Logics = {
         for (var i = 0; i < _set1.length; i++) {
             flagEquals = false;
             for(var j = 0; j < _set2.length; j++) {
-                if (_set1[i].toString() == _set2[j].toString()) {
+                if (_set1[i].asString == _set2[j].asString) {
                     flagEquals = true;
                     break;
                 }
@@ -530,7 +530,7 @@ Logics = {
     skolemize: function(facts, elem) {
         var skolem = '';
         for (var i = 0; i < facts.length; i++) {
-            skolem += facts[i].toString();
+            skolem += facts[i].asString;
         }
         return md5(skolem) + elem;
     }

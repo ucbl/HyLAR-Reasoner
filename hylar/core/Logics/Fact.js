@@ -50,6 +50,8 @@ Fact = function(pred, sub, obj, originConjs, expl, graphs, consequences, notUsin
     if (Utils.isOperator(this.predicate)) {
         this.operatorPredicate = true;
     }
+
+    this.asString = this.asPlainString();
 };
 
 Fact.prototype = {
@@ -58,20 +60,8 @@ Fact.prototype = {
      * Convenient method to stringify a fact.
      * @returns {string}
      */
-    /*toString: function() {
-        var e, spo;
 
-        if(this.falseFact) {
-            spo = 'FALSE';
-        } else {
-            spo = '(' + this.subject + ' ' + this.predicate + ' ' + this.object + ')'
-        }
-
-        this.explicit ? e = 'E' : e = 'I';
-        return e + spo;
-    },*/
-
-    toString: function() {
+    asPlainString: function() {
         var e, spo;
 
         if(this.falseFact) {
@@ -82,6 +72,10 @@ Fact.prototype = {
 
         this.explicit ? e = 'E' : e = 'I';
         return e + spo;
+    },
+
+    toString: function() {
+        return this.asString;
     },
 
     toCHR: function(mapping) {

@@ -11,7 +11,7 @@ var q = require('q');
 var CHR = require('chr');
 var chr = CHR();
 
-var ruleDeps;
+var firedRules;
 
 /**
  * Core solver used to evaluate rules against facts
@@ -20,8 +20,26 @@ var ruleDeps;
 
 Solver = {
 
-    initRuleDeps: function() {
-        ruleDeps = {};
+    initFiredRules: function() {
+        firedRules = {};
+    },
+
+    getRuleDeps: function() {
+        var tmp = {},
+            flat = [];
+        for (var key in firedRules) {
+            var deps = firedRules[key].dependentRules;
+            for (var key2 in deps) {
+                var deprule = deps[key2];
+                tmp[deprule.toString()] = deprule;
+            }
+        }
+        
+        Object.keys(tmp).forEach(function(key) {
+            flat.push(tmp[key]);
+        });
+
+        return flat;
     },
 
     /**
@@ -32,7 +50,6 @@ Solver = {
      */
     evaluateRuleSet: function(rs, facts, doTagging, resolvedImplicitFactSet) {
         var deferred = q.defer(), promises = [], cons = [], filteredFacts;
-        this.initRuleDeps();
         for (var key in rs) {            
             if (doTagging) {
                 promises.push(this.evaluateThroughRestrictionWithTagging(rs[key], facts, resolvedImplicitFactSet));
@@ -45,11 +62,7 @@ Solver = {
                 for (var i = 0; i < consTab.length; i++) {
                     cons = cons.concat(consTab[i]);
                 }
-                var deps = [];
-                Object.keys(ruleDeps).forEach(function(key) {
-                    deps.push(ruleDeps[key]);
-                });
-                deferred.resolve({cons: cons, ruleDeps: deps});
+                deferred.resolve({cons: cons});
             });
         } catch(e) {
             deferred.reject(e);
@@ -275,8 +288,6 @@ Solver = {
         if (!this.factElemMatches(fact.subject, ruleFact.subject, mapping, localMapping)) {
             return false;
         }
-
-        ruleDeps[rule.toString()] = rule;
 
         // If an already existing uri has been mapped...
         for (var key in localMapping) {
