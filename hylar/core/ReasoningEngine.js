@@ -135,6 +135,84 @@ ReasoningEngine = {
         return deferred.promise;
     },
 
+    /**
+     * Returns valid facts using explicit facts' validity tags.
+     * @param F
+     * @param refs
+     * @returns {Array}
+     */
+    tagFilter: function(F) {
+        var validSet = [];
+        for (var i = 0; i < F.length; i++) {
+            if (F[i].isValid()) {
+                validSet.push(F[i]);
+            }
+        }
+        return validSet;
+    },
+
+    /**
+     * Tags newly inferred facts, and (un)validates updated ones.
+     * Explicit facts are 'validity'-tagged, while
+     * implicit ones are 'causedBy'-tagged.
+     * @param FeAdd
+     * @param FeDel
+     * @param F
+     * @param R
+     * @returns {{additions: *, deletions: Array}}
+     */
+    tagging: function(FeAdd, FeDel, F, R) {
+        var newExplicitFacts, resolvedExplicitFacts, validUpdateResults,
+            FiAdd = [], Rins = [], deferred = q.defer(),
+            Fi = Logics.getOnlyImplicitFacts(F), Fe,
+
+            startAlgorithm = function() {
+                if(newExplicitFacts.length > 0) {
+                    evaluationLoop(F);
+                } else {
+                    deferred.resolve({
+                        additions: resolvedExplicitFacts,
+                        deletions: []
+                    });
+                }
+            },
+
+            evaluationLoop = function() {
+                F = Utils.uniques(F, Fi);
+                Rins = Logics.restrictRuleSet(R, F);
+                Solver.evaluateRuleSet(Rins, F, true)
+                    .then(function(values) {
+                        FiAdd = values.cons;                        
+                        if (Logics.unify(FiAdd, Fi)) {
+                            setTimeout(evaluationLoop, 1);
+                        } else {
+                            deferred.resolve({
+                                additions: newExplicitFacts.concat(resolvedExplicitFacts, Fi),
+                                deletions: []
+                            });
+                        }
+                    });
+            };
+
+        // Returns new explicit facts to be added
+        validUpdateResults = Logics.updateValidTags(F, FeAdd, FeDel);
+        newExplicitFacts = validUpdateResults.new;
+        resolvedExplicitFacts = validUpdateResults.resolved;
+        F = F.concat(newExplicitFacts);
+        startAlgorithm();
+
+        return deferred.promise;
+    }    
+};
+
+module.exports = {
+    naive: ReasoningEngine.naive,
+    incrementalBf: ReasoningEngine.incrementalBf,
+    incremental: ReasoningEngine.incremental,
+    tagging: ReasoningEngine.tagging,
+    tagFilter: ReasoningEngine.tagFilter
+};
+
     /*incrementalBf: function (FeAdd, FeDel, F, R) {
 
         R = Logics.decomposeRuleHeadsIntoSeveralRules(R);
@@ -263,81 +341,3 @@ ReasoningEngine = {
             updatedF: F
         };
     },*/
-
-    /**
-     * Returns valid facts using explicit facts' validity tags.
-     * @param F
-     * @param refs
-     * @returns {Array}
-     */
-    tagFilter: function(F) {
-        var validSet = [];
-        for (var i = 0; i < F.length; i++) {
-            if (F[i].isValid()) {
-                validSet.push(F[i]);
-            }
-        }
-        return validSet;
-    },
-
-    /**
-     * Tags newly inferred facts, and (un)validates updated ones.
-     * Explicit facts are 'validity'-tagged, while
-     * implicit ones are 'causedBy'-tagged.
-     * @param FeAdd
-     * @param FeDel
-     * @param F
-     * @param R
-     * @returns {{additions: *, deletions: Array}}
-     */
-    tagging: function(FeAdd, FeDel, F, R) {
-        var newExplicitFacts, resolvedExplicitFacts, validUpdateResults,
-            FiAdd = [], Rins = [], deferred = q.defer(),
-            Fi = Logics.getOnlyImplicitFacts(F), Fe,
-
-            startAlgorithm = function() {
-                if(newExplicitFacts.length > 0) {
-                    evaluationLoop(F);
-                } else {
-                    deferred.resolve({
-                        additions: resolvedExplicitFacts,
-                        deletions: []
-                    });
-                }
-            },
-
-            evaluationLoop = function() {
-                F = Utils.uniques(F, Fi);
-                Rins = Logics.restrictRuleSet(R, F);
-                Solver.evaluateRuleSet(Rins, F, true)
-                    .then(function(values) {
-                        FiAdd = values.cons;
-                        if (Logics.unify(FiAdd, Fi)) {
-                            setTimeout(evaluationLoop, 1);
-                        } else {
-                            deferred.resolve({
-                                additions: newExplicitFacts.concat(resolvedExplicitFacts, Fi),
-                                deletions: []
-                            });
-                        }
-                    });
-            };
-
-        // Returns new explicit facts to be added
-        validUpdateResults = Logics.updateValidTags(F, FeAdd, FeDel);
-        newExplicitFacts = validUpdateResults.new;
-        resolvedExplicitFacts = validUpdateResults.resolved;
-        F = F.concat(newExplicitFacts);
-        startAlgorithm();
-
-        return deferred.promise;
-    }    
-};
-
-module.exports = {
-    naive: ReasoningEngine.naive,
-    incrementalBf: ReasoningEngine.incrementalBf,
-    incremental: ReasoningEngine.incremental,
-    tagging: ReasoningEngine.tagging,
-    tagFilter: ReasoningEngine.tagFilter
-};

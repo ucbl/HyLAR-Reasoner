@@ -57,8 +57,8 @@ Solver = {
                 promises.push(this.evaluateThroughRestriction(rs[key], facts));
             }
         }
-        try {
-            q.all(promises).then(function (consTab) {
+        try {                    
+            q.all(promises).then(function (consTab) {                
                 for (var i = 0; i < consTab.length; i++) {
                     cons = cons.concat(consTab[i]);
                 }
@@ -105,7 +105,7 @@ Solver = {
 
         try {
             this.checkOperators(rule, mappingList);
-
+            
             for (var i = 0; i < mappingList.length; i++) {
                 if (mappingList[i]) {
                     // Replace mappings on all consequences
@@ -275,7 +275,7 @@ Solver = {
      * @param mapping
      * @returns {*}
      */
-    factMatches: function(fact, ruleFact, mapping, constants, rule) {
+    factMatches: function(fact, ruleFact, mapping, constants) {
         var localMapping = {};
     
         // Checks and update localMapping if matches     

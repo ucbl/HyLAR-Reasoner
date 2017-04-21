@@ -115,8 +115,8 @@ Logics = {
      * @returns {*}
      */
     causeMatchesFact: function(cause, fact) {
-        return this.causeMemberMatchesFactMember(cause.subject, fact.subject)
-            && this.causeMemberMatchesFactMember(cause.predicate, fact.predicate)
+        return this.causeMemberMatchesFactMember(cause.predicate, fact.predicate) 
+            && this.causeMemberMatchesFactMember(cause.subject, fact.subject)
             && this.causeMemberMatchesFactMember(cause.object, fact.object);
     },
 
@@ -128,9 +128,9 @@ Logics = {
      * @returns {boolean}
      */
     causeMemberMatchesFactMember: function(causeMember, factMember) {
-        if (this.isVariable(causeMember)) {
+        if(causeMember == factMember) {
             return true;
-        } else if(causeMember == factMember) {
+        } else if (causeMember.indexOf('?') === 0) {
             return true;
         } else {
             return false;

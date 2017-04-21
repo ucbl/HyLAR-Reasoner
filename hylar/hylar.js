@@ -178,6 +178,7 @@ Hylar.prototype.treatLoad = function(ontologyTxt, mimeType, graph) {
             return false;
             break;
         default:
+
             return that.sm.load(ontologyTxt, mimeType, graph)
                 .then(function() {
                     return that.classify();
@@ -473,7 +474,7 @@ Hylar.prototype.registerDerivations = function(derivations, graph) {
 Hylar.prototype.classify = function() {
     var that = this, factsChunk, chunks = [], chunksNb = 4000, insertionPromises = [];
     console.notify('Classification started.');
-
+    
     return this.sm.query('CONSTRUCT { ?a ?b ?c } WHERE { ?a ?b ?c }')
         .then(function(r) {
             var facts = [], triple, _fs, f;
@@ -505,7 +506,7 @@ Hylar.prototype.classify = function() {
             }
             return;
         })
-        .then(function() {
+        .then(function() {            
             console.notify('Classification succeeded.');
             return Promise.reduce(chunks, function(previous, chunk) {                
                 return that.sm.insert(chunk);
