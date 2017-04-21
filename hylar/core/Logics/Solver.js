@@ -299,9 +299,9 @@ Solver = {
         // Merges local and global mapping
         for (var mapKey in mapping) {
             if (mapKey == '__facts__') {
-                localMapping[mapKey] = Utils.insertUnique(mapping[mapKey], fact)
+                localMapping[mapKey] = Utils.uniques(mapping[mapKey], [fact]);
             } else {
-                for (var key in localMapping) {
+                for (key in localMapping) {
                     if (mapping[mapKey] == localMapping[key]) {
                         if (mapKey != key) {
                             return false;
@@ -317,7 +317,7 @@ Solver = {
     },
 
     factElemMatches: function(factElem, causeElem, globalMapping, localMapping) {
-        if (Logics.isVariable(causeElem)) {
+        if (causeElem.indexOf('?') === 0) {
             if (globalMapping[causeElem] && (globalMapping[causeElem] != factElem)) {
                 return false;
             } else {
