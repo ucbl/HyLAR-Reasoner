@@ -14,7 +14,7 @@
         The KB is currently <% if (consistent) { %>consistent.<% } else { %><a href="/explore/%23default/IFALSE">inconsistent</a>.<% } %>
 
         <h3>Upload an ontology (RDF/XML, Turtle, N3 or JSON-LD)</h3>
-        <form target="_self" enctype="multipart/form-data" method="post" action="/ontology">
+        <form target="_self" enctype="multipart/form-data" method="post" action="<%- contextPath %>/ontology">
             <input type="file" name="file"/>
             <input type=submit value="Upload"/>
         </form>
@@ -31,20 +31,20 @@
             <% for (var i = 0; i < ontologies.length; i++) { %>
             <tr>
                 <td>
-                    <a href="/ontology/<%- ontologies[i] %>"><%- ontologies[i] %></a>
+                    <a href="<%- contextPath %>/ontology/<%- ontologies[i] %>"><%- ontologies[i] %></a>
                 </td>
                 <td>
-                    <a target="_self" href="/classify/<%- ontologies[i] %>" class="menuitem">
+                    <a target="_self" href="<%- contextPath %>/classify/<%- ontologies[i] %>" class="menuitem">
                         <span about="Clear and load <%- ontologies[i] %>" class="glyphicon glyphicon-open"></span>
                     </a>
                 </td>
                 <td>
-                    <a target="_self" href="/classify/<%- ontologies[i] %>?keepoldvalues=true">
+                    <a target="_self" href="<%- contextPath %>/classify/<%- ontologies[i] %>?keepoldvalues=true">
                         <span about="Load <%- ontologies[i] %> without clearing data " class="glyphicon glyphicon-plus"></span>
                     </a>
                 </td>
                 <td>
-                    <a target="_self" href="/remove/<%- ontologies[i] %>">
+                    <a target="_self" href="<%- contextPath %>/remove/<%- ontologies[i] %>">
                         <span about="Remove <%- ontologies[i] %>" class="glyphicon glyphicon-remove"></span>
                     </a>
                 </td>

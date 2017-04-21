@@ -156,6 +156,14 @@ Fact.prototype = {
         return true;
     },
 
+    hasSimilarPatternWith: function(fact) {
+         return (
+            Logics.similarAtoms(this.subject, fact.subject) &&
+            Logics.similarAtoms(this.predicate, fact.predicate) &&
+            Logics.similarAtoms(this.object, fact.object)
+         );
+    },
+
     /**
      * Returns the fact if it appears in a set of facts.
      * Returns false otherwise.

@@ -17,6 +17,7 @@ Rule = function(slf, srf, name) {
     this.operatorCauses = [];
     this.consequences = srf;
     this.constants = [];
+    this.ruleDependencies = [];
     this.matches = {};
 
     for (var i = 0; i < slf.length; i++) {
@@ -106,6 +107,25 @@ Rule.prototype = {
         this.causes = newRule.causes;
         this.consequences = newRule.consequences;
         this.constants = newRule.constants;
+    },
+
+    dependsOn: function(rule) {
+        for (var i = 0; i < rule.consequences.length; i++) {
+            var cons = rule.consequences[i];
+            for (var j = 0; j < this.causes.length; j++) {
+                var cause = this.causes[j];
+                if (cause.hasSimilarPatternWith(cons)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    },
+
+    addDependency: function(rule) {
+        if (!(rule in this.ruleDependencies)) {
+            this.ruleDependencies.push(rule);
+        }
     },
 
     // @todo

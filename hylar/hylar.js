@@ -57,6 +57,7 @@ Hylar = function() {
     this.rules = OWL2RL.test;
     this.queryHistory = [];
     this.sm.init();
+    this.computeRuleDependencies();
     this.status = {
         classifying: false,
         querying: false
@@ -66,6 +67,10 @@ Hylar = function() {
 Hylar.prototype.toggleClassifyingStatus = function() {
     this.status.classifying = !(this.status.classifying);
 };
+
+Hylar.prototype.computeRuleDependencies = function() {
+    Reasoner.updateRuleDependencies(this.rules);        
+};      
 
 Hylar.prototype.clean = function() {
     this.dict = new Dictionary();
@@ -297,19 +302,19 @@ Hylar.prototype.setDictionaryContent = function(dict) {
     this.dict.setContent(dict);
 };
 
-Hylar.prototype.import = function(dictContent) {
-    var query = "INSERT DATA { ";
+Hylar.prototype.import = function(dictionary) {
+    var importedTriples = "",
+        dictContent = dictionary.dict;
     for (var graph in dictContent) {
         for (var triple in dictContent[graph]) {
-            query += triple.replace(/(\n|\r)/g, '');
+            importedTriples += triple.replace(/(\n|\r|\\)/g, '') + "\n";
             for (var i = 0; i < dictContent[graph][triple].length; i++) {
                 dictContent[graph][triple][i].__proto__ = Fact.prototype;
             }
         }
     }
-    query += " }"
     this.setDictionaryContent(dictContent);
-    return this.sm.query(query);
+    return this.sm.load(importedTriples, "text/turtle");
 };
 
 Hylar.prototype.checkConsistency = function() {

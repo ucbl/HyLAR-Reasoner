@@ -11,7 +11,7 @@ var H = require('../hylar/hylar');
 var owl, ontology, Hylar = new H();
 
 var univ1 = fs.readFileSync(path.resolve(__dirname + '/ontologies/univ-bench-base-onto.ttl')).toString();
-var triples = fs.readFileSync(path.resolve(__dirname + '/ontologies/University0_14.nt')).toString();
+var triples = fs.readFileSync(path.resolve(__dirname + '/ontologies/University0_14-2.nt')).toString();
 
 var insertQueryText = 'INSERT DATA { ' + triples + ' }';
 var selectQueryText = 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX ub: <http://www.lehigh.edu/~zhp2/2004/0401/univ-bench.owl#> SELECT ?X ?Y ?Z WHERE {?X rdf:type ub:GraduateStudent . ?Y rdf:type ub:University . ?Z rdf:type ub:Department . ?X ub:memberOf ?Z . ?Z ub:subOrganizationOf ?Y . ?X ub:undergraduateDegreeFrom ?Y}';

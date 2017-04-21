@@ -83,11 +83,12 @@ StorageManager.prototype.query = function(query) {
 StorageManager.prototype.load = function(data, format) {
     var deferred = q.defer();
 
-    this.storage.load(format, data, function (err, r) {
-        console.notify(r + ' triples loaded.');
+    this.storage.load(format, data, function (err, r) {                
         if(err) {
+            console.error(err.toString());
             deferred.reject(err);
         } else {
+            console.notify(r + ' triples loaded.');
             deferred.resolve(r);
         }
     });
