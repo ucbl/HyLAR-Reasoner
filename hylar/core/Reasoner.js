@@ -19,7 +19,7 @@ module.exports = {
             for (var j = 0; j < ruleSet.length; j++) {
                 var depRule = ruleSet[j];
                 if (rule.dependsOn(depRule)) {
-                    rule.addDependency(depRule);
+                    depRule.addDependentRule(rule);
                 }
             }
         }

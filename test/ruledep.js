@@ -9,11 +9,12 @@ describe('RuleDep', function () {
         var data = '';
         for (var i = 0; i < Hylar.rules.length; i++) {
             var rule = Hylar.rules[i];
-            data += rule.toString() + '\n';            
-            for (var j = 0; j < Hylar.rules.length; j++) {
-                var deprule = Hylar.rules[j];
+            data += rule.toString() + ' -- may fire [' + rule.dependentRules.length + '] more rules\n';            
+            for (var j = 0; j < rule.dependentRules.length; j++) {
+                var deprule = rule.dependentRules[j];
                 data += '\t\t' + deprule.toString() + '\n';
             }
+            data+='\n';
         }
         fs.writeFileSync('ruledeps.txt', data, { flag : 'w' });
     });

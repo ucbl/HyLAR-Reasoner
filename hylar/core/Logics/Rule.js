@@ -17,7 +17,7 @@ Rule = function(slf, srf, name) {
     this.operatorCauses = [];
     this.consequences = srf;
     this.constants = [];
-    this.ruleDependencies = [];
+    this.dependentRules = [];
     this.matches = {};
 
     for (var i = 0; i < slf.length; i++) {
@@ -122,9 +122,9 @@ Rule.prototype = {
         return false;
     },
 
-    addDependency: function(rule) {
-        if (!(rule in this.ruleDependencies)) {
-            this.ruleDependencies.push(rule);
+    addDependentRule: function(rule) {
+        if (!(rule in this.dependentRules)) {
+            this.dependentRules.push(rule);
         }
     },
 

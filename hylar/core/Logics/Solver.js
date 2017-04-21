@@ -21,7 +21,7 @@ var ruleDeps;
 Solver = {
 
     initRuleDeps: function() {
-        ruleDeps = [];
+        ruleDeps = {};
     },
 
     /**
@@ -45,7 +45,11 @@ Solver = {
                 for (var i = 0; i < consTab.length; i++) {
                     cons = cons.concat(consTab[i]);
                 }
-                deferred.resolve({cons: cons, ruleDeps: ruleDeps});
+                var deps = [];
+                Object.keys(ruleDeps).forEach(function(key) {
+                    deps.push(ruleDeps[key]);
+                });
+                deferred.resolve({cons: cons, ruleDeps: deps});
             });
         } catch(e) {
             deferred.reject(e);
@@ -272,10 +276,7 @@ Solver = {
             return false;
         }
 
-        if (!rule in ruleDeps) {
-            ruleDeps.push(rule);
-        }
-        
+        ruleDeps[rule.toString()] = rule;
 
         // If an already existing uri has been mapped...
         for (var key in localMapping) {

@@ -63,7 +63,7 @@ ReasoningEngine = {
      * @param FeDel set of assertions to be deleted
      */
     incremental: function (FeAdd, FeDel, F, R) {        
-        var Rdel = [], Rred, Rins = [],
+        var Rdel = R, Rred = R, Rins = R,
             FiDel = [], FiAdd = [],
             FiDelNew = [], FiAddNew = [],
             superSet = [],
@@ -75,16 +75,17 @@ ReasoningEngine = {
 
             deferred = q.defer(),
 
-            startAlgorithm = function() {
+            startAlgorithm = function() {                
                 overDeletionEvaluationLoop();
             },
 
             overDeletionEvaluationLoop = function() {
                 FiDel = Utils.uniques(FiDel, FiDelNew);
-                Rdel = Logics.restrictRuleSet(R, Utils.uniques(FeDel, FiDel));
+                Rdel = Logics.restrictRuleSet(Rdel, Utils.uniques(FeDel, FiDel));
                 Solver.evaluateRuleSet(Rdel, Utils.uniques(Utils.uniques(Fi, Fe), FeDel))
                     .then(function(values) {
                         FiDelNew = values.cons;
+                        Rdel = values.ruleDeps;
                         if (Utils.uniques(FiDel, FiDelNew).length > FiDel.length) {
                             overDeletionEvaluationLoop();
                         } else {
@@ -97,10 +98,11 @@ ReasoningEngine = {
 
             rederivationEvaluationLoop = function() {
                 FiAdd = Utils.uniques(FiAdd, FiAddNew);
-                Rred = Logics.restrictRuleSet(R, FiDel);
+                Rred = Logics.restrictRuleSet(Rred, FiDel);
                 Solver.evaluateRuleSet(Rred, Utils.uniques(Fe, Fi))
                     .then(function(values) {
                         FiAddNew = values.cons;
+                        Rred = values.ruleDeps;
                         if (Utils.uniques(FiAdd, FiAddNew).length > FiAdd.length) {
                             rederivationEvaluationLoop();
                         } else {
@@ -116,8 +118,7 @@ ReasoningEngine = {
                 Solver.evaluateRuleSet(Rins, superSet)
                     .then(function(values) {
                         FiAddNew = values.cons;
-                        R = values.ruleDeps;
-                        console.log(R.length);
+                        Rins = values.ruleDeps;                       
                         if (!Utils.containsSubset(FiAdd, FiAddNew)) {
                             insertionEvaluationLoop();
                         } else {                
