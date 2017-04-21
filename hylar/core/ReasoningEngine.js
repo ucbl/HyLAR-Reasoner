@@ -133,7 +133,7 @@ ReasoningEngine = {
         return deferred.promise;
     },
 
-    incrementalBf: function (FeAdd, FeDel, F, R) {
+    /*incrementalBf: function (FeAdd, FeDel, F, R) {
 
         R = Logics.decomposeRuleHeadsIntoSeveralRules(R);
 
@@ -260,7 +260,7 @@ ReasoningEngine = {
             deletions: deletions,
             updatedF: F
         };
-    },
+    },*/
 
     /**
      * Returns valid facts using explicit facts' validity tags.

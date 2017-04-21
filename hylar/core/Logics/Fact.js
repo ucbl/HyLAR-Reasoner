@@ -58,13 +58,26 @@ Fact.prototype = {
      * Convenient method to stringify a fact.
      * @returns {string}
      */
-    toString: function() {
+    /*toString: function() {
         var e, spo;
 
         if(this.falseFact) {
             spo = 'FALSE';
         } else {
             spo = '(' + this.subject + ' ' + this.predicate + ' ' + this.object + ')'
+        }
+
+        this.explicit ? e = 'E' : e = 'I';
+        return e + spo;
+    },*/
+
+    toString: function() {
+        var e, spo;
+
+        if(this.falseFact) {
+            spo = 'FALSE';
+        } else {
+            spo = '(' + Utils.removeBeforeSharp(this.subject) + ', ' + Utils.removeBeforeSharp(this.predicate) + ', ' + Utils.removeBeforeSharp(this.object) + ')'
         }
 
         this.explicit ? e = 'E' : e = 'I';
