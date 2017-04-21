@@ -311,7 +311,7 @@ ReasoningEngine = {
                 Rins = Logics.restrictRuleSet(R, F);
                 Solver.evaluateRuleSet(Rins, F, true)
                     .then(function(values) {
-                        FiAdd = values;
+                        FiAdd = values.cons;
                         if (Logics.unify(FiAdd, Fi)) {
                             setTimeout(evaluationLoop, 1);
                         } else {
