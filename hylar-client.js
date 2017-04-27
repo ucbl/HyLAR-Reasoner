@@ -8745,8 +8745,8 @@ Logics = {
      * @returns {*}
      */
     causeMatchesFact: function(cause, fact) {
-        return this.causeMemberMatchesFactMember(cause.subject, fact.subject)
-            && this.causeMemberMatchesFactMember(cause.predicate, fact.predicate)
+        return this.causeMemberMatchesFactMember(cause.predicate, fact.predicate) 
+            && this.causeMemberMatchesFactMember(cause.subject, fact.subject)
             && this.causeMemberMatchesFactMember(cause.object, fact.object);
     },
 
@@ -8758,9 +8758,9 @@ Logics = {
      * @returns {boolean}
      */
     causeMemberMatchesFactMember: function(causeMember, factMember) {
-        if (this.isVariable(causeMember)) {
+        if(causeMember == factMember) {
             return true;
-        } else if(causeMember == factMember) {
+        } else if (causeMember.indexOf('?') === 0) {
             return true;
         } else {
             return false;
@@ -9388,8 +9388,8 @@ Solver = {
                 promises.push(this.evaluateThroughRestriction(rs[key], facts));
             }
         }
-        try {
-            q.all(promises).then(function (consTab) {
+        try {                    
+            q.all(promises).then(function (consTab) {                
                 for (var i = 0; i < consTab.length; i++) {
                     cons = cons.concat(consTab[i]);
                 }
@@ -9436,7 +9436,7 @@ Solver = {
 
         try {
             this.checkOperators(rule, mappingList);
-
+            
             for (var i = 0; i < mappingList.length; i++) {
                 if (mappingList[i]) {
                     // Replace mappings on all consequences
@@ -9606,7 +9606,7 @@ Solver = {
      * @param mapping
      * @returns {*}
      */
-    factMatches: function(fact, ruleFact, mapping, constants, rule) {
+    factMatches: function(fact, ruleFact, mapping, constants) {
         var localMapping = {};
     
         // Checks and update localMapping if matches     
@@ -10597,6 +10597,84 @@ ReasoningEngine = {
         return deferred.promise;
     },
 
+    /**
+     * Returns valid facts using explicit facts' validity tags.
+     * @param F
+     * @param refs
+     * @returns {Array}
+     */
+    tagFilter: function(F) {
+        var validSet = [];
+        for (var i = 0; i < F.length; i++) {
+            if (F[i].isValid()) {
+                validSet.push(F[i]);
+            }
+        }
+        return validSet;
+    },
+
+    /**
+     * Tags newly inferred facts, and (un)validates updated ones.
+     * Explicit facts are 'validity'-tagged, while
+     * implicit ones are 'causedBy'-tagged.
+     * @param FeAdd
+     * @param FeDel
+     * @param F
+     * @param R
+     * @returns {{additions: *, deletions: Array}}
+     */
+    tagging: function(FeAdd, FeDel, F, R) {
+        var newExplicitFacts, resolvedExplicitFacts, validUpdateResults,
+            FiAdd = [], Rins = [], deferred = q.defer(),
+            Fi = Logics.getOnlyImplicitFacts(F), Fe,
+
+            startAlgorithm = function() {
+                if(newExplicitFacts.length > 0) {
+                    evaluationLoop(F);
+                } else {
+                    deferred.resolve({
+                        additions: resolvedExplicitFacts,
+                        deletions: []
+                    });
+                }
+            },
+
+            evaluationLoop = function() {
+                F = Utils.uniques(F, Fi);
+                Rins = Logics.restrictRuleSet(R, F);
+                Solver.evaluateRuleSet(Rins, F, true)
+                    .then(function(values) {
+                        FiAdd = values.cons;                        
+                        if (Logics.unify(FiAdd, Fi)) {
+                            setTimeout(evaluationLoop, 1);
+                        } else {
+                            deferred.resolve({
+                                additions: newExplicitFacts.concat(resolvedExplicitFacts, Fi),
+                                deletions: []
+                            });
+                        }
+                    });
+            };
+
+        // Returns new explicit facts to be added
+        validUpdateResults = Logics.updateValidTags(F, FeAdd, FeDel);
+        newExplicitFacts = validUpdateResults.new;
+        resolvedExplicitFacts = validUpdateResults.resolved;
+        F = F.concat(newExplicitFacts);
+        startAlgorithm();
+
+        return deferred.promise;
+    }    
+};
+
+module.exports = {
+    naive: ReasoningEngine.naive,
+    incrementalBf: ReasoningEngine.incrementalBf,
+    incremental: ReasoningEngine.incremental,
+    tagging: ReasoningEngine.tagging,
+    tagFilter: ReasoningEngine.tagFilter
+};
+
     /*incrementalBf: function (FeAdd, FeDel, F, R) {
 
         R = Logics.decomposeRuleHeadsIntoSeveralRules(R);
@@ -10725,84 +10803,6 @@ ReasoningEngine = {
             updatedF: F
         };
     },*/
-
-    /**
-     * Returns valid facts using explicit facts' validity tags.
-     * @param F
-     * @param refs
-     * @returns {Array}
-     */
-    tagFilter: function(F) {
-        var validSet = [];
-        for (var i = 0; i < F.length; i++) {
-            if (F[i].isValid()) {
-                validSet.push(F[i]);
-            }
-        }
-        return validSet;
-    },
-
-    /**
-     * Tags newly inferred facts, and (un)validates updated ones.
-     * Explicit facts are 'validity'-tagged, while
-     * implicit ones are 'causedBy'-tagged.
-     * @param FeAdd
-     * @param FeDel
-     * @param F
-     * @param R
-     * @returns {{additions: *, deletions: Array}}
-     */
-    tagging: function(FeAdd, FeDel, F, R) {
-        var newExplicitFacts, resolvedExplicitFacts, validUpdateResults,
-            FiAdd = [], Rins = [], deferred = q.defer(),
-            Fi = Logics.getOnlyImplicitFacts(F), Fe,
-
-            startAlgorithm = function() {
-                if(newExplicitFacts.length > 0) {
-                    evaluationLoop(F);
-                } else {
-                    deferred.resolve({
-                        additions: resolvedExplicitFacts,
-                        deletions: []
-                    });
-                }
-            },
-
-            evaluationLoop = function() {
-                F = Utils.uniques(F, Fi);
-                Rins = Logics.restrictRuleSet(R, F);
-                Solver.evaluateRuleSet(Rins, F, true)
-                    .then(function(values) {
-                        FiAdd = values.cons;
-                        if (Logics.unify(FiAdd, Fi)) {
-                            setTimeout(evaluationLoop, 1);
-                        } else {
-                            deferred.resolve({
-                                additions: newExplicitFacts.concat(resolvedExplicitFacts, Fi),
-                                deletions: []
-                            });
-                        }
-                    });
-            };
-
-        // Returns new explicit facts to be added
-        validUpdateResults = Logics.updateValidTags(F, FeAdd, FeDel);
-        newExplicitFacts = validUpdateResults.new;
-        resolvedExplicitFacts = validUpdateResults.resolved;
-        F = F.concat(newExplicitFacts);
-        startAlgorithm();
-
-        return deferred.promise;
-    }    
-};
-
-module.exports = {
-    naive: ReasoningEngine.naive,
-    incrementalBf: ReasoningEngine.incrementalBf,
-    incremental: ReasoningEngine.incremental,
-    tagging: ReasoningEngine.tagging,
-    tagFilter: ReasoningEngine.tagFilter
-};
 },{"./Logics/Logics":49,"./Logics/Solver":51,"./Utils":59,"q":101}],57:[function(require,module,exports){
 /**
  * Created by aifb on 25.07.16.
@@ -11540,6 +11540,7 @@ Hylar.prototype.treatLoad = function(ontologyTxt, mimeType, graph) {
             return false;
             break;
         default:
+
             return that.sm.load(ontologyTxt, mimeType, graph)
                 .then(function() {
                     return that.classify();
@@ -11835,7 +11836,7 @@ Hylar.prototype.registerDerivations = function(derivations, graph) {
 Hylar.prototype.classify = function() {
     var that = this, factsChunk, chunks = [], chunksNb = 4000, insertionPromises = [];
     console.notify('Classification started.');
-
+    
     return this.sm.query('CONSTRUCT { ?a ?b ?c } WHERE { ?a ?b ?c }')
         .then(function(r) {
             var facts = [], triple, _fs, f;
@@ -11867,7 +11868,7 @@ Hylar.prototype.classify = function() {
             }
             return;
         })
-        .then(function() {
+        .then(function() {            
             console.notify('Classification succeeded.');
             return Promise.reduce(chunks, function(previous, chunk) {                
                 return that.sm.insert(chunk);

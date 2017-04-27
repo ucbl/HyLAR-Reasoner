@@ -63,14 +63,18 @@ StorageManager.prototype.loadRdfXml = function(data) {
  */
 StorageManager.prototype.query = function(query) {
     var deferred = q.defer();    
-    query = query.replace(/\\/g, '').replace(/(\n|\r)/g, '');          
-    this.storage.execute(query, function (err, r) {
-        if(err) {            
-            deferred.reject(err);
-        } else {
-            deferred.resolve(r);
-        }
-    });
+    query = query.replace(/\\/g, '').replace(/(\n|\r)/g, '');    
+    try {      
+        this.storage.execute(query, function (err, r) {
+            if(err) {            
+                deferred.reject(err);
+            } else {
+                deferred.resolve(r);
+            }
+        });
+    } catch(e) {
+        deferred.resolve(true);
+    }
     return deferred.promise;
 };
 

@@ -108,11 +108,11 @@ ReasoningEngine = {
                         }
                     });
             },
-
+            
             insertionEvaluationLoop = function() {    
                 FiAdd = Utils.uniques(FiAdd, FiAddNew);
                 superSet = Utils.uniques(Utils.uniques(Utils.uniques(Fe, Fi), FeAdd), FiAdd);
-                Rins = Logics.restrictRuleSet(R, superSet);
+                Rins = Logics.restrictRuleSet(R, superSet);                
                 Solver.evaluateRuleSet(Rins, superSet)
                     .then(function(values) {
                         FiAddNew = values.cons;                       

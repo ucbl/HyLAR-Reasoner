@@ -11,6 +11,8 @@ var q = require('q');
 var CHR = require('chr');
 var chr = CHR();
 
+var emitter = require('../Emitter');
+
 var firedRules;
 
 /**
@@ -110,7 +112,7 @@ Solver = {
                 if (mappingList[i]) {
                     // Replace mappings on all consequences
                     for (var j = 0; j < rule.consequences.length; j++) {                        
-                        consequences.push(this.substituteFactVariables(mappingList[i], rule.consequences[j], []));
+                        consequences.push(this.substituteFactVariables(mappingList[i], rule.consequences[j], [], rule));
                         
                     }
                 }
@@ -143,7 +145,7 @@ Solver = {
                     causes = Logics.buildCauses(mappingList[i].__facts__);
                     iterationConsequences = [];
                     for (var j = 0; j < rule.consequences.length; j++) {
-                        consequence = this.substituteFactVariables(mappingList[i], rule.consequences[j], causes);
+                        consequence = this.substituteFactVariables(mappingList[i], rule.consequences[j], causes, rule);
                         //if (Logics.filterKnownOrAlternativeImplicitFact(consequence, kb, resolvedImplicitFacts)) {
                         consequences.push(consequence);
                         iterationConsequences.push(consequence);
@@ -275,7 +277,7 @@ Solver = {
      * @param mapping
      * @returns {*}
      */
-    factMatches: function(fact, ruleFact, mapping, constants) {
+    factMatches: function(fact, ruleFact, mapping, constants, rule) {
         var localMapping = {};
     
         // Checks and update localMapping if matches     
@@ -288,6 +290,8 @@ Solver = {
         if (!this.factElemMatches(fact.subject, ruleFact.subject, mapping, localMapping)) {
             return false;
         }
+        
+        emitter.emit('rule-fired', rule.name);        
 
         // If an already existing uri has been mapped...
         for (var key in localMapping) {
@@ -381,7 +385,7 @@ Solver = {
         return substitutedFact;
     },
 
-    substitute: function(atom, mappings, causedBy, graphs) {
+    /*substitute: function(atom, mappings, causedBy, graphs) {
         var substitutedFacts = [],
             substitutedFact;
 
@@ -395,7 +399,7 @@ Solver = {
         return substitutedFacts;
     }
 
-    /*matchHead: function(ruleSet, fact) {
+    matchHead: function(ruleSet, fact) {
         var tuples = [],
             atom;
 

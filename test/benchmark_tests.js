@@ -9,6 +9,7 @@ var mime = require('mime-types');
 
 var Logics = require('../hylar/core/Logics/Logics');
 var OWL2RL = require('../hylar/core/OWL2RL');
+var emitter = require('../hylar/core/Emitter');
 
 var H = require('../hylar/hylar');
 var owl, ontology, Hylar = new H();
@@ -21,6 +22,13 @@ var univ1 = baseOntoTxt + fs.readFileSync(path.resolve(__dirname + '/ontologies/
 var univ2 = baseOntoTxt + fs.readFileSync(path.resolve(__dirname + '/ontologies/University0_5.ttl')).toString();
 var univ3 = baseOntoTxt + fs.readFileSync(path.resolve(__dirname + '/ontologies/University0_14.ttl')).toString();
 
+/*var univ1 = baseOntoTxt + fs.readFileSync(path.resolve(__dirname + '/ontologies/University20-5k.ttl')).toString();
+var univ2 = baseOntoTxt + fs.readFileSync(path.resolve(__dirname + '/ontologies/University20-20k.ttl')).toString();
+var univ3 = baseOntoTxt + fs.readFileSync(path.resolve(__dirname + '/ontologies/University20-50k.ttl')).toString();*/
+
+//univ1=univ3;
+//univ1 += univ2 + univ3; //20k 
+
 Hylar.setRules(OWL2RL.equality.concat(OWL2RL.transitivityInverse, OWL2RL.equivalence, OWL2RL.subsumption));
 //Hylar.setRules(OWL2RL.equivalence);
 //Hylar.setRules(OWL2RL.equality);
@@ -28,21 +36,40 @@ Hylar.setRules(OWL2RL.equality.concat(OWL2RL.transitivityInverse, OWL2RL.equival
 //Hylar.setRules(OWL2RL.transitivityInverse);
 
 var date = new Date().getTime();
+var firedRules;
+
+emitter.on('rule-fired', function(rulename) {
+    if (!firedRules[rulename]) {
+        firedRules[rulename] = 0;
+    }           
+    firedRules[rulename]++;
+});
+
+function initFiredRules() {
+    firedRules = {};    
+}
+
+function displayFiredRules() {
+    console.log(JSON.stringify(firedRules, null, 4));
+}
+        
 
 Hylar.quiet();
 
 function delay() {
-    var delay = new Date().getTime() - date;
+    /*var delay = new Date().getTime() - date;
     fs.appendFileSync('bench.txt', delay + '\n');
     console.log(delay);
-    date = new Date().getTime(); 
+    date = new Date().getTime();*/ 
 }
 
 
 describe('CLASSIFICATION UNIV 1', function () {
     it('should parse and classify the ontology', function () {
+        initFiredRules();
         return Hylar.load(univ1, 'text/turtle', false, false, reasoningMethod)
         .then(function() {
+            displayFiredRules();
             delay();
         });
     });
