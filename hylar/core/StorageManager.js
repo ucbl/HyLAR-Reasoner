@@ -171,18 +171,6 @@ StorageManager.prototype.regenerateSideStore = function() {
     return deferred.promise;
 };
 
-StorageManager.prototype.loadOntologyIntoSideStore = function(data, format) {
-    var deferred = q.defer();
-    this.sideStore.load(format, data, function (err, r) {
-        if(err) {
-            deferred.reject(err);
-        } else {
-            deferred.resolve(r);
-        }
-    });
-    return deferred.promise;
-};
-
 StorageManager.prototype.loadIntoSideStore = function(ttl, graph) {
     var deferred = q.defer(),
         query = 'INSERT DATA { ' + ttl + ' }';

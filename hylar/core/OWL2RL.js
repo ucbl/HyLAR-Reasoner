@@ -3,7 +3,7 @@
  */
 
 /**
- * OWL2RL spec from http://www.w3.org/TR/owl2-profiles
+ * Partial OWL2RL spec from http://www.w3.org/TR/owl2-profiles
  * @author Mehdi Terdjimi
  * @type {{rules: *[]}}
  */
@@ -142,12 +142,12 @@ OWL2RL = {
         ],
 
         domainRange: [
-
+            //prp-dom
             new Rule([
                     new Fact(Domain, '?p', '?c', [], true),
                     new Fact('?p', '?x', '?y', [], true)],
                 [new Fact(Type, '?x', '?c', [], true)], "Domain-ClassAssertion"),
-
+            //prp-rng
             new Rule([
                     new Fact(Range, '?p', '?c', [], true),
                     new Fact('?p', '?x', '?y', [], true)],

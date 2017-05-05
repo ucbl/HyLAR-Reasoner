@@ -169,19 +169,6 @@ Logics = {
     },
 
     /**
-     * Invalidates a fact set.
-     * @param fs1
-     * @param fs2
-     * @returns {Array}
-     */
-    invalidate: function(fs1) {
-        for (var i = 0; i < fs1.length; i++) {
-            fs1[i].valid = false;
-        }
-        return fs1;
-    },
-
-    /**
      * Substracts each set.
      * Not to be used in tag-based reasoning.
      * @param _set1
@@ -218,30 +205,6 @@ Logics = {
         } catch(e) {
             return false;
         }
-    },
-
-    decomposeRuleHeadsIntoSeveralRules: function(ruleSet) {
-        var newRuleSet = [];
-        for (var i = 0; i < ruleSet.length; i++) {
-            for (var j = 0; j < ruleSet[i].consequences.length; j++) {
-                newRuleSet.push(new Rule(ruleSet[i].causes, [ruleSet[i].consequences[j]]));
-            }
-        }
-        return newRuleSet;
-    },
-
-    factIsGround: function(fact) {
-        return !this.isVariable(fact.subject) && !this.isVariable(fact.predicate) && !this.isVariable(fact.object)
-    },
-
-    getInconsistencies: function(fs) {
-        var inconsistencies = [];
-        for (var i = 0; i < fs.length; i++) {
-           if ((fs[i] !== undefined) && (fs[i].falseFact)) {
-               inconsistencies = fs[i].causedBy;
-           }
-        }
-        return inconsistencies;
     },
 
     updateValidTags: function(kb, additions, deletions) {
@@ -285,62 +248,6 @@ Logics = {
             }
         }
     },
-
-    /*addAlternativeDerivationAsCausedByFromExplicit: function(kb, kbFact, altFact) {
-        var derivations = kbFact.implicitlyDerives(kb),
-            derivConj, kbConj, newConj, alternativeConjs = [];
-
-        for (var i = 0; i < derivations.length; i++) {
-            for (var j = 0; j < derivations[i].causedBy.length; j++) {
-                derivConj = derivations[i].causedBy[j];
-                for (var k = 0; k < kbFact.causedBy.length; k++) {
-                    kbConj = kbFact.causedBy[k];
-                    if (newConj == Utils.removeSubset(derivConj, kbConj)) {
-                        newConj.push(altFact);
-                        derivations[i].causedBy = this.uniquesCausedBy(derivations[i].causedBy, [newConj]);
-                    }
-                }
-            }
-
-        }
-        kb.push(altFact);
-    },*/
-
-    /*
-    addAlternativeDerivationAsCausedByFromImplicit: function(kb, kbFact, altFact) {
-        var derivations = kbFact.explicitlyDerives(kb),
-            derivConj, kbConj, newConj, alternativeConjs = [];
-
-        for (var i = 0; i < derivations.length; i++) {
-            derivations[i].implicitCauses.push(altFact);
-            for (var j = 0; j < derivations[i].causedBy.length; j++) {
-                derivConj = derivations[i].causedBy[j];
-                for (var k = 0; k < altFact.causedBy.length; k++) {
-                    kbConj = altFact.causedBy[k];
-                    if (newConj = Utils.removeFromSet(derivConj, kbFact)) {
-                        newConj = Utils.uniques(newConj, kbConj);
-                        //derivations[i].causedBy.push(newConj);
-                        derivations[i].causedBy = this.uniquesCausedBy(derivations[i].causedBy, [newConj]);
-                    }
-                }
-            }
-
-        }
-        kb.push(altFact);
-    },
-
-    filterKnownOrAlternativeImplicitFact: function(derivedFact, kb, implicitFactsSubset) {
-        for (var i = 0; i < kb.length; i++) {
-            if (kb[i].equivalentTo(derivedFact)) {
-                return false;
-            } else if (kb[i].isAlternativeEquivalentOf(derivedFact)) {
-                implicitFactsSubset.push(derivedFact);
-                this.addAlternativeDerivationAsCausedBy(kb, kb[i], derivedFact);
-                return false;
-            }
-        }
-        return derivedFact;
-    },*/
 
     buildCauses: function(conjunction) {
         var explicitFacts = this.getOnlyExplicitFacts(conjunction),
@@ -406,7 +313,7 @@ Logics = {
         for (var i = 0; i < fs.length; i++) {
             if (fs[i] !== undefined) {
                 if (foundFactIndex = fs[i].appearsIn(unifiedSet)) {
-                    unifiedSet[foundFactIndex].causedBy = this.uniquesCausedBy(fs[i].causedBy, unifiedSet[foundFactIndex].causedBy);//Utils.uniques(fs[i].causedBy, unifiedSet[foundFactIndex].causedBy);
+                    unifiedSet[foundFactIndex].causedBy = this.uniquesCausedBy(fs[i].causedBy, unifiedSet[foundFactIndex].causedBy);
                     unifiedSet[foundFactIndex].consequences = Utils.uniques(fs[i].consequences, unifiedSet[foundFactIndex].consequences);                    
                     fs[i].doPropagate(unifiedSet[foundFactIndex]);                   
                 } else {
@@ -415,21 +322,6 @@ Logics = {
             }
         }
         return unifiedSet;
-    },
-
-    unifyAndCheck: function(subSet, updatingSet, kb) {
-        var initialLength = updatingSet.length;
-
-        subSet = this.unifyFactSet(subSet);
-        this.combine(updatingSet, subSet);
-
-        initialLength += this.checkExplicitEquivalents(subSet, kb);
-
-        if (initialLength < updatingSet.length) {
-            return true;
-        } else {
-            return false;
-        }
     },
 
     unify: function(subSet, updatingSet) {
@@ -443,22 +335,6 @@ Logics = {
         } else {
             return false;
         }
-    },
-
-    checkExplicitEquivalents: function(subSet, kb) {
-        var countedEquivalents = 0;
-        for (var i = 0; i < kb.length; i++) {
-            for (var j = 0; j < subSet.length; j++) {
-                if (subSet[j] !== undefined) {
-                    if(kb[i].explicit && kb[i].isAlternativeEquivalentOf(subSet[j])) {
-                        this.addAlternativeDerivationAsCausedByFromImplicit(kb, kb[i], subSet[j], true);
-                        countedEquivalents++;
-                        delete subSet[j];
-                    }
-                }
-            }
-        }
-        return countedEquivalents;
     },
 
     uniquesCausedBy: function(cb1, cb2) {

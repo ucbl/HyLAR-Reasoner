@@ -12,7 +12,6 @@ var rdfext = require('rdf-ext')(),
     sparqlJs = require('sparqljs'),
 
     SparqlParser = new sparqlJs.Parser(),
-    SparqlGenerator = new sparqlJs.Generator(),
     RdfXmlParser = new rdfext.RdfXmlParser();
 
 /**
@@ -265,16 +264,6 @@ ParsingInterface = {
         var res;
         try {
             res = parsedQuery.updates[0].insert.length > 0;
-        } catch(e) {
-            return false;
-        }
-        return res;
-    },
-
-    isDelete: function(parsedQuery) {
-        var res;
-        try {
-            res = parsedQuery.updates[0].delete.length > 0;
         } catch(e) {
             return false;
         }

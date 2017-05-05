@@ -92,14 +92,6 @@ Dictionary.prototype.put = function(fact, graph) {
     }
 };
 
-Dictionary.prototype.lastUpdateIsOld = function() {
-    if (this.allowPurge) {
-        return ( (this.lastUpdate != 0) && (new Date().getTime() - this.lastUpdate) > this.purgeThreshold);
-    } else {
-        return false;
-    }
-};
-
 Dictionary.prototype.isOld = function(graph, factIndex) {
     return (this.dict[graph][factIndex].lastUpdate - this.lastUpdate) > this.purgeThreshold;
 };

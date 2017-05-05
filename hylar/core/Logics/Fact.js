@@ -12,11 +12,11 @@ var Utils = require('../Utils');
  * @param originFacts array of facts causing this
  * @constructor
  */
-Fact = function(pred, sub, obj, originConjs, expl, graphs, consequences, notUsingValidity, fromTriple) {
+Fact = function(pred, sub, obj, causes, expl, graphs, consequences, notUsingValidity, fromTriple) {
     if(pred == 'FALSE') {
         this.falseFact = 'true';
     }
-    if (originConjs === undefined) originConjs = [];
+    if (causes === undefined) causes = [];
     if (expl === undefined) expl = true;
     if (graphs === undefined) graphs = [];
     if (consequences === undefined) consequences = [];
@@ -28,9 +28,10 @@ Fact = function(pred, sub, obj, originConjs, expl, graphs, consequences, notUsin
     this.consequences = consequences;
     this.fromTriple = fromTriple;
 
-    this.causedBy = originConjs;
+    this.causedBy = causes;
     this.explicit = expl;
     this.graphs = graphs;
+
     if (!notUsingValidity && this.explicit) {
         this.valid = true;
     }
@@ -204,51 +205,6 @@ Fact.prototype = {
             return false;
         }
     },
-    /*isValid: function(treated) {
-        if (treated === undefined) treated = [];
-        if (this.explicit) {
-            return this.valid;
-        }
-        for (var i = 0; i < this.causedBy.length; i++) {
-            var valid = true,
-                conj = this.causedBy[i];
-            for (var j = 0; j < conj.length; j++) {
-                if (treated.toString().indexOf(conj[j]) === -1) {
-                    treated.push(conj[j]);
-                    valid = valid && conj[j].isValid(treated);
-                } else {
-                    return false;
-                }
-            }
-            if (valid) {
-                return true;
-            }
-        }
-        return false;
-    },*/
-
-    implicitlyDerives: function(kb) {
-        var factsDerived = [];
-        for (var i = 0; i < kb.length; i++) {
-            if (this.appearsIn(kb[i].implicitCauses)) {
-                factsDerived.push(kb[i]);
-            }
-        }
-        return factsDerived;
-    },
-
-    explicitlyDerives: function(kb) {
-        var factsDerived = [];
-        for (var i = 0; i < kb.length; i++) {
-            for (var j = 0; j < kb[i].causedBy.length; j++) {
-                if (this.appearsIn(kb[i].causedBy[j])) {
-                    factsDerived.push(kb[i]);
-                    break;
-                }
-            }
-        }
-        return factsDerived;
-    },
 
     derives: function(kb) {
         var factsDerived = [];
@@ -265,27 +221,6 @@ Fact.prototype = {
             }
         }
         return factsDerived;
-    },
-
-    isAlternativeEquivalentOf: function(fact) {
-        if(!fact.explicit) return false;
-        return (
-            (fact.subject == this.subject) &&
-            (fact.predicate == this.predicate) &&
-            (fact.object == this.object) &&
-            (fact.explicit != this.explicit)
-        );
-    },
-
-    findAlternativeEquivalent: function(kb) {
-        var alternativeEquivalent;
-        for (var i = 0; i < kb.length; i++) {
-            alternativeEquivalent = this.isAlternativeEquivalentOf(kb[i]);
-            if (alternativeEquivalent) {
-                return kb[i];
-            }
-        }
-        return false;
     },
 
     doPropagate: function(keptFact) {        

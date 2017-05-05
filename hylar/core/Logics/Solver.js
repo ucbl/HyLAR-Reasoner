@@ -5,15 +5,9 @@
 var Fact = require('./Fact');
 var Logics = require('./Logics');
 var Utils = require('../Utils');
-var AnnotatedQuery = require('./AnnotatedQuery');
-
-var q = require('q');
-var CHR = require('chr');
-var chr = CHR();
-
 var emitter = require('../Emitter');
 
-var firedRules;
+var q = require('q');
 
 /**
  * Core solver used to evaluate rules against facts
@@ -21,29 +15,6 @@ var firedRules;
  */
 
 Solver = {
-
-    initFiredRules: function() {
-        firedRules = {};
-    },
-
-    getRuleDeps: function() {
-        var tmp = {},
-            flat = [];
-        for (var key in firedRules) {
-            var deps = firedRules[key].dependentRules;
-            for (var key2 in deps) {
-                var deprule = deps[key2];
-                tmp[deprule.toString()] = deprule;
-            }
-        }
-        
-        Object.keys(tmp).forEach(function(key) {
-            flat.push(tmp[key]);
-        });
-
-        return flat;
-    },
-
     /**
      * Evaluates a set of rules over a set of facts.
      * @param rs
@@ -70,28 +41,6 @@ Solver = {
             deferred.reject(e);
         }
         return deferred.promise;
-    },
-
-    evaluateRuleSetThroughCHR: function(rs, facts) {
-        var promises = [];
-        for (var key in rs) {
-            chr(rs[key].toCHR());
-        }
-        for (key in facts) {
-            try {
-                promises.push(
-                    chr.t(
-                        facts[key].subjectCHR(), 
-                        facts[key].predicateCHR(), 
-                        facts[key].objectCHR()
-                    ));
-            } catch (e) {}
-        }
-        Promise.all(promises).then(function(r) {
-            1;//
-        }).catch(function(e) {
-            2;//
-        });
     },
 
     /**
@@ -201,19 +150,6 @@ Solver = {
             i++;
         }        
         return mappingList;
-    },
-
-    excludeKnownMatches: function(rule, facts, consequences) {
-        var match, filteredFacts = [];
-        for (var i = 0; i < facts.length; i++) {
-            match = rule.hasKnownMatchFor(facts[i]);
-            if (match) {
-                consequences.push(match);                
-            } else {
-                filteredFacts.push(facts[i]);
-            }
-        }
-        return filteredFacts;
     },
 
     /**
@@ -383,102 +319,7 @@ Solver = {
         }
 
         return substitutedFact;
-    },
-
-    /*substitute: function(atom, mappings, causedBy, graphs) {
-        var substitutedFacts = [],
-            substitutedFact;
-
-        for (var i = 0; i < mappings.length; i++) {
-            substitutedFact = this.substituteFactVariables(mappings[i], atom, causedBy, graphs);
-            if(substitutedFact && Logics.factIsGround(substitutedFact)) {
-                substitutedFacts.push(substitutedFact);
-            }
-        }
-
-        return substitutedFacts;
     }
-
-    matchHead: function(ruleSet, fact) {
-        var tuples = [],
-            atom;
-
-        for (var i = 0; i < ruleSet.length; i++) {
-            var mapping = {},
-                annotatedQuery = new AnnotatedQuery(),
-                head = ruleSet[i].consequences[0],
-                ruleConstants = ruleSet[i].constants;
-
-            if (ruleSet[i].consequences.length > 1) {
-                throw 'B/F algorithm expects an unique consequence (HEAD)!';
-            }
-
-            mapping = this.factMatches(fact, head, mapping, ruleConstants);
-
-            if (mapping) {
-                for (var j = 0; j < ruleSet[i].causes.length; j++) {
-                    atom = new AnnotatedQuery.atom(ruleSet[i].causes[j]);
-                    annotatedQuery.addAtom(atom);
-                }
-
-                tuples.push({
-                    mapping: mapping,
-                    rule: ruleSet[i],
-                    annotatedQuery: annotatedQuery
-                });
-            }
-        }
-
-        return tuples;
-    },
-
-    matchBody: function(ruleSet, fact) {
-        var tuples = [];
-
-        for (var i = 0; i < ruleSet.length; i++) {
-            var mapping = {}, annotateDiff = true,
-                currentMapping, atom,
-                annotatedQuery = new AnnotatedQuery();
-
-            for (var j = 0; j < ruleSet[i].causes.length; j++) {
-                currentMapping = this.factMatches(fact, ruleSet[i].causes[j], mapping, ruleSet[i].constants);
-                if (currentMapping) {
-                    annotateDiff = false;
-                    mapping = currentMapping;
-                }
-                annotatedQuery.addAtom(new AnnotatedQuery.atom(ruleSet[i].causes[j], annotateDiff));
-            }
-            annotatedQuery.addAtom(new AnnotatedQuery.atom(ruleSet[i].consequences[0], annotateDiff));
-
-            if (!Utils.emptyObject(mapping)) {
-                tuples.push({
-                    mapping: (mapping || {}),
-                    rule: ruleSet[i],
-                    annotatedQuery: annotatedQuery
-                });
-            }
-
-        }
-        return tuples;
-    },
-
-    eval: function(X, annotatedQuery, Y, mapping, constants) {
-        var mappings = [mapping], currentMapping,
-            XWithoutY = Logics.minus(X, Y);
-
-            for (var i = 0; i < X.length; i++) {
-                for (var j = 0; j < annotatedQuery.atomsLen(); j++) {
-                    currentMapping = this.factMatches(X[i], annotatedQuery.getAtom(j).value, mapping, constants);
-                    if (currentMapping) {
-                        mapping = currentMapping;
-                        mappings.push(mapping);
-                    }
-                }
-
-            }
-
-        return mappings;
-    }*/
 };
 
 module.exports = Solver;

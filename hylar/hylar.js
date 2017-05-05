@@ -8,13 +8,14 @@ var fs = require('fs'),
 
 var Promise = require('bluebird');
 
+var emitter = require('./core/Emitter');
+
 var Dictionary = require('./core/Dictionary'),
     ParsingInterface = require('./core/ParsingInterface'),
     StorageManager = require('./core/StorageManager'),
     Reasoner = require('./core/Reasoner'),
     OWL2RL = require('./core/OWL2RL'),
     Fact = require('./core/Logics/Fact'),
-    Errors = require('./core/Errors'),
     Utils = require('./core/Utils');
 
 var logFile = 'hylar.log';
@@ -57,15 +58,7 @@ Hylar = function() {
     this.rules = OWL2RL.test;
     this.queryHistory = [];
     this.sm.init();
-    this.computeRuleDependencies();
-    this.status = {
-        classifying: false,
-        querying: false
-    };    
-};
-
-Hylar.prototype.toggleClassifyingStatus = function() {
-    this.status.classifying = !(this.status.classifying);
+    this.computeRuleDependencies();  
 };
 
 Hylar.prototype.computeRuleDependencies = function() {
@@ -143,7 +136,7 @@ Hylar.prototype.updateReasoningMethod = function(method) {
  */
 Hylar.prototype.load = function(ontologyTxt, mimeType, keepOldValues, graph, reasoningMethod) {
     var that = this;
-    this.toggleClassifyingStatus();
+    emitter.emit('classif-started');
     this.updateReasoningMethod(reasoningMethod);
 
     if (!keepOldValues) {
@@ -182,8 +175,7 @@ Hylar.prototype.treatLoad = function(ontologyTxt, mimeType, graph) {
             return that.sm.load(ontologyTxt, mimeType, graph)
                 .then(function() {
                     return that.classify();
-                }, function(error) {
-                    that.toggleClassifyingStatus();
+                }, function(error) {                    
                     console.error(error);
                     throw error;
                 });
@@ -514,7 +506,7 @@ Hylar.prototype.classify = function() {
             }, 0);
         })
         .then(function() {
-            that.toggleClassifyingStatus();
+            emitter.emit('classif-ended');
             return true;
         });
 };
