@@ -190,12 +190,12 @@ Fact.prototype = {
             return undefined;
         } else {
             var valid,
-                conj = this.causedBy,
+                causes = this.causedBy,
                 explicitFact;
-            for (var i = 0; i < conj.length; i++) {
+            for (var i = 0; i < causes.length; i++) {
                 valid = true;
-                for (var j = 0; j < conj[i].length; j++) {
-                    explicitFact = conj[i][j];
+                for (var j = 0; j < causes[i].length; j++) {
+                    explicitFact = causes[i][j];
                     valid = valid && explicitFact.valid;
                 }
                 if (valid) {

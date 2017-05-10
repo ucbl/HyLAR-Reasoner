@@ -5,9 +5,11 @@
 var Fact = require('./Fact');
 var Logics = require('./Logics');
 var Utils = require('../Utils');
+
 var emitter = require('../Emitter');
 
 var q = require('q');
+
 
 /**
  * Core solver used to evaluate rules against facts
