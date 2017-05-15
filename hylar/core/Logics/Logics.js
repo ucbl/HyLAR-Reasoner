@@ -338,7 +338,7 @@ Logics = {
     },
 
     uniquesCausedBy: function(cb1, cb2) {
-        var min, max, newCb, found;
+        var min, max, newCb = [], found;
 
         if (cb1.length >= cb2.length) {
             min = cb2;
@@ -348,20 +348,25 @@ Logics = {
             max = cb2;
         }
 
-        newCb = min.slice();
-
         for (var i = 0; i < max.length; i++) {
             found = false;
             for (var j = 0; j < min.length; j++) {
-                if (Utils.equivalentSets(max[i], min[j])) {
+                if (this.containsFacts(min[j], max[i])) {
                     found = true;
+                    if (min.length != max.length) {
+                        min[j] = max[i];
+                    }
                     break;
                 }
             }
+
             if (!found) {
                 newCb.push(max[i]);
             }
         }
+
+        newCb = newCb.concat(min.slice());
+
         return newCb;
     },
 
