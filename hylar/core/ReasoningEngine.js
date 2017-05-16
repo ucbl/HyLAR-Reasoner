@@ -97,8 +97,8 @@ ReasoningEngine = {
 
             rederivationEvaluationLoop = function() {
                 FiAdd = Utils.uniques(FiAdd, FiAddNew);
-                Rred = Logics.restrictRuleSet(Rred, FiDel);
-                Solver.evaluateRuleSet(R, Utils.uniques(Fe, Fi))
+                Rred = Logics.restrictRuleSet(R, FiDel);
+                Solver.evaluateRuleSet(Rred, Utils.uniques(Fe, Fi))
                     .then(function(values) {
                         FiAddNew = values.cons;
                         if (Utils.uniques(FiAdd, FiAddNew).length > FiAdd.length) {
