@@ -27,7 +27,7 @@ var univ2 = baseOntoTxt + fs.readFileSync(path.resolve(__dirname + '/ontologies/
 var univ3 = baseOntoTxt + fs.readFileSync(path.resolve(__dirname + '/ontologies/University20-50k.ttl')).toString();*/
 
 //univ1=univ3;
-//univ1 += univ2 + univ3; //20k 
+//univ1 += univ2 + univ3; //20k
 
 Hylar.setRules(OWL2RL.equality.concat(OWL2RL.transitivityInverse, OWL2RL.equivalence, OWL2RL.subsumption));
 //Hylar.setRules(OWL2RL.equivalence);
