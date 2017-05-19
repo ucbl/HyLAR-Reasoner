@@ -1,6 +1,6 @@
 # HyLAR-Reasoner ![HyLAR icon](https://github.com/ucbl/HyLAR-Reasoner/blob/master/hylar-icon.png) 
 
-An OWL 2 RL incremental reasoner for the Web.
+A rule-based incremental reasoner for the Web.
 
 ## Table of contents
 
@@ -12,7 +12,7 @@ An OWL 2 RL incremental reasoner for the Web.
 
 ## Description
 
-HyLAR is a **Hy**brid **L**ocation-**A**gnostic OWL 2 RL incremental **R**easoner that uses known rdf-based librairies such as rdfstore.js, sparqljs and rdf-ext while providing an additional incremental reasoning engine. HyLAR can be either used locally as a npm module or globally as a server, and comes with a browserified version.
+HyLAR is a **Hy**brid **L**ocation-**A**gnostic incremental **R**easoner that uses known rdf-based librairies such as rdfstore.js, sparqljs and rdf-ext while providing an additional incremental reasoning engine. HyLAR can be either used locally as a npm module or globally as a server, and comes with a browserified version.
 
 HyLAR relies on the rdfstore.js triplestore as well as rdf-ext parsing librairies, and therefore supports JSON-LD, RDF/XML, N3 and Turtle serializations.
 SPARQL support is detailed [here](https://github.com/antoniogarrote/rdfstore-js#sparql-support). The inferences initially supported by HyLAR are described [at the bottom of this page](#supported-inferences). HyLAR supports custom business rules.
