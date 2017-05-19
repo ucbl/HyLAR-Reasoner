@@ -8,3 +8,4 @@ hylar/server/*.log
 hylar.log
 .vscode
 ./bench.txt
+bench_results
