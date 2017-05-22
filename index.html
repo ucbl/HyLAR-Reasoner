@@ -1,1 +1,27 @@
-<h1>HyLAR</h1>
+<!doctype html>
+<html>
+	<head>
+		<title>HyLAR docs</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+		<link rel="stylesheet" href="github-pages/main.css">			
+	</head>
+	<body>						
+		<nav id="navbar" class="navbar navbar-toggleable-md bg-faded fixed-top navbar-light"></nav>			
+		<div class="container-fluid">	
+			<div class="row">
+			<nav id="tree" class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar"></nav>
+			<main id="main" class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3"></main>		
+		</div>
+	</body>
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+	<script src="github-pages/display.js"></script>
+	
+	<script type="application/javascript">
+		displayPage('navbar', 'nav.html');
+		displayPage('tree', 'menu.html');
+		displayPage('main', 'content.html');
+	</script>
+
+	<script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>	
+</html>

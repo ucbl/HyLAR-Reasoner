@@ -1,0 +1,66 @@
+body {
+	padding-top: 125px;
+}
+
+tiny {
+	font-size: 16px;	
+}
+
+.navbar {
+	box-shadow: 2px 2px 15px 2px #BBB;
+	z-index: 1;
+}
+
+tree {
+	position: sticky;
+	padding: 20px;		
+	padding-right: 40px;
+	background-color: #eceeef;	
+}
+
+.sidebar {
+  position: fixed;
+  top: 51px;
+  bottom: 0;
+  left: 0;  
+  margin-top: 60px;
+  padding: 20px;
+  overflow-x: hidden;
+  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+  border-right: 1px solid #ddd;
+  border-top: 1px solid #ddd;
+ }
+
+.sidebar {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.sidebar .nav {
+  margin-bottom: 20px;
+}
+
+.sidebar .nav-item {
+  width: 100%;
+}
+
+.sidebar .nav-item + .nav-item {
+  margin-left: 0;
+}
+
+.sidebar .nav-link {
+  border-radius: 0;
+}
+
+ul li {
+	font-weight: 600;
+	padding: 5px;
+	list-style: none;	
+}
+
+ul li ul li {
+	padding: 5px;
+	font-weight: 400;
+	font-size: 14px;	
+	border-left: 1px solid #999;	
+}
