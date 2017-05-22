@@ -2,6 +2,37 @@ body {
 	padding-top: 125px;
 }
 
+h1 {
+  font-weight: 100;
+  padding-bottom: 20px;
+}
+
+h2 {
+  font-weight: 100;
+}
+
+blockquote {
+  background: linear-gradient(70deg, #eee, white);
+  padding-top: 5px;  
+  padding-bottom: 1px;  
+  padding-left: 12px;  
+  margin: 15px;  
+  margin-right: 50%;    
+  border-left: 10px solid #bbb;    
+  border-bottom: 1px solid #bbb;  
+}
+
+p em {
+  padding-left: 15px;
+  font-weight: 300;
+  font-style: normal; 
+}
+
+p strong {  
+  display: block;  
+  padding-bottom: 5px;  
+}
+
 tiny {
 	font-size: 16px;	
 }
@@ -44,23 +75,31 @@ tree {
   width: 100%;
 }
 
-.sidebar .nav-item + .nav-item {
-  margin-left: 0;
-}
-
-.sidebar .nav-link {
-  border-radius: 0;
-}
-
 ul li {
 	font-weight: 600;
-	padding: 5px;
+	margin-left: 1em;   
 	list-style: none;	
 }
 
-ul li ul li {
-	padding: 5px;
+li ul li {	
 	font-weight: 400;
+  font-color: blue;
 	font-size: 14px;	
-	border-left: 1px solid #999;	
+  margin-left: 0px;    
+  border-left: 1px solid #999;	    
+}
+
+.li-link {
+  background-repeat: no-repeat;
+  background-position: left 14px;
+  background-size: 14px 14px;  
+  padding-left: 1em;     
+}
+
+.li-main {
+   background-image: url('../hylar-icon.png');
+}
+
+ul li .li-link {    
+  background: linear-gradient(70deg, #eee, white)
 }
