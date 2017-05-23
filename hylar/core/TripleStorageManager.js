@@ -13,7 +13,7 @@ var q = require('q');
  * Relies on antonio garrote's rdfstore.js
  */
 
-function StorageManager() {
+function TripleStorageManager() {
     //
 }
 
@@ -22,7 +22,7 @@ function StorageManager() {
      * Register owl, rdfs and rdfs prefixes.
      * @returns {*}
      */
-StorageManager.prototype.init = function() {
+TripleStorageManager.prototype.init = function() {
     var deferred = q.defer(),
         that = this;
     new rdfstore.create(function(err, store) {
@@ -45,7 +45,7 @@ StorageManager.prototype.init = function() {
      * @param data
      * @returns {*|Promise}
      */
-StorageManager.prototype.loadRdfXml = function(data) {
+TripleStorageManager.prototype.loadRdfXml = function(data) {
         var that = this;
         return ParsingInterface.rdfXmlToTurtle(data)
         .then(function(ttl) {
@@ -61,7 +61,7 @@ StorageManager.prototype.loadRdfXml = function(data) {
  * @param query
  * @returns {*}
  */
-StorageManager.prototype.query = function(query) {
+TripleStorageManager.prototype.query = function(query) {
     var deferred = q.defer();    
     query = query.replace(/\\/g, '').replace(/(\n|\r)/g, '');    
     try {      
@@ -84,7 +84,7 @@ StorageManager.prototype.query = function(query) {
  * @param format Ontology mimetype
  * @returns {*}
  */
-StorageManager.prototype.load = function(data, format) {
+TripleStorageManager.prototype.load = function(data, format) {
     var deferred = q.defer();
 
     this.storage.load(format, data, function (err, r) {                
@@ -103,7 +103,7 @@ StorageManager.prototype.load = function(data, format) {
  * Empties the entire store.
  * @returns {*}
  */
-StorageManager.prototype.clear = function()  {
+TripleStorageManager.prototype.clear = function()  {
     return this.query('DELETE { ?a ?b ?c } WHERE { ?a ?b ?c }');
 };
 
@@ -113,7 +113,7 @@ StorageManager.prototype.clear = function()  {
  * @param ttl Triples to insert, in turtle.
  * @returns {*}
  */
-StorageManager.prototype.insert = function(ttl, graph) {
+TripleStorageManager.prototype.insert = function(ttl, graph) {
     var query;
     if (graph === undefined) {
         query = 'INSERT DATA { ' + ttl + ' }';
@@ -129,7 +129,7 @@ StorageManager.prototype.insert = function(ttl, graph) {
  * @param ttl Triples to insert, in turtle.
  * @returns {*}
  */
-StorageManager.prototype.delete = function(ttl, graph) {
+TripleStorageManager.prototype.delete = function(ttl, graph) {
     var query;
     if (graph === undefined) {
         query = 'DELETE DATA { ' + ttl + ' }';
@@ -144,7 +144,7 @@ StorageManager.prototype.delete = function(ttl, graph) {
  * for export purposes.
  * @returns {*}
  */
-StorageManager.prototype.getContent = function() {
+TripleStorageManager.prototype.getContent = function() {
     return this.query('CONSTRUCT { ?a ?b ?c } WHERE { ?a ?b ?c }');
 };
 
@@ -154,13 +154,13 @@ StorageManager.prototype.getContent = function() {
  * @param ttl Triples to import, in turtle.
  * @returns {*|Promise}
  */
-StorageManager.prototype.createStoreWith = function(ttl) {
+TripleStorageManager.prototype.createStoreWith = function(ttl) {
     return this.clear().then(function() {
         return this.insert(ttl)
     });
 };
 
-StorageManager.prototype.regenerateSideStore = function() {
+TripleStorageManager.prototype.regenerateSideStore = function() {
     var deferred = q.defer(),
         that = this;
 
@@ -171,7 +171,7 @@ StorageManager.prototype.regenerateSideStore = function() {
     return deferred.promise;
 };
 
-StorageManager.prototype.loadIntoSideStore = function(ttl, graph) {
+TripleStorageManager.prototype.loadIntoSideStore = function(ttl, graph) {
     var deferred = q.defer(),
         query = 'INSERT DATA { ' + ttl + ' }';
 
@@ -192,7 +192,7 @@ StorageManager.prototype.loadIntoSideStore = function(ttl, graph) {
     return deferred.promise;
 };
 
-StorageManager.prototype.querySideStore = function(query) {
+TripleStorageManager.prototype.querySideStore = function(query) {
     var deferred = q.defer();
     this.sideStore.execute(query,
         function(err, r) {
@@ -201,4 +201,4 @@ StorageManager.prototype.querySideStore = function(query) {
     return deferred.promise;
 };
 
-module.exports = StorageManager;
+module.exports = TripleStorageManager;

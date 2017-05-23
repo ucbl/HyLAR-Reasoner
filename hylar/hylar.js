@@ -12,7 +12,7 @@ var emitter = require('./core/Emitter');
 
 var Dictionary = require('./core/Dictionary'),
     ParsingInterface = require('./core/ParsingInterface'),
-    StorageManager = require('./core/StorageManager'),
+    TripleStorageManager = require('./core/TripleStorageManager'),
     Reasoner = require('./core/Reasoner'),
     OWL2RL = require('./core/OWL2RL'),
     Fact = require('./core/Logics/Fact'),
@@ -54,7 +54,7 @@ console.error = function(msg) {
 
 Hylar = function() {
     this.dict = new Dictionary();
-    this.sm = new StorageManager();
+    this.sm = new TripleStorageManager();
     this.rules = OWL2RL.test;
     this.queryHistory = [];
     this.sm.init();

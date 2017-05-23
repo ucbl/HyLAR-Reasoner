@@ -9,6 +9,12 @@ h1 {
 
 h2 {
   font-weight: 100;
+  padding-top: 30px; 
+  border-top: 1px solid #ddd; 
+}
+
+h3 {
+  font-weight: 200;
 }
 
 blockquote {
@@ -23,7 +29,8 @@ blockquote {
 }
 
 p em {
-  padding-left: 15px;
+  padding-left: 7px;
+  padding-right: 7px;
   font-weight: 300;
   font-style: normal; 
 }
@@ -102,4 +109,35 @@ li ul li {
 
 ul li .li-link {    
   background: linear-gradient(70deg, #eee, white)
+}
+
+pre {
+    margin-right: 40%; 
+    margin-left: 15px;   
+    height: 200px;              
+}
+
+.hljs  {  
+  height: 100%;
+  padding-left: 20px;  
+  background-color: #ddd;  
+  border: 1px solid #bbb;  
+  border-radius: 2px;  
+}
+
+.eval {
+  font-size: 12px;  
+  background-color: #ddd; 
+  margin-left: 16px;
+  padding: 2px;
+  border: 1px solid #bbb;  
+}
+
+.eval:hover, eval:active {  
+  text-decoration: none;
+  background-color: #eee;
+}
+
+.eval a:hover {
+  text-decoration: none;
 }
