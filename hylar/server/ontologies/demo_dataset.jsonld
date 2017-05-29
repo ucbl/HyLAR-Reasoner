@@ -1,0 +1,138 @@
+{
+  "@context": {
+    "gr": "http://purl.org/goodrelations/v1#",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "pv": "http://ns.inria.fr/provoc#",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "schema": "http://schema.org/",
+    "vocab": "http://www.my-online-store.fr/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "@graph": [
+    {
+      "@id": "http://www.apple.com/product/iPad3",
+      "@type": [
+        "gr:ProductOrService",
+        "vocab:Tablet"
+      ],
+      "gr:hasBrand": {
+        "@id": "http://www.apple.com/Apple"
+      }
+    },
+    {
+      "@id": "http://components.org/4G",
+      "@type": "pv:Component"
+    },
+    {
+      "@id": "http://centrecommercial-partdieu.com/stores/FNAC",
+      "@type": "gr:BusinessEntity",
+      "gr:hasBrand": {
+        "@id": "http://www.samsung.com/Samsung"
+      },
+      "gr:hasPOS": {
+        "@id": "http://centrecommercial-partdieu.com/stores/FNAC/location"
+      },
+      "gr:offers": [
+        {
+          "@id": "http://centrecommercial-partdieu.com/stores/FNAC/offering/GalaxyTab4"
+        },
+        {
+          "@id": "http://centrecommercial-partdieu.com/stores/FNAC/offering/GalaxyTab4_4G"
+        }
+      ]
+    },
+    {
+      "@id": "http://centrecommercial-partdieu.com/stores/FNAC/offering/GalaxyTab4",
+      "@type": "gr:Offering",
+      "gr:includes": {
+        "@id": "http://www.samsung.com/GalaxyTab4"
+      }
+    },
+    {
+      "@id": "gr:Location",
+      "owl:sameAs": {
+        "@id": "schema:Place"
+      }
+    },
+    {
+      "@id": "http://centrecommercial-partdieu.com/stores/FNAC/offering/iPad3",
+      "@type": "gr:Offering",
+      "gr:includes": {
+        "@id": "http://centrecommercial-partdieu.com/stores/FNAC/iPad3"
+      }
+    },
+    {
+      "@id": "http://www.cities.com/Lyon",
+      "@type": "schema:Place"
+    },
+    {
+      "@id": "http://www.apple.com/Apple",
+      "@type": "gr:Brand"
+    },
+    {
+      "@id": "http://www.samsung.com/GalaxyTab4_4G",
+      "@type": [
+        "vocab:Tablet",
+        "gr:ProductOrService"
+      ],
+      "pv:hasComponent": {
+        "@id": "http://components.org/4G"
+      },
+      "rdfs:subClassOf": {
+        "@id": "http://www.samsung.com/GalaxyTab4"
+      }
+    },
+    {
+      "@id": "http://centrecommercial-partdieu.com/stores/AppleStore/offering/iPad3",
+      "@type": "gr:Offering",
+      "gr:includes": {
+        "@id": "http://www.apple.com/product/iPad3"
+      }
+    },
+    {
+      "@id": "http://centrecommercial-partdieu.com/stores/AppleStore/location",
+      "schema:place": {
+        "@id": "http://www.cities.com/Lyon"
+      }
+    },
+    {
+      "@id": "http://centrecommercial-partdieu.com/stores/AppleStore",
+      "@type": "gr:BusinessEntity",
+      "gr:hasBrand": {
+        "@id": "http://www.apple.com/Apple"
+      },
+      "gr:hasPOS": {
+        "@id": "http://centrecommercial-partdieu.com/stores/AppleStore/location"
+      },
+      "gr:offers": {
+        "@id": "http://centrecommercial-partdieu.com/stores/AppleStore/offering/iPad3"
+      }
+    },
+    {
+      "@id": "http://centrecommercial-partdieu.com/stores/FNAC/location",
+      "schema:place": {
+        "@id": "http://www.cities.com/Lyon"
+      }
+    },
+    {
+      "@id": "http://www.samsung.com/GalaxyTab4",
+      "@type": [
+        "vocab:Tablet",
+        "gr:ProductOrService"
+      ]
+    },
+    {
+      "@id": "http://centrecommercial-partdieu.com/stores/FNAC/offering/GalaxyTab4_4G",
+      "@type": "gr:Offering",
+      "gr:includes": {
+        "@id": "http://www.samsung.com/GalaxyTab4_4G"
+      }
+    },
+    {
+      "@id": "http://www.samsung.com/Samsung",
+      "@type": "gr:Brand"
+    }
+  ]
+}
+

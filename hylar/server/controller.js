@@ -271,7 +271,7 @@ module.exports = {
                 res.status(200).send(asString);
             }
 
-            console.notify("Evaluation finished in " + processedTime - receivedReqTime + "ms.");
+            console.notify("Evaluation finished in " + (processedTime - receivedReqTime) + "ms.");
 
             if (req.headers.accept == 'application/sparql-results+json') {
                 res.status(200).send(results);

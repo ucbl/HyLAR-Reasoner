@@ -17,9 +17,7 @@ This method initializes the triplestore (required before any operation). It retu
 
 Allows loading an ontology with RDF/XML serialization. As rdfstore does not naturally allow it, it relies on the [Parsing Interface](#pars) to convert it in turtle format and load it afterwards. Returns a promise.
 
-<a href="#stor" class="eval" onclick="evalCode(this)">&nbsp;► Test Example&nbsp;</a> *RDF/XML Ontology Loading*
-
-```
+```[RDF/XML Ontology Loading]
 let data = `
 	<!-- Code: RDF/XML -->
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
@@ -53,9 +51,7 @@ load(hylar, data)
 
 This method is called by HyLAR. It does not provide inferencing at this level, as it is a direct call to rdfstore *Store.execute()* method. Hence, its execution is straightforward, and works for any kind of SPARQL query currently supported by rdfstore.
 
-<a href="#stor" class="eval" onclick="evalCode(this)">&nbsp;► Test Example&nbsp;</a> *INSERT and CONSTRUCT queries*
-
-```
+```[INSERT and CONSTRUCT queries]
 let hylar = new Hylar();
 
 hylar.sm
@@ -99,4 +95,5 @@ Clears the triplestore using a *DELETE WHERE { ?s ?p ?o }* SPARQL query.
 # Side Store Features
 
 The side store allows generating a temporary triplestore to process scope-limited queries.
+
 

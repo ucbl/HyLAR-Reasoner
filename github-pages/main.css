@@ -127,8 +127,7 @@ pre {
 
 .eval {
   font-size: 12px;  
-  background-color: #ddd; 
-  margin-left: 16px;
+  background-color: #ddd;   
   padding: 2px;
   border: 1px solid #bbb;  
 }
@@ -140,4 +139,8 @@ pre {
 
 .eval a:hover {
   text-decoration: none;
+}
+
+.ragged {
+  margin-left: 16px;
 }

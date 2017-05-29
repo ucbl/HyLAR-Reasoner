@@ -63,7 +63,7 @@ TripleStorageManager.prototype.loadRdfXml = function(data) {
  */
 TripleStorageManager.prototype.query = function(query) {
     var deferred = q.defer();    
-    query = query.replace(/\\/g, '').replace(/(\n|\r)/g, '');    
+    query = query.replace(/\\/g, '').replace(/(\n|\r)/g, '\n');
     try {      
         this.storage.execute(query, function (err, r) {
             if(err) {            
