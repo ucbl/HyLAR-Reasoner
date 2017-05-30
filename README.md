@@ -72,13 +72,25 @@ Each subject/predicate/object can be one of the following:
 
 A predicate can also be any of these comparison operators: `<`, `>`, `=`, `<=`, `=>`.
 
+**Rule add example (first param: the 'raw' rule, second param: the rule name)**
+
+```javascript
+h.parseAndAddRule('(?p1 http://www.w3.org/2002/07/owl#inverseOf ?p2) ^ (?x ?p1 ?y) -> (?y ?p2 ?x)', 'inverse-1');
+```
+**Rule removal example (first and only param: either the rule name or the raw rule)**
+
+```javascript
+h.removeRule('inverse-1');
+// Outputs "[HyLAR] Removed rule (?c1 type ?c2) ^ (?c3 type ?c2) -> (?c1 isSomehowRelatedTo ?c3)" if succeeded.
+```
+
 ## Use HyLAR in a browser
 
 HyLAR comes with a browserified version, available using bower: `bower install hylar`. Include the file `hylar-client.js` as a script in your page with this line:
 ```html
 <script src="path-to/hylar-client.js"></script>
 ```
-As in the node module version, you can instantiate HyLAR with `var h = new Hylar();` and call the same methods `query()`, `load()` and `addRules()`.
+As in the node module version, you can instantiate HyLAR with `var h = new Hylar();` and call the same methods `query()`, `load()` and `parseAndAddRule()`.
 
 ## Use HyLAR as a server
 
@@ -123,32 +135,32 @@ Puts an list of custom rules and adds it to the reasoner.
 
 The following OWL 2 rules are currently supported by HyLAR, based on the semantics detailed [here](https://www.w3.org/TR/owl2-profiles/#Reasoning_in_OWL_2_RL_and_RDF_Graphs_using_Rules):
 
-* `(?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2) ^ (?c2, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c3) -> (?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c3)`
+* `(?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2) ^ (?c2 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c3) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c3)`
 
-* `(?c1, http://www.w3.org/2000/01/rdf-schema#subClassOf, ?c2) ^ (?x, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?c1) -> (?x, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?c2)`
+* `(?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2) ^ (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c1) -> (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c2)`
 
-* `(?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) ^ (?p2, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p3) -> (?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p3)`
+* `(?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) ^ (?p2 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p3) -> (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p3)`
 
-* `(?p1, http://www.w3.org/2000/01/rdf-schema#subPropertyOf, ?p2) ^ (?x, ?p1, ?y) -> (?x, ?p2, ?y)`
+* `(?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) ^ (?x ?p1 ?y) -> (?x ?p2 ?y)`
 
-* `(?x, ?p, ?y) ^ (?p, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/2002/07/owl#TransitiveProperty) ^ (?y, ?p, ?z) -> (?x, ?p, ?z)`
+* `(?x ?p ?y) ^ (?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#TransitiveProperty) ^ (?y ?p ?z) -> (?x ?p ?z)`
 
-* `(?p1, http://www.w3.org/2002/07/owl#inverseOf, ?p2) ^ (?x, ?p1, ?y) -> (?y, ?p2, ?x)`
+* `(?p1 http://www.w3.org/2002/07/owl#inverseOf ?p2) ^ (?x ?p1 ?y) -> (?y ?p2 ?x)`
 
-* `(?p1, http://www.w3.org/2002/07/owl#inverseOf, ?p2) ^ (?x, ?p2, ?y) -> (?y, ?p1, ?x)`
+* `(?p1 http://www.w3.org/2002/07/owl#inverseOf ?p2) ^ (?x ?p2 ?y) -> (?y ?p1 ?x)`
 
-* `(?c1, http://www.w3.org/2002/07/owl#equivalentClass, ?c2) ^ (?x, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?c1) -> (?x, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?c2)`
+* `(?c1 http://www.w3.org/2002/07/owl#equivalentClass ?c2) ^ (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c1) -> (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c2)`
 
-* `(?c1, http://www.w3.org/2002/07/owl#equivalentClass, ?c2) ^ (?x, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?c2) -> (?x, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, ?c1)`
+* `(?c1 http://www.w3.org/2002/07/owl#equivalentClass ?c2) ^ (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c2) -> (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c1)`
 
-* `(?p1, http://www.w3.org/2002/07/owl#equivalentProperty, ?p2) ^ (?x, ?p1, y) -> (?x, ?p2, ?y)`
+* `(?p1 http://www.w3.org/2002/07/owl#equivalentProperty ?p2) ^ (?x ?p1 y) -> (?x ?p2 ?y)`
 
-* `(?p1, http://www.w3.org/2002/07/owl#equivalentProperty, ?p2) ^ (?x, ?p2, y) -> (?x, ?p1, ?y)`
+* `(?p1 http://www.w3.org/2002/07/owl#equivalentProperty ?p2) ^ (?x ?p2 y) -> (?x ?p1 ?y)`
 
-* `(?s1, http://www.w3.org/2002/07/owl#sameAs, ?s2) ^ (?s1, ?p, ?o) -> (?s2, ?p, ?o)`
+* `(?s1 http://www.w3.org/2002/07/owl#sameAs ?s2) ^ (?s1 ?p ?o) -> (?s2 ?p ?o)`
 
-* `(?p1, http://www.w3.org/2002/07/owl#sameAs, ?p2) ^ (?s, ?p1, ?o) -> (?s, ?p2, ?o)`
+* `(?p1 http://www.w3.org/2002/07/owl#sameAs ?p2) ^ (?s ?p1 ?o) -> (?s ?p2 ?o)`
 
-* `(?o1, http://www.w3.org/2002/07/owl#sameAs, ?o2) ^ (?s, ?p, ?o1) -> (?s, ?p, ?o2)`
+* `(?o1 http://www.w3.org/2002/07/owl#sameAs ?o2) ^ (?s ?p ?o1) -> (?s ?p ?o2)`
 
-* `(?x, http://www.w3.org/2002/07/owl#sameAs, ?y) ^ (?y, http://www.w3.org/2002/07/owl#sameAs, ?z) -> (?x, http://www.w3.org/2002/07/owl#sameAs, ?z)`
+* `(?x http://www.w3.org/2002/07/owl#sameAs ?y) ^ (?y http://www.w3.org/2002/07/owl#sameAs ?z) -> (?x http://www.w3.org/2002/07/owl#sameAs ?z)`
