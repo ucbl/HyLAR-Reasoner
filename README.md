@@ -33,10 +33,10 @@ which takes three parameters:
 - keepOldValues: A boolean: true to keep old values while classfying, false to overwrite the KB. Default is **false**.
 
 ```javascript
-var H = require('hylar'),
-    Hylar = new H();
+var Hylar = require('hylar'),
+    h = new Hylar();
     
-Hylar.load(rawOntology, mimeType, keepOldValues)
+h.load(rawOntology, mimeType, keepOldValues)
     .then(function(reponse) {
         console.log(response) // outputs true if succeeded
     });
@@ -49,7 +49,7 @@ Once loaded, HyLAR is able to process SPARQL queries using `query()`, with the f
 - query: A string, the SPARQL query
 
 ```javascript
-Hylar.query(query)
+h.query(query)
     .then(function(results) {
         console.log(results) // is a JSON object
     });
@@ -78,7 +78,7 @@ HyLAR comes with a browserified version, available using bower: `bower install h
 ```html
 <script src="path-to/hylar-client.js"></script>
 ```
-As in the node module version, you can instantiate HyLAR with `Hylar = new H();` and call the same methods `query()`, `load()` and `addRules()`.
+As in the node module version, you can instantiate HyLAR with `var h = new Hylar();` and call the same methods `query()`, `load()` and `addRules()`.
 
 ## Use HyLAR as a server
 
