@@ -13,6 +13,7 @@ var emitter = require('./core/Emitter');
 var Dictionary = require('./core/Dictionary'),
     ParsingInterface = require('./core/ParsingInterface'),
     TripleStorageManager = require('./core/TripleStorageManager'),
+    Logics = require('./core/Logics/Logics'),
     Reasoner = require('./core/Reasoner'),
     OWL2RL = require('./core/OWL2RL'),
     Fact = require('./core/Logics/Fact'),
@@ -525,7 +526,68 @@ Hylar.prototype.addRule = function(rule, name) {
     this.rules[this.rules.length-1].setName(name);
 };
 
-Hylar.prototype.removeRule = function(index) {
+Hylar.prototype.parseAndAddRule = function(rawRule, name) {
+    var rule;
+    try {
+        rule = Logics.parseRule(rawRule, name);
+    } catch(e) {
+        console.error('Error when parsing rule ' + rule);
+        return;
+    }
+    this.rules.push(rule);
+};
+
+Hylar.prototype.removeRule = function(nameOrRaw) {
+    var newRules = [],
+        parsedRule = '';
+    try {
+        parsedRule = Logics.parseRule(nameOrRaw);
+    } catch(e) {}
+    for (var i = 0; i < this.rules.length; i++) {
+        if ((this.rules[i].name != nameOrRaw) && (this.rules[i].toString() != parsedRule.toString())) {
+            newRules.push(this.rules[i]);
+        } else {
+            console.notify("Removed rule " + this.rules[i].toString());
+        }
+    }
+    this.rules = newRules;
+};
+
+Hylar.prototype.getRuleName = function(raw) {
+    var newRules = [],
+        parsedRule = '';
+    try {
+        parsedRule = Logics.parseRule(raw);
+    } catch(e) {
+        console.error('Error when parsing rule ' + raw);
+        return
+    }
+
+    for (var i = 0; i < this.rules.length; i++) {
+        if (this.rules[i].toString() == parsedRule.toString()) {
+            return this.rules[i].name;
+        }
+    }
+};
+
+Hylar.prototype.getRuleId = function(raw) {
+    var newRules = [],
+        parsedRule = '';
+    try {
+        parsedRule = Logics.parseRule(raw);
+    } catch(e) {
+        console.error('Error when parsing rule ' + raw);
+        return
+    }
+
+    for (var i = 0; i < this.rules.length; i++) {
+        if (this.rules[i].toString() == parsedRule.toString()) {
+            return i;
+        }
+    }
+};
+
+Hylar.prototype.removeRuleById = function(index) {
     var newRules = [];
     for (var i = 0; i < this.rules.length; i++) {
         if (i!=index) {

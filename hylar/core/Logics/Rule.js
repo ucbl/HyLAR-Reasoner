@@ -45,12 +45,12 @@ Rule.prototype = {
     toString: function() {
         var factConj = '';
         for(var key in this.causes) {
-            factConj += ' ^ ' + this.causes[key].toString().substring(1);
+            factConj += ' ^ ' + this.causes[key].toString().substring(1).replace(/,/g, '');
         }
         for(var key in this.operatorCauses) {
-            factConj += ' ^ ' + this.operatorCauses[key].toString().substring(1);
+            factConj += ' ^ ' + this.operatorCauses[key].toString().substring(1).replace(/,/g, '');
         }
-        return factConj.substr(3) + ' -> ' + this.consequences.toString().substring(1);
+        return factConj.substr(3) + ' -> ' + this.consequences.toString().substring(1).replace(/,/g, '');
     },
 
     setName: function(name) {

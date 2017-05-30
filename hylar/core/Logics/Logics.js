@@ -378,7 +378,7 @@ Logics = {
         return parsedRuleList;
     },
 
-    parseRule: function(strRule) {
+    parseRule: function(strRule, name) {
 
         var tripleRegex = RegularExpressions.TRIPLE,
             atomRegex = RegularExpressions.ATOM,
@@ -401,7 +401,7 @@ Logics = {
             }
         }
 
-        return new Rule(causes, consequences);
+        return new Rule(causes, consequences, name);
     },
 
     isBNode: function(elem) {

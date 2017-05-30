@@ -1,7 +1,7 @@
 {
   "name": "hylar",
   "main": "hylar/hylar.js",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "dependencies": {
     "bluebird": "^3.4.111",
     "body-parser": "^1.11.0",
@@ -46,6 +46,7 @@
     "node": ">=0.10.0"
   },
   "scripts": {
+    "clientize": "browserify hylar/hylar.js -o hylar-client.js",
     "test": "export rm=incremental &&mocha test/adaptation_test test/tests.js && export rm=tagBased && mocha test/tests.js && mocha test/logics_test.js",
     "irtest": "export rm=incremental &&mocha test/tests.js",
     "tbtest": "export rm=tagBased &&mocha test/tests.js",
