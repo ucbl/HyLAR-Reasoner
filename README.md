@@ -81,7 +81,7 @@ h.parseAndAddRule('(?p1 http://www.w3.org/2002/07/owl#inverseOf ?p2) ^ (?x ?p1 ?
 
 ```javascript
 h.removeRule('inverse-1');
-// Outputs "[HyLAR] Removed rule (?c1 type ?c2) ^ (?c3 type ?c2) -> (?c1 isSomehowRelatedTo ?c3)" if succeeded.
+// Outputs "[HyLAR] Removed rule (?p1 inverseOf ?p2) ^ (?x ?p1 ?y) -> (?y ?p2 ?x)" if succeeded.
 ```
 
 ## Use HyLAR in a browser
