@@ -107,7 +107,7 @@ var rules = {
 };
 
 describe('Adaptation tests', function () {
-    it('should execute each task on the client side', function () {
+    it('should execute each task on the correct side', function () {
         var rsq = rules.queryingLocation,
             rsc = rules.classifLocation,
        promises = [Solver.evaluateRuleSet(rsq, fs1),
@@ -127,40 +127,45 @@ describe('Adaptation tests', function () {
             Solver.evaluateRuleSet(rsq, fs8),
             Solver.evaluateRuleSet(rsc, fs8)];
         
-        return Promise.all(promises).then(function(t) {
-            t[0].length.should.equal(1);
-            t[0][0].object.should.equal('server');
-            t[2].length.should.equal(1);
-            t[2][0].object.should.equal('client');
-            t[4].length.should.equal(1);
-            t[4][0].object.should.equal('client');
-            t[6].length.should.equal(1);
-            t[6][0].object.should.equal('client');
-            t[8].length.should.equal(1);
-            t[8][0].object.should.equal('server');
-            t[10].length.should.equal(1);
-            t[10][0].object.should.equal('client');
-            t[12].length.should.equal(1);
-            t[12][0].object.should.equal('client');
-            t[14].length.should.equal(1);
-            t[14][0].object.should.equal('client');
+        return Promise.all(promises).then(function(t) {            
+            t[0].cons.length.should.equal(1);
+            t[0].cons[0].object.should.equal('server');
+            t[2].cons.length.should.equal(1);
+            t[2].cons[0].object.should.equal('client');
+            t[4].cons.length.should.equal(1);
+            t[4].cons[0].object.should.equal('client');
+            
+            t[6].cons.forEach(function(e) {
+                console.log(JSON.stringify(e.asString, null, 3))    
+            })
+            
+            t[6].cons.length.should.equal(1);
+            t[6].cons[0].object.should.equal('client');
+            t[8].cons.length.should.equal(1);
+            t[8].cons[0].object.should.equal('server');
+            t[10].cons.length.should.equal(1);
+            t[10].cons[0].object.should.equal('client');
+            t[12].cons.length.should.equal(1);
+            t[12].cons[0].object.should.equal('client');
+            t[14].cons.length.should.equal(1);
+            t[14].cons[0].object.should.equal('client');
 
-            t[1].length.should.equal(1);
-            t[1][0].object.should.equal('server');
-            t[3].length.should.equal(1);
-            t[3][0].object.should.equal('server');
-            t[5].length.should.equal(1);
-            t[5][0].object.should.equal('client');
-            t[7].length.should.equal(1);
-            t[7][0].object.should.equal('client');
-            t[9].length.should.equal(1);
-            t[9][0].object.should.equal('server');
-            t[11].length.should.equal(1);
-            t[11][0].object.should.equal('server');
-            t[13].length.should.equal(1);
-            t[13][0].object.should.equal('server');
-            t[15].length.should.equal(1);
-            t[15][0].object.should.equal('server');
+            t[1].cons.length.should.equal(1);
+            t[1].cons[0].object.should.equal('server');
+            t[3].cons.length.should.equal(1);
+            t[3].cons[0].object.should.equal('server');
+            t[5].cons.length.should.equal(1);
+            t[5].cons[0].object.should.equal('client');
+            t[7].cons.length.should.equal(1);
+            t[7].cons[0].object.should.equal('client');
+            t[9].cons.length.should.equal(1);
+            t[9].cons[0].object.should.equal('server');
+            t[11].cons.length.should.equal(1);
+            t[11].cons[0].object.should.equal('server');
+            t[13].cons.length.should.equal(1);
+            t[13].cons[0].object.should.equal('server');
+            t[15].cons.length.should.equal(1);
+            t[15].cons[0].object.should.equal('server');
         })
 
         
