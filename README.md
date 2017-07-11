@@ -2,6 +2,8 @@
 
 A rule-based incremental reasoner for the Web.
 
+![Build status on node 6, 5, 4](https://api.travis-ci.org/ucbl/HyLAR-Reasoner.svg?branch=master)
+
 ## Table of contents
 
 - [Description](#description)
