@@ -83,8 +83,16 @@ TripleStorageManager.prototype.query = function(query) {
         );
     } catch(e) {
         try {
-            this.storage = rdflib.sparqlUpdateParser(query, this.storage, 'http://default.com','application/sparql-update').insert;
-            deferred.resolve(true);
+            formattedQuery = rdflib.sparqlUpdateParser(query, this.storage, 'http://default.com');
+            rdflib.UpdateManager(this.storage).update_statement(formattedQuery.statements[0]);
+            /*this.storage.query(formattedQuery,
+                function(result){
+                    r.push(result);
+                }, null,
+                function() {
+                    deferred.resolve(r);
+                }
+            );*/
         } catch(e) {
             console.error("Query parse error: " + e.toString());
         }
