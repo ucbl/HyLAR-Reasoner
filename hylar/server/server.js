@@ -14,7 +14,7 @@ var ontoDir = Controller.configuration.ontoDir,
 
 process.on('uncaughtException', function(err) {
     console.error('Uncaught Exception');
-    throw err;
+    console.error(err);
 });
 
 app.set('view engine', 'ejs');
