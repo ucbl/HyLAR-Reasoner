@@ -7,12 +7,12 @@ var Fact = require('./Logics/Fact'),
     RegularExpressions = require('./RegularExpressions'),
     Utils = require('./Utils');
 
-var rdfext = require('rdf-ext')(),
+var rdfext = require('rdf-ext'),
     q = require('q'),
     sparqlJs = require('sparqljs'),
 
     SparqlParser = new sparqlJs.Parser(),
-    RdfXmlParser = new rdfext.RdfXmlParser();
+    RdfXmlParser = new rdfext.Parsers();
 
 /**
  * The parsing interface, for transforming facts, triples, turtle or even results bindings
