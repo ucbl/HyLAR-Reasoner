@@ -473,11 +473,11 @@ Hylar.prototype.classify = function() {
             var facts = [], triple, _fs, f;
             for (var i = 0; i <  r.triples.length; i++) {
                 triple = r.triples[i];
-                if(!(
+                /*if(!(
                         triple.subject.interfaceName == "BlankNode" ||
                         triple.predicate.interfaceName == "BlankNode" ||
                         triple.object.interfaceName == "BlankNode"
-                    )) {
+                    )) {*/
                     _fs = that.dict.get(triple);
                     if(!_fs) {
                         f = ParsingInterface.tripleToFact(triple, true, (that.rMethod == Reasoner.process.it.incrementally));
@@ -486,7 +486,7 @@ Hylar.prototype.classify = function() {
                     } else {
                         facts = facts.concat(_fs);
                     }
-                }
+                //}
 
             }
             return Reasoner.evaluate(facts, [], [], that.rMethod, that.rules);

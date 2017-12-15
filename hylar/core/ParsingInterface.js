@@ -108,6 +108,10 @@ ParsingInterface = {
 
         if (entityStr === undefined) return false;
 
+        if (entityStr.startsWith('_')) {
+            return entityStr;
+        }
+
         if (entityStr.match(dblQuoteInStrPattern)) {
             dblQuoteMatch = entityStr.match(dblQuoteInStrPattern);
             entityStr = dblQuoteMatch[1] + dblQuoteMatch[2].replace(/(")/g, "'") + dblQuoteMatch[3]; //temporary ; has to be debbuged asap            
