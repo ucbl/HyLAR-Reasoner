@@ -104,13 +104,13 @@ OWL2RL = {
             //prp-eqp1
             new Rule([
                     new Fact(EquivalentProperty, '?p1', '?p2', [], true),
-                    new Fact('?p1', '?x', 'y', [], true)],
+                    new Fact('?p1', '?x', '?y', [], true)],
                 [new Fact('?p2', '?x', '?y', [], true)], "Property-Equivalence-1"),
 
             //prp-eqp2
             new Rule([
                     new Fact(EquivalentProperty, '?p1', '?p2', [], true),
-                    new Fact('?p2', '?x', 'y', [], true)],
+                    new Fact('?p2', '?x', '?y', [], true)],
                 [new Fact('?p1', '?x', '?y', [], true)], "Property-Equivalence-2")
         ],
 
