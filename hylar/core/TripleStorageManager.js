@@ -5,7 +5,8 @@
 var ParsingInterface = require('./ParsingInterface');
 var Prefixes = require('./Prefixes');
 
-var rdfstore = require('rdfstore');
+//var rdfstore = require('rdfstore');
+var rdflib = require('rdflib');
 var q = require('q');
 
 /**
@@ -25,7 +26,10 @@ function TripleStorageManager() {
 TripleStorageManager.prototype.init = function() {
     var deferred = q.defer(),
         that = this;
-    new rdfstore.create(function(err, store) {
+    this.storage = rdflib.graph();
+    deferred.resolve();
+
+    /*new rdfstore.create(function(err, store) {
         if(err) {
             deferred.reject(err);
         } else {
@@ -35,7 +39,7 @@ TripleStorageManager.prototype.init = function() {
             that.storage.setPrefix('rdfs', Prefixes.RDFS);
             deferred.resolve();
         }
-    });
+    });*/
     return deferred.promise;
 };
 
@@ -62,9 +66,39 @@ TripleStorageManager.prototype.loadRdfXml = function(data) {
  * @returns {*}
  */
 TripleStorageManager.prototype.query = function(query) {
-    var deferred = q.defer();    
-    query = query.replace(/\\/g, '').replace(/(\n|\r)/g, '\n');
-    try {      
+    var deferred = q.defer(),
+        query = query.replace(/\\/g, '').replace(/(\n|\r)/g, '\n'),
+        r = [],
+        formattedQuery;
+
+    try {
+        formattedQuery = rdflib.SPARQLToQuery(query, false, this.storage);
+        this.storage.query(formattedQuery,
+            function(result){
+                r.push(result);
+            }, null,
+            function() {
+                deferred.resolve(r);
+            }
+        );
+    } catch(e) {
+        try {
+            formattedQuery = rdflib.sparqlUpdateParser(query, this.storage, 'http://default.com');
+            rdflib.UpdateManager(this.storage).update_statement(formattedQuery.statements[0]);
+            /*this.storage.query(formattedQuery,
+                function(result){
+                    r.push(result);
+                }, null,
+                function() {
+                    deferred.resolve(r);
+                }
+            );*/
+        } catch(e) {
+            console.error("Query parse error: " + e.toString());
+        }
+    }
+
+    /*try {
         this.storage.execute(query, function (err, r) {
             if(err) {            
                 deferred.reject(err);
@@ -74,7 +108,7 @@ TripleStorageManager.prototype.query = function(query) {
         });
     } catch(e) {
         deferred.resolve(true);
-    }
+    }*/
     return deferred.promise;
 };
 
@@ -87,7 +121,14 @@ TripleStorageManager.prototype.query = function(query) {
 TripleStorageManager.prototype.load = function(data, format) {
     var deferred = q.defer();
 
-    this.storage.load(format, data, function (err, r) {                
+    try {
+        rdflib.parse(data, this.storage, 'http://default.com', format, function(done) {
+            deferred.resolve(done);
+        });
+
+    } catch(e) {
+        deferred.reject(e);
+    }/*function (err, r) {
         if(err) {
             console.error(err.toString());
             deferred.reject(err);
@@ -95,7 +136,7 @@ TripleStorageManager.prototype.load = function(data, format) {
             console.notify(r + ' triples loaded.');
             deferred.resolve(r);
         }
-    });
+    });*/
     return deferred.promise;
 };
 
