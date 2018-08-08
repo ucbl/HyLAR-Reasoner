@@ -1,4 +1,4 @@
-# HyLAR-Reasoner ![HyLAR icon](https://github.com/ucbl/HyLAR-Reasoner/blob/master/hylar-icon.png) 
+# HyLAR-Reasoner ![HyLAR icon](https://raw.githubusercontent.com/ucbl/HyLAR-Reasoner/master/hylar-icon.png) 
 
 A rule-based incremental reasoner for the Web.
 
