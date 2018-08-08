@@ -154,25 +154,13 @@ Hylar.prototype.treatLoad = function(ontologyTxt, mimeType, graph) {
     var that = this;
     switch(mimeType) {
         case 'application/xml':
-            return that.sm.loadRdfXml(ontologyTxt, graph)
-                .then(function() {
-                    console.notify('Store initialized successfully.');
-                    return that.classify();
-                });
-            break;
         case 'application/rdf+xml':
-            return that.sm.loadRdfXml(ontologyTxt, graph)
-                .then(function() {
-                    return that.classify();
-                });
-            break;
         case false:
             console.error('Unrecognized or unsupported mimetype. ' +
-                'Supported formats are rdf/xml, jsonld, turtle, n3');
+                'Supported formats are jsonld, turtle, n3');
             return false;
             break;
         default:
-
             return that.sm.load(ontologyTxt, mimeType, graph)
                 .then(function() {
                     return that.classify();

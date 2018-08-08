@@ -39,23 +39,6 @@ TripleStorageManager.prototype.init = function() {
     return deferred.promise;
 };
 
-    /**
-     * Suitable function to load rdf/xml ontologies
-     * using rdf-ext parser.
-     * @param data
-     * @returns {*|Promise}
-     */
-TripleStorageManager.prototype.loadRdfXml = function(data) {
-        var that = this;
-        return ParsingInterface.rdfXmlToTurtle(data)
-        .then(function(ttl) {
-            return that.load(ttl, 'text/turtle');
-        }, function(error) {
-            console.error(error);
-            throw error;
-        });
-};
-
 /**
  * Launches a query against the triplestore.
  * @param query
