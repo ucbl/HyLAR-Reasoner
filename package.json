@@ -3,44 +3,27 @@
   "main": "hylar/hylar.js",
   "version": "1.8.4",
   "dependencies": {
-    "bluebird": "^3.4.111",
-    "body-parser": "^1.11.0",
-    "chalk": "^1.1.3",
-    "chr": "^2.0.10",
-    "ejs": "^2.4.1",
+    "bluebird": "^3.5.1",
+    "body-parser": "^1.18.3",
+    "chalk": "^2.4.1",
+    "chr": "^3.3.2",
+    "ejs": "^2.6.1",
     "escape-html": "^1.0.3",
-    "express": "^4.11.1",
-    "gulp-debug": "~2.1.2",
+    "express": "^4.16.3",
     "md5": "^2.2.1",
-    "mime-types": "^2.1.10",
-    "multer": "^1.1.0",
-    "q": "^1.0.1",
-    "rdf-ext": "^0.2.6",
-    "rdflib": "^0.7.2",
-    "rdfstore": "0.9.14",
+    "mime-types": "^2.1.19",
+    "multer": "^1.3.1",
+    "q": "^1.5.1",
+    "rdf-ext": "^1.1.0",
+    "rdflib": "^0.17.0",
+    "rdfstore": "0.9.17",
     "sparql": "^0.1.3",
-    "sparqljs": "^1.1.3"
+    "sparqljs": "^2.0.3"
   },
   "devDependencies": {
-    "brfs": "^1.4.3",
-    "browserify": "^13.1.1",
-    "gulp-browserify": "^0.5.1",
-    "gulp-clean": "^0.3.1",
-    "gulp-concat": "^2.6.0",
-    "gulp-replace": "^0.5.4",
-    "jasmine-core": "^2.5.2",
-    "karma": "^1.3.0",
-    "karma-coverage": "^1.1.1",
-    "karma-jasmine": "^1.0.2",
-    "karma-mocha": "^1.3.0",
-    "karma-phantomjs-launcher": "^1.0.2",
-    "karma-requirejs": "^1.1.0",
-    "mocha": "^3.2.0",
-    "mochify": "^2.18.1",
-    "request": "^2.74.0",
-    "requirejs": "^2.3.2",
-    "run-sequence": "^1.1.2",
-    "should": "^10.0.0"
+    "brfs": "^2.0.0",
+    "browserify": "^16.2.2",
+    "mocha": "^5.2.0"
   },
   "engines": {
     "node": ">=0.10.0"
@@ -50,7 +33,8 @@
     "test": "export rm=incremental &&mocha test/logics_test.js test/tests.js && export rm=tagBased && mocha test/tests.js && mocha test/logics_test.js",
     "irtest": "export rm=incremental &&mocha test/tests.js",
     "tbtest": "export rm=tagBased &&mocha test/tests.js",
-    "build": "browserify -t brfs test/benchmark_tests_lite.js > bench.js"
+    "build": "browserify -t brfs test/benchmark_tests_lite.js > bench.js",
+	"start": "node hylar/server/server.js"
   },
   "bin": {
     "hylar": "hylar/server/server.js"
