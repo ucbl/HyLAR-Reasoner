@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+var h = require('../hylar');
+
 var express = require('express'),
     app = express(),
     bodyParser = require('body-parser'),
@@ -13,8 +15,8 @@ var ontoDir = Controller.configuration.ontoDir,
     upload = multer({ dest: ontoDir });
 
 process.on('uncaughtException', function(err) {
-    console.error('Uncaught Exception');
-    console.error(err);
+    h.displayError('Uncaught Exception');
+    h.displayError(err);
 });
 
 app.set('view engine', 'ejs');
@@ -86,6 +88,6 @@ app.post('/explore/rules', Controller.addRules, Controller.renderRules);
 app.get('/demo', Controller.geoloc);
 return app.listen(port, function() {
     Utils._instanceid = port;
-    console.notify('HyLAR is running on port ' + port + '.');
+    h.notify('HyLAR is running on port ' + port + '.');
     return;
 });

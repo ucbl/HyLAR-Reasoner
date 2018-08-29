@@ -13,7 +13,7 @@
         The knowledge base currently contains <%- kb.length %> facts (<%- nbExplicit %> explicit, <%- nbImplicit %>  implicit).<br/>
         The KB is currently <% if (consistent) { %>consistent.<% } else { %><a href="/explore/%23default/IFALSE">inconsistent</a>.<% } %>
 
-        <h3>Upload an ontology (RDF/XML, Turtle, N3 or JSON-LD)</h3>
+        <h3>Upload an ontology (Turtle, N3 or JSON-LD)</h3>
         <form target="_self" enctype="multipart/form-data" method="post" action="<%- contextPath %>/ontology">
             <input type="file" name="file"/>
             <input type=submit value="Upload"/>

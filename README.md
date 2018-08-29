@@ -1,8 +1,8 @@
-# HyLAR-Reasoner ![HyLAR icon](https://github.com/ucbl/HyLAR-Reasoner/blob/master/hylar-icon.png) 
+# HyLAR-Reasoner ![HyLAR icon](https://raw.githubusercontent.com/ucbl/HyLAR-Reasoner/master/hylar-icon.png) 
 
 A rule-based incremental reasoner for the Web.
 
-![Build status on node 6, 5, 4](https://api.travis-ci.org/ucbl/HyLAR-Reasoner.svg?branch=master)
+![Build status on node 8, 7, 6, 5](https://api.travis-ci.org/ucbl/HyLAR-Reasoner.svg?branch=master)
 
 ## Table of contents
 
@@ -16,7 +16,7 @@ A rule-based incremental reasoner for the Web.
 
 HyLAR is a **Hy**brid **L**ocation-**A**gnostic incremental **R**easoner that uses known rdf-based librairies such as rdfstore.js, sparqljs and rdf-ext while providing an additional incremental reasoning engine. HyLAR can be either used locally as a npm module or globally as a server, and comes with a browserified version.
 
-HyLAR relies on the rdfstore.js triplestore as well as rdf-ext parsing librairies, and therefore supports JSON-LD, RDF/XML, N3 and Turtle serializations.
+HyLAR relies on the rdfstore.js triplestore and therefore supports JSON-LD, N3 and Turtle serializations.
 SPARQL support is detailed [here](https://github.com/antoniogarrote/rdfstore-js#sparql-support). The inferences initially supported by HyLAR are described [at the bottom of this page](#supported-inferences). HyLAR supports custom business rules.
 
 ## Use HyLAR locally
@@ -31,7 +31,7 @@ To use HyLAR locally, just launch
 Import HyLAR, then classify your ontology and query it using `load()`,
 which takes three parameters:
 - rawOntology: A string, the raw ontology.
-- mimeType: A string, either `application/rdf+xml`, `text/turtle`, `text/n3` or `application/ld+json`.
+- mimeType: A string, either `text/turtle`, `text/n3` or `application/ld+json`.
 - keepOldValues: A boolean: true to keep old values while classfying, false to overwrite the KB. Default is **false**.
 
 ```javascript
@@ -119,7 +119,7 @@ Loads, parses and classify the file **{FILE_NAME}** from the ontology directory.
 Allows classifying an ontology as a string, which requires its original serialization type.
 > **Body parameters** 
 >`filename` the absolute path of the ontology file to be processed.
-> `mimetype` the serialization of the ontology (mimetype, one of application/rdf+xml, text/turtle, text/n3 or application/ld+json).
+> `mimetype` the serialization of the ontology (mimetype, one of text/turtle, text/n3 or application/ld+json).
 
 #### GET /query
 SPARQL queries your loaded ontology as does `Hylar.query()`.

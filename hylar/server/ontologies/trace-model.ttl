@@ -1,0 +1,326 @@
+@prefix ktbs: <http://liris.cnrs.fr/silex/2009/ktbs#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+ktbs:ObselType a owl:Class .
+
+# assistance events
+<https://www.aidaxis.com/ns/assistanceLaunch> a ktbs:ObselType ;
+    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .
+
+<https://www.aidaxis.com/ns/assistanceLaunch/sessionBegin> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/assistanceLaunch> ;
+    ktbs:hasAttributeRange xsd:dateTime ;
+    skos:prefLabel "horodatage du début de session utilisateur" .
+
+<https://www.aidaxis.com/ns/assistanceLaunch/sourceId> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/assistanceLaunch> ;
+    ktbs:hasAttributeRange xsd:string ;
+    skos:prefLabel "identifiant du composant générant l'évènement" .
+
+<https://www.aidaxis.com/ns/assistanceLaunch/assistanceFile> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/assistanceLaunch> ;
+    ktbs:hasAttributeRange xsd:string ;
+    skos:prefLabel "nom du fichier d'assistance" .
+
+
+
+<https://www.aidaxis.com/ns/assistanceStop> a ktbs:ObselType ;
+    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .
+
+<https://www.aidaxis.com/ns/assistanceStop/sessionBegin> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/assistanceStop> ;
+    ktbs:hasAttributeRange xsd:dateTime ;
+    skos:prefLabel "horodatage du début de session utilisateur" .
+
+<https://www.aidaxis.com/ns/assistanceStop/sourceId> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/assistanceStop> ;
+    ktbs:hasAttributeRange xsd:string ;
+    skos:prefLabel "identifiant du composant générant l'évènement" .
+
+<https://www.aidaxis.com/ns/assistanceStop/assistanceFile> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/assistanceStop> ;
+    ktbs:hasAttributeRange xsd:string ;
+    skos:prefLabel "nom du fichier d'assistance" .
+
+<https://www.aidaxis.com/ns/assistanceStop/hasStart> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/assistanceStop> ;
+    ktbs:hasAttributeRange <https://www.aidaxis.com/ns/assistanceLaunch> ;
+    skos:prefLabel "lien vers l'obsel de départ" .
+
+
+
+<https://www.aidaxis.com/ns/consultationAnswer> a ktbs:ObselType ;
+    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .
+
+<https://www.aidaxis.com/ns/consultationAnswer/sessionBegin> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/consultationAnswer> ;
+    ktbs:hasAttributeRange xsd:dateTime ;
+    skos:prefLabel "horodatage du début de session utilisateur" .
+
+<https://www.aidaxis.com/ns/consultationAnswer/sourceId> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/consultationAnswer> ;
+    ktbs:hasAttributeRange xsd:string ;
+    skos:prefLabel "identifiant du composant générant l'évènement" .
+
+<https://www.aidaxis.com/ns/consultationAnswer/assistanceFile> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/consultationAnswer> ;
+    ktbs:hasAttributeRange xsd:string ;
+    skos:prefLabel "nom du fichier d'assistance" .
+
+<https://www.aidaxis.com/ns/consultationAnswer/value> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/consultationAnswer> ;
+    ktbs:hasAttributeRange xsd:string ;
+    skos:prefLabel "valeur de la réponse à la consultation" .
+
+<https://www.aidaxis.com/ns/consultationAnswer/options> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/consultationAnswer> ;
+    ktbs:hasAttributeRange xsd:string ; # incorrect type ! should be array
+    skos:prefLabel "options de la consultation" .
+
+
+<https://www.aidaxis.com/ns/end> a ktbs:ObselType ;
+    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .
+
+<https://www.aidaxis.com/ns/end/sessionBegin> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/end> ;
+    ktbs:hasAttributeRange xsd:dateTime ;
+    skos:prefLabel "horodatage du début de session utilisateur" .
+
+<https://www.aidaxis.com/ns/end/sourceId> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/end> ;
+    ktbs:hasAttributeRange xsd:string ;
+    skos:prefLabel "identifiant du composant générant l'évènement" .
+
+<https://www.aidaxis.com/ns/end/assistanceFile> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/end> ;
+    ktbs:hasAttributeRange xsd:string ;
+    skos:prefLabel "nom du fichier d'assistance" .
+
+<https://www.aidaxis.com/ns/end/hasStart> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/end> ;
+    ktbs:hasAttributeRange <https://www.aidaxis.com/ns/trigger> ;
+    skos:prefLabel "lien vers l'obsel de départ" .
+
+
+<https://www.aidaxis.com/ns/trigger> a ktbs:ObselType ;
+    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .
+
+<https://www.aidaxis.com/ns/trigger/sessionBegin> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/trigger> ;
+    ktbs:hasAttributeRange xsd:dateTime ;
+    skos:prefLabel "horodatage du début de session utilisateur" .
+
+<https://www.aidaxis.com/ns/trigger/sourceId> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/trigger> ;
+    ktbs:hasAttributeRange xsd:string ;
+    skos:prefLabel "identifiant du composant générant l'évènement" .
+
+<https://www.aidaxis.com/ns/trigger/assistanceFile> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/trigger> ;
+    ktbs:hasAttributeRange xsd:string ;
+    skos:prefLabel "nom du fichier d'assistance" .
+
+<https://www.aidaxis.com/ns/trigger/targetType> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/trigger> ;
+    ktbs:hasAttributeRange rdf:type ;
+    skos:prefLabel "type de l'interaction cible" .
+
+<https://www.aidaxis.com/ns/trigger/targetId> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/trigger> ;
+    ktbs:hasAttributeRange <https://www.aidaxis.com/ns/AssistanceEvent> ;
+    skos:prefLabel "identifiant de l'interaction cible" .
+
+
+
+# user events
+<https://www.aidaxis.com/ns/caretEvent> a ktbs:ObselType ;
+    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .
+
+<https://www.aidaxis.com/ns/caretEvent/sessionBegin> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/caretEvent> ;
+    ktbs:hasAttributeRange xsd:dateTime ;
+    skos:prefLabel "horodatage du début de session utilisateur" .
+
+<https://www.aidaxis.com/ns/caretEvent/sourceId> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/caretEvent> ;
+    ktbs:hasAttributeRange xsd:string ;
+    skos:prefLabel "identifiant du composant générant l'évènement" .
+
+<https://www.aidaxis.com/ns/caretEvent/assistanceFile> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/caretEvent> ;
+    ktbs:hasAttributeRange xsd:string ;
+    skos:prefLabel "nom du fichier d'assistance" .
+
+
+
+<https://www.aidaxis.com/ns/focusGained> a ktbs:ObselType ;
+    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .
+
+<https://www.aidaxis.com/ns/focusGained/sessionBegin> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/focusGained> ;
+    ktbs:hasAttributeRange xsd:dateTime ;
+    skos:prefLabel "horodatage du début de session utilisateur" .
+
+<https://www.aidaxis.com/ns/focusGained/sourceId> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/focusGained> ;
+    ktbs:hasAttributeRange xsd:string ;
+    skos:prefLabel "identifiant du composant générant l'évènement" .
+
+<https://www.aidaxis.com/ns/focusGained/assistanceFile> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/focusGained> ;
+    ktbs:hasAttributeRange xsd:string ;
+    skos:prefLabel "nom du fichier d'assistance" .
+
+
+
+<https://www.aidaxis.com/ns/focusLost> a ktbs:ObselType ;
+    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .
+
+<https://www.aidaxis.com/ns/focusLost/sessionBegin> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/focusLost> ;
+    ktbs:hasAttributeRange xsd:dateTime ;
+    skos:prefLabel "horodatage du début de session utilisateur" .
+
+<https://www.aidaxis.com/ns/focusLost/sourceId> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/focusLost> ;
+    ktbs:hasAttributeRange xsd:string ;
+    skos:prefLabel "identifiant du composant générant l'évènement" .
+
+<https://www.aidaxis.com/ns/focusLost/assistanceFile> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/focusLost> ;
+    ktbs:hasAttributeRange xsd:string ;
+    skos:prefLabel "nom du fichier d'assistance" .
+
+
+
+<https://www.aidaxis.com/ns/mouseClicked> a ktbs:ObselType ;
+    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .
+
+<https://www.aidaxis.com/ns/mouseClicked/sessionBegin> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/mouseClicked> ;
+    ktbs:hasAttributeRange xsd:dateTime ;
+    skos:prefLabel "horodatage du début de session utilisateur" .
+
+<https://www.aidaxis.com/ns/mouseClicked/sourceId> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/mouseClicked> ;
+    ktbs:hasAttributeRange xsd:string ;
+    skos:prefLabel "identifiant du composant générant l'évènement" .
+
+<https://www.aidaxis.com/ns/mouseClicked/assistanceFile> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/mouseClicked> ;
+    ktbs:hasAttributeRange xsd:string ;
+    skos:prefLabel "nom du fichier d'assistance" .
+
+
+
+<https://www.aidaxis.com/ns/mouseExited> a ktbs:ObselType ;
+    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .
+
+<https://www.aidaxis.com/ns/mouseExited/sessionBegin> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/mouseExited> ;
+    ktbs:hasAttributeRange xsd:dateTime ;
+    skos:prefLabel "horodatage du début de session utilisateur" .
+
+<https://www.aidaxis.com/ns/mouseExited/sourceId> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/mouseExited> ;
+    ktbs:hasAttributeRange xsd:string ;
+    skos:prefLabel "identifiant du composant générant l'évènement" .
+
+<https://www.aidaxis.com/ns/mouseExited/assistanceFile> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/mouseExited> ;
+    ktbs:hasAttributeRange xsd:string ;
+    skos:prefLabel "nom du fichier d'assistance" .
+
+
+
+<https://www.aidaxis.com/ns/mouseMoved> a ktbs:ObselType ;
+    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .
+
+<https://www.aidaxis.com/ns/mouseMoved/sessionBegin> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/mouseMoved> ;
+    ktbs:hasAttributeRange xsd:dateTime ;
+    skos:prefLabel "horodatage du début de session utilisateur" .
+
+<https://www.aidaxis.com/ns/mouseMoved/sourceId> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/mouseMoved> ;
+    ktbs:hasAttributeRange xsd:string ;
+    skos:prefLabel "identifiant du composant générant l'évènement" .
+
+<https://www.aidaxis.com/ns/mouseMoved/assistanceFile> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/mouseMoved> ;
+    ktbs:hasAttributeRange xsd:string ;
+    skos:prefLabel "nom du fichier d'assistance" .
+
+
+
+<https://www.aidaxis.com/ns/mouseOver> a ktbs:ObselType ;
+    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .
+
+<https://www.aidaxis.com/ns/mouseOver/sessionBegin> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/mouseOver> ;
+    ktbs:hasAttributeRange xsd:dateTime ;
+    skos:prefLabel "horodatage du début de session utilisateur" .
+
+<https://www.aidaxis.com/ns/mouseOver/sourceId> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/mouseOver> ;
+    ktbs:hasAttributeRange xsd:string ;
+    skos:prefLabel "identifiant du composant générant l'évènement" .
+
+<https://www.aidaxis.com/ns/mouseOver/assistanceFile> a ktbs:AttributeType ;
+    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/mouseOver> ;
+    ktbs:hasAttributeRange xsd:string ;
+    skos:prefLabel "nom du fichier d'assistance" .
+
+
+#super type
+<https://www.aidaxis.com/ns/AssistanceEvent> a ktbs:ObselType .
+
+<https://www.aidaxis.com/ns/UserEvent> a ktbs:ObselType .
+
+<https://www.aidaxis.com/ns/TargetApplicationEvent> a ktbs:ObselType .
+
+
+#Assistance events
+<https://www.aidaxis.com/ns/end> a ktbs:ObselType ;
+    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .
+
+<https://www.aidaxis.com/ns/trigger> a ktbs:ObselType ;
+    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .
+
+<https://www.aidaxis.com/ns/assistanceLaunch> a ktbs:ObselType ;
+    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .
+
+<https://www.aidaxis.com/ns/assistanceStop> a ktbs:ObselType ;
+    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .
+
+<https://www.aidaxis.com/ns/consultationAnswer> a ktbs:ObselType ;
+    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .
+
+
+
+#User event
+<https://www.aidaxis.com/ns/caretEvent> a ktbs:ObselType ;
+    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/UserEvent> .
+
+<https://www.aidaxis.com/ns/focusGained> a ktbs:ObselType ;
+    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/UserEvent> .
+
+<https://www.aidaxis.com/ns/focusLost> a ktbs:ObselType ;
+    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/UserEvent> .
+
+<https://www.aidaxis.com/ns/mouseClicked> a ktbs:ObselType ;
+    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/UserEvent> .
+
+<https://www.aidaxis.com/ns/mouseExited> a ktbs:ObselType ;
+    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/UserEvent> .
+
+<https://www.aidaxis.com/ns/mouseMoved> a ktbs:ObselType ;
+    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/UserEvent> .
+
+<https://www.aidaxis.com/ns/mouseOver> a ktbs:ObselType ;
+    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/UserEvent> .

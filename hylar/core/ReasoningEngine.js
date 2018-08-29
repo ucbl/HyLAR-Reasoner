@@ -2,6 +2,8 @@
  * Created by Spadon on 11/09/2015.
  */
 
+var h = require('../hylar');
+
 var Logics = require('./Logics/Logics'),
     Solver = require('./Logics/Solver'),
     Utils = require('./Utils');
@@ -127,7 +129,7 @@ ReasoningEngine = {
                             });
                         }
                     }).fail(function(err) {
-                        console.error(err);
+                        h.displayError(err);
                     });
             };
 

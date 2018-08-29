@@ -7,12 +7,9 @@ var Fact = require('./Logics/Fact'),
     RegularExpressions = require('./RegularExpressions'),
     Utils = require('./Utils');
 
-var rdfext = require('rdf-ext')(),
-    q = require('q'),
+var q = require('q'),
     sparqlJs = require('sparqljs'),
-
-    SparqlParser = new sparqlJs.Parser(),
-    RdfXmlParser = new rdfext.RdfXmlParser();
+    SparqlParser = new sparqlJs.Parser()    
 
 /**
  * The parsing interface, for transforming facts, triples, turtle or even results bindings
@@ -35,30 +32,8 @@ String.prototype.format = function() {
     }
 };
 
-
-
-    /**
-     * Parses rdf/xml to turtle using rdf ext.
-     * @param data Raw rdf/xml data (str)
-     * @returns {*}
-     */
+    
 ParsingInterface = {
-    rdfXmlToTurtle: function(data) {
-        var deferred = q.defer(), triple;
-        RdfXmlParser.parse(data, function(parsed, err) {
-            if(err) deferred.reject(err);
-
-            var triples = parsed._graph,
-                turtle = '';
-            for (var i = 0; i < triples.length; i++) {
-                triple = triples[i];
-                turtle += triple + '\n';
-            }
-            deferred.resolve(turtle);
-        });
-        return deferred.promise;
-    },
-
     /**
      * Transforms a triple into a fact.
      * @param t The triple

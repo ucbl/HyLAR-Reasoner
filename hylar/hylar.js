@@ -21,31 +21,6 @@ var Dictionary = require('./core/Dictionary'),
 
 var logFile = 'hylar.log';
 
-console.notify = function(msg) {
-    console.log(chalk.green('[HyLAR] ') + msg);
-    try {
-        fs.appendFileSync(logFile, new Date().toString() + ' ' + msg + '\n');
-    } catch (e) {
-        //return Errors.FileIO(logFile);
-    }
-};
-console.warn = function(msg) {
-    console.log(chalk.yellow('[HyLAR] WARNING: ') + msg);
-    try {
-        fs.appendFileSync(logFile, new Date().toString() + ' ' + msg + '\n');
-    } catch (e) {
-        //return Errors.FileIO(logFile);
-    }
-};
-console.error = function(msg) {
-    console.log(chalk.white.bgRed('[HyLAR]') + ' ' + chalk.bold('ERROR:') + ' ' + msg);
-    try {
-        fs.appendFileSync(logFile, new Date().toString() + ' ' + msg + '\n');
-    } catch (e) {
-        //return Errors.FileIO(logFile);
-    }
-};
-
 /**
  * HyLAR main module.
  * @author Mehdi Terdjimi
@@ -62,13 +37,52 @@ Hylar = function() {
     this.computeRuleDependencies();  
 };
 
+/**
+ * Custom error display
+ * @returns {*}
+ */
+Hylar.displayError = function(msg) {
+    console.log(chalk.white.bgRed('[HyLAR]') + ' ' + chalk.bold('ERROR:') + ' ' + msg);
+    try {
+        fs.appendFileSync(logFile, new Date().toString() + ' ' + msg + '\n');
+    } catch (e) {
+        return Errors.FileIO(logFile);
+    }
+};
+
+/**
+ * Custom warning display
+ * @returns {*}
+ */
+Hylar.displayWarning = function(msg) {
+    console.log(chalk.yellow('[HyLAR] WARNING: ') + msg);
+    try {
+        fs.appendFileSync(logFile, new Date().toString() + ' ' + msg + '\n');
+    } catch (e) {
+        return Errors.FileIO(logFile);
+    }
+}
+
+/**
+ * Notifications of HyLAR (similar to console.log behavior)
+ * @returns {*}
+ */
+Hylar.notify = function(msg) {
+    console.log(chalk.green('[HyLAR] ') + msg);
+    try {
+        fs.appendFileSync(logFile, new Date().toString() + ' ' + msg + '\n');
+    } catch (e) {
+        return Errors.FileIO(logFile);
+    }
+}
+
 Hylar.prototype.computeRuleDependencies = function() {
     Reasoner.updateRuleDependencies(this.rules);        
 };      
 
 Hylar.prototype.clean = function() {
     this.dict = new Dictionary();
-    this.sm = new StorageManager();
+    this.sm = new TripleStorageManager();
     this.sm.init();
 };
 
@@ -78,7 +92,7 @@ Hylar.prototype.clean = function() {
 Hylar.prototype.setIncremental = function() {
     this.rMethod = Reasoner.process.it.incrementally;
     this.dict.turnOffForgetting();
-    console.notify('Reasoner set as incremental.');
+    Hylar.notify('Reasoner set as incremental.');
 };
 
 /**
@@ -87,7 +101,7 @@ Hylar.prototype.setIncremental = function() {
 Hylar.prototype.setTagBased = function() {
     this.rMethod = Reasoner.process.it.tagBased;
     this.dict.turnOnForgetting();
-    console.notify('Reasoner set as tag-based.');
+    Hylar.notify('Reasoner set as tag-based.');
 };
 
 /**
@@ -95,7 +109,7 @@ Hylar.prototype.setTagBased = function() {
  */
 Hylar.prototype.setIncrementalBf = function() {
     this.rMethod = Reasoner.process.it.incrementallyBf;
-    console.notify('Reasoner set as incremental b/f.');
+    Hylar.notify('Reasoner set as incremental b/f.');
 };
 
 Hylar.prototype.setRules = function(rules) {
@@ -154,30 +168,18 @@ Hylar.prototype.treatLoad = function(ontologyTxt, mimeType, graph) {
     var that = this;
     switch(mimeType) {
         case 'application/xml':
-            return that.sm.loadRdfXml(ontologyTxt, graph)
-                .then(function() {
-                    console.notify('Store initialized successfully.');
-                    return that.classify();
-                });
-            break;
         case 'application/rdf+xml':
-            return that.sm.loadRdfXml(ontologyTxt, graph)
-                .then(function() {
-                    return that.classify();
-                });
-            break;
         case false:
-            console.error('Unrecognized or unsupported mimetype. ' +
-                'Supported formats are rdf/xml, jsonld, turtle, n3');
+            Hylar.error('Unrecognized or unsupported mimetype. ' +
+                'Supported formats are jsonld, turtle, n3');
             return false;
             break;
         default:
-
             return that.sm.load(ontologyTxt, mimeType, graph)
                 .then(function() {
                     return that.classify();
                 }, function(error) {                    
-                    console.error(error);
+                    Hylar.displayError(error);
                     throw error;
                 });
     }
@@ -351,11 +353,11 @@ Hylar.prototype.treatUpdate = function(update, type) {
         initialResponse = Utils.emptyPromise([ { triples:[] } ]);
 
     if(type == 'insert') {
-        console.notify('Starting insertion.');
+        Hylar.notify('Starting insertion.');
         iTriples = iTriples.concat(update.triples);
 
     } else if(type  == 'delete') {
-        console.notify('Starting deletion.');
+        Hylar.notify('Starting deletion.');
         for (var i = 0; i < update.triples.length; i++) {
             if (Utils.tripleContainsVariable(update.triples[i])) {
                 deleteQueryBody = ParsingInterface.tripleToTurtle(update.triples[i]);
@@ -383,7 +385,7 @@ Hylar.prototype.treatUpdate = function(update, type) {
                 insert: ParsingInterface.factsToTurtle(derivations.additions),
                 delete: ParsingInterface.factsToTurtle(derivations.deletions)
             };
-            console.notify('Update completed.');
+            Hylar.notify('Update completed.');
             return insDel;
         })
 
@@ -442,7 +444,7 @@ Hylar.prototype.registerDerivations = function(derivations, graph) {
     var factsToBeAdded = derivations.additions,
         factsToBeDeleted = derivations.deletions;
     graph = this.dict.resolveGraph(graph);
-    console.notify('Registering derivations to dictionary...');
+    Hylar.notify('Registering derivations to dictionary...');
 
     for (var i = 0; i < factsToBeDeleted.length; i++) {
         if (factsToBeDeleted[i].toString() == 'IFALSE') {
@@ -456,7 +458,7 @@ Hylar.prototype.registerDerivations = function(derivations, graph) {
         this.dict.put(factsToBeAdded[i], graph);
     }
 
-    console.notify('Registered successfully.');
+    Hylar.notify('Registered successfully.');
 };
 
 /**
@@ -466,7 +468,7 @@ Hylar.prototype.registerDerivations = function(derivations, graph) {
  */
 Hylar.prototype.classify = function() {
     var that = this, factsChunk, chunks = [], chunksNb = 5000, insertionPromises = [];
-    console.notify('Classification started.');
+    Hylar.notify('Classification started.');
     
     return this.sm.query('CONSTRUCT { ?a ?b ?c } WHERE { ?a ?b ?c }')
         .then(function(r) {
@@ -500,7 +502,7 @@ Hylar.prototype.classify = function() {
             return;
         })
         .then(function() {            
-            console.notify('Classification succeeded.');
+            Hylar.notify('Classification succeeded.');
             
             return Promise.reduce(chunks, function(previous, chunk) {                
                 return that.sm.insert(chunk);
@@ -531,7 +533,7 @@ Hylar.prototype.parseAndAddRule = function(rawRule, name) {
     try {
         rule = Logics.parseRule(rawRule, name);
     } catch(e) {
-        console.error('Error when parsing rule ' + rule);
+        Hylar.displayError('Error when parsing rule ' + rule);
         return;
     }
     this.rules.push(rule);
@@ -547,7 +549,7 @@ Hylar.prototype.removeRule = function(nameOrRaw) {
         if ((this.rules[i].name != nameOrRaw) && (this.rules[i].toString() != parsedRule.toString())) {
             newRules.push(this.rules[i]);
         } else {
-            console.notify("Removed rule " + this.rules[i].toString());
+            Hylar.notify("Removed rule " + this.rules[i].toString());
         }
     }
     this.rules = newRules;
@@ -559,7 +561,7 @@ Hylar.prototype.getRuleName = function(raw) {
     try {
         parsedRule = Logics.parseRule(raw);
     } catch(e) {
-        console.error('Error when parsing rule ' + raw);
+        Hylar.displayError('Error when parsing rule ' + raw);
         return
     }
 
@@ -576,7 +578,7 @@ Hylar.prototype.getRuleId = function(raw) {
     try {
         parsedRule = Logics.parseRule(raw);
     } catch(e) {
-        console.error('Error when parsing rule ' + raw);
+        Hylar.displayError('Error when parsing rule ' + raw);
         return
     }
 
@@ -593,7 +595,7 @@ Hylar.prototype.removeRuleById = function(index) {
         if (i!=index) {
             newRules.push(this.rules[i]);
         } else {
-            console.notify("Removed rule " + this.rules[i].toString());
+            Hylar.notify("Removed rule " + this.rules[i].toString());
         }
     }
     this.rules = newRules;
@@ -608,7 +610,7 @@ Hylar.prototype.resetRules = function() {
 };
 
 Hylar.prototype.quiet = function() {
-    console.notify = function(){};
+    Hylar.notify = function(){};
 };
 
 module.exports = Hylar;

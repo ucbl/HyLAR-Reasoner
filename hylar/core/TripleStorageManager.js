@@ -2,7 +2,8 @@
  * Created by pc on 20/11/2015.
  */
 
-var ParsingInterface = require('./ParsingInterface');
+var h = require('../hylar')
+
 var Prefixes = require('./Prefixes');
 
 //var rdfstore = require('rdfstore');
@@ -41,23 +42,6 @@ TripleStorageManager.prototype.init = function() {
         }
     });*/
     return deferred.promise;
-};
-
-    /**
-     * Suitable function to load rdf/xml ontologies
-     * using rdf-ext parser.
-     * @param data
-     * @returns {*|Promise}
-     */
-TripleStorageManager.prototype.loadRdfXml = function(data) {
-        var that = this;
-        return ParsingInterface.rdfXmlToTurtle(data)
-        .then(function(ttl) {
-            return that.load(ttl, 'text/turtle');
-        }, function(error) {
-            console.error(error);
-            throw error;
-        });
 };
 
 /**
@@ -130,10 +114,10 @@ TripleStorageManager.prototype.load = function(data, format) {
         deferred.reject(e);
     }/*function (err, r) {
         if(err) {
-            console.error(err.toString());
+            h.displayError(err.toString());
             deferred.reject(err);
         } else {
-            console.notify(r + ' triples loaded.');
+            h.notify(r + ' triples loaded.');
             deferred.resolve(r);
         }
     });*/
