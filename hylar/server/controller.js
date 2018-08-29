@@ -11,7 +11,6 @@ var escape = require('escape-html');
 
 var h = require('../hylar');
 var Hylar = new h();
-var Utils = require('../core/Utils');
 var Logics = require('../core/Logics/Logics');
 
 var appDir = path.dirname(require.main.filename),
@@ -105,11 +104,11 @@ module.exports = {
             Hylar.load(rawOntology, mimeType, req.query.keepoldvalues, graph, req.body.reasoningMethod)
                 .then(function() {
                     req.processingDelay  = new Date().getTime() - initialTime;
-                    console.notify("Classification finished in " + req.processingDelay + "ms.");
+                    h.notify("Classification finished in " + req.processingDelay + "ms.");
                     next();
                 })
                 .catch(function(error) {
-                    console.error(error.stack);
+                    h.displayError(error.stack);
                     res.status(500).send(error.stack);
                 });
     },
@@ -197,7 +196,7 @@ module.exports = {
                 res.status(200).send(asString);
             }
 
-            console.notify("Evaluation finished in " + (processedTime - receivedReqTime) + "ms.");
+            h.notify("Evaluation finished in " + (processedTime - receivedReqTime) + "ms.");
 
             if (req.headers.accept == 'application/sparql-results+json') {
                 res.status(200).send(results);
@@ -211,7 +210,7 @@ module.exports = {
             }
         })
         .catch(function(error) {
-            console.error(error.stack);
+            h.displayError(error.stack);
             res.status(500).send(error.stack);
         })
 
@@ -335,7 +334,7 @@ module.exports = {
             try {
                 Hylar.query(req.body.query).then(function (result) {
                     processingDelay = new Date().getTime() - start;
-                    console.notify("Evaluation finished in " + processingDelay + "ms.");
+                    h.notify("Evaluation finished in " + processingDelay + "ms.");
                     req.sparqlResults = result;
                     req.sparqlQuery = req.body.query;
                     Hylar.addToQueryHistory(req.sparqlQuery, true);
