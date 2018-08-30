@@ -153,6 +153,8 @@ ParsingInterface = {
      * @returns {*}
      */
     parseSPARQL: function(query) {
+        // Hack to remove potential CONSTRUCT issues with GRAPH in the first pattern
+        query = query.replace(RegularExpressions.CONSTRUCT_GRAPH_1ST_PATTERN, "$1$2$3");
         return SparqlParser.parse(query);
     },
 
@@ -250,12 +252,16 @@ ParsingInterface = {
     },
 
     buildUpdateQueryWithConstructResults: function(initialQuery, results) {
-        switch(this.isInsert(initialQuery)) {
-            case true:
-                return "INSERT DATA { " + this.triplesToTurtle(results.triples) + " }";
-                break;
-            default:
-                return "DELETE DATA { " + this.triplesToTurtle(results.triples) + " }";
+        if (results.hasOwnProperty('triples')) {
+            switch (this.isInsert(initialQuery)) {
+                case true:
+                    return "INSERT DATA { " + this.triplesToTurtle(results.triples) + " }";
+                    break;
+                default:
+                    return "DELETE DATA { " + this.triplesToTurtle(results.triples) + " }";
+            }
+        } else {
+            return ""
         }
     }
 };

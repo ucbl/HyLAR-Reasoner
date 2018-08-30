@@ -5,8 +5,10 @@
 var fs = require('fs'),
     path = require('path'),
     request = require('request'),
-    mime = require('mime-types');
+    mime = require('mime-types'),
+	xml2js = require('xml2js');
 
+var builder = new xml2js.Builder({ "rootName": "sparql" });
 var escape = require('escape-html');
 
 var h = require('../hylar');
@@ -177,42 +179,74 @@ module.exports = {
     },
 
     processSPARQL: function(req, res) {
+        var sendWithContentNegotiation = function() {
+            if (req.accepts('application/sparql-results+xml')) {
+                res.set('Content-Type', 'application/sparql-results+xml');
+                jsonRes.$ = {
+                    "xmlns": "http://www.w3.org/2005/sparql-results#",
+                    "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+                    "xsi:schemaLocation": "http://www.w3.org/2001/sw/DataAccess/rf1/result2.xsd"
+                }
+                res.send(builder.buildObject(jsonRes));
+            } else {
+                res.set('Content-Type', 'application/sparql-results+json');
+                res.send(jsonRes);
+            }
+        }
+
         var initialTime = req.query.time,
             asString = req.body.asString,
             receivedReqTime = new Date().getTime(),
             requestDelay =  receivedReqTime - initialTime,
             processedTime;
 
+		var jsonRes = {
+			"head": {
+				"link": [''],
+				"vars": ['']
+			},
+			"results": {
+				"bindings": ['']
+			}
+		}
 
-        Hylar.query(req.body.query, req.body.reasoningMethod)
-        .then(function(results) {
-            processedTime = new Date().getTime();
+		var query = req.body.query || req.body.update || req.query.query
+					
+		if (query) {
+			Hylar.query(query, req.body.reasoningMethod)
+			.then(function(results) {
+				processedTime = new Date().getTime();
+				h.notify("Evaluation finished in " + (processedTime - receivedReqTime) + "ms.");
 
-            if (asString && results.triples && results.triples.length) {
-                asString = "";
-                for (var i = 0; i < results.triples.length; i++) {
-                    asString += results.triples[i].toString() + " ";
+                if (asString) {
+                    if (results.triples && results.triples.length) {
+                        asString = "";
+                        for (var i = 0; i < results.triples.length; i++) {
+                            asString += results.triples[i].toString() + " ";
+                        }
+                        res.send(asString);
+                    }
+                } else {
+                    // Build results as W3C sparql result standardization
+                    if (results.length > 0) {
+                        jsonRes.head.vars = Object.keys(results[0])
+                        jsonRes.results.bindings = results
+                    }
+                    jsonRes.head = {
+                        processingDelay: processedTime - receivedReqTime,
+                        requestDelay: requestDelay,
+                        serverTime: new Date().getTime()
+                    }
+                    sendWithContentNegotiation()
                 }
-                res.status(200).send(asString);
-            }
-
-            h.notify("Evaluation finished in " + (processedTime - receivedReqTime) + "ms.");
-
-            if (req.headers.accept == 'application/sparql-results+json') {
-                res.status(200).send(results);
-            } else {
-                res.status(200).send({
-                    data: results,
-                    processingDelay: processedTime - receivedReqTime,
-                    requestDelay: requestDelay,
-                    serverTime: new Date().getTime()
-                });
-            }
-        })
-        .catch(function(error) {
-            h.displayError(error.stack);
-            res.status(500).send(error.stack);
-        })
+			})
+			.catch(function(error) {
+				h.displayError(error.stack);
+				res.status(500).send(error.stack);
+			})
+		} else {
+			sendWithContentNegotiation()
+		}
 
     },
 

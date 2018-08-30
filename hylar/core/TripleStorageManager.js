@@ -2,8 +2,6 @@
  * Created by pc on 20/11/2015.
  */
 
-var h = require('../hylar')
-
 var Prefixes = require('./Prefixes');
 
 var rdfstore = require('rdfstore');
@@ -73,10 +71,8 @@ TripleStorageManager.prototype.load = function(data, format) {
 
     this.storage.load(format, data, function (err, r) {                
         if(err) {
-            h.displayError(err.toString());
             deferred.reject(err);
         } else {
-            h.notify(r + ' triples loaded.');
             deferred.resolve(r);
         }
     });

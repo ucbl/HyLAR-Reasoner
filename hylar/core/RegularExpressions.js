@@ -18,5 +18,6 @@ module.exports = {
     NO_BRACKET_BODYQUERY: /^[^\{]*\{([^\{\}]*)\}\s*$/i,
     SINGLE_BRACKET_BODYQUERY: /^[^\{]*\{[^\{\}]*\{([^\{\}]*)\}\s*\}\s*$/i,
     CONSTRUCT_BODYQUERY_WITH_BRACKETS: /\s*CONSTRUCT\s*\{.*\}\s*WHERE\s*(.*)/i,
-    DELETE_OR_INSERT_STATEMENT: /^[\s]*(delete|insert)(.+)$/i
+    DELETE_OR_INSERT_STATEMENT: /^[\s]*(delete|insert)(.+)$/i,
+    CONSTRUCT_GRAPH_1ST_PATTERN: /(CONSTRUCT \{ )GRAPH <.+> \{( .+ )\}( \} WHERE.+)/i
 };

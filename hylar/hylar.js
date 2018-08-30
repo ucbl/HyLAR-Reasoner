@@ -176,9 +176,10 @@ Hylar.prototype.treatLoad = function(ontologyTxt, mimeType, graph) {
             break;
         default:
             return that.sm.load(ontologyTxt, mimeType, graph)
-                .then(function() {
+                .then(function(r) {
+                    Hylar.notify(r + ' triples loaded in the store.');
                     return that.classify();
-                }, function(error) {                    
+                }, function(error) {
                     Hylar.displayError(error);
                     throw error;
                 });
@@ -191,8 +192,13 @@ Hylar.prototype.treatLoad = function(ontologyTxt, mimeType, graph) {
  * @param reasoningMethod The desired reasoning method if inserting/deleting
  */
 Hylar.prototype.query = function(query, reasoningMethod) {
-    var sparql = ParsingInterface.parseSPARQL(query),
+    try {
+		var sparql = ParsingInterface.parseSPARQL(query),
         singleWhereQueries = [], that = this;
+	} catch (e) {
+		Hylar.displayError('Problem with SPARQL query: ' + query);
+		throw e;
+	}
 
     this.updateReasoningMethod(reasoningMethod);
 
