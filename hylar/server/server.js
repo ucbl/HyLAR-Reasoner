@@ -7,6 +7,9 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     multer  = require('multer');
 
+var asciify = require("asciify"),
+    chalkRainbow = require('chalk-rainbow')
+
 var Controller = require('./controller'),
     Utils = require('../core/Utils');
 
@@ -89,6 +92,9 @@ app.post('/explore/rules', Controller.addRules, Controller.renderRules);
 app.get('/demo', Controller.geoloc);
 return app.listen(port, function() {
     Utils._instanceid = port;
-    h.notify('HyLAR is running on port ' + port + '.');
+    asciify('HyLAR', {font: 'larry3d'}, function (err, result) {
+        console.log(chalkRainbow(result));
+        h.notify(`⭐ Now running on port ${port} ⭐`)
+    });
     return;
 });

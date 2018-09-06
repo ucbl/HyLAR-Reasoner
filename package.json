@@ -3,6 +3,7 @@
   "main": "hylar/hylar.js",
   "version": "1.8.5",
   "dependencies": {
+    "asciify": "^1.3.5",
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.3",
     "chalk": "^2.4.1",
