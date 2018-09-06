@@ -4,6 +4,7 @@
 
 var fs = require('fs'),
     chalk = require('chalk'),
+    chalkRainbow = require('chalk-rainbow')
     q = require('q');
 
 var Promise = require('bluebird');
@@ -42,7 +43,7 @@ Hylar = function() {
  * @returns {*}
  */
 Hylar.displayError = function(msg) {
-    console.log(chalk.white.bgRed('[HyLAR]') + ' ' + chalk.bold('ERROR:') + ' ' + msg);
+    console.log(`${chalk.red('[HyLAR] ')} 😰 ${chalk.bold('ERROR:')} ${msg}`);
     try {
         fs.appendFileSync(logFile, new Date().toString() + ' ' + msg + '\n');
     } catch (e) {
@@ -55,7 +56,7 @@ Hylar.displayError = function(msg) {
  * @returns {*}
  */
 Hylar.displayWarning = function(msg) {
-    console.log(chalk.yellow('[HyLAR] WARNING: ') + msg);
+    console.log(`${chalk.yellow('[HyLAR] ')} 😐 WARNING: ${msg}`);
     try {
         fs.appendFileSync(logFile, new Date().toString() + ' ' + msg + '\n');
     } catch (e) {
@@ -69,6 +70,15 @@ Hylar.displayWarning = function(msg) {
  */
 Hylar.notify = function(msg) {
     console.log(chalk.green('[HyLAR] ') + msg);
+    try {
+        fs.appendFileSync(logFile, new Date().toString() + ' ' + msg + '\n');
+    } catch (e) {
+        return Errors.FileIO(logFile);
+    }
+}
+
+Hylar.success = function(msg) {
+    console.log(`${chalkRainbow('[HyLAR] ')} 👍 ${msg}`);
     try {
         fs.appendFileSync(logFile, new Date().toString() + ' ' + msg + '\n');
     } catch (e) {
@@ -391,7 +401,7 @@ Hylar.prototype.treatUpdate = function(update, type) {
                 insert: ParsingInterface.factsToTurtle(derivations.additions),
                 delete: ParsingInterface.factsToTurtle(derivations.deletions)
             };
-            Hylar.notify('Update completed.');
+            Hylar.success('Update completed.');
             return insDel;
         })
 
@@ -464,7 +474,7 @@ Hylar.prototype.registerDerivations = function(derivations, graph) {
         this.dict.put(factsToBeAdded[i], graph);
     }
 
-    Hylar.notify('Registered successfully.');
+    Hylar.success('Registered successfully.');
 };
 
 /**

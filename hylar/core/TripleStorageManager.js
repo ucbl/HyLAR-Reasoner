@@ -49,7 +49,7 @@ TripleStorageManager.prototype.query = function(query) {
     try {      
         this.storage.execute(query, function (err, r) {
             if(err) {            
-                deferred.reject(err);
+                deferred.reject(new Error(`(SPARQL) ${err}`));
             } else {
                 deferred.resolve(r);
             }
@@ -93,14 +93,11 @@ TripleStorageManager.prototype.clear = function()  {
  * @param ttl Triples to insert, in turtle.
  * @returns {*}
  */
-TripleStorageManager.prototype.insert = function(ttl, graph) {
-    var query;
-    if (graph === undefined) {
-        query = 'INSERT DATA { ' + ttl + ' }';
-    } else {
-        query = 'INSERT DATA { GRAPH <' + graph + '> { ' + ttl + ' } }'
-    }
-    return this.query(query);
+TripleStorageManager.prototype.insert = async function(ttl, graph) {
+    let ack = await this.query('INSERT DATA { ' + ttl + ' }');
+    if (graph !== undefined) {
+        return await this.query('INSERT DATA { GRAPH <' + graph + '> { ' + ttl + ' } { ' + ttl + ' } }')
+    } else return ack
 };
 
 /**
@@ -109,14 +106,11 @@ TripleStorageManager.prototype.insert = function(ttl, graph) {
  * @param ttl Triples to insert, in turtle.
  * @returns {*}
  */
-TripleStorageManager.prototype.delete = function(ttl, graph) {
-    var query;
-    if (graph === undefined) {
-        query = 'DELETE DATA { ' + ttl + ' }';
-    } else {
-        query = 'DELETE DATA { GRAPH <' + graph + '> { ' + ttl + ' } }'
-    }
-    return this.query(query);
+TripleStorageManager.prototype.delete = async function(ttl, graph) {
+    let ack = await this.query('DELETE DATA { ' + ttl + ' }');
+    if (graph !== undefined) {
+        return await this.query('DELETE DATA { GRAPH <' + graph + '> { ' + ttl + ' } { ' + ttl + ' } }')
+    } else return ack
 };
 
 /**

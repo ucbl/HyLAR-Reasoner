@@ -6,6 +6,7 @@
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.3",
     "chalk": "^2.4.1",
+    "chalk-rainbow": "^1.0.0",
     "chr": "^3.3.2",
     "ejs": "^2.6.1",
     "escape-html": "^1.0.3",

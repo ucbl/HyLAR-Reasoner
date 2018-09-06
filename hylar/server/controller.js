@@ -2,20 +2,18 @@
  * Created by Spadon on 02/10/2014.
  */
 
-var fs = require('fs'),
+const fs = require('fs'),
     path = require('path'),
     request = require('request'),
     mime = require('mime-types'),
-	xml2js = require('xml2js');
+    escape = require('escape-html');
 
-var builder = new xml2js.Builder({ "rootName": "sparql" });
-var escape = require('escape-html');
+const h = require('../hylar');
+const Hylar = new h();
+const Logics = require('../core/Logics/Logics');
+const ContentNegotiator = require('./content_negotiator')
 
-var h = require('../hylar');
-var Hylar = new h();
-var Logics = require('../core/Logics/Logics');
-
-var appDir = path.dirname(require.main.filename),
+let appDir = path.dirname(require.main.filename),
     ontoDir = appDir + '/ontologies',
     htmlDir = appDir + '/views',
     port = 3000,
@@ -72,7 +70,7 @@ module.exports = {
      * @param next
      */
     getOntology: function(req, res, next) {
-        var initialTime = req.query.time,
+        let initialTime = req.query.time,
             receivedReqTime = new Date().getTime(),
             filename = req.params.filename,
             absolutePathToFile = ontoDir + '/' + filename,
@@ -97,22 +95,22 @@ module.exports = {
         });
     },
 
-    loadOntology: function(req, res, next) {
-        var rawOntology = req.rawOntology,
+    loadOntology: async function(req, res, next) {
+        let rawOntology = req.rawOntology,
             mimeType = req.mimeType,
             graph = req.graph,
             initialTime = new Date().getTime();
 
-            Hylar.load(rawOntology, mimeType, req.query.keepoldvalues, graph, req.body.reasoningMethod)
-                .then(function() {
-                    req.processingDelay  = new Date().getTime() - initialTime;
-                    h.notify("Classification finished in " + req.processingDelay + "ms.");
-                    next();
-                })
-                .catch(function(error) {
-                    h.displayError(error.stack);
-                    res.status(500).send(error.stack);
-                });
+        try {
+            await Hylar.load(rawOntology, mimeType, req.query.keepoldvalues, graph, req.body.reasoningMethod)
+            req.processingDelay = new Date().getTime() - initialTime;
+            h.success("Classification finished in " + req.processingDelay + "ms.");
+            next()
+
+        } catch(error) {
+            h.displayError(error.stack);
+            res.status(500).send(error.stack);
+        }
     },
 
     escapeStrOntology: function(req, res, next) {
@@ -135,20 +133,22 @@ module.exports = {
         });
     },
 
-    importHylarContents: function(req, res) {
-        var importedData;
+    importHylarContents: async function(req, res) {
+        let importedData;
         fs.readFile(ontoDir + "/export.json", function(err, data) {
             if(err) {
                 res.status(500).send(err.toString());
             } else {
                 importedData = data.toString();
-                Hylar.import(JSON.parse(importedData).dictionary).then(function(value) {
+                try {
+                    let value = await
+                    Hylar.import(JSON.parse(importedData).dictionary)
                     res.send({status: value});
-                }).fail(function(err) {
+                } catch(err) {
                     res.status(500).json({err: err.toString});
-                });
-            };
-        });        
+                }
+            }
+        })
     },
 
     /**
@@ -178,76 +178,47 @@ module.exports = {
         next();
     },
 
-    processSPARQL: function(req, res) {
-        var sendWithContentNegotiation = function() {
-            if (req.accepts('application/sparql-results+xml')) {
-                res.set('Content-Type', 'application/sparql-results+xml');
-                jsonRes.$ = {
-                    "xmlns": "http://www.w3.org/2005/sparql-results#",
-                    "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
-                    "xsi:schemaLocation": "http://www.w3.org/2001/sw/DataAccess/rf1/result2.xsd"
-                }
-                res.send(builder.buildObject(jsonRes));
-            } else {
-                res.set('Content-Type', 'application/sparql-results+json');
-                res.send(jsonRes);
-            }
-        }
-
-        var initialTime = req.query.time,
-            asString = req.body.asString,
+    processSPARQL: async function(req, res) {
+        let results = {}, asString = req.body.asString
+        let initialTime = req.query.time,
             receivedReqTime = new Date().getTime(),
             requestDelay =  receivedReqTime - initialTime,
-            processedTime;
+            processedTime = -1;
 
-		var jsonRes = {
-			"head": {
-				"link": [''],
-				"vars": ['']
-			},
-			"results": {
-				"bindings": ['']
-			}
-		}
+        // Actual sparql query
+		let query = req.body.query || req.body.update || req.query.query
+        // Drop it if the query is null
+		if (!query) ContentNegotiator.answerSparqlWithContentNegotiation(req, res)
 
-		var query = req.body.query || req.body.update || req.query.query
-					
-		if (query) {
-			Hylar.query(query, req.body.reasoningMethod)
-			.then(function(results) {
-				processedTime = new Date().getTime();
-				h.notify("Evaluation finished in " + (processedTime - receivedReqTime) + "ms.");
+        // Process query if it is set
+        try {
+            results = await Hylar.query(query, req.body.reasoningMethod)
+            processedTime = new Date().getTime();
 
-                if (asString) {
-                    if (results.triples && results.triples.length) {
-                        asString = "";
-                        for (var i = 0; i < results.triples.length; i++) {
-                            asString += results.triples[i].toString() + " ";
-                        }
-                        res.send(asString);
+            let hylar_meta = {
+                processingDelay: processedTime - receivedReqTime,
+                requestDelay: requestDelay,
+                serverTime: new Date().getTime()
+            }
+            let params = { results, hylar_meta }
+
+            h.success("Evaluation finished in " + (processedTime - receivedReqTime) + "ms.");
+
+            if (asString) {
+                if (results.triples && results.triples.length) {
+                    asString = "";
+                    for (let i = 0; i < results.triples.length; i++) {
+                        asString += results.triples[i].toString() + " ";
                     }
-                } else {
-                    // Build results as W3C sparql result standardization
-                    if (results.length > 0) {
-                        jsonRes.head.vars = Object.keys(results[0])
-                        jsonRes.results.bindings = results
-                    }
-                    jsonRes.head = {
-                        processingDelay: processedTime - receivedReqTime,
-                        requestDelay: requestDelay,
-                        serverTime: new Date().getTime()
-                    }
-                    sendWithContentNegotiation()
+                    res.send(asString);
                 }
-			})
-			.catch(function(error) {
-				h.displayError(error.stack);
-				res.status(500).send(error.stack);
-			})
-		} else {
-			sendWithContentNegotiation()
-		}
-
+            } else {
+                ContentNegotiator.answerSparqlWithContentNegotiation(req, res, params)
+            }
+        } catch(error) {
+            h.displayError(error.stack);
+            res.status(500).send(error.message);
+        }
     },
 
     list: function(req, res) {
@@ -261,11 +232,11 @@ module.exports = {
      * @param next
      */
     getExternalOntology: function(req, res, next) {
-        var initialTime = 0,
+        let initialTime = 0,
             receivedReqTime = new Date().getTime();
 
         req.requestDelay =  receivedReqTime - initialTime;
-        var url = req.body.url;
+        let url = req.body.url;
 
         request.get(url, function (error, response, body) {
             if (!error && response.statusCode == 200) {
@@ -281,7 +252,7 @@ module.exports = {
      * @param res
      */
     hello: function(req, res) {
-        var ontologies = fs.readdirSync(ontoDir), kb = Hylar.getDictionary().values(),
+        let ontologies = fs.readdirSync(ontoDir), kb = Hylar.getDictionary().values(),
             nbExplicit = Logics.getOnlyExplicitFacts(kb).length,
             nbImplicit = kb.length - nbExplicit,
             consistent = Hylar.checkConsistency().consistent;
@@ -321,14 +292,14 @@ module.exports = {
     },
 
     renderFact: function(req, res) {
-        var uri = req.params.fact, dict = Hylar.getDictionary(), graph = decodeURIComponent(req.params.graph),
+        let uri = req.params.fact, dict = Hylar.getDictionary(), graph = decodeURIComponent(req.params.graph),
             kb = [], content = dict.content(), lookup, key, fact, derivations, factName;
 
         if (!uri) {
-            for (var graph in content) {
-                for (var dictKey in content[graph]) {
-                    var values = dict.get(dictKey, graph);
-                    for (var i = 0; i < values.length; i++) {
+            for (let graph in content) {
+                for (let dictKey in content[graph]) {
+                    let values = dict.get(dictKey, graph);
+                    for (let i = 0; i < values.length; i++) {
                         kb.push({
                             val: values[i],
                             graph: graph
@@ -361,19 +332,18 @@ module.exports = {
         });
     },
 
-    simpleSparql: function(req, res, next) {
+    simpleSparql: async function(req, res, next) {
         //noinspection JSValidateTypes
-        var start = new Date().getTime(), processingDelay;
+        let start = new Date().getTime(), processingDelay;
         if (req.body.query !== undefined) {
             try {
-                Hylar.query(req.body.query).then(function (result) {
+                let result = await Hylar.query(req.body.query)
                     processingDelay = new Date().getTime() - start;
-                    h.notify("Evaluation finished in " + processingDelay + "ms.");
+                    h.success("Evaluation finished in " + processingDelay + "ms.");
                     req.sparqlResults = result;
                     req.sparqlQuery = req.body.query;
                     Hylar.addToQueryHistory(req.sparqlQuery, true);
                     next();
-                })
             } catch(e) {
                 Hylar.addToQueryHistory(req.body.query, false);
                 req.error = e;
@@ -403,7 +373,7 @@ module.exports = {
     },
 
     addRules: function(req, res, next) {
-        var rules = req.body.rules,
+        let rules = req.body.rules,
             parsedRules;
         if (req.body.rule !== undefined) {
             try {
@@ -428,7 +398,7 @@ module.exports = {
     },
 
     removeRule: function(req, res, next) {
-        var ruleIndex = req.params.ruleIndex;
+        let ruleIndex = req.params.ruleIndex;
         Hylar.removeRuleById(ruleIndex);
         next();
     },
