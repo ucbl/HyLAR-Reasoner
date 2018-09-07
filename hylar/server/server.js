@@ -94,7 +94,7 @@ return app.listen(port, function() {
     Utils._instanceid = port;
     asciify('HyLAR', {font: 'larry3d'}, function (err, result) {
         console.log(chalkRainbow(result));
-        h.notify(`⭐ Now running on port ${port} ⭐`)
+        h.notify(`⭐ [ Ver. ${require('../../package.json').version} ] Now running on port ${port} ⭐`)
     });
     return;
 });

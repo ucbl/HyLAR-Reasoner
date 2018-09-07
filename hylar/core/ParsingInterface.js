@@ -9,7 +9,8 @@ var Fact = require('./Logics/Fact'),
 
 var q = require('q'),
     sparqlJs = require('sparqljs'),
-    SparqlParser = new sparqlJs.Parser()    
+    SparqlParser = new sparqlJs.Parser(),
+    SparqlGenerator = new sparqlJs.Generator()
 
 /**
  * The parsing interface, for transforming facts, triples, turtle or even results bindings
@@ -263,6 +264,11 @@ ParsingInterface = {
         } else {
             return ""
         }
+    },
+
+    deserializeQuery(sparqlQuery) {
+        let query = SparqlGenerator.stringify(sparqlQuery);
+        return query;
     }
 };
 

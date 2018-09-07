@@ -18,7 +18,8 @@ var Dictionary = require('./core/Dictionary'),
     Reasoner = require('./core/Reasoner'),
     OWL2RL = require('./core/OWL2RL'),
     Fact = require('./core/Logics/Fact'),
-    Utils = require('./core/Utils');
+    Utils = require('./core/Utils'),
+    Errors = require('./core/Errors')
 
 var logFile = 'hylar.log';
 
@@ -130,22 +131,20 @@ Hylar.prototype.setRules = function(rules) {
  * Switches HyLAR's reasoning method
  * @param method Name of the method ('incremental' or 'tagBased')
  */
-Hylar.prototype.updateReasoningMethod = function(method) {
+Hylar.prototype.updateReasoningMethod = function(method = 'incremental') {
     switch(method) {
         case 'tagBased':
-            this.setTagBased();
+            this.setTagBased()
             break;
         case 'incremental':
-            this.setIncremental();
+            this.setIncremental()
             break;
         case 'incrementalBf':
-            this.setIncrementalBf();
+            this.setIncrementalBf()
             break;
         default:
-            if (this.rMethod === undefined) {
-                this.setIncremental();
-            }
-            break;
+            Hylar.displayWarning(`Reasoning method ${method} not supported, using incremental instead.`)
+            this.setIncremental()
     }
 };
 
@@ -201,10 +200,11 @@ Hylar.prototype.treatLoad = function(ontologyTxt, mimeType, graph) {
  * @param query The SPARQL query text
  * @param reasoningMethod The desired reasoning method if inserting/deleting
  */
-Hylar.prototype.query = function(query, reasoningMethod) {
+Hylar.prototype.query = async function(query, reasoningMethod) {
+    let sparql, singleWhereQueries = []
+
     try {
-		var sparql = ParsingInterface.parseSPARQL(query),
-        singleWhereQueries = [], that = this;
+		sparql = ParsingInterface.parseSPARQL(query)
 	} catch (e) {
 		Hylar.displayError('Problem with SPARQL query: ' + query);
 		throw e;
@@ -212,37 +212,99 @@ Hylar.prototype.query = function(query, reasoningMethod) {
 
     this.updateReasoningMethod(reasoningMethod);
 
-    if (this.sm.storage === undefined) {
-        this.sm.init();
-    } else {
-        switch (sparql.type) {
-            case 'update':
-                if (ParsingInterface.isUpdateWhere(sparql)) {
-                    return this.query(ParsingInterface.updateWhereToConstructWhere(query))
-                        .then(function(data) {
-                            return that.query(ParsingInterface.buildUpdateQueryWithConstructResults(sparql, data));
-                        });
-                } else {
-                    return this.treatUpdateWithGraph(query);
-                }
-                break;
-            default:
-                if (this.rMethod == Reasoner.process.it.incrementally) {
-                    return that.sm.query(query);
-                }
-                return that.sm.regenerateSideStore()
-                    .then(function(done) {
-                        for (var i = 0; i < sparql.where.length; i++) {
-                            singleWhereQueries.push(ParsingInterface.isolateWhereQuery(sparql, i));
+    switch (sparql.type) {
+        // Insert, delete queries
+        case 'update':
+            if (ParsingInterface.isUpdateWhere(sparql)) {
+                let data = await this.query(ParsingInterface.updateWhereToConstructWhere(query))
+                return this.query(ParsingInterface.buildUpdateQueryWithConstructResults(sparql, data));
+            } else {
+                return this.treatUpdateWithGraph(query);
+            }
+            break;
+
+        // Select, Ask, Construct queries
+        default:
+            // If incremental query
+            if (this.rMethod == Reasoner.process.it.incrementally) {
+                // To overcome rdfstore not supporting count; only supports count(*) though
+                let countStatements = []
+
+                if (sparql.hasOwnProperty('variables')) {
+                    sparql.variables.forEach((_var, index) => {
+                        if (_var.hasOwnProperty('expression') && _var.expression.aggregation == 'count') {
+                            // If this is a count statement on a wildcard select, process it
+                            if (_var.expression.expression == '*') {
+                                countStatements.push(_var)
+                                sparql.variables[index] = _var.expression.expression
+                            // Otherwise throw unsupported
+                            } else {
+                                throw Errors.CountNotImplemented(_var.expression.expression)
+                            }
                         }
-                        return Promise.reduce(singleWhereQueries, function(previous, singleWhereQuery) {
-                            return that.treatSelectOrConstruct(singleWhereQuery);
-                        }, 0);
                     })
-                    .then(function(done) {
-                        return that.sm.querySideStore(query);
-                    });
-        }
+                    if (countStatements.length > 0) query = ParsingInterface.deserializeQuery(sparql)
+                }
+
+                // Execute query against the store
+                let results = await this.sm.query(query)
+
+                // Reattach counted if relevant
+                if (countStatements.length > 0) {
+                    countStatements.forEach(cntStm => {
+                        if (cntStm.expression.expression == '*') {
+                            // The count result that will be attached
+                            let countResult = {
+                                token: 'literal',
+                                type: 'http://www.w3.org/2001/XMLSchema#integer',
+                                value: results.length
+                            }
+
+                            // Replace bindings
+                            results.forEach((binding, index) => {
+                                Object.keys(binding).forEach(_var => {
+                                    if (sparql.variables.indexOf(_var) == -1) {
+                                        delete binding[_var]
+                                    }
+                                })
+                                if (Object.keys(binding).length == 0) {
+                                    delete results[index]
+                                }
+                            })
+                            results = results.filter(binding => binding)
+
+                            // Either attach to remaining bindings or add a unique count binding
+                            if (results.length > 0) {
+                                results.forEach(binding => {
+                                    binding[cntStm.variable] = countResult
+                                })
+                            } else {
+                                let binding = {}
+                                binding[cntStm.variable] = countResult
+                                results.push(binding)
+                            }
+                        } else {
+                            throw Errors.CountNotImplemented(cntStm.expression.expression)
+                        }
+                    })
+                }
+
+                return results
+
+            // If tag-based query
+            } else {
+                await this.sm.regenerateSideStore()
+
+                for (var i = 0; i < sparql.where.length; i++) {
+                    singleWhereQueries.push(ParsingInterface.isolateWhereQuery(sparql, i))
+                }
+
+                await Promise.reduce(singleWhereQueries, function (previous, singleWhereQuery) {
+                    return this.treatSelectOrConstruct(singleWhereQuery);
+                }, 0)
+
+                return this.sm.querySideStore(query);
+            }
     }
 };
 
