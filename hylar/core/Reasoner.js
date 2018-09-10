@@ -50,6 +50,7 @@ module.exports = {
      */
     process: {
         it: {
+            none: null,
             incrementally: ReasoningEngine.incremental,
             incrementallyBf: ReasoningEngine.incrementalBf,
             naively: ReasoningEngine.naive,

@@ -98,6 +98,16 @@ Hylar.prototype.clean = function() {
 };
 
 /**
+ * Deactivate reasoning
+ */
+Hylar.prototype.setTagBased = function() {
+    this.rMethod = Reasoner.process.it.none;
+    this.dict =
+    Hylar.notify('Reasoner set as tag-based.');
+};
+
+
+/**
  * Puts on incremental reasoning
  */
 Hylar.prototype.setIncremental = function() {
@@ -115,14 +125,6 @@ Hylar.prototype.setTagBased = function() {
     Hylar.notify('Reasoner set as tag-based.');
 };
 
-/**
- * Puts on tag-based reasoning using backward/forward algorithm
- */
-Hylar.prototype.setIncrementalBf = function() {
-    this.rMethod = Reasoner.process.it.incrementallyBf;
-    Hylar.notify('Reasoner set as incremental b/f.');
-};
-
 Hylar.prototype.setRules = function(rules) {
     this.rules = rules;
 };
@@ -133,6 +135,8 @@ Hylar.prototype.setRules = function(rules) {
  */
 Hylar.prototype.updateReasoningMethod = function(method = 'incremental') {
     switch(method) {
+        case 'none':
+            if (this.rMethod != Reasoner.process.it.none) this.setTagBased()
         case 'tagBased':
             if (this.rMethod != Reasoner.process.it.tagBased) this.setTagBased()
             break;

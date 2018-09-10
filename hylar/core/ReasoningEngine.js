@@ -208,7 +208,6 @@ ReasoningEngine = {
 };
 
 module.exports = {
-    naive: ReasoningEngine.naive,
     incrementalBf: ReasoningEngine.incrementalBf,
     incremental: ReasoningEngine.incremental,
     tagging: ReasoningEngine.tagging,
