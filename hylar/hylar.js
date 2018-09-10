@@ -134,13 +134,10 @@ Hylar.prototype.setRules = function(rules) {
 Hylar.prototype.updateReasoningMethod = function(method = 'incremental') {
     switch(method) {
         case 'tagBased':
-            this.setTagBased()
+            if (this.rMethod != Reasoner.process.it.tagBased) this.setTagBased()
             break;
         case 'incremental':
-            this.setIncremental()
-            break;
-        case 'incrementalBf':
-            this.setIncrementalBf()
+            if (this.rMethod != Reasoner.process.it.incrementally) this.setIncremental()
             break;
         default:
             Hylar.displayWarning(`Reasoning method ${method} not supported, using incremental instead.`)
@@ -204,7 +201,10 @@ Hylar.prototype.query = async function(query, reasoningMethod) {
     let sparql, singleWhereQueries = []
 
     try {
+        // Parse original query
 		sparql = ParsingInterface.parseSPARQL(query)
+        // Cleans out string query
+        query = ParsingInterface.deserializeQuery(sparql)
 	} catch (e) {
 		Hylar.displayError('Problem with SPARQL query: ' + query);
 		throw e;
@@ -216,7 +216,11 @@ Hylar.prototype.query = async function(query, reasoningMethod) {
         // Insert, delete queries
         case 'update':
             if (ParsingInterface.isUpdateWhere(sparql)) {
-                let data = await this.query(ParsingInterface.updateWhereToConstructWhere(query))
+                // Get construct results of the update where query
+                let sparqlConstruct = ParsingInterface.updateWhereToConstructWhere(sparql)
+                let data = await this.query(ParsingInterface.deserializeQuery(sparqlConstruct))
+
+                // Put them back in a simple update data manner to provide inner-graph inference
                 return this.query(ParsingInterface.buildUpdateQueryWithConstructResults(sparql, data));
             } else {
                 return this.treatUpdateWithGraph(query);
@@ -421,19 +425,18 @@ Hylar.prototype.isIncremental = function() {
  * @param sparql The query text.
  * @returns {Object} The results of this query.
  */
-Hylar.prototype.treatUpdate = function(update, type) {
+Hylar.prototype.treatUpdate = async function(update, type) {
     var that = this,
         graph = update.name,
         iTriples = [],
         dTriples = [],
         FeIns, FeDel, F = this.getDictionary().values(graph),
-        turtle, insDel, deleteQueryBody, promises = [],
+        deleteQueryBody, promises = [],
         initialResponse = Utils.emptyPromise([ { triples:[] } ]);
 
     if(type == 'insert') {
         Hylar.notify('Starting insertion.');
         iTriples = iTriples.concat(update.triples);
-
     } else if(type  == 'delete') {
         Hylar.notify('Starting deletion.');
         for (var i = 0; i < update.triples.length; i++) {
@@ -444,40 +447,32 @@ Hylar.prototype.treatUpdate = function(update, type) {
                 dTriples.push(update.triples[i]);
             }
         }
+
         initialResponse = Promise.all(promises);
+        let results = await initialResponse
+
+        for (var i = 0; i < results.length; i++) {
+            dTriples = dTriples.concat(results[i].triples);
+        }
     }
 
-    return initialResponse
+    FeIns = ParsingInterface.triplesToFacts(iTriples, true, (that.rMethod == Reasoner.process.it.incrementally));
+    FeDel = ParsingInterface.triplesToFacts(dTriples, true, (that.rMethod == Reasoner.process.it.incrementally));
 
-        .then(function(results) {
-            for (var i = 0; i < results.length; i++) {
-                dTriples = dTriples.concat(results[i].triples);
-            }
-            FeIns = ParsingInterface.triplesToFacts(iTriples, true, (that.rMethod == Reasoner.process.it.incrementally));
-            FeDel = ParsingInterface.triplesToFacts(dTriples, true, (that.rMethod == Reasoner.process.it.incrementally));
-            return Reasoner.evaluate(FeIns, FeDel, F, that.rMethod, that.rules)
+    let derivations = await Reasoner.evaluate(FeIns, FeDel, F, that.rMethod, that.rules)
 
-        }).then(function(derivations) {
-            that.registerDerivations(derivations, graph);
-            insDel = {
-                insert: ParsingInterface.factsToTurtle(derivations.additions),
-                delete: ParsingInterface.factsToTurtle(derivations.deletions)
-            };
-            Hylar.success('Update completed.');
-            return insDel;
-        })
+    this.registerDerivations(derivations, graph);
 
-        .then(function(obj) {
-            turtle = obj;
-            if(turtle.delete != '') return that.sm.delete(turtle.delete, graph);
-            else return true;
-        })
+    let updates = {
+        insert: ParsingInterface.factsToTurtle(derivations.additions),
+        delete: ParsingInterface.factsToTurtle(derivations.deletions)
+    }
 
-        .then(function() {
-            if(turtle.insert != '') return that.sm.insert(turtle.insert, graph);
-            else return true;
-        });
-};
+    if(updates.delete != '') return this.sm.delete(updates.delete, graph)
+    if(updates.insert != '') return this.sm.insert(updates.insert, graph)
+    return true
+}
+
 
 /**
  * Processes select or construct queries.

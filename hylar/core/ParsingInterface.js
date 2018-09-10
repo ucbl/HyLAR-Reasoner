@@ -144,8 +144,30 @@ ParsingInterface = {
         return ttl;
     },
 
-    updateWhereToConstructWhere: function(query, doParse) {
-        return query.replace(RegularExpressions.DELETE_OR_INSERT_STATEMENT, 'CONSTRUCT$2');
+    /**
+     * Transforms a parsed update where query to a construct query
+     * @param parsedQuery as update where
+     * @returns parsedQuery as construct
+     */
+    updateWhereToConstructWhere: function(parsedQuery) {
+        parsedQuery.type = "query"
+        parsedQuery.queryType = "CONSTRUCT"
+
+        parsedQuery.where = []
+        parsedQuery.template = []
+
+        parsedQuery.updates.forEach(up => {
+            parsedQuery.where = parsedQuery.where.concat(up.where)
+            up.insert.forEach(ins => {
+                parsedQuery.template = parsedQuery.template.concat(ins.triples)
+            })
+            up.delete.forEach(del => {
+                parsedQuery.template = parsedQuery.template.concat(del.triples)
+            })
+        })
+
+        delete parsedQuery.updates
+        return parsedQuery
     },
 
     /**
@@ -228,7 +250,6 @@ ParsingInterface = {
     },
 
     isUpdateWhere: function(parsedQuery) {
-        var res;
         try {
             if ( (parsedQuery.updates[0].where)
                 || (parsedQuery.updates[0].updateType == "deletewhere")

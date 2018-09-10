@@ -45,7 +45,7 @@ TripleStorageManager.prototype.init = function() {
  */
 TripleStorageManager.prototype.query = function(query) {
     var deferred = q.defer();    
-    query = query.replace(/\\/g, '').replace(/(\n|\r)/g, '\n');
+    query = query.replace(/\\/g, '').replace(/(\n|\r)/g, ' ');
     try {      
         this.storage.execute(query, function (err, r) {
             if(err) {            
@@ -55,7 +55,7 @@ TripleStorageManager.prototype.query = function(query) {
             }
         });
     } catch(e) {
-        deferred.resolve(true);
+        deferred.reject(e);
     }
     return deferred.promise;
 };
@@ -94,9 +94,9 @@ TripleStorageManager.prototype.clear = function()  {
  * @returns {*}
  */
 TripleStorageManager.prototype.insert = async function(ttl, graph) {
-    let ack = await this.query('INSERT DATA { ' + ttl + ' }');
+    let ack = await this.query(`INSERT DATA { ${ttl} }`);
     if (graph !== undefined) {
-        return await this.query('INSERT DATA { GRAPH <' + graph + '> { ' + ttl + ' } { ' + ttl + ' } }')
+        return (await this.query(`INSERT DATA { GRAPH <${graph}> { ${ttl} } }`)) && ack
     } else return ack
 };
 
