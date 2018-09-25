@@ -2,7 +2,12 @@
 
 A rule-based incremental reasoner for the Web.
 
+To cite HyLAR: [HyLAR+: improving Hybrid Location-Agnostic Reasoning
+with Incremental Rule-based Update](https://hal.archives-ouvertes.fr/hal-01276558/file/Demo_www2016.pdf)
+
 ![Build status on node 8, 7, 6, 5](https://api.travis-ci.org/ucbl/HyLAR-Reasoner.svg?branch=master)
+
+
 
 ## Table of contents
 
@@ -11,6 +16,8 @@ A rule-based incremental reasoner for the Web.
 - [Use HyLAR in a browser](#use-hylar-in-a-browser)
 - [Use HyLAR as a server](#use-hylar-as-a-server)
 - [Supported Inferences](#supported-inferences)
+- [Publications](#publications)
+
 
 ## Description
 
@@ -166,3 +173,18 @@ The following OWL 2 rules are currently supported by HyLAR, based on the semanti
 * `(?o1 http://www.w3.org/2002/07/owl#sameAs ?o2) ^ (?s ?p ?o1) -> (?s ?p ?o2)`
 
 * `(?x http://www.w3.org/2002/07/owl#sameAs ?y) ^ (?y http://www.w3.org/2002/07/owl#sameAs ?z) -> (?x http://www.w3.org/2002/07/owl#sameAs ?z)`
+
+## Publications
+
+### Location-agnostic mechanism
+
+Terdjimi, M., Médini, L., & Mrissa, M. (2015, May). [Hylar: Hybrid location-agnostic reasoning 📚](https://hal.archives-ouvertes.fr/hal-01154549/file/hylar.pdf) In ESWC Developers Workshop 2015 (p. 1).
+
+### Incremental reasoning on the Web with HyLAR
+
+Terdjimi, M., Médini, L., & Mrissa, M. (2016, April). [HyLAR+: improving hybrid location-agnostic reasoning with incremental rule-based update 📚](https://hal.archives-ouvertes.fr/hal-01276558/file/Demo_www2016.pdf) In Proceedings of the 25th International Conference Companion on World Wide Web (pp. 259-262). International World Wide Web Conferences Steering Committee. 
+
+### Tag-based maintenance
+
+Terdjimi, M., Médini, L., & Mrissa, M. (2018, April). [Web Reasoning Using Fact Tagging 📚](http://mmrissa.perso.univ-pau.fr/pub/Accepted-papers/2018-TheWebConf-RoD.pdf) In Companion of the The Web Conference 2018 on The Web Conference 2018 (pp. 1587-1594). International World Wide Web Conferences Steering Committee.
+
