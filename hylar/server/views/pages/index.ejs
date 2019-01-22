@@ -19,21 +19,8 @@
     </section>
 
     <section class="section">
-        <article class="message is-info">
-            <div class="message-body">
-                The knowledge base currently contains <%- kb.length %> facts (<%- nbExplicit %> explicit, <%- nbImplicit %>  implicit).
-            </div>
-        </article>
-
-        <article class="message <% if (consistent) { %>is-success<% } else { %>is-danger<% }%>">
-            <div class="message-body">
-                The KB is currently <% if (consistent) { %>consistent.<% } else { %><a href="/explore/%23default/IFALSE">inconsistent</a>.<% } %>
-            </div>
-        </article>
-    </section>
-
-    <section class="section">
         <div class="container is-fluid">
+            <p class="title has-text-centered">Upload</p>
             <div class="file is-boxed">
                 <label class="file-label">
                     <input id="file-upload" class="file-input" type="file" name="resume" onchange="fileUpload(this, '<% contextPath %>')">
@@ -84,6 +71,5 @@
             </table>
         </div>
     </section>
-
 </body>
 </html>

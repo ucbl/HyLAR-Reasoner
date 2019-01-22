@@ -1,8 +1,10 @@
-a.fact {
+span.fact {
     color: darkslategray;
     display: inline-block;
     border: 1px solid slategray;
     padding: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
     margin-right: 5px;
     margin-left: 5px;
     margin-bottom: 5px;
@@ -10,14 +12,20 @@ a.fact {
     width: auto;
     background: ghostwhite;
     box-shadow: slategray 1px 1px;
+    letter-spacing: 1px;
 }
 
-a.fact-valid-true {
+code {
+    background-color: unset;
+    color: #2c2c2c;
+}
+
+span.fact-valid-true {
     color: green;
     border-color: limegreen;
 }
 
-a.fact-valid-false {
+span.fact-valid-false {
     color: indianred;
     border-color: indianred;
 }
@@ -39,14 +47,6 @@ span.rule {
     width: auto;
     background: #FEFEFE;
     box-shadow: slategray 1px 1px;
-}
-
-h3 {
-    border-bottom: 1px solid slategray;
-    padding-bottom: 5px;
-    padding-left: 5px;
-    padding-top: 15px;
-    text-shadow: 1px 1px lightslategrey;
 }
 
 .error {
@@ -93,4 +93,46 @@ td.is-centered {
 .table {
     margin-left: auto;
     margin-right: auto;
+}
+
+span.fact .fact-state {
+    text-shadow: 0.5px 0.5px #d2d2d2;
+    letter-spacing: 0.75px;
+    cursor: default;
+}
+
+span.fact.fact-state.explicit {
+    color: #7c5fa4;
+    background-color: #f8f8fa;
+    border: 1px solid #7c5fa4;
+}
+span.fact.fact-state.implicit {
+    color: #5283a4;
+    background-color: #ecf7fa;
+    border: 1px solid #5283a4;
+}
+
+.fact.false {
+    background-color: #ffeded;
+    color: #ff6b62;
+}
+
+.footer {
+    position: fixed;
+    padding: 10px;
+    bottom: 0;
+    width: 100%;
+    z-index: 5;
+}
+
+.footer.status-ok {
+    background-color: #eeffe8;
+    border-top: 1px solid #b7dfc0;
+    color: #355335;
+}
+
+.footer.status-nok {
+    background-color: #fff0ed;
+    border-top: 1px solid #df682a;
+    color: #c24421;
 }

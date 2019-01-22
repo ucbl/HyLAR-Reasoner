@@ -38,6 +38,17 @@ Hylar = function() {
     this.reasoning = true
     this.sm.init()
     this.computeRuleDependencies()
+    this.log = []
+}
+
+Hylar.log = function(msg) {
+    msg = new Date().toString() + ' ' + msg + '\n'
+    this.log.push(msg)
+    fs.appendFileSync(logFile, msg);
+}
+
+Hylar.prototype.lastLog = function() {
+    this.log.length > 0 ? this.log[this.log.length-1] : ''
 }
 
 /**
@@ -48,7 +59,7 @@ Hylar.displayError = function(error) {
     let msg = error.stack || error.toString()
     console.log(`${chalk.red('[HyLAR] ')} 😰 ${chalk.bold('ERROR:')} ${msg}`);
     try {
-        fs.appendFileSync(logFile, new Date().toString() + ' ' + msg + '\n');
+        Hylar.log(msg)
     } catch (e) {
         return Errors.FileIO(logFile);
     }
@@ -61,7 +72,7 @@ Hylar.displayError = function(error) {
 Hylar.displayWarning = function(msg) {
     console.log(`${chalk.yellow('[HyLAR] ')} 😐 WARNING: ${msg}`);
     try {
-        fs.appendFileSync(logFile, new Date().toString() + ' ' + msg + '\n');
+        Hylar.log(msg)
     } catch (e) {
         return Errors.FileIO(logFile);
     }
@@ -74,7 +85,7 @@ Hylar.displayWarning = function(msg) {
 Hylar.notify = function(msg, params = { silent: false }) {
     if (params.silent == false) console.log(chalk.green('[HyLAR] ') + msg);
     try {
-        fs.appendFileSync(logFile, new Date().toString() + ' ' + msg + '\n');
+        Hylar.log(msg)
     } catch (e) {
         return Errors.FileIO(logFile);
     }
@@ -83,7 +94,7 @@ Hylar.notify = function(msg, params = { silent: false }) {
 Hylar.success = function(msg) {
     console.log(`${chalkRainbow('[HyLAR] ')} 👍 ${msg}`);
     try {
-        fs.appendFileSync(logFile, new Date().toString() + ' ' + msg + '\n');
+        Hylar.log(msg)
     } catch (e) {
         return Errors.FileIO(logFile);
     }

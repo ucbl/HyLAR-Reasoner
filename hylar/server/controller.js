@@ -18,7 +18,7 @@ let appDir = path.dirname(require.main.filename),
     htmlDir = appDir + '/views',
     port = 3000,
     parsedPort,
-    contextPath = "";
+    contextPath = ""
 
 process.argv.forEach(function(value, index) {
     if ((value == '-od') || (value == '--ontology-directory')) {
@@ -258,18 +258,13 @@ module.exports = {
      * @param res
      */
     hello: function(req, res) {
-        let ontologies = fs.readdirSync(ontoDir), kb = Hylar.getDictionary().values(),
-            nbExplicit = Logics.getOnlyExplicitFacts(kb).length,
-            nbImplicit = kb.length - nbExplicit,
-            consistent = Hylar.checkConsistency().consistent;
+        let ontologies = fs.readdirSync(ontoDir), kb = Hylar.getDictionary().values();
 
         res.render(htmlDir + '/pages/index', {
             kb: kb,
             ontologies: ontologies,
-            nbExplicit: nbExplicit,
-            nbImplicit: nbImplicit,
-            consistent: consistent,
-            contextPath: contextPath
+            contextPath: contextPath,
+            lastLog: Hylar.lastLog()
         });
     },
 
@@ -302,6 +297,10 @@ module.exports = {
     renderFact: function(req, res) {
         let uri = req.params.fact, dict = Hylar.getDictionary(), graph = decodeURIComponent(req.params.graph),
             kb = [], content = dict.content(), lookup, key, fact, derivations, factName;
+
+        let nbExplicit = Logics.getOnlyExplicitFacts(kb).length,
+            nbImplicit = kb.length - nbExplicit,
+            consistent = Hylar.checkConsistency().consistent
 
         if (!uri) {
             for (let graph in content) {
@@ -336,7 +335,11 @@ module.exports = {
             factTriple: escape(key),
             derivations: derivations,
             graph: graph,
-            contextPath: contextPath
+            contextPath: contextPath,
+            lastLog: Hylar.lastLog(),
+            nbExplicit,
+            nbImplicit,
+            consistent
         });
     },
 
@@ -368,7 +371,8 @@ module.exports = {
             prevResults: (req.sparqlResults ? req.sparqlResults : ''),
             history: Hylar.queryHistory,
             error: (req.error ? req.error: ''),
-            contextPath: contextPath
+            contextPath: contextPath,
+            lastLog: Hylar.lastLog()
         });
     },
 
@@ -376,7 +380,8 @@ module.exports = {
         res.render(htmlDir + '/pages/rules', {
             rules: Hylar.getRulesAsStringArray(),
             error: req.error,
-            contextPath: contextPath
+            contextPath: contextPath,
+            lastLog: Hylar.lastLog()
         });
     },
 
