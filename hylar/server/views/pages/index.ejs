@@ -4,54 +4,86 @@
     <% include ../partials/head.ejs %>
 </head>
 <body>
-<header>
-    <% include ../partials/menu.ejs %>
-</header>
-    <div class="container">
+    <header>
+        <% include ../partials/menu.ejs %>
+    </header>
+    <section class="hero is-dark">
+        <div class="hero-body">
+            <p class="title">
+                HyLAR
+            </p>
+            <p class="subtitle">
+                Hybrid Location-Agnostic Reasoner
+            </p>
+        </div>
+    </section>
 
-        <h3>Statistics</h3>
-        The knowledge base currently contains <%- kb.length %> facts (<%- nbExplicit %> explicit, <%- nbImplicit %>  implicit).<br/>
-        The KB is currently <% if (consistent) { %>consistent.<% } else { %><a href="/explore/%23default/IFALSE">inconsistent</a>.<% } %>
+    <section class="section">
+        <article class="message is-info">
+            <div class="message-body">
+                The knowledge base currently contains <%- kb.length %> facts (<%- nbExplicit %> explicit, <%- nbImplicit %>  implicit).
+            </div>
+        </article>
 
-        <h3>Upload an ontology (Turtle, N3 or JSON-LD)</h3>
-        <form target="_self" enctype="multipart/form-data" method="post" action="<%- contextPath %>/ontology">
-            <input type="file" name="file"/>
-            <input type=submit value="Upload"/>
-        </form>
+        <article class="message <% if (consistent) { %>is-success<% } else { %>is-danger<% }%>">
+            <div class="message-body">
+                The KB is currently <% if (consistent) { %>consistent.<% } else { %><a href="/explore/%23default/IFALSE">inconsistent</a>.<% } %>
+            </div>
+        </article>
+    </section>
 
-        <h3>Available ontologies</h3>
+    <section class="section">
+        <div class="container is-fluid">
+            <div class="file is-boxed">
+                <label class="file-label">
+                    <input id="file-upload" class="file-input" type="file" name="resume" onchange="fileUpload(this, '<% contextPath %>')">
+                    <span class="file-cta">
+                    <span class="file-icon">
+                        <i class="fas fa-upload"></i>
+                    </span>
+                    <span class="file-label">
+                        Load turtle, N3 or JSON-LD serialized graph
+                    </span>
+                </span>
+                </label>
+            </div>
+        </div>
+    </section>
 
-        <table class="table table-bordered">
-            <tr>
-                <th>Ontology filename</th>
-                <th>Classify (overwrite)</th>
-                <th>Classify (keep old values)</th>
-                <th>Delete file</th>
-            </tr>
-            <% for (var i = 0; i < ontologies.length; i++) { %>
-            <tr>
-                <td>
-                    <a href="<%- contextPath %>/ontology/<%- ontologies[i] %>"><%- ontologies[i] %></a>
-                </td>
-                <td>
-                    <a target="_self" href="<%- contextPath %>/classify/<%- ontologies[i] %>" class="menuitem">
-                        <span about="Clear and load <%- ontologies[i] %>" class="glyphicon glyphicon-open"></span>
-                    </a>
-                </td>
-                <td>
-                    <a target="_self" href="<%- contextPath %>/classify/<%- ontologies[i] %>?keepoldvalues=true">
-                        <span about="Load <%- ontologies[i] %> without clearing data " class="glyphicon glyphicon-plus"></span>
-                    </a>
-                </td>
-                <td>
-                    <a target="_self" href="<%- contextPath %>/remove/<%- ontologies[i] %>">
-                        <span about="Remove <%- ontologies[i] %>" class="glyphicon glyphicon-remove"></span>
-                    </a>
-                </td>
-            </tr>
-            <% } %>
-        </table>
+    <section class="section">
+        <div class="container is-fluid">
+            <table class="table is-striped">
+                <tr class="is-warning">
+                    <th>File</th>
+                    <th>Compute closure (overwrite)</th>
+                    <th>Compute closure (keep old values)</th>
+                    <th>Delete file</th>
+                </tr>
+                <% for (var i = 0; i < ontologies.length; i++) { %>
+                <tr>
+                    <td>
+                        <a href="<%- contextPath %>/ontology/<%- ontologies[i] %>"><%- ontologies[i] %></a>
+                    </td>
+                    <td class="is-centered">
+                        <a target="_self" href="<%- contextPath %>/classify/<%- ontologies[i] %>" class="menuitem">
+                            <i class="fas fa-cog"></i>
+                        </a>
+                    </td>
+                    <td class="is-centered">
+                        <a target="_self" href="<%- contextPath %>/classify/<%- ontologies[i] %>?keepoldvalues=true">
+                            <i class="fas fa-cogs"></i>
+                        </a>
+                    </td>
+                    <td class="is-centered">
+                        <a target="_self" href="<%- contextPath %>/remove/<%- ontologies[i] %>">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </td>
+                </tr>
+                <% } %>
+            </table>
+        </div>
+    </section>
 
-    </div>
 </body>
 </html>

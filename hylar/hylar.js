@@ -31,19 +31,21 @@ var logFile = 'hylar.log';
  */
 
 Hylar = function() {
-    this.dict = new Dictionary();
-    this.sm = new TripleStorageManager();
-    this.rules = OWL2RL.test;
-    this.queryHistory = [];
-    this.sm.init();
-    this.computeRuleDependencies();  
-};
+    this.dict = new Dictionary()
+    this.sm = new TripleStorageManager()
+    this.rules = OWL2RL.test
+    this.queryHistory = []
+    this.reasoning = true
+    this.sm.init()
+    this.computeRuleDependencies()
+}
 
 /**
  * Custom error display
  * @returns {*}
  */
-Hylar.displayError = function(msg) {
+Hylar.displayError = function(error) {
+    let msg = error.stack || error.toString()
     console.log(`${chalk.red('[HyLAR] ')} 😰 ${chalk.bold('ERROR:')} ${msg}`);
     try {
         fs.appendFileSync(logFile, new Date().toString() + ' ' + msg + '\n');
@@ -69,8 +71,8 @@ Hylar.displayWarning = function(msg) {
  * Notifications of HyLAR (similar to console.log behavior)
  * @returns {*}
  */
-Hylar.notify = function(msg) {
-    console.log(chalk.green('[HyLAR] ') + msg);
+Hylar.notify = function(msg, params = { silent: false }) {
+    if (params.silent == false) console.log(chalk.green('[HyLAR] ') + msg);
     try {
         fs.appendFileSync(logFile, new Date().toString() + ' ' + msg + '\n');
     } catch (e) {
@@ -87,6 +89,15 @@ Hylar.success = function(msg) {
     }
 }
 
+Hylar.prototype.setReasoningOn = function() {
+    this.reasoning = true
+}
+
+Hylar.prototype.setReasoningOff = function() {
+    Hylar.displayWarning('Reasoning has been set off.')
+    this.reasoning = false
+}
+
 Hylar.prototype.computeRuleDependencies = function() {
     Reasoner.updateRuleDependencies(this.rules);        
 };      
@@ -96,16 +107,6 @@ Hylar.prototype.clean = function() {
     this.sm = new TripleStorageManager();
     this.sm.init();
 };
-
-/**
- * Deactivate reasoning
- */
-Hylar.prototype.setTagBased = function() {
-    this.rMethod = Reasoner.process.it.none;
-    this.dict =
-    Hylar.notify('Reasoner set as tag-based.');
-};
-
 
 /**
  * Puts on incremental reasoning
@@ -134,18 +135,18 @@ Hylar.prototype.setRules = function(rules) {
  * @param method Name of the method ('incremental' or 'tagBased')
  */
 Hylar.prototype.updateReasoningMethod = function(method = 'incremental') {
-    switch(method) {
-        case 'none':
-            if (this.rMethod != Reasoner.process.it.none) this.setTagBased()
-        case 'tagBased':
-            if (this.rMethod != Reasoner.process.it.tagBased) this.setTagBased()
-            break;
-        case 'incremental':
-            if (this.rMethod != Reasoner.process.it.incrementally) this.setIncremental()
-            break;
-        default:
-            Hylar.displayWarning(`Reasoning method ${method} not supported, using incremental instead.`)
-            this.setIncremental()
+    if (!this.rMethod) {
+        switch (method) {
+            case 'tagBased':
+                if (this.rMethod != Reasoner.process.it.tagBased) this.setTagBased()
+                break;
+            case 'incremental':
+                if (this.rMethod != Reasoner.process.it.incrementally) this.setIncremental()
+                break;
+            default:
+                Hylar.displayWarning(`Reasoning method ${method} not supported, using incremental instead.`)
+                this.setIncremental()
+        }
     }
 };
 
@@ -159,40 +160,42 @@ Hylar.prototype.updateReasoningMethod = function(method = 'incremental') {
  * @param keepOldValues (optional - default: false) Avoid storage cleaning if set to true.
  * @returns {*}
  */
-Hylar.prototype.load = function(ontologyTxt, mimeType, keepOldValues, graph, reasoningMethod) {
+Hylar.prototype.load = async function(ontologyTxt, mimeType, keepOldValues, graph, reasoningMethod) {
     var that = this;
     emitter.emit('classif-started');
     this.updateReasoningMethod(reasoningMethod);
 
     if (!keepOldValues) {
         this.dict.clear();
-        return this.sm.init().then(function() {
-            return that.treatLoad(ontologyTxt, mimeType, graph);
-        });
+        await this.sm.init()
+        return that.treatLoad(ontologyTxt, mimeType, graph)
     } else {
-        return this.treatLoad(ontologyTxt, mimeType, graph);
+        return this.treatLoad(ontologyTxt, mimeType, graph)
     }
 };
 
-Hylar.prototype.treatLoad = function(ontologyTxt, mimeType, graph) {
+Hylar.prototype.treatLoad = async function(ontologyTxt, mimeType) {
     var that = this;
     switch(mimeType) {
         case 'application/xml':
         case 'application/rdf+xml':
         case false:
-            Hylar.error('Unrecognized or unsupported mimetype. ' +
-                'Supported formats are jsonld, turtle, n3');
+            Hylar.error(`Unrecognized or unsupported mimeType. Supported formats are json-ld, turtle, n3`)
             return false;
             break;
         default:
-            return that.sm.load(ontologyTxt, mimeType, graph)
-                .then(function(r) {
-                    Hylar.notify(r + ' triples loaded in the store.');
-                    return that.classify();
-                }, function(error) {
-                    Hylar.displayError(error);
-                    throw error;
-                });
+            try {
+                let r = await this.sm.load(ontologyTxt, mimeType)
+                Hylar.notify(r + ' triples loaded in the store.')
+                if (this.reasoning == true) {
+                    return that.classify()
+                } else {
+                    return r
+                }
+            } catch (error) {
+                Hylar.displayError(error)
+                throw error;
+            }
     }
 };
 
@@ -202,7 +205,8 @@ Hylar.prototype.treatLoad = function(ontologyTxt, mimeType, graph) {
  * @param reasoningMethod The desired reasoning method if inserting/deleting
  */
 Hylar.prototype.query = async function(query, reasoningMethod) {
-    let sparql, singleWhereQueries = []
+    let sparql, singleWhereQueries = [], result
+    Hylar.notify(`Received ${query}`, { silent: true })
 
     try {
         // Parse original query
@@ -213,6 +217,8 @@ Hylar.prototype.query = async function(query, reasoningMethod) {
 		Hylar.displayError('Problem with SPARQL query: ' + query);
 		throw e;
 	}
+
+    if (this.reasoning == false) return this.sm.query(query)
 
     this.updateReasoningMethod(reasoningMethod);
 
@@ -255,7 +261,11 @@ Hylar.prototype.query = async function(query, reasoningMethod) {
                 }
 
                 // Execute query against the store
-                let results = await this.sm.query(query)
+                try {
+                    results = await this.sm.query(query)
+                } catch(err) {
+                    throw err
+                }
 
                 // Reattach counted if relevant
                 if (countStatements.length > 0) {
@@ -320,7 +330,7 @@ Hylar.prototype.query = async function(query, reasoningMethod) {
  * High-level treatUpdate that takes graphs into account.
  * @returns Promise
  */
-Hylar.prototype.treatUpdateWithGraph = function(query) {    
+Hylar.prototype.treatUpdateWithGraph = async function(query) {
     var sparql = ParsingInterface.parseSPARQL(query),
         promises = [], updates;
 
@@ -334,20 +344,19 @@ Hylar.prototype.treatUpdateWithGraph = function(query) {
             promises.push(this.treatUpdate(updates[j], sparql.updates[i].updateType));
         }
     }
-    return Promise.all(promises).then(function(values) {
-        return [].concat.apply([], values);
-    });
+
+    let values = await Promise.all(promises)
+    return [].concat.apply([], values);
+
 };
 
 /**
  * Returns the content of the triplestore as turtle.
  * @returns {String}
  */
-Hylar.prototype.getStorage = function() {
-    return this.sm.getContent()
-        .then(function(content) {
-            return content.triples.toString();
-        });
+Hylar.prototype.getStorage = async function() {
+    let content = await this.sm.getContent()
+    return content.triples.toString();
 };
 
 /**
@@ -484,29 +493,23 @@ Hylar.prototype.treatUpdate = async function(update, type) {
  * @returns {Object} The results of this query.
  */
 Hylar.prototype.treatSelectOrConstruct = function(query) {
-    var that = this;
     if (this.rMethod == Reasoner.process.it.tagBased) {
-        var val, blanknodes, facts, triples, temporaryData, sideStoreIndex,
-            parsedQuery= ParsingInterface.parseSPARQL(query),
+        let parsedQuery= ParsingInterface.parseSPARQL(query),
             graph = parsedQuery.where[0].name,
             constructEquivalentQuery = ParsingInterface.constructEquivalentQuery(query, graph);
 
-        return this.sm.query(constructEquivalentQuery)
-            .then(function(r) {
-                triples = r.triples;
-                val = that.dict.findValues(triples, graph);
-                facts = val.found;
-                blanknodes = val.notfound;
-                return {
-                    results: r,
-                    filtered: Reasoner.engine.tagFilter(facts, that.dict.values(graph))
-                }
-            })
-            .then(function(r) {
-                temporaryData = that.dict.findKeys(r.filtered, graph).found.join(' ');
-                return that.sm.loadIntoSideStore(temporaryData, graph);
-            });
+        let results = this.sm.query(constructEquivalentQuery)
+        let triples = results.triples;
+        let val = this.dict.findValues(triples, graph);
+        let facts = val.found;
 
+        let formattedResults = {
+            results: results,
+            filtered: Reasoner.engine.tagFilter(facts, that.dict.values(graph))
+        }
+
+        let temporaryData = this.dict.findKeys(formattedResults.filtered, graph).found.join(' ');
+        return this.sm.loadIntoSideStore(temporaryData, graph);
     } else {
         return this.sm.query(query);
     }
@@ -518,12 +521,12 @@ Hylar.prototype.treatSelectOrConstruct = function(query) {
  * @param derivations The derivations to be registered.
  */
 Hylar.prototype.registerDerivations = function(derivations, graph) {
-    var factsToBeAdded = derivations.additions,
+    let factsToBeAdded = derivations.additions,
         factsToBeDeleted = derivations.deletions;
     graph = this.dict.resolveGraph(graph);
     Hylar.notify('Registering derivations to dictionary...');
 
-    for (var i = 0; i < factsToBeDeleted.length; i++) {
+    for (let i = 0; i < factsToBeDeleted.length; i++) {
         if (factsToBeDeleted[i].toString() == 'IFALSE') {
             delete this.dict.dict[graph]['__FALSE__'];
         } else {
@@ -543,52 +546,40 @@ Hylar.prototype.registerDerivations = function(derivations, graph) {
  * already loaded in the triplestore.
  * @returns {*}
  */
-Hylar.prototype.classify = function() {
-    var that = this, factsChunk, chunks = [], chunksNb = 5000, insertionPromises = [];
+Hylar.prototype.classify = async function() {
     Hylar.notify('Classification started.');
     
-    return this.sm.query('CONSTRUCT { ?a ?b ?c } WHERE { ?a ?b ?c }')
-        .then(function(r) {
-            var facts = [], triple, _fs, f;
-            for (var i = 0; i <  r.triples.length; i++) {
-                triple = r.triples[i];
-                /*if(!(
-                        triple.subject.interfaceName == "BlankNode" ||
-                        triple.predicate.interfaceName == "BlankNode" ||
-                        triple.object.interfaceName == "BlankNode"
-                    )) {*/
-                    _fs = that.dict.get(triple);
-                    if(!_fs) {
-                        f = ParsingInterface.tripleToFact(triple, true, (that.rMethod == Reasoner.process.it.incrementally));
-                        that.dict.put(f);
-                        facts.push(f);
-                    } else {
-                        facts = facts.concat(_fs);
-                    }
-                //}
+    let r = await this.sm.query('CONSTRUCT { ?a ?b ?c } WHERE { ?a ?b ?c }')
+    let facts = []
 
-            }
-            return Reasoner.evaluate(facts, [], [], that.rMethod, that.rules);
-        })
-        .then(function(r) {                                   
-            that.registerDerivations(r);
-            for (var i = 0, j = r.additions.length; i < j; i += chunksNb) {
-                factsChunk = r.additions.slice(i,i+chunksNb);
-                chunks.push(ParsingInterface.factsToTurtle(factsChunk));
-            }
-            return;
-        })
-        .then(function() {            
-            Hylar.notify('Classification succeeded.');
+    for (let i = 0; i <  r.triples.length; i++) {
+        let triple = r.triples[i];
+            let _fs = this.dict.get(triple);
+            if(!_fs) {
+                let f = ParsingInterface.tripleToFact(triple, true, (this.rMethod == Reasoner.process.it.incrementally))
+                this.dict.put(f)
+                facts.push(f)
+            } else facts = facts.concat(_fs)
+    }
+
+    let derivations = await Reasoner.evaluate(facts, [], [], this.rMethod, this.rules)
+    this.registerDerivations(derivations);
+
+    let chunks = [], chunksNb = 5000
+
+    for (var i = 0, j = derivations.additions.length; i < j; i += chunksNb) {
+        let factsChunk = derivations.additions.slice(i,i+chunksNb);
+        chunks.push(ParsingInterface.factsToTurtle(factsChunk));
+    }
+
+    Hylar.notify('Classification succeeded.');
             
-            return Promise.reduce(chunks, function(previous, chunk) {                
-                return that.sm.insert(chunk);
-            }, 0);
-        })
-        .then(function() {
-            emitter.emit('classif-ended');
-            return true;
-        });
+    await Promise.reduce(chunks, (previous, chunk) => {
+        return this.sm.insert(chunk);
+    }, 0)
+
+    emitter.emit('classif-ended');
+    return true
 };
 
 /**

@@ -18,8 +18,7 @@ var ontoDir = Controller.configuration.ontoDir,
     upload = multer({ dest: ontoDir });
 
 process.on('uncaughtException', function(err) {
-    h.displayError('Uncaught Exception');
-    throw err;
+    h.displayError(err);
 });
 
 app.set('view engine', 'ejs');
@@ -41,9 +40,10 @@ app.use(function(req, res, next){
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// CSS & images
+// CSS & images & js
 app.use('/css', express.static(__dirname + '/css'));
 app.use('/img', express.static(__dirname + '/images'));
+app.use('/js', express.static(__dirname + '/js'));
 
 // parse application/json
 app.use(bodyParser.json());
@@ -57,7 +57,7 @@ app.get('/import', Controller.importHylarContents);
 
 // OWL ontology uploading, parsing, getting, classifying
 app.get('/ontology', Controller.list);
-app.post('/ontology', upload.single('file'), Controller.upload, Controller.hello);
+app.post('/ontology', upload.single('file'), Controller.upload);
 app.get('/ontology/:filename', Controller.getOntology, Controller.sendOntology);
 app.delete('/ontology/:filename', Controller.removeOntology, Controller.acknowledgeEnd);
 app.get('/remove/:filename', Controller.removeOntology, Controller.hello);
@@ -90,11 +90,20 @@ app.post('/explore/rules', Controller.addRules, Controller.renderRules);
 // Launching server
 
 app.get('/demo', Controller.geoloc);
-return app.listen(port, function() {
-    Utils._instanceid = port;
-    asciify('HyLAR', {font: 'larry3d'}, function (err, result) {
-        console.log(chalkRainbow(result));
-        h.notify(`⭐ [ Ver. ${require('../../package.json').version} ] Now running on port ${port} ⭐`)
-    });
-    return;
-});
+
+(async() => {
+    await new Promise((resolve, reject) => {
+        try {
+            app.listen(port, function () {
+                Utils._instanceid = port;
+                asciify('HyLAR', {font: 'larry3d'}, function (err, result) {
+                    console.log(chalkRainbow(result));
+                    h.notify(`⭐ [ Ver. ${require('../../package.json').version} ] Now running on port ${port} ⭐`)
+                    resolve()
+                })
+            })
+        } catch (err) {
+            throw err
+        }
+    })
+})()

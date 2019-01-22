@@ -51,7 +51,7 @@ TripleStorageManager.prototype.query = function(query) {
             if(err) {            
                 deferred.reject(new Error(`(SPARQL) ${err}`));
             } else {
-                deferred.resolve(r);
+                deferred.resolve(r !== undefined ? r : true)
             }
         });
     } catch(e) {

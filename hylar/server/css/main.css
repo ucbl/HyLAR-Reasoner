@@ -82,3 +82,15 @@ h3 {
     cursor: copy;
 }
 
+td.is-centered {
+    text-align: center;
+}
+
+.container div.file {
+    justify-content: center;
+}
+
+.table {
+    margin-left: auto;
+    margin-right: auto;
+}

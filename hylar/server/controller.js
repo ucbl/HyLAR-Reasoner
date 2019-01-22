@@ -52,6 +52,12 @@ process.argv.forEach(function(value, index) {
     }
 });
 
+process.argv.forEach(function(value, index) {
+    if((value=='-x') || (value=='--reasoning-off')) {
+        Hylar.setReasoningOff()
+    }
+});
+
 module.exports = {
 
     /**
@@ -108,7 +114,7 @@ module.exports = {
             next()
 
         } catch(error) {
-            h.displayError(error.stack);
+            h.displayError(error);
             res.status(500).send(error.stack);
         }
     },
@@ -216,7 +222,7 @@ module.exports = {
                 ContentNegotiator.answerSparqlWithContentNegotiation(req, res, params)
             }
         } catch(error) {
-            h.displayError(error.stack);
+            h.displayError(error);
             res.status(500).send(error.message);
         }
     },
@@ -288,7 +294,9 @@ module.exports = {
 
     upload: function(req, res, next) {
         fs.renameSync(req.file.path, path.normalize(req.file.destination + '/' + req.file.originalname));
-        next();
+        res.status(200).json({
+            fileName: req.file.originalname
+        })
     },
 
     renderFact: function(req, res) {
