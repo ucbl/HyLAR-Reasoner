@@ -136,3 +136,9 @@ span.fact.fact-state.implicit {
     border-top: 1px solid #df682a;
     color: #c24421;
 }
+
+.last-log {
+    padding: 5px;
+    font-family: "Courier New", Courier, monospace;
+    letter-spacing: -1px;
+}

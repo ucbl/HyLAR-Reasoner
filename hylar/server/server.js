@@ -51,6 +51,7 @@ app.use(bodyParser.json());
 // Server utils
 app.get('/', Controller.hello);
 app.get('/time', Controller.time);
+app.get('/status', Controller.status)
 
 app.get('/export', Controller.sendHylarContents);
 app.get('/import', Controller.importHylarContents);

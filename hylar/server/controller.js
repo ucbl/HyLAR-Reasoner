@@ -69,6 +69,12 @@ module.exports = {
         port: port
     },
 
+    status: function(req, res) {
+        res.status(200).json({
+            lastLog: Hylar.lastLog()
+        })
+    },
+
     /**
      * OWL File content to text
      * @param req
@@ -110,7 +116,7 @@ module.exports = {
         try {
             await Hylar.load(rawOntology, mimeType, req.query.keepoldvalues, graph, req.body.reasoningMethod)
             req.processingDelay = new Date().getTime() - initialTime;
-            h.success("Classification finished in " + req.processingDelay + "ms.");
+            h.success(`Classification of ${req.params.filename} finished in ${req.processingDelay} ms.`);
             next()
 
         } catch(error) {
@@ -181,7 +187,9 @@ module.exports = {
 
     removeOntology: function(req, res, next) {
         fs.unlinkSync(ontoDir + '/' + req.params.filename);
+        h.notify(`File ${req.params.filename} removed`)
         next();
+
     },
 
     processSPARQL: async function(req, res) {
@@ -263,8 +271,7 @@ module.exports = {
         res.render(htmlDir + '/pages/index', {
             kb: kb,
             ontologies: ontologies,
-            contextPath: contextPath,
-            lastLog: Hylar.lastLog()
+            contextPath: contextPath
         });
     },
 
@@ -292,6 +299,7 @@ module.exports = {
         res.status(200).json({
             fileName: req.file.originalname
         })
+        h.notify(`File ${req.file.originalname} loaded and ready to process`)
     },
 
     renderFact: function(req, res) {
@@ -336,7 +344,6 @@ module.exports = {
             derivations: derivations,
             graph: graph,
             contextPath: contextPath,
-            lastLog: Hylar.lastLog(),
             nbExplicit,
             nbImplicit,
             consistent
@@ -371,8 +378,7 @@ module.exports = {
             prevResults: (req.sparqlResults ? req.sparqlResults : ''),
             history: Hylar.queryHistory,
             error: (req.error ? req.error: ''),
-            contextPath: contextPath,
-            lastLog: Hylar.lastLog()
+            contextPath: contextPath
         });
     },
 
@@ -380,8 +386,7 @@ module.exports = {
         res.render(htmlDir + '/pages/rules', {
             rules: Hylar.getRulesAsStringArray(),
             error: req.error,
-            contextPath: contextPath,
-            lastLog: Hylar.lastLog()
+            contextPath: contextPath
         });
     },
 

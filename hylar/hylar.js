@@ -39,16 +39,17 @@ Hylar = function() {
     this.sm.init()
     this.computeRuleDependencies()
     this.log = []
+    Hylar.currentInstance = this
 }
 
 Hylar.log = function(msg) {
-    msg = new Date().toString() + ' ' + msg + '\n'
-    this.log.push(msg)
-    fs.appendFileSync(logFile, msg);
+    let dateMsg = `[ ${new Date().toString()} ] ${msg}\n`
+    Hylar.currentInstance.log.push(msg)
+    fs.appendFileSync(logFile, dateMsg);
 }
 
 Hylar.prototype.lastLog = function() {
-    this.log.length > 0 ? this.log[this.log.length-1] : ''
+    return this.log.length > 0 ? this.log[this.log.length-1] : ''
 }
 
 /**
@@ -197,7 +198,7 @@ Hylar.prototype.treatLoad = async function(ontologyTxt, mimeType) {
         default:
             try {
                 let r = await this.sm.load(ontologyTxt, mimeType)
-                Hylar.notify(r + ' triples loaded in the store.')
+                Hylar.notify(r + ' triples loaded in the store.', {  })
                 if (this.reasoning == true) {
                     return that.classify()
                 } else {

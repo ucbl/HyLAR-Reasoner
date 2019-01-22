@@ -33,9 +33,9 @@ const areYouSure = (ev, url) => {
 }
 
 const checkStatus = () => {
-    $.get('/')
-        .success(() => {
-            $('#hylar-status').html(`<span class="status-ok"></span><i class="fas fa-check"></i> HyLAR is currently used on the <b>server-side</b></span>`)
+    $.get('/status')
+        .success((result) => {
+            $('#hylar-status').html(`<span class="status-ok"></span><i class="fas fa-check"></i> HyLAR is currently used on the <b>server-side</b></span>  |<span class="last-log">${result.lastLog}</span>`)
             $('footer').addClass('status-ok')
             $('footer').removeClass('status-nok')
         })
