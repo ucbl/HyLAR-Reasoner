@@ -194,7 +194,7 @@ Hylar.prototype.load = async function(ontologyTxt, mimeType, keepOldValues, grap
     }
 };
 
-Hylar.prototype.treatLoad = async function(ontologyTxt, mimeType) {
+Hylar.prototype.treatLoad = async function(ontologyTxt, mimeType, graph) {
     var that = this;
     switch(mimeType) {
         case 'application/xml':
@@ -208,7 +208,7 @@ Hylar.prototype.treatLoad = async function(ontologyTxt, mimeType) {
                 let r = await this.sm.load(ontologyTxt, mimeType)
                 Hylar.notify(r + ' triples loaded in the store.', {  })
                 if (this.reasoning == true) {
-                    return that.classify()
+                    return that.classify(graph)
                 } else {
                     return r
                 }
@@ -629,7 +629,7 @@ Hylar.prototype.registerDerivations = function(derivations, graph) {
  * already loaded in the triplestore.
  * @returns {*}
  */
-Hylar.prototype.classify = async function() {
+Hylar.prototype.classify = async function(graph) {
     Hylar.notify('Classification started.');
     
     let r = await this.sm.query('CONSTRUCT { ?a ?b ?c } WHERE { ?a ?b ?c }')
@@ -640,13 +640,13 @@ Hylar.prototype.classify = async function() {
             let _fs = this.dict.get(triple);
             if(!_fs) {
                 let f = ParsingInterface.tripleToFact(triple, true, (this.rMethod == Reasoner.process.it.incrementally))
-                this.dict.put(f)
+                this.dict.put(f, graph)
                 facts.push(f)
             } else facts = facts.concat(_fs)
     }
 
     let derivations = await Reasoner.evaluate(facts, [], [], this.rMethod, this.rules)
-    this.registerDerivations(derivations);
+    this.registerDerivations(derivations, graph);
 
     let chunks = [], chunksNb = 5000
 
