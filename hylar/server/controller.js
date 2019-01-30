@@ -9,7 +9,6 @@ const fs = require('fs'),
     escape = require('escape-html');
 
 const h = require('../hylar');
-const Hylar = new h();
 const Logics = require('../core/Logics/Logics');
 const ContentNegotiator = require('./content_negotiator')
 
@@ -19,6 +18,18 @@ let appDir = path.dirname(require.main.filename),
     port = 3000,
     parsedPort,
     contextPath = ""
+
+let persistent = true
+
+process.argv.forEach(function(value, index) {
+    if((value=='--no-persist')) {
+        persistent = false
+    }
+});
+
+const Hylar = new h({
+    persistent
+});
 
 process.argv.forEach(function(value, index) {
     if ((value == '-od') || (value == '--ontology-directory')) {
@@ -384,6 +395,7 @@ module.exports = {
 
     renderRules: function(req, res) {
         res.render(htmlDir + '/pages/rules', {
+            prefixes: Hylar.prefixes.entries(),
             rules: Hylar.getRulesAsStringArray(),
             error: req.error,
             contextPath: contextPath

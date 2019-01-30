@@ -13,11 +13,6 @@
         <p class="title">
             Knowledge base
         </p>
-        <% if (fact) { %>
-        <p class="subtitle">
-            <%- factName %>
-        </p>
-        <% } %>
     </div>
 </section>
 
@@ -26,7 +21,7 @@
         <% if (kb.length != 0) { %>
             <article class="message is-info">
                 <div class="message-body">
-                    The knowledge base currently contains <%- kb.length %> facts (<%- nbExplicit %> explicit, <%- nbImplicit %>  implicit).
+                    The knowledge base currently contains <%- kb.length %> facts (<%- kb.map(entry => { return entry.val }).filter(fact => { return fact.explicit }).length %> explicit, <%- kb.map(entry => { return entry.val }).filter(fact => { return !fact.explicit }).length %>  implicit).
                     <p>
                         <i class="fas fa-bolt"></i> <a onclick="areYouSure(this, '<%- contextPath %>/explore/resetKB')">Clear the knowledge base</a>
                     </p>
@@ -42,106 +37,76 @@
 <% } %>
 
 <section class="section">
-
-        <% if (!fact) { %>
-        <table class="table is-fullwidth is-striped is-bordered table-responsive">
-            <tr class="is-warning">
-                <th>State</th>
-                <th>Subject</th>
-                <th>Predicate</th>
-                <th>Object</th>
-                <th>Graph</th>
-                <th>Validity</th>
-                <th>Details</th>
-            </tr>
-            <% for (var i = 0; i < kb.length; i++) { %>
-            <tr>
-                <td>
-                    <% if (kb[i].val.explicit) { %>
-                        <span class="fact fact-state explicit">Explicit</span>
-                    <% } else { %>
-                        <span class="fact fact-state implicit">Implicit</span>
-                    <% } %>
-                </td>
-                <% if (kb[i].val.predicate == 'FALSE') { %>
-                <td colspan="6" class="fact is-light has-text-centered">
-                     False fact
-                </td>
+    <table id="facts-list" class="table is-fullwidth is-bordered table-responsive">
+        <thead>
+        <tr class="is-warning">
+            <th>State</th>
+            <th>Subject</th>
+            <th>Predicate</th>
+            <th>Object</th>
+            <th>Graph</th>
+            <th>Validity</th>
+            <th>Details</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% for (var i = 0; i < kb.length; i++) { %>
+        <tr class="fact-entry" id="fact-<%- i %>">
+            <td>
+                <% if (kb[i].val.explicit) { %>
+                    <span class="fact fact-state explicit">Explicit</span>
                 <% } else { %>
-                <td>
-                    <code><%- kb[i].val.subject %></code>
-                </td>
-                <td>
-                    <code><%- kb[i].val.predicate %></code>
-                </td>
-                <td>
-                    <code><%- kb[i].val.object %></code>
-                </td>
-                <td>
-                    <code><%- kb[i].graph %></code>
-                </td>
-                <td class="has-text-centered">
-                    <% if (kb[i].val.isValid()) { %>
-                        <span class="fact fact-valid-true">Valid</span>
-                    <% } else { %>
-                        <span class="fact fact-valid-false">Invalid</span>
-                    <% } %>
-                </td>
-                <td class="has-text-centered">
-                    <a href="<%- contextPath %>/explore/<%- encodeURIComponent(kb[i].graph) %>/<%- encodeURIComponent(kb[i].val) %>">
-                        <i class="fas fa-info-circle"></i>
-                    </a>
-                </td>
+                    <span class="fact fact-state implicit">Implicit</span>
                 <% } %>
-            </tr>
-            <% } %>
-        </table>
-
-        <% } else { %>
-
-            <% if (fact.explicit) { %>
-                <span class="label label-primary">EXPLICIT</span>
+            </td>
+            <% if (kb[i].val.predicate == 'FALSE') { %>
+            <td colspan="6" class="fact is-light has-text-centered">
+                 False fact
+            </td>
             <% } else { %>
-                <span class="label label-info">IMPLICIT</span>
-            <% } %>
-
-            <% if (fact.isValid() == true) { %>
-                &nbsp;<span class="label label-success">VALID</span>
-            <% } else if (fact.isValid() == false) {%>
-                &nbsp;<span class="label label-danger">NOT VALID</span>
-            <% } %>
-
-            <span class="label label-default"><%- graph %> GRAPH</span>
-
-            <% if (fact.toString() === 'IFALSE') { %><br/><i>Note: IFALSE denotes KB inconsistency.</i><% } %>
-
-            <h3>Equivalent as triple</h3>
-            <code><%- factTriple %></code>
-
-            <h3>Truncated version</h3>
-            <%- fact.truncatedString() %>
-
-            <!-- Analyzing explicit causes -->
-            <% for (var i = 0; i < fact.causedBy.length; i++) { %>
-            <h3>Explicitly derived from</h3>
-                <% for (var j = 0; j < fact.causedBy[i].length; j++) { %>
-                    <a class="fact fact-valid-<%- fact.causedBy[i][j].isValid() %>" href="<%- contextPath %>/explore/<%- encodeURIComponent(fact.causedBy[i][j].toString()) %>"><%- fact.causedBy[i][j].truncatedString() %></a>
-                    <% if (!(j+1==fact.causedBy[i].length)) { %> <b>AND</b> <% } %>
+            <td>
+                <code><%- kb[i].val.subject %></code>
+            </td>
+            <td>
+                <code><%- kb[i].val.predicate %></code>
+            </td>
+            <td>
+                <code><%- kb[i].val.object %></code>
+            </td>
+            <td>
+                <code><%- kb[i].graph %></code>
+            </td>
+            <td class="has-text-centered">
+                <% if (kb[i].val.isValid()) { %>
+                    <span class="fact fact-valid-true">Valid</span>
+                <% } else { %>
+                    <span class="fact fact-valid-false">Invalid</span>
                 <% } %>
-            <% } %>
-
-            <!-- Analyzing consequences -->
-            <% if (fact.consequences.length > 0) { %>
-                <h3>Derives</h3>
+            </td>
+            <td class="has-text-centered">
+                <!-- Analyzing consequences -->
+                <% if (kb[i].val.causedBy.length > 0) { %>
                 <ul>
-                <% for (var j = 0; j < fact.consequences.length; j++) { %>
+                    <% for (let cause of kb[i].val.causedBy) { %>
                     <li>
-                        <a class="fact fact-valid-<%- fact.consequences[j].isValid() %>" href="/explore/<%- encodeURIComponent(fact.consequences[j].toString()) %>"><%- fact.consequences[j].truncatedString() %></a>
+                        <a <% for (let fact of cause) { %>data-fact-<%- kb.map(entry => { return entry.val }).indexOf(fact) %> <% } %> onclick="highlightFacts(this)">Derivation #<%- kb[i].val.causedBy.indexOf(cause) %></a>
                     </li>
-                <% } %>
+                    <% } %>
                 </ul>
+                <% } %>
+            </td>
             <% } %>
-
+        </tr>
         <% } %>
+        </tbody>
+    </table>
+
+    <div class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            oui
+        </div>
+        <button class="modal-close is-large" aria-label="close"></button>
+    </div>
 </section>
 </body>

@@ -17,6 +17,15 @@
             </p>
         </div>
     </section>
+    <section class="section">
+        <div class="container is-fluid has-text-centered">
+            <img width="50px" height="50px" src="<%- contextPath %>/img/hylar-icon.png">
+            <i class="fas fa-database" style="font-size: 50px"></i>
+            <div class="last-log">
+                <%- kb.length %> facts (<%- kb.filter(fact => { return fact.explicit }).length %> explicit, <%- kb.filter(fact => { return !fact.explicit }).length %>  implicit)
+            </div>
+        </div>
+    </section>
 
     <section class="section">
         <div class="container is-fluid">

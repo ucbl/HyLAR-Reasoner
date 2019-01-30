@@ -3,7 +3,7 @@
  */
 
 /**
- * Partial OWL2RL spec from http://www.w3.org/TR/owl2-profiles
+ * Partial owl2RL spec from http://www.w3.org/TR/owl2-profiles
  * @author Mehdi Terdjimi
  * @type {{rules: *[]}}
  */
@@ -13,29 +13,29 @@ var Rule = require('./Logics/Rule'),
     Prefixes = require('./Prefixes'),
     Logics = require('./Logics/Logics');
 
-var Class = Prefixes.OWL + 'Class',
-    EquivalentClass = Prefixes.OWL + 'equivalentClass',
-    EquivalentProperty = Prefixes.OWL + 'equivalentProperty',
-    Thing = Prefixes.OWL + 'Thing',
-    Nothing = Prefixes.OWL + 'Nothing',
-    Type = Prefixes.RDF + 'type',
-    Subject = Prefixes.RDF + 'subject',
-    Predicate = Prefixes.RDF + 'predicate',
-    Object = Prefixes.RDF + 'object',
-    SubClassOf = Prefixes.RDFS + 'subClassOf',
-    SubPropertyOf = Prefixes.RDFS + 'subPropertyOf',
-    TransitiveProperty = Prefixes.OWL + 'TransitiveProperty',
-    InverseOf = Prefixes.OWL + 'inverseOf',
-    SameAs = Prefixes.OWL + 'sameAs',
-    Domain = Prefixes.RDFS + "domain",
-    Range = Prefixes.RDFS + "range";
+var Class = Prefixes.get('owl') + 'Class',
+    EquivalentClass = Prefixes.get('owl') + 'equivalentClass',
+    EquivalentProperty = Prefixes.get('owl') + 'equivalentProperty',
+    Thing = Prefixes.get('owl') + 'Thing',
+    Nothing = Prefixes.get('owl') + 'Nothing',
+    Type = Prefixes.get('rdf') + 'type',
+    Subject = Prefixes.get('rdf') + 'subject',
+    Predicate = Prefixes.get('rdf') + 'predicate',
+    Object = Prefixes.get('rdf') + 'object',
+    SubClassOf = Prefixes.get('rdfs') + 'subClassOf',
+    SubPropertyOf = Prefixes.get('rdfs') + 'subPropertyOf',
+    TransitiveProperty = Prefixes.get('owl') + 'TransitiveProperty',
+    InverseOf = Prefixes.get('owl') + 'inverseOf',
+    SameAs = Prefixes.get('owl') + 'sameAs',
+    Domain = Prefixes.get('rdfs') + "domain",
+    Range = Prefixes.get('rdfs') + "range";
 
 /**
- * RDFS/OWL entailment rules.
+ * rdfs/owl entailment rules.
  * @type {{rules: {classSubsumption: *[], propertySubsumption: *[], transitivity: *[], inverse: *[], equivalence: *[], equality: *[]}}}
  */
 
-OWL2RL = {
+owl2RL = {
     rules: {
         classSubsumption: [
             // scm-sco
@@ -173,105 +173,45 @@ OWL2RL = {
                     new Fact(SubPropertyOf, '?p1', '?p2', [], true)],
                 [new Fact(Range, '?p1', '?c', [], true)], "Range-PropertySubsumption")
         
-        ],
-
-        testsFipa: [
-            new Rule([
-                new Fact(Type, '?x', 'http://sites.google.com/site/smartappliancesproject/ontologies/fipa#Function', [], true),
-                new Fact(Type, '?x', 'http://sites.google.com/site/smartappliancesproject/ontologies/fipa#RequestDeviceInfo', [], true)
-            ], [
-                new Fact(Type, '?x', Thing, [], true)
-            ], "Propagation-Test-1"),
-
-            new Rule([
-                new Fact(Type, '?x', Thing, [], true)
-            ], [
-                new Fact('FALSE')
-            ], "Inconsitency-Test"),
-
-            new Rule([
-                new Fact(Type, '?x', 'http://sites.google.com/site/smartappliancesproject/ontologies/fipa#Function', [], true)
-            ], [
-                new Fact(Type, '?x', 'http://sites.google.com/site/smartappliancesproject/ontologies/fipa#RequestDeviceInfo', [], true)
-            ])
-        ],
-
-        testsBNode: [
-            new Rule([
-                new Fact(Type, '?x', 'http://sites.google.com/site/smartappliancesproject/ontologies/fipa#Function', [], true)
-            ], [
-                new Fact(Subject, '__bnode__1', '?x', [], true),
-                new Fact(Predicate, '__bnode__1', Type, [], true),
-                new Fact(Object, '__bnode__1', 'http://sites.google.com/site/smartappliancesproject/ontologies/fipa#Function', [], true)
-            ], "BNode-Test")
         ]
 
     }
 };
 
 module.exports = {
-    test:OWL2RL.rules.classSubsumption
-        .concat(OWL2RL.rules.propertySubsumption)
-        .concat(OWL2RL.rules.transitivity)
-        .concat(OWL2RL.rules.inverse)
-        .concat(OWL2RL.rules.equivalence)
-        .concat(OWL2RL.rules.equality)
-        .concat(OWL2RL.rules.domainRange).concat(OWL2RL.rules.testsFipa)
+    test:owl2RL.rules.classSubsumption
+        .concat(owl2RL.rules.propertySubsumption)
+        .concat(owl2RL.rules.transitivity)
+        .concat(owl2RL.rules.inverse)
+        .concat(owl2RL.rules.equivalence)
+        .concat(owl2RL.rules.equality)
+        .concat(owl2RL.rules.domainRange)
         .concat(Logics.parseRules([
             "(?x ?p1 ?y) ^ (?p2 http://www.w3.org/2002/07/owl#propertyChainAxiom ?n) ^ (?n http://www.w3.org/1999/02/22-rdf-syntax-ns#first ?p1) ^ (?n http://www.w3.org/1999/02/22-rdf-syntax-ns#rest ?n2) ^ (?n2 http://www.w3.org/1999/02/22-rdf-syntax-ns#first ?p2) ^ (?y ?p2 ?z) -> (?x ?p2 ?z)"
-        ]))
-        /*.concat(Logics.parseRules([
-            "(?x http://www.w3.org/2002/07/owl#sameAs ?y) -> (?y http://www.w3.org/2002/07/owl#sameAs ?x)",
-            "(?x http://www.w3.org/2002/07/owl#sameAs ?y) ^ (?y http://www.w3.org/2002/07/owl#sameAs ?z) -> (?x http://www.w3.org/2002/07/owl#sameAs ?z)",            
-            "(?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#FunctionalProperty) ^ (?x ?p ?y1) ^ (?x ?p ?y2)	-> (?y1 http://www.w3.org/2002/07/owl#sameAs ?y2)",
-            "(?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#InverseFunctionalProperty) ^ (?x1 ?p ?y) ^ (?x2 ?p ?y) -> (?x1 http://www.w3.org/2002/07/owl#sameAs ?x2)",
-            "(?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#SymmetricProperty) ^ (?x ?p ?y) -> (?y ?p ?x)",
-            "(?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#TransitiveProperty) ^ (?x ?p ?y) ^ (?y ?p ?z) -> (?x ?p ?z)",
-            "(?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) ^ (?x ?p1 ?y) -> (?x ?p2 ?y)",
-            "(?x http://www.w3.org/2002/07/owl#someValuesFrom ?y) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u ?p ?v) ^ (?v http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?y) -> (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x)",
-            "(?x http://www.w3.org/2002/07/owl#someValuesFrom http://www.w3.org/2002/07/owl#Thing) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u ?p ?v)	-> (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x)",
-            "(?x http://www.w3.org/2002/07/owl#allValuesFrom ?y) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x) ^ (?u ?p ?v)	-> (?v http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?y)",
-            "(?x http://www.w3.org/2002/07/owl#hasValue ?y) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x)	-> (?u ?p ?y)",
-            "(?x http://www.w3.org/2002/07/owl#hasValue ?y) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u ?p ?y) -> (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x)",
-            "(?c http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#Class) -> (?c http://www.w3.org/2000/01/rdf-schema#subClassOf ?c) ^ (?c http://www.w3.org/2002/07/owl#equivalentClass ?c) ^ (?c http://www.w3.org/2000/01/rdf-schema#subClassOf http://www.w3.org/2002/07/owl#Thing) ^ (http://www.w3.org/2002/07/owl#Nothing http://www.w3.org/2000/01/rdf-schema#subClassOf ?c)",
-            "(?c1 http://www.w3.org/2002/07/owl#equivalentClass ?c2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2) ^ (?c2 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c1)",
-            "(?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2) ^ (?c2 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c1) -> (?c1 http://www.w3.org/2002/07/owl#equivalentClass ?c2)",
-            "(?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#ObjectProperty) -> (?p http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p) ^ (?p http://www.w3.org/2002/07/owl#equivalentProperty ?p)",
-            "(?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#DatatypeProperty) -> (?p http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p) ^ (?p http://www.w3.org/2002/07/owl#equivalentProperty ?p)",
-            "(?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) ^ (?p2 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p3) -> (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p3)",
-            "(?p1 http://www.w3.org/2002/07/owl#equivalentProperty ?p2) -> (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) ^ (?p2 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p1)",
-            "(?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) ^ (?p2 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p1) -> (?p1 http://www.w3.org/2002/07/owl#equivalentProperty ?p2)",
-            "(?c1 http://www.w3.org/2002/07/owl#hasValue ?i) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p1) ^ (?c2 http://www.w3.org/2002/07/owl#hasValue ?i) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p2) ^ (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2)",
-            "(?c1 http://www.w3.org/2002/07/owl#someValuesFrom ?y1) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?c2 http://www.w3.org/2002/07/owl#someValuesFrom ?y2) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?y1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?y2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2)",
-            "(?c1 http://www.w3.org/2002/07/owl#someValuesFrom ?y) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p1) ^ (?c2 http://www.w3.org/2002/07/owl#someValuesFrom ?y) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p2) ^ (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2)",
-            "(?c1 http://www.w3.org/2002/07/owl#allValuesFrom ?y1) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?c2 http://www.w3.org/2002/07/owl#allValuesFrom ?y2) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?y1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?y2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2)",
-            "(?c1 http://www.w3.org/2002/07/owl#allValuesFrom ?y) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p1) ^ (?c2 http://www.w3.org/2002/07/owl#allValuesFrom ?y) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p2) ^ (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) -> (?c2 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c1)"
-        ]))
-        .concat(OWL2RL.rules.testsFipa)
-        .concat(OWL2RL.rules.testsBNode)*/,
+        ])),
 
-    rules: OWL2RL.rules.classSubsumption
-        .concat(OWL2RL.rules.propertySubsumption)
-        .concat(OWL2RL.rules.transitivity)
-        .concat(OWL2RL.rules.inverse)
-        .concat(OWL2RL.rules.equivalence)
-        .concat(OWL2RL.rules.equality)
-        .concat(OWL2RL.rules.domainRange),
+    rules: owl2RL.rules.classSubsumption
+        .concat(owl2RL.rules.propertySubsumption)
+        .concat(owl2RL.rules.transitivity)
+        .concat(owl2RL.rules.inverse)
+        .concat(owl2RL.rules.equivalence)
+        .concat(owl2RL.rules.equality)
+        .concat(owl2RL.rules.domainRange),
 
-    classSubsumption: OWL2RL.rules.classSubsumption,
+    classSubsumption: owl2RL.rules.classSubsumption,
 
-    subsumption: OWL2RL.rules.classSubsumption
-        .concat(OWL2RL.rules.propertySubsumption),
+    subsumption: owl2RL.rules.classSubsumption
+        .concat(owl2RL.rules.propertySubsumption),
 
-    transitivity: OWL2RL.rules.transitivity,
+    transitivity: owl2RL.rules.transitivity,
 
-    transitivityInverse: OWL2RL.rules.transitivity
-        .concat(OWL2RL.rules.inverse),
+    transitivityInverse: owl2RL.rules.transitivity
+        .concat(owl2RL.rules.inverse),
 
-    inverse: OWL2RL.rules.inverse,
+    inverse: owl2RL.rules.inverse,
 
-    equivalence: OWL2RL.rules.equivalence,
+    equivalence: owl2RL.rules.equivalence,
 
-    equality: OWL2RL.rules.equality
+    equality: owl2RL.rules.equality
 };
 

@@ -7,9 +7,43 @@
  * @type {{OWL: string, RDF: string, RDFS: string, FIPA: string}}
  */
 
-module.exports = {
-    OWL: 'http://www.w3.org/2002/07/owl#',
-    RDF: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-    RDFS: 'http://www.w3.org/2000/01/rdf-schema#',
-    FIPA: 'http://sites.google.com/site/smartappliancesproject/ontologies/fipa#'
-};
+const RegularExpressions = require('./RegularExpressions')
+
+class Prefixes {
+    constructor() {
+        this.counter = 0
+        this.prefixes = {
+            owl: 'http://www.w3.org/2002/07/owl#',
+            rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+            rdfs: 'http://www.w3.org/2000/01/rdf-schema#'
+        }
+    }
+
+    forgeCustomPrefix() {
+        return `h${this.counter++}`
+    }
+
+    add(prefix, uri) {
+        this.prefixes[prefix] = uri
+    }
+
+    get(prefix) {
+        return this.prefixes[prefix]
+    }
+
+    entries() {
+        return this.prefixes
+    }
+
+    registerPrefixFrom(fact) {
+        let prefixedURIs = Object.values(this.prefixes)
+        for (let triple of [fact.subject, fact.predicate, fact.object]) {
+            if (!prefixedURIs.includes(triple)) {
+                RegularExpressions
+                this.add(this.forgeCustomPrefix(), triple)
+            }
+        }
+    }
+}
+
+module.exports = new Prefixes()

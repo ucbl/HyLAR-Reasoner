@@ -7,44 +7,105 @@
 <header>
     <% include ../partials/menu.ejs %>
 </header>
-<div class="container">
-    <h3>Rules</h3>
 
-    <h4>
-        <a href="<%- contextPath %>/explore/resetRules">Reset rules</a>
-    </h4>
+<section class="hero is-dark">
+    <div class="hero-body">
+        <p class="title">
+            Rules
+        </p>
+    </div>
+</section>
 
-    <h4>Add a new rule</h4>
-    <form method="post" action="<%- contextPath %>/explore/rules">
-        Name: <input type="text" name="rulename"/><br/>
-        (see <a target="_blank" href="https://www.npmjs.com/package/hylar#create-your-own-rules">guidelines</a> for creating your own rules).
-        Prefixes on rule are not supported (e.g. owl:*, rdf:*, ...). Please use full URIs.
-        <textarea name="rule" style="font-family: 'Courier New'; font-size: 16px;" class="form-control" rows="6"></textarea>
-        <input type=submit value="Add rule"/>
-    </form>
-    <div style="padding-top: 10px; font-weight: bold; color:indianred;"><%- error %></div>
-    <h4>Current rules</h4>
-    <% if (rules.length == 0) { %>HyLAR has no rules (no pun intended!)<% } %>
-    <table class="table table-bordered">
-        <tr>
-            <th>Name</th>
-            <th>Rule</th>
-            <th>Remove</th>
-        </tr>
-        <% for (var i = 0; i < rules.length; i++) { %>
+<section class="section">
+    <article class="message is-info">
+        <div class="message-body">
+            The reasoner currently supports <%- rules.length %> rule<% if (rules.length != 1) {%>s<% } %>.
+            <p>
+                <i class="fas fa-undo-alt"></i> <a onclick="areYouSure(this, '<%- contextPath %>/rule/remove/<%- i %>')">Set the reasoner back to the initial rule set</a>
+            </p>
+        </div>
+    </article>
+    <article class="message is-primary">
+        <div class="message-body">
+            <i class="far fa-file-alt"></i> Please see HyLAR <a target="_blank" href="https://www.npmjs.com/package/hylar#create-your-own-rules">guidelines</a> for writing rules.
+            Prefixes on rules are not supported (e.g. owl:*, rdf:*, ...), hence use full URIs.
+        </div>
+    </article>
+</section>
+
+<section class="section">
+    <div class="card">
+        <header class="card-header">
+            <p class="card-header-title">
+                Add a rule
+            </p>
+        </header>
+        <div class="card-content">
+            <div class="field">
+                <label class="label">Name</label>
+                <div class="control">
+                    <input name="rulename" class="input" type="text" placeholder="Rule-X">
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">
+                    Rule
+                </label>
+                <div class="control">
+                    <textarea id="rule-content" class="textarea" name="rule" class="input" type="text" placeholder="(?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2) ^ ... -> ..."></textarea>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="select">
+                    <select onchange="appendPrefix(this)">
+                        <option>Quick URI prefix selector...</option>
+                        <% for (let prefix of Object.keys(prefixes)) { %>
+                        <option><%- prefixes[prefix] %></option>
+                        <% } %>
+                    </select>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control has-text-centered">
+                    <button onclick="addRule()" class="button is-dark is-link">Save rule</button>
+                </div>
+            </div>
+            <!--<form method="post" action="<%- contextPath %>/explore/rules">
+                Name: <input type="text" name="rulename"/><br/>
+                <textarea name="rule" style="font-family: 'Courier New'; font-size: 16px;" class="form-control" rows="6"></textarea>
+                <input type=submit value="Add rule"/>
+            </form>
+            <div style="padding-top: 10px; font-weight: bold; color:indianred;"><%- error %></div>-->
+        </div>
+    </div>
+</section>
+
+<section class="section">
+        <p class="title">Current rules</p>
+        <% if (rules.length == 0) { %>HyLAR has no rules (no pun intended!)<% } %>
+        <table class="table table-bordered">
             <tr>
-                <td>
-                    <% if (rules[i].name) { %><%- rules[i].name %><% } else { %>Unnamed rule #<%- i %>%><% } %>
-                </td>
-                <td>
-                    <small><%- rules[i].rule %></small>
-                </td>
-                <td class="status">
-                    <a href="<%- contextPath %>/rule/remove/<%- i %>"><span class="glyphicon glyphicon-remove"/></a>
-                </td>
+                <th>Name</th>
+                <th>Rule</th>
+                <th>Remove</th>
             </tr>
-        <% } %>
-    </table>
-    </br>
-</div>
+            <% for (var i = 0; i < rules.length; i++) { %>
+                <tr>
+                    <td>
+                        <% if (rules[i].name) { %><%- rules[i].name %><% } else { %>Unnamed rule #<%- i %>%><% } %>
+                    </td>
+                    <td>
+                        <small><%- rules[i].rule %></small>
+                    </td>
+                    <td class="status">
+                        <a href="<%- contextPath %>/rule/remove/<%- i %>"><span class="glyphicon glyphicon-remove"/></a>
+                    </td>
+                </tr>
+            <% } %>
+        </table>
+        </br>
+    </div>
+</section>
 </body>

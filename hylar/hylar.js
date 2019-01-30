@@ -19,7 +19,9 @@ var Dictionary = require('./core/Dictionary'),
     OWL2RL = require('./core/OWL2RL'),
     Fact = require('./core/Logics/Fact'),
     Utils = require('./core/Utils'),
-    Errors = require('./core/Errors')
+    Errors = require('./core/Errors'),
+    RegularExpressions = require('./core/RegularExpressions')
+
 
 var logFile = 'hylar.log';
 
@@ -30,16 +32,20 @@ var logFile = 'hylar.log';
  * @email mehdi.terdjimi@univ-lyon1.fr
  */
 
-Hylar = function() {
+Hylar = function(params = {}) {
     this.dict = new Dictionary()
     this.sm = new TripleStorageManager()
+    this.prefixes = require('./core/Prefixes')
     this.rules = OWL2RL.test
     this.queryHistory = []
+    this.allowPersist = params.hasOwnProperty('persistent') ? params.persistent : true
     this.reasoning = true
     this.sm.init()
     this.computeRuleDependencies()
     this.log = []
     Hylar.currentInstance = this
+
+    this.restore()
 }
 
 Hylar.log = function(msg) {
@@ -117,7 +123,9 @@ Hylar.prototype.computeRuleDependencies = function() {
 Hylar.prototype.clean = function() {
     this.dict = new Dictionary();
     this.sm = new TripleStorageManager();
+    this.sm = new TripleStorageManager();
     this.sm.init();
+    this.persist()
 };
 
 /**
@@ -403,6 +411,7 @@ Hylar.prototype.getDictionary = function() {
  */
 Hylar.prototype.setDictionaryContent = function(dict) {
     this.dict.setContent(dict);
+    this.persist()
 };
 
 Hylar.prototype.import = function(dictionary) {
@@ -417,8 +426,68 @@ Hylar.prototype.import = function(dictionary) {
         }
     }
     this.setDictionaryContent(dictContent);
-    return this.sm.load(importedTriples, "text/turtle");
+    return this.sm.load(importedTriples, "text/turtle")
 };
+
+Hylar.prototype.persist = function() {
+    if (!this.allowPersist) return
+
+    // Check if db folder exists
+    if (!fs.existsSync('./db')){
+        fs.mkdirSync('./db')
+    }
+
+    let dbconf = {
+        mappingsGraphDbFiles: {}
+    }
+
+    if (fs.existsSync('./db/db.conf')) {
+        dbconf = JSON.parse(fs.readFileSync('./db/db.conf').toString())
+    }
+
+    for (let graphUri in this.getDictionary().dict) {
+        // Write db content on file
+        let filename = `${graphUri.match(RegularExpressions.URI_AFTER_HASH_OR_SLASH)[0]}.n3`
+        let dbfilename = `./db/${filename}`
+        let graphContent = this.getDictionary().dict[graphUri]
+        let explicitEntries = []
+
+        for (let triple in graphContent) {
+            if (Logics.getOnlyExplicitFacts(graphContent[triple]).length > 0) explicitEntries.push(triple)
+        }
+        fs.writeFileSync(dbfilename, explicitEntries.join('\n'))
+
+        dbconf.mappingsGraphDbFiles[filename] = graphUri
+    }
+
+    fs.writeFileSync('./db/db.conf', JSON.stringify(dbconf, null, 3))
+}
+
+Hylar.prototype.restore = async function() {
+    if (!fs.existsSync('./db') || !this.allowPersist) return
+
+    Hylar.notify('... Recovering DB ...')
+
+    let files  = fs.readdirSync('./db')
+    let dbconf = {
+        mappingsGraphDbFiles: {}
+    }
+
+    if (fs.existsSync('./db/db.conf')) {
+        dbconf = JSON.parse(fs.readFileSync('./db/db.conf').toString())
+    }
+
+    for (let file of files.filter((file) => { return file != 'db.conf'})) {
+        try {
+            let content = fs.readFileSync(`./db/${file}`).toString()
+            await this.load(content, 'text/n3', true, dbconf.mappingsGraphDbFiles[file])
+        } catch (err) {
+            Hylar.displayWarning(Errors.DBParsing(file))
+        }
+    }
+
+    Hylar.notify('* DB recover finished *')
+}
 
 Hylar.prototype.checkConsistency = function() {
     var __FALSE__ = this.getDictionary().dict['#default']['__FALSE__'],
@@ -548,8 +617,10 @@ Hylar.prototype.registerDerivations = function(derivations, graph) {
 
     for (var i = 0; i < factsToBeAdded.length; i++) {
         this.dict.put(factsToBeAdded[i], graph);
+        this.prefixes.registerPrefixFrom(factsToBeAdded[i])
     }
 
+    this.persist()
     Hylar.success('Registered successfully.');
 };
 

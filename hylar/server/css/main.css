@@ -142,3 +142,20 @@ span.fact.fact-state.implicit {
     font-family: "Courier New", Courier, monospace;
     letter-spacing: -1px;
 }
+
+tr.fact-entry.fact-highlight {
+    background-color: #d9c5f0;
+}
+
+tr.fact-entry.fact-highlight.fact-derived {
+    background-color: #d0f0eb;
+}
+
+div.card {
+    margin-right: 30%;
+    margin-left: 30%;
+}
+
+.select, .select select {
+    width: 100%
+}

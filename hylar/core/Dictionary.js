@@ -7,8 +7,8 @@
  * @type {{substractFactSets: Function, combine: Function}|exports|module.exports}
  */
 
-var Utils = require('./Utils');
-var ParsingInterface = require('./ParsingInterface');
+const Utils = require('./Utils')
+const ParsingInterface = require('./ParsingInterface')
 
 function Dictionary() {
     this.dict = {
@@ -26,10 +26,8 @@ Dictionary.prototype.turnOffForgetting = function() {
     this.allowPurge = false;
 };
 
-Dictionary.prototype.resolveGraph = function(graph) {
-    if (!graph) {
-        return "#default";
-    } else if (!this.dict[graph]) {
+Dictionary.prototype.resolveGraph = function(graph = '#default') {
+    if (!this.dict[graph]) {
         this.dict[graph] = {};
     }
     return graph;
@@ -195,7 +193,6 @@ Dictionary.prototype.findKeys = function(values, graph) {
     };
 };
 
-/** todo gerer graphs **/
 Dictionary.prototype.getFactFromStringRepresentation = function(factStr, graph) {
     graph = this.resolveGraph(graph);
     for (var key in this.dict[graph]) {
@@ -210,6 +207,6 @@ Dictionary.prototype.getFactFromStringRepresentation = function(factStr, graph) 
         }
     }
     return false;
-};
+}
 
 module.exports = Dictionary;

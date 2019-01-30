@@ -46,5 +46,27 @@ const checkStatus = () => {
         })
 }
 
+const highlightFacts = (ev) => {
+    let blocks = Object.keys(ev.dataset).map(blockId => { return document.getElementById(blockId) })
+
+    for (let block of document.getElementsByClassName('fact-entry')) {
+        block.classList.remove("fact-highlight")
+        block.classList.remove("fact-derived")
+    }
+
+    ev.closest("tr").classList.add("fact-derived")
+    blocks.push(ev.closest("tr"))
+
+    for (let block of blocks) {
+        $("#facts-list tbody").prepend(block).closest('th')
+        block.classList.add('fact-highlight')
+        block.scrollIntoView({ block: 'center' })
+    }
+}
+
+const appendPrefix = (ev) => {
+    document.getElementById('rule-content').value = `${document.getElementById('rule-content').value}${ev.value}`
+}
+
 checkStatus()
 window.setInterval(checkStatus, 1000)
