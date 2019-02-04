@@ -68,5 +68,79 @@ const appendPrefix = (ev) => {
     document.getElementById('rule-content').value = `${document.getElementById('rule-content').value}${ev.value}`
 }
 
+const sparql = (ev, contextPath) => {
+    let query = sparqlQuery.getValue()
+
+    $.ajax({
+        url: `${contextPath}/query`,
+        type: "POST",
+        data: {
+            query
+        },
+        headers: {
+            Accept: "application/sparql-results+json"
+        },
+        success: function (result, status, xhr) {
+            let resultsSection = document.getElementById('sparql-results-section')
+            let resultsTable = document.getElementById('sparql-results-table')
+            let graphResultDiv = document.getElementById('sparql-graph-result')
+
+            resultsTable.innerHTML = null
+            graphResultDiv.innerText = null
+
+            if (xhr.getResponseHeader('content-type').includes('text/turtle')) {
+                resultsSection.style.display = 'none'
+                graphResultDiv.style.display = null
+                graphResultDiv.innerText = `${result}`
+                graphResultDiv.insertAdjacentHTML('beforeend', `
+                    <div class="graph-result-menu">
+                        <a id="graph-download" href="">Download graph <i class="fas fa-file-download"></i></a>
+                    </div>
+                `)
+                document.getElementById('graph-download').href = `${contextPath}/query?query=${query}`
+                return
+            } else {
+                graphResultDiv.style.display = 'none'
+                resultsSection.style.display = null
+            }
+
+            let thead = ''
+            if (result.head.vars != '') {
+                thead = '<thead><tr>'
+                for (let variable of result.head.vars) {
+                    thead = `${thead}<th>${variable}</th>`
+                }
+                thead = `${thead}</thead></tr>`
+            }
+
+            let tbody = '<tbody>'
+            for (let binding of result.results.bindings) {
+                tbody = `${tbody}<tr>`
+                if (typeof binding == 'object') {
+                    for (let variable of result.head.vars) {
+                        tbody = `${tbody}<td draggable="true" onclick="copy(this)">${binding[variable].value}</td>`
+                    }
+                } else {
+                    tbody = `${tbody}No results found.`
+                }
+                tbody = `${tbody}</tr>`
+            }
+            tbody = `${tbody}</tbody>`
+
+            resultsTable.insertAdjacentHTML('afterbegin', `${thead}${tbody}`)
+        }
+    })
+}
+
+function putSparql(i) {
+    var query = $('#'+i).text();
+    $('#query').val(query);
+    $('html, body').animate({ scrollTop: 0 }, 0);
+}
+
+const copy = (el) => {
+    sparqlQuery.setValue(`${sparqlQuery.getValue()}${el.innerText}`)
+}
+
 checkStatus()
 window.setInterval(checkStatus, 1000)

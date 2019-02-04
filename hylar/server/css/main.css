@@ -159,3 +159,52 @@ div.card {
 .select, .select select {
     width: 100%
 }
+
+div.powered-by {
+    margin-top: 10px;
+    text-align: right;
+}
+
+div.powered-by .rdfstore {
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+    font-size: 13px;
+    padding: 2px;
+    padding-bottom: 4px;
+    border: 1px solid #df9e27;
+    border-radius: 5px;
+    color: #df682a;
+    background-color: rgba(248, 236, 14, 0.2);
+    box-shadow: #dfc830 1px 1px;
+}
+div.powered-by .yasqe {
+    margin-bottom: 10px;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 2px;
+    padding-bottom: 4px;
+    border: 1px solid #5283a4;
+    border-radius: 5px;
+    color: #5283a4;
+    background-color: rgba(236, 247, 250, 0.2);
+    box-shadow: #b7dfc0 1px 1px;
+}
+
+.graph-result {
+    border: 1px solid #dbdbdb;
+    padding: 10px;
+    color: rgba(69, 46, 91, 0.78);
+    font-family: "Courier New", Courier, monospace;
+    font-size: 14px;
+    overflow: hidden;
+}
+
+.graph-result-menu {
+    text-align: right;
+    font-size: 18px;
+    border-top: 1px solid #dbdbdb;
+    background-color: #ecf7fa;
+    padding: 3px;
+    padding-right: 10px;
+    margin-top: 10px;
+}

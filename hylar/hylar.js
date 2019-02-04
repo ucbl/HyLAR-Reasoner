@@ -181,21 +181,19 @@ Hylar.prototype.updateReasoningMethod = function(method = 'incremental') {
  * @returns {*}
  */
 Hylar.prototype.load = async function(ontologyTxt, mimeType, keepOldValues, graph, reasoningMethod) {
-    var that = this;
     emitter.emit('classif-started');
     this.updateReasoningMethod(reasoningMethod);
 
     if (!keepOldValues) {
         this.dict.clear();
         await this.sm.init()
-        return that.treatLoad(ontologyTxt, mimeType, graph)
+        return this.treatLoad(ontologyTxt, mimeType, graph)
     } else {
         return this.treatLoad(ontologyTxt, mimeType, graph)
     }
 };
 
 Hylar.prototype.treatLoad = async function(ontologyTxt, mimeType, graph) {
-    var that = this;
     switch(mimeType) {
         case 'application/xml':
         case 'application/rdf+xml':
@@ -208,7 +206,7 @@ Hylar.prototype.treatLoad = async function(ontologyTxt, mimeType, graph) {
                 let r = await this.sm.load(ontologyTxt, mimeType)
                 Hylar.notify(r + ' triples loaded in the store.', {  })
                 if (this.reasoning == true) {
-                    return that.classify(graph)
+                    return this.classify(graph)
                 } else {
                     return r
                 }
@@ -337,7 +335,7 @@ Hylar.prototype.query = async function(query, reasoningMethod) {
                     singleWhereQueries.push(ParsingInterface.isolateWhereQuery(sparql, i))
                 }
 
-                await Promise.reduce(singleWhereQueries, function (previous, singleWhereQuery) {
+                await Promise.reduce(singleWhereQueries, (previous, singleWhereQuery) => {
                     return this.treatSelectOrConstruct(singleWhereQuery);
                 }, 0)
 
@@ -520,8 +518,7 @@ Hylar.prototype.isIncremental = function() {
  * @returns {Object} The results of this query.
  */
 Hylar.prototype.treatUpdate = async function(update, type) {
-    var that = this,
-        graph = update.name,
+    let graph = update.name,
         iTriples = [],
         dTriples = [],
         FeIns, FeDel, F = this.getDictionary().values(graph),
@@ -550,10 +547,10 @@ Hylar.prototype.treatUpdate = async function(update, type) {
         }
     }
 
-    FeIns = ParsingInterface.triplesToFacts(iTriples, true, (that.rMethod == Reasoner.process.it.incrementally));
-    FeDel = ParsingInterface.triplesToFacts(dTriples, true, (that.rMethod == Reasoner.process.it.incrementally));
+    FeIns = ParsingInterface.triplesToFacts(iTriples, true, (this.rMethod == Reasoner.process.it.incrementally));
+    FeDel = ParsingInterface.triplesToFacts(dTriples, true, (this.rMethod == Reasoner.process.it.incrementally));
 
-    let derivations = await Reasoner.evaluate(FeIns, FeDel, F, that.rMethod, that.rules)
+    let derivations = await Reasoner.evaluate(FeIns, FeDel, F, this.rMethod, this.rules)
 
     this.registerDerivations(derivations, graph);
 
@@ -586,7 +583,7 @@ Hylar.prototype.treatSelectOrConstruct = function(query) {
 
         let formattedResults = {
             results: results,
-            filtered: Reasoner.engine.tagFilter(facts, that.dict.values(graph))
+            filtered: Reasoner.engine.tagFilter(facts, this.dict.values(graph))
         }
 
         let temporaryData = this.dict.findKeys(formattedResults.filtered, graph).found.join(' ');

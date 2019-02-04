@@ -2,10 +2,7 @@
 * Created by Spadon on 17/10/2014.
 */
 
-var ReasoningEngine = require('./ReasoningEngine'),
-    Logics = require('./Logics/Logics');
-
-var q = require('q');
+var ReasoningEngine = require('./ReasoningEngine');
 
 /**
  * The core reasoner or HyLAR.

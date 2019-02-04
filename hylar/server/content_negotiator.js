@@ -17,7 +17,8 @@ let xmlSparqlAttributes = {
  */
 let acceptedContents = {
     sparql_results_xml: 'application/sparql-results+xml',
-    sparql_results_json: 'application/sparql-results+json'
+    sparql_results_json: 'application/sparql-results+json',
+    text_turtle: 'text/turtle'
 }
 
 /**
@@ -43,6 +44,18 @@ module.exports = {
      * @param httpResponse: The response, with expected content type, sent back to the client
      */
     answerSparqlWithContentNegotiation: function(clientHttpRequest, httpResponse, additionalParams = { hylar_meta: {}, response: {}}) {
+        if (additionalParams.results.hasOwnProperty('triples')) {
+            // Send response to client as turtle
+            httpResponse.set('Content-Type', acceptedContents.text_turtle)
+            httpResponse.set('Content-disposition', 'attachment; filename=results.ttl')
+            let content = ''
+            for (let triple of additionalParams.results.triples) {
+                content = `${content}${triple.toString()}`
+            }
+            httpResponse.send(content)
+            return
+        }
+
         let sparqlJson = generateJsonSparqlResults()
 
         // Build results as W3C sparql result standardization

@@ -143,7 +143,7 @@ Dictionary.prototype.values = function(graph) {
  * @param triples An array of turtle triples.
  * @returns {{found: Array, notfound: Array}}
  */
-Dictionary.prototype.findValues = function(triples, graph) {
+Dictionary.prototype.findValues = function(triples = [], graph) {
     var values = [], notfound = [],
         facts;
     graph = this.resolveGraph(graph);

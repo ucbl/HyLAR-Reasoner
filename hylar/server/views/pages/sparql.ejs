@@ -6,62 +6,71 @@
 <body>
 <header>
     <% include ../partials/menu.ejs %>
-    <script>
-        function putSparql(i) {
-            var query = $('#'+i).text();
-            $('#query').val(query);
-            $('html, body').animate({ scrollTop: 0 }, 0);
-        }
-    </script>
 </header>
+<section class="hero is-dark">
+    <div class="hero-body">
+        <p class="title">
+            SPARQL Endpoint
+        </p>
+    </div>
+</section>
+<section class="section">
+    <div class="container">
+        <textarea id="query" name="query"><%- sparqlQuery %></textarea>
+        <div class="columns">
+            <div class="column">
+                <input onclick="sparql(this, '<%- contextPath %>')" style="margin-top: 10px" class="button is-info" type="submit" value="Submit query">
+            </div>
+            <div class="column">
+                <div class="powered-by">
+                    Powered by
+                    <a class="rdfstore" href="https://www.npmjs.com/package/rdfstore"><img width="14px" height="14px" src="<%- contextPath %>/img/rdf.png"> rdfstore.js</a> and
+                    <a class="yasqe" href="https://yasqe.yasgui.org/"><img width="14px" height="14px" src="<%- contextPath %>/img/yasqe.png"> YASQE</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="sparql-results-section" style="display:none;" class="section">
+    <div class="container">
+        <h1 class="subtitle">Results</h1>
+        <table id="sparql-results-table" class="table is-bordered table-responsive is-fullwidth"></table>
+    </div>
+</section>
+
 <div class="container">
-    <h3>SPARQL endpoint</h3>
-    <form method="post" action="">
-        <small>Powered by <a href="https://www.npmjs.com/package/rdfstore">rdfstore.js</a></small>
-        <textarea id="query" name="query" style="font-family: 'Courier New'; font-size: 16px;" class="form-control" rows="10"><%- sparqlQuery %></textarea>
-        <input type="submit" value="Submit query"/>
-    </form>
+    <div id="sparql-graph-result" class="container graph-result" style="display:none;">
+    </div>
+</div>
 
-    <h3>Results</h3>
-    <table class="table table-bordered sparqlresults-table">
-        <tr>
-        <% for (var variable in prevResults[0]) { %>
-            <th><%= variable %></th>
-        <% } %>
-        </tr>
-        <% if(prevResults && (prevResults.length == 0)) { %><span class="error">No results found. </span><% } %>
-        <% for (var i = 0; i < prevResults.length; i++) { %>
-        <tr>
-            <% for (var key in prevResults[i]) { %>
-            <td><small class="sparqlresults">
-                    <%- prevResults[i][key] ? prevResults[i][key].value : '' %></small></td>
-            <% } %>
-        </tr>
-        <% } %>
-    </table>
-
-    <h3>Query history</h3>
-    <table class="table table-bordered">
-        <tr>
-            <th>SPARQL query</th>
-            <th>Status</th>
-        </tr>
-        <% for (var i = (history.length-1); i > -1; i--) { %>
-        <tr class="queryhistory" onclick="putSparql('q<%- i %>')">
-            <td id="q<%- i %>"><%= history[i].query %></td>
-            <td class="sparqlstatus">
-                <% if(history[i].noError) { %>
+<section class="section">
+    <div class="container">
+        <h1 class="subtitle">Query history</h1>
+        <table class="table is-warning is-bordered is-striped table-responsive is-fullwidth">
+            <tr>
+                <th>SPARQL query</th>
+                <th>Status</th>
+            </tr>
+            <% for (var i = (history.length-1); i > -1; i--) { %>
+            <tr class="queryhistory" onclick="putSparql('q<%- i %>')">
+                <td id="q<%- i %>"><%= history[i].query %></td>
+                <td class="sparqlstatus">
+                    <% if(history[i].noError) { %>
                     <span class="noerror glyphicon glyphicon-ok"> Passed</span>
-                <% } else { %>
+                    <% } else { %>
                     <span class="error glyphicon glyphicon-remove-circle"> Errored</span>
-                <% } %>
-            </td>
-        </tr>
-        <% } %>
-    </table>
+                    <% } %>
+                </td>
+            </tr>
+            <% } %>
+        </table>
+    </div>
+</section>
 
-</div>
-    <div style="padding-top: 10px; font-weight: bold; color:indianred;"><%- error %></div>
-</div>
+<script>
+    let sparqlQuery = YASQE.fromTextArea(document.getElementById('query'))
+</script>
+
 </body>
 </html>

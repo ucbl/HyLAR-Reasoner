@@ -5,7 +5,8 @@ var h = require('../hylar');
 var express = require('express'),
     app = express(),
     bodyParser = require('body-parser'),
-    multer  = require('multer');
+    multer  = require('multer'),
+    path = require('path');
 
 var asciify = require("asciify"),
     chalkRainbow = require('chalk-rainbow')
@@ -38,13 +39,13 @@ app.use(function(req, res, next){
 });
 
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 // CSS & images & js
 app.use('/css', express.static(__dirname + '/css'));
 app.use('/img', express.static(__dirname + '/images'));
 app.use('/js', express.static(__dirname + '/js'));
-
 // parse application/json
 app.use(bodyParser.json());
 
