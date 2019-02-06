@@ -8,8 +8,7 @@
 
 ktbs:ObselType a owl:Class .
 
-# assistance events
-<https://www.aidaxis.com/ns/assistanceLaunch> a ktbs:ObselType ;
+ktbs:ObselType;
     ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .
 
 <https://www.aidaxis.com/ns/assistanceLaunch/sessionBegin> a ktbs:AttributeType ;

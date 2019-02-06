@@ -373,7 +373,12 @@ Logics = {
     parseRules: function(strRuleList) {
         var parsedRuleList = [];
         for (var i = 0; i < strRuleList.length; i++) {
-            parsedRuleList.push(this.parseRule(strRuleList[i]));
+			let match = strRuleList[i].match('(.+)=(.+)')
+			if (match) {
+				parsedRuleList.push(this.parseRule(match[2], match[1]))
+			} else {
+				parsedRuleList.push(this.parseRule(strRuleList[i]))
+			}
         }
         return parsedRuleList;
     },

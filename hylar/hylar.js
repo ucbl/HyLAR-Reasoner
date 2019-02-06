@@ -36,7 +36,7 @@ Hylar = function(params = {}) {
     this.dict = new Dictionary()
     this.sm = new TripleStorageManager()
     this.prefixes = require('./core/Prefixes')
-    this.rules = OWL2RL.test
+    this.rules = OWL2RL
     this.queryHistory = []
     this.allowPersist = params.hasOwnProperty('persistent') ? params.persistent : true
     this.reasoning = true
