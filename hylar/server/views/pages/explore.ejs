@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <% include ../partials/head.ejs %>
+    <script src="<%- contextPath %>/hylar-client.js"></script>
 </head>
 <body>
 <header>
@@ -51,7 +52,7 @@
         </thead>
         <tbody>
         <% for (var i = 0; i < kb.length; i++) { %>
-        <tr class="fact-entry" id="fact-<%- i %>">
+        <tr class="fact-entry" data-fact-id="<%- i %>" id="fact-<%- i %>">
             <td>
                 <% if (kb[i].val.explicit) { %>
                     <span class="fact fact-state explicit">Explicit</span>
@@ -64,13 +65,13 @@
                  False fact
             </td>
             <% } else { %>
-            <td>
+            <td id="subject-<%- i %>">
                 <code><%- kb[i].val.subject %></code>
             </td>
-            <td>
+            <td id="predicate-<%- i %>">
                 <code><%- kb[i].val.predicate %></code>
             </td>
-            <td>
+            <td id="object-<%- i %>">
                 <code><%- kb[i].val.object %></code>
             </td>
             <td>

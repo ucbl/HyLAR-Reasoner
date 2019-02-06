@@ -6,7 +6,24 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 
-ktbs:ObselType a owl:Class .
+ktbs:ObselType,
+ktbs:AssistanceEvent,
+ktbs:UserEvent,
+ktbs:TargetApplicationEvent,
+ktbs:SystemNotice,
+ktbs:ErrorNotice,
+	a owl:Class .
+	
+ktbs:AssistanceEvent,
+ktbs:UserEvent,
+ktbs:TargetApplicationEvent,
+	a ktbs:ObselType
+	
+ktbs:subject, ktbs:message a owl:ObjectProperty .
+ktbs:subject, ktbs:message a ktbs:AttributeType .
+
+ktbs:SystemNotice rdfs:subClassOf ktbs:TargetApplicationEvent .
+ktbs:ErrorNotice rdfs:subClassOf ktbs:SystemNotice .
 
 ktbs:ObselType;
     ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .

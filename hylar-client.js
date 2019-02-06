@@ -8,8 +8,8 @@
  * @type {{substractFactSets: Function, combine: Function}|exports|module.exports}
  */
 
-var Utils = require('./Utils');
-var ParsingInterface = require('./ParsingInterface');
+const Utils = require('./Utils')
+const ParsingInterface = require('./ParsingInterface')
 
 function Dictionary() {
     this.dict = {
@@ -27,10 +27,8 @@ Dictionary.prototype.turnOffForgetting = function() {
     this.allowPurge = false;
 };
 
-Dictionary.prototype.resolveGraph = function(graph) {
-    if (!graph) {
-        return "#default";
-    } else if (!this.dict[graph]) {
+Dictionary.prototype.resolveGraph = function(graph = '#default') {
+    if (!this.dict[graph]) {
         this.dict[graph] = {};
     }
     return graph;
@@ -146,7 +144,7 @@ Dictionary.prototype.values = function(graph) {
  * @param triples An array of turtle triples.
  * @returns {{found: Array, notfound: Array}}
  */
-Dictionary.prototype.findValues = function(triples, graph) {
+Dictionary.prototype.findValues = function(triples = [], graph) {
     var values = [], notfound = [],
         facts;
     graph = this.resolveGraph(graph);
@@ -196,7 +194,6 @@ Dictionary.prototype.findKeys = function(values, graph) {
     };
 };
 
-/** todo gerer graphs **/
 Dictionary.prototype.getFactFromStringRepresentation = function(factStr, graph) {
     graph = this.resolveGraph(graph);
     for (var key in this.dict[graph]) {
@@ -211,16 +208,15 @@ Dictionary.prototype.getFactFromStringRepresentation = function(factStr, graph) 
         }
     }
     return false;
-};
+}
 
 module.exports = Dictionary;
 },{"./ParsingInterface":9,"./Utils":15}],2:[function(require,module,exports){
-var EventEmitter = require('events').EventEmitter;
-
-var Emitter = new EventEmitter();
+const EventEmitter = require('events').EventEmitter;
+const Emitter = new EventEmitter();
 
 module.exports = Emitter;
-},{"events":35}],3:[function(require,module,exports){
+},{"events":39}],3:[function(require,module,exports){
 /**
  * Created by aifb on 02.05.16.
  */
@@ -240,6 +236,14 @@ module.exports = {
 
     FileIO: function(filename) {
         return new Error('Cannot access ' + filename);
+    },
+
+    DBParsing: function(filename) {
+        return new Error(`Cannot parse '${filename}' as graph database.`)
+    },
+
+    CountNotImplemented: function(expr) {
+        return new Error(`COUNT statement currently only supports single wildcard (*) counts, got '${expr}'`)
     }
 };
 },{}],4:[function(require,module,exports){
@@ -858,7 +862,12 @@ Logics = {
     parseRules: function(strRuleList) {
         var parsedRuleList = [];
         for (var i = 0; i < strRuleList.length; i++) {
-            parsedRuleList.push(this.parseRule(strRuleList[i]));
+			let match = strRuleList[i].match('(.+)=(.+)')
+			if (match) {
+				parsedRuleList.push(this.parseRule(match[2], match[1]))
+			} else {
+				parsedRuleList.push(this.parseRule(strRuleList[i]))
+			}
         }
         return parsedRuleList;
     },
@@ -903,7 +912,7 @@ Logics = {
 };
 
 module.exports = Logics;
-},{"../Errors":3,"../RegularExpressions":13,"../Utils":15,"./Fact":4,"./Rule":6,"md5":41}],6:[function(require,module,exports){
+},{"../Errors":3,"../RegularExpressions":13,"../Utils":15,"./Fact":4,"./Rule":6,"md5":47}],6:[function(require,module,exports){
 /**
  * Created by mt on 21/12/2015.
  */
@@ -1368,286 +1377,80 @@ Solver = {
 };
 
 module.exports = Solver;
-},{"../Emitter":2,"../Utils":15,"./Fact":4,"./Logics":5,"q":45}],8:[function(require,module,exports){
+},{"../Emitter":2,"../Utils":15,"./Fact":4,"./Logics":5,"q":51}],8:[function(require,module,exports){
 /**
  * Created by MT on 17/09/2015.
  */
 
 /**
- * Partial OWL2RL spec from http://www.w3.org/TR/owl2-profiles
+ * Partial owl2RL spec from http://www.w3.org/TR/owl2-profiles
  * @author Mehdi Terdjimi
  * @type {{rules: *[]}}
  */
 
-var Rule = require('./Logics/Rule'),
-    Fact = require('./Logics/Fact'),
-    Prefixes = require('./Prefixes'),
-    Logics = require('./Logics/Logics');
-
-var Class = Prefixes.OWL + 'Class',
-    EquivalentClass = Prefixes.OWL + 'equivalentClass',
-    EquivalentProperty = Prefixes.OWL + 'equivalentProperty',
-    Thing = Prefixes.OWL + 'Thing',
-    Nothing = Prefixes.OWL + 'Nothing',
-    Type = Prefixes.RDF + 'type',
-    Subject = Prefixes.RDF + 'subject',
-    Predicate = Prefixes.RDF + 'predicate',
-    Object = Prefixes.RDF + 'object',
-    SubClassOf = Prefixes.RDFS + 'subClassOf',
-    SubPropertyOf = Prefixes.RDFS + 'subPropertyOf',
-    TransitiveProperty = Prefixes.OWL + 'TransitiveProperty',
-    InverseOf = Prefixes.OWL + 'inverseOf',
-    SameAs = Prefixes.OWL + 'sameAs',
-    Domain = Prefixes.RDFS + "domain",
-    Range = Prefixes.RDFS + "range";
-
-/**
- * RDFS/OWL entailment rules.
- * @type {{rules: {classSubsumption: *[], propertySubsumption: *[], transitivity: *[], inverse: *[], equivalence: *[], equality: *[]}}}
- */
+const Logics = require('./Logics/Logics')
 
 OWL2RL = {
-    rules: {
-        classSubsumption: [
-            // scm-sco
-            new Rule([
-                    new Fact(SubClassOf, '?c1', '?c2', [], true),
-                    new Fact(SubClassOf, '?c2', '?c3', [], true)],
-                [new Fact(SubClassOf, '?c1', '?c3', [], true)], "Class-Subsumption-1"),
+    rules: Logics.parseRules([
+        "prp-dom = (?p http://www.w3.org/2000/01/rdf-schema#domain ?c) ^ (?x ?p ?y) -> (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c)",
+        "prp-rng = (?p http://www.w3.org/2000/01/rdf-schema#range ?c) ^ (?x ?p ?y) -> (?y http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c)",
+        "prp-fp = (?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#FunctionalProperty) ^ (?x ?p ?y1) ^ (?x ?p ?y2) -> (?y1 http://www.w3.org/2002/07/owl#sameAs ?y2)",
+        "prp-ifp = (?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#InverseFunctionalProperty) ^ (?x1 ?p ?y) ^ (?x2 ?p ?y) -> (?x1 http://www.w3.org/2002/07/owl#sameAs ?x2)",
+        "prp-irp = (?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#IrreflexiveProperty) ^ (?x ?p ?x) -> false",
+        "prp-symp = (?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#SymmetricProperty) ^ (?x ?p ?y) -> (?y ?p ?x)",
+        "prp-asyp = (?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#AsymmetricProperty) ^ (?x ?p ?y) ^ (?y ?p ?x) -> false",
+        "prp-trp = (?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#TransitiveProperty) ^ (?x ?p ?y) ^ (?y ?p ?z) -> (?x ?p ?z)",
+        "prp-spo1 = (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) ^ (?x ?p1 ?y) -> (?x ?p2 ?y)",
+        "prp-spo2 = (?x ?p1 ?y) ^ (?p2 http://www.w3.org/2002/07/owl#propertyChainAxiom ?n) ^ (?n http://www.w3.org/1999/02/22-rdf-syntax-ns#first ?p1) ^ (?n http://www.w3.org/1999/02/22-rdf-syntax-ns#rest ?n2) ^ (?n2 http://www.w3.org/1999/02/22-rdf-syntax-ns#first ?p2) ^ (?y ?p2 ?z) -> (?x ?p2 ?z)",
+        "prp-eqp1 = (?p1 http://www.w3.org/2002/07/owl#equivalentProperty ?p2) ^ (?x ?p1 ?y) -> (?x ?p2 ?y)",
+        "prp-eqp2 = (?p1 http://www.w3.org/2002/07/owl#equivalentProperty ?p2) ^ (?x ?p2 ?y) -> (?x ?p1 ?y)",
+        "prp-pdw = (?p1 http://www.w3.org/2002/07/owl#propertyDisjointWith ?p2) ^ (?x ?p1 ?y) ^ (?x ?p2 ?y) -> false",
+        "prp-inv1 = (?p1 http://www.w3.org/2002/07/owl#inverseOf ?p2) ^ (?x ?p1 ?y) -> (?y ?p2 ?x)",
+        "prp-inv2 = (?p1 http://www.w3.org/2002/07/owl#inverseOf ?p2) ^ (?x ?p2 ?y) -> (?y ?p1 ?x)",
+        "prp-npa1 = (?x http://www.w3.org/2002/07/owl#sourceIndividual ?i1) ^ (?x http://www.w3.org/2002/07/owl#assertionProperty ?p) ^ (?x http://www.w3.org/2002/07/owl#targetIndividual ?i2) ^ (?i1 ?p ?i2) -> false",
+        "prp-npa2 = (?x http://www.w3.org/2002/07/owl#sourceIndividual ?i) ^ (?x http://www.w3.org/2002/07/owl#assertionProperty ?p) ^ (?x http://www.w3.org/2002/07/owl#targetValue ?lt) ^ (?i ?p ?lt) -> false",
+        "cls-nothing2 = (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#Nothing) -> false",
+        "cls-com = (?c1 http://www.w3.org/2002/07/owl#complementOf ?c2) ^ (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c1) ^ (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c2) -> false",
+        "cls-svf1 = (?x http://www.w3.org/2002/07/owl#someValuesFrom ?y) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u ?p ?v) ^ (?v http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?y) -> (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x)",
+        "cls-svf2 = (?x http://www.w3.org/2002/07/owl#someValuesFrom http://www.w3.org/2002/07/owl#Thing) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u ?p ?v) -> (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x)",
+        "cls-avf = (?x http://www.w3.org/2002/07/owl#allValuesFrom ?y) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x) ^ (?u ?p ?v) -> (?v http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?y)",
+        "cls-hv1 = (?x http://www.w3.org/2002/07/owl#hasValue ?y) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x) -> (?u ?p ?y)",
+        "cls-hv2 = (?x http://www.w3.org/2002/07/owl#hasValue ?y) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u ?p ?y) -> (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x)",
+        "cls-maxc1 = (?x http://www.w3.org/2002/07/owl#maxCardinality \"0\"^^xsd:nonNegativeInteger) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x) ^ (?u ?p ?y) -> false",
+        "cls-maxc2 = (?x http://www.w3.org/2002/07/owl#maxCardinality \"1\"^^xsd:nonNegativeInteger) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x) ^ (?u ?p ?y1) ^ (?u ?p ?y2) -> (?y1 http://www.w3.org/2002/07/owl#sameAs ?y2)",
+        "cls-maxqc1 = (?x http://www.w3.org/2002/07/owl#maxQualifiedCardinality \"0\"^^xsd:nonNegativeInteger) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?x http://www.w3.org/2002/07/owl#onClass ?c) ^ (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x) ^ (?u ?p ?y) ^ (?y http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c) -> false",
+        "cls-maxqc2 = (?x http://www.w3.org/2002/07/owl#maxQualifiedCardinality \"0\"^^xsd:nonNegativeInteger) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?x http://www.w3.org/2002/07/owl#onClass http://www.w3.org/2002/07/owl#Thing) ^ (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x) ^ (?u ?p ?y) -> false",
+        "cls-maxqc3 = (?x http://www.w3.org/2002/07/owl#maxQualifiedCardinality \"1\"^^xsd:nonNegativeInteger) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?x http://www.w3.org/2002/07/owl#onClass ?c) ^ (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x) ^ (?u ?p ?y1) ^ (?y1 http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c) ^ (?u ?p ?y2) ^ (?y2 http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c) -> (?y1 http://www.w3.org/2002/07/owl#sameAs ?y2)",
+        "cls-maxqc4 = (?x http://www.w3.org/2002/07/owl#maxQualifiedCardinality \"1\"^^xsd:nonNegativeInteger) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?x http://www.w3.org/2002/07/owl#onClass http://www.w3.org/2002/07/owl#Thing) ^ (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x) ^ (?u ?p ?y1) ^ (?u ?p ?y2) -> (?y1 http://www.w3.org/2002/07/owl#sameAs ?y2)",
+        "cax-sco = (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2) ^ (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c1) -> (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c2)",
+        "cax-eqc1 = (?c1 http://www.w3.org/2002/07/owl#equivalentClass ?c2) ^ (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c1) -> (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c2)",
+        "cax-eqc2 = (?c1 http://www.w3.org/2002/07/owl#equivalentClass ?c2) ^ (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c2) -> (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c1)",
+        "cax-dw = (?c1 http://www.w3.org/2002/07/owl#disjointWith ?c2) ^ (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c1) ^ (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c2) -> false",
+        "scm-cls = (?c http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#Class) -> (?c http://www.w3.org/2000/01/rdf-schema#subClassOf ?c) ^ (?c http://www.w3.org/2002/07/owl#equivalentClass ?c) ^ (?c http://www.w3.org/2000/01/rdf-schema#subClassOf http://www.w3.org/2002/07/owl#Thing) ^ (http://www.w3.org/2002/07/owl#Nothing http://www.w3.org/2000/01/rdf-schema#subClassOf ?c)",
+        "scm-sco = (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2) ^ (?c2 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c3) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c3)",
+        "scm-eqc1 = (?c1 http://www.w3.org/2002/07/owl#equivalentClass ?c2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2) ^ (?c2 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c1)",
+        "scm-eqc2 = (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2) ^ (?c2 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c1) -> (?c1 http://www.w3.org/2002/07/owl#equivalentClass ?c2)",
+        "scm-op = (?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#ObjectProperty) -> (?p http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p) ^ (?p http://www.w3.org/2002/07/owl#equivalentProperty ?p)",
+        "scm-dp = (?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#DatatypeProperty) -> (?p http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p) ^ (?p http://www.w3.org/2002/07/owl#equivalentProperty ?p)",
+        "scm-spo = (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) ^ (?p2 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p3) -> (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p3)",
+        "scm-eqp1 = (?p1 http://www.w3.org/2002/07/owl#equivalentProperty ?p2) -> (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) ^ (?p2 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p1)",
+        "scm-eqp2 = (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) ^ (?p2 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p1) -> (?p1 http://www.w3.org/2002/07/owl#equivalentProperty ?p2)",
+        "scm-dom1 = (?p http://www.w3.org/2000/01/rdf-schema#domain ?c1) ^ (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2) -> (?p http://www.w3.org/2000/01/rdf-schema#domain ?c2)",
+        "scm-dom2 = (?p2 http://www.w3.org/2000/01/rdf-schema#domain ?c) ^ (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) -> (?p1 http://www.w3.org/2000/01/rdf-schema#domain ?c)",
+        "scm-rng1 = (?p http://www.w3.org/2000/01/rdf-schema#range ?c1) ^ (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2) -> (?p http://www.w3.org/2000/01/rdf-schema#range ?c2)",
+        "scm-rng2 = (?p2 http://www.w3.org/2000/01/rdf-schema#range ?c) ^ (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) -> (?p1 http://www.w3.org/2000/01/rdf-schema#range ?c)",
+        "scm-hv = (?c1 http://www.w3.org/2002/07/owl#hasValue ?i) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p1) ^ (?c2 http://www.w3.org/2002/07/owl#hasValue ?i) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p2) ^ (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2)",
+        "scm-svf1 = (?c1 http://www.w3.org/2002/07/owl#someValuesFrom ?y1) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?c2 http://www.w3.org/2002/07/owl#someValuesFrom ?y2) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?y1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?y2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2)",
+        "scm-svf2 = (?c1 http://www.w3.org/2002/07/owl#someValuesFrom ?y) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p1) ^ (?c2 http://www.w3.org/2002/07/owl#someValuesFrom ?y) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p2) ^ (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2)",
+        "scm-avf1 = (?c1 http://www.w3.org/2002/07/owl#allValuesFrom ?y1) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?c2 http://www.w3.org/2002/07/owl#allValuesFrom ?y2) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?y1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?y2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2)",
+        "scm-avf2 = (?c1 http://www.w3.org/2002/07/owl#allValuesFrom ?y) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p1) ^ (?c2 http://www.w3.org/2002/07/owl#allValuesFrom ?y) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p2) ^ (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) -> (?c2 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c1)"
+    ])
+}
 
-            // cax-sco
-            new Rule([
-                    new Fact(SubClassOf, '?c1', '?c2', [], true),
-                    new Fact(Type, '?x', '?c1', [], true)],
-                [new Fact(Type, '?x', '?c2', [], true)], "Class-Subsumption-2")
-        ],
-
-        propertySubsumption: [
-            // scm-spo
-            new Rule([
-                    new Fact(SubPropertyOf, '?p1', '?p2', [], true),
-                    new Fact(SubPropertyOf, '?p2', '?p3', [], true)],
-                [new Fact(SubPropertyOf, '?p1', '?p3', [], true)], "Property-Subsumption-1"),
-
-            // prp-spo1
-            new Rule([
-                    new Fact(SubPropertyOf, '?p1', '?p2', [], true),
-                    new Fact('?p1', '?x', '?y', [], true)],
-                [new Fact('?p2', '?x', '?y', [], true)], "Property-Subsumption-2")
-        ],
-
-        transitivity: [
-            // prp-trp
-            new Rule([
-                    new Fact('?p', '?x', '?y', [], true),
-                    new Fact(Type, '?p', TransitiveProperty, [], true),
-                    new Fact('?p', '?y', '?z', [], true)],
-                [new Fact('?p', '?x', '?z', [], true)], "Property-Transitivity")
-        ],
-
-        inverse: [
-            //prp-inv1
-            new Rule([
-                    new Fact(InverseOf, '?p1', '?p2', [], true),
-                    new Fact('?p1', '?x', '?y', [], true)],
-                [new Fact('?p2', '?y', '?x', [], true)], "Property-Inverse-1"),
-
-            //prp-inv2
-            new Rule([
-                    new Fact(InverseOf, '?p1', '?p2', [], true),
-                    new Fact('?p2', '?x', '?y', [], true)],
-                [new Fact('?p1', '?y', '?x', [], true)], "Property-Inverse-2")
-        ],
-
-        equivalence: [
-            //cax-eqc1
-            new Rule([
-                    new Fact(EquivalentClass, '?c1', '?c2', [], true),
-                    new Fact(Type, '?x', '?c1', [], true)],
-                [new Fact(Type, '?x', '?c2', [], true)], "Class-Equivalence-1"),
-
-            //cax-eqc2
-            new Rule([
-                    new Fact(EquivalentClass, '?c1', '?c2', [], true),
-                    new Fact(Type, '?x', '?c2', [], true)],
-                [new Fact(Type, '?x', '?c1', [], true)], "Class-Equivalence-2"),
-
-            //prp-eqp1
-            new Rule([
-                    new Fact(EquivalentProperty, '?p1', '?p2', [], true),
-                    new Fact('?p1', '?x', '?y', [], true)],
-                [new Fact('?p2', '?x', '?y', [], true)], "Property-Equivalence-1"),
-
-            //prp-eqp2
-            new Rule([
-                    new Fact(EquivalentProperty, '?p1', '?p2', [], true),
-                    new Fact('?p2', '?x', '?y', [], true)],
-                [new Fact('?p1', '?x', '?y', [], true)], "Property-Equivalence-2")
-        ],
-
-        equality: [
-            //eq-rep-s
-            new Rule([
-                    new Fact(SameAs, '?s1', '?s2', [], true),
-                    new Fact('?p', '?s1', '?o', [], true)],
-                [new Fact('?p', '?s2', '?o', [], true)], "Equality-1"),
-
-            //eq-rep-p
-            new Rule([
-                    new Fact(SameAs, '?p1', '?p2', [], true),
-                    new Fact('?p1', '?s', '?o', [], true)],
-                [new Fact('?p2', '?s', '?o', [], true)], "Equality-2"),
-
-            //eq-rep-o
-            new Rule([
-                    new Fact(SameAs, '?o1', '?o2', [], true),
-                    new Fact('?p', '?s', '?o1', [], true)],
-                [new Fact('?p', '?s', '?o2', [], true)], "Equality-3"),
-
-            //eq-trans
-            new Rule([
-                    new Fact(SameAs, '?x', '?y', [], true),
-                    new Fact(SameAs, '?y', '?z', [], true)],
-                [new Fact(SameAs, '?x', '?z', [], true)], "Equality-4")
-
-        ],
-
-        domainRange: [
-            //prp-dom
-            new Rule([
-                    new Fact(Domain, '?p', '?c', [], true),
-                    new Fact('?p', '?x', '?y', [], true)],
-                [new Fact(Type, '?x', '?c', [], true)], "Domain-ClassAssertion"),
-            //prp-rng
-            new Rule([
-                    new Fact(Range, '?p', '?c', [], true),
-                    new Fact('?p', '?x', '?y', [], true)],
-                [new Fact(Type, '?y', '?c', [], true)], "Range-ClassAssertion"),
-                
-            new Rule([
-                    new Fact(Domain, '?p', '?c1', [], true),
-                    new Fact(SubClassOf, '?c1', '?c2', [], true)],
-                [new Fact(Domain, '?p', '?c2', [], true)], "Domain-ClassSubsumption"),
-            
-            new Rule([
-                    new Fact(Domain, '?p2', '?c', [], true),
-                    new Fact(SubPropertyOf, '?p1', '?p2', [], true)],
-                [new Fact(Domain, '?p1', '?c', [], true)], "Domain-PropertySubsumption"),
-
-            new Rule([
-                    new Fact(Range, '?p', '?c1', [], true),
-                    new Fact(SubClassOf, '?c1', '?c2', [], true)],
-                [new Fact(Range, '?p', '?c2', [], true)], "Range-ClassSubsumption"),
-            
-            new Rule([
-                    new Fact(Range, '?p2', '?c', [], true),
-                    new Fact(SubPropertyOf, '?p1', '?p2', [], true)],
-                [new Fact(Range, '?p1', '?c', [], true)], "Range-PropertySubsumption")
-        
-        ],
-
-        testsFipa: [
-            new Rule([
-                new Fact(Type, '?x', 'http://sites.google.com/site/smartappliancesproject/ontologies/fipa#Function', [], true),
-                new Fact(Type, '?x', 'http://sites.google.com/site/smartappliancesproject/ontologies/fipa#RequestDeviceInfo', [], true)
-            ], [
-                new Fact(Type, '?x', Thing, [], true)
-            ], "Propagation-Test-1"),
-
-            new Rule([
-                new Fact(Type, '?x', Thing, [], true)
-            ], [
-                new Fact('FALSE')
-            ], "Inconsitency-Test"),
-
-            new Rule([
-                new Fact(Type, '?x', 'http://sites.google.com/site/smartappliancesproject/ontologies/fipa#Function', [], true)
-            ], [
-                new Fact(Type, '?x', 'http://sites.google.com/site/smartappliancesproject/ontologies/fipa#RequestDeviceInfo', [], true)
-            ])
-        ],
-
-        testsBNode: [
-            new Rule([
-                new Fact(Type, '?x', 'http://sites.google.com/site/smartappliancesproject/ontologies/fipa#Function', [], true)
-            ], [
-                new Fact(Subject, '__bnode__1', '?x', [], true),
-                new Fact(Predicate, '__bnode__1', Type, [], true),
-                new Fact(Object, '__bnode__1', 'http://sites.google.com/site/smartappliancesproject/ontologies/fipa#Function', [], true)
-            ], "BNode-Test")
-        ]
-
-    }
-};
-
-module.exports = {
-    test:OWL2RL.rules.classSubsumption
-        .concat(OWL2RL.rules.propertySubsumption)
-        .concat(OWL2RL.rules.transitivity)
-        .concat(OWL2RL.rules.inverse)
-        .concat(OWL2RL.rules.equivalence)
-        .concat(OWL2RL.rules.equality)
-        .concat(OWL2RL.rules.domainRange).concat(OWL2RL.rules.testsFipa)
-        .concat(Logics.parseRules([
-            "(?x ?p1 ?y) ^ (?p2 http://www.w3.org/2002/07/owl#propertyChainAxiom ?n) ^ (?n http://www.w3.org/1999/02/22-rdf-syntax-ns#first ?p1) ^ (?n http://www.w3.org/1999/02/22-rdf-syntax-ns#rest ?n2) ^ (?n2 http://www.w3.org/1999/02/22-rdf-syntax-ns#first ?p2) ^ (?y ?p2 ?z) -> (?x ?p2 ?z)"
-        ]))
-        /*.concat(Logics.parseRules([
-            "(?x http://www.w3.org/2002/07/owl#sameAs ?y) -> (?y http://www.w3.org/2002/07/owl#sameAs ?x)",
-            "(?x http://www.w3.org/2002/07/owl#sameAs ?y) ^ (?y http://www.w3.org/2002/07/owl#sameAs ?z) -> (?x http://www.w3.org/2002/07/owl#sameAs ?z)",            
-            "(?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#FunctionalProperty) ^ (?x ?p ?y1) ^ (?x ?p ?y2)	-> (?y1 http://www.w3.org/2002/07/owl#sameAs ?y2)",
-            "(?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#InverseFunctionalProperty) ^ (?x1 ?p ?y) ^ (?x2 ?p ?y) -> (?x1 http://www.w3.org/2002/07/owl#sameAs ?x2)",
-            "(?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#SymmetricProperty) ^ (?x ?p ?y) -> (?y ?p ?x)",
-            "(?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#TransitiveProperty) ^ (?x ?p ?y) ^ (?y ?p ?z) -> (?x ?p ?z)",
-            "(?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) ^ (?x ?p1 ?y) -> (?x ?p2 ?y)",
-            "(?x http://www.w3.org/2002/07/owl#someValuesFrom ?y) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u ?p ?v) ^ (?v http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?y) -> (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x)",
-            "(?x http://www.w3.org/2002/07/owl#someValuesFrom http://www.w3.org/2002/07/owl#Thing) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u ?p ?v)	-> (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x)",
-            "(?x http://www.w3.org/2002/07/owl#allValuesFrom ?y) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x) ^ (?u ?p ?v)	-> (?v http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?y)",
-            "(?x http://www.w3.org/2002/07/owl#hasValue ?y) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x)	-> (?u ?p ?y)",
-            "(?x http://www.w3.org/2002/07/owl#hasValue ?y) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u ?p ?y) -> (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x)",
-            "(?c http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#Class) -> (?c http://www.w3.org/2000/01/rdf-schema#subClassOf ?c) ^ (?c http://www.w3.org/2002/07/owl#equivalentClass ?c) ^ (?c http://www.w3.org/2000/01/rdf-schema#subClassOf http://www.w3.org/2002/07/owl#Thing) ^ (http://www.w3.org/2002/07/owl#Nothing http://www.w3.org/2000/01/rdf-schema#subClassOf ?c)",
-            "(?c1 http://www.w3.org/2002/07/owl#equivalentClass ?c2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2) ^ (?c2 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c1)",
-            "(?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2) ^ (?c2 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c1) -> (?c1 http://www.w3.org/2002/07/owl#equivalentClass ?c2)",
-            "(?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#ObjectProperty) -> (?p http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p) ^ (?p http://www.w3.org/2002/07/owl#equivalentProperty ?p)",
-            "(?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#DatatypeProperty) -> (?p http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p) ^ (?p http://www.w3.org/2002/07/owl#equivalentProperty ?p)",
-            "(?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) ^ (?p2 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p3) -> (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p3)",
-            "(?p1 http://www.w3.org/2002/07/owl#equivalentProperty ?p2) -> (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) ^ (?p2 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p1)",
-            "(?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) ^ (?p2 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p1) -> (?p1 http://www.w3.org/2002/07/owl#equivalentProperty ?p2)",
-            "(?c1 http://www.w3.org/2002/07/owl#hasValue ?i) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p1) ^ (?c2 http://www.w3.org/2002/07/owl#hasValue ?i) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p2) ^ (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2)",
-            "(?c1 http://www.w3.org/2002/07/owl#someValuesFrom ?y1) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?c2 http://www.w3.org/2002/07/owl#someValuesFrom ?y2) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?y1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?y2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2)",
-            "(?c1 http://www.w3.org/2002/07/owl#someValuesFrom ?y) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p1) ^ (?c2 http://www.w3.org/2002/07/owl#someValuesFrom ?y) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p2) ^ (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2)",
-            "(?c1 http://www.w3.org/2002/07/owl#allValuesFrom ?y1) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?c2 http://www.w3.org/2002/07/owl#allValuesFrom ?y2) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?y1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?y2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2)",
-            "(?c1 http://www.w3.org/2002/07/owl#allValuesFrom ?y) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p1) ^ (?c2 http://www.w3.org/2002/07/owl#allValuesFrom ?y) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p2) ^ (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) -> (?c2 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c1)"
-        ]))
-        .concat(OWL2RL.rules.testsFipa)
-        .concat(OWL2RL.rules.testsBNode)*/,
-
-    rules: OWL2RL.rules.classSubsumption
-        .concat(OWL2RL.rules.propertySubsumption)
-        .concat(OWL2RL.rules.transitivity)
-        .concat(OWL2RL.rules.inverse)
-        .concat(OWL2RL.rules.equivalence)
-        .concat(OWL2RL.rules.equality)
-        .concat(OWL2RL.rules.domainRange),
-
-    classSubsumption: OWL2RL.rules.classSubsumption,
-
-    subsumption: OWL2RL.rules.classSubsumption
-        .concat(OWL2RL.rules.propertySubsumption),
-
-    transitivity: OWL2RL.rules.transitivity,
-
-    transitivityInverse: OWL2RL.rules.transitivity
-        .concat(OWL2RL.rules.inverse),
-
-    inverse: OWL2RL.rules.inverse,
-
-    equivalence: OWL2RL.rules.equivalence,
-
-    equality: OWL2RL.rules.equality
-};
+module.exports = OWL2RL.rules
 
 
-},{"./Logics/Fact":4,"./Logics/Logics":5,"./Logics/Rule":6,"./Prefixes":10}],9:[function(require,module,exports){
+},{"./Logics/Logics":5}],9:[function(require,module,exports){
 /*
  * Created by MT on 20/11/2015.
  */
@@ -1659,7 +1462,8 @@ var Fact = require('./Logics/Fact'),
 
 var q = require('q'),
     sparqlJs = require('sparqljs'),
-    SparqlParser = new sparqlJs.Parser()    
+    SparqlParser = new sparqlJs.Parser(),
+    SparqlGenerator = new sparqlJs.Generator()
 
 /**
  * The parsing interface, for transforming facts, triples, turtle or even results bindings
@@ -1793,8 +1597,30 @@ ParsingInterface = {
         return ttl;
     },
 
-    updateWhereToConstructWhere: function(query, doParse) {
-        return query.replace(RegularExpressions.DELETE_OR_INSERT_STATEMENT, 'CONSTRUCT$2');
+    /**
+     * Transforms a parsed update where query to a construct query
+     * @param parsedQuery as update where
+     * @returns parsedQuery as construct
+     */
+    updateWhereToConstructWhere: function(parsedQuery) {
+        parsedQuery.type = "query"
+        parsedQuery.queryType = "CONSTRUCT"
+
+        parsedQuery.where = []
+        parsedQuery.template = []
+
+        parsedQuery.updates.forEach(up => {
+            parsedQuery.where = parsedQuery.where.concat(up.where)
+            up.insert.forEach(ins => {
+                parsedQuery.template = parsedQuery.template.concat(ins.triples)
+            })
+            up.delete.forEach(del => {
+                parsedQuery.template = parsedQuery.template.concat(del.triples)
+            })
+        })
+
+        delete parsedQuery.updates
+        return parsedQuery
     },
 
     /**
@@ -1803,6 +1629,8 @@ ParsingInterface = {
      * @returns {*}
      */
     parseSPARQL: function(query) {
+        // Hack to remove potential CONSTRUCT issues with GRAPH in the first pattern
+        query = query.replace(RegularExpressions.CONSTRUCT_GRAPH_1ST_PATTERN, "$1$2$3");
         return SparqlParser.parse(query);
     },
 
@@ -1875,7 +1703,6 @@ ParsingInterface = {
     },
 
     isUpdateWhere: function(parsedQuery) {
-        var res;
         try {
             if ( (parsedQuery.updates[0].where)
                 || (parsedQuery.updates[0].updateType == "deletewhere")
@@ -1900,19 +1727,28 @@ ParsingInterface = {
     },
 
     buildUpdateQueryWithConstructResults: function(initialQuery, results) {
-        switch(this.isInsert(initialQuery)) {
-            case true:
-                return "INSERT DATA { " + this.triplesToTurtle(results.triples) + " }";
-                break;
-            default:
-                return "DELETE DATA { " + this.triplesToTurtle(results.triples) + " }";
+        if (results.hasOwnProperty('triples')) {
+            switch (this.isInsert(initialQuery)) {
+                case true:
+                    return "INSERT DATA { " + this.triplesToTurtle(results.triples) + " }";
+                    break;
+                default:
+                    return "DELETE DATA { " + this.triplesToTurtle(results.triples) + " }";
+            }
+        } else {
+            return ""
         }
+    },
+
+    deserializeQuery(sparqlQuery) {
+        let query = SparqlGenerator.stringify(sparqlQuery);
+        return query;
     }
 };
 
 module.exports = ParsingInterface;
 
-},{"./Errors":3,"./Logics/Fact":4,"./RegularExpressions":13,"./Utils":15,"q":45,"sparqljs":94}],10:[function(require,module,exports){
+},{"./Errors":3,"./Logics/Fact":4,"./RegularExpressions":13,"./Utils":15,"q":51,"sparqljs":100}],10:[function(require,module,exports){
 /**
  * Created by mt on 23/11/2015.
  */
@@ -1922,21 +1758,52 @@ module.exports = ParsingInterface;
  * @type {{OWL: string, RDF: string, RDFS: string, FIPA: string}}
  */
 
-module.exports = {
-    OWL: 'http://www.w3.org/2002/07/owl#',
-    RDF: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-    RDFS: 'http://www.w3.org/2000/01/rdf-schema#',
-    FIPA: 'http://sites.google.com/site/smartappliancesproject/ontologies/fipa#'
-};
-},{}],11:[function(require,module,exports){
+const RegularExpressions = require('./RegularExpressions')
+
+class Prefixes {
+    constructor() {
+        this.counter = 0
+        this.prefixes = {
+            owl: 'http://www.w3.org/2002/07/owl#',
+            rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+            rdfs: 'http://www.w3.org/2000/01/rdf-schema#'
+        }
+    }
+
+    forgeCustomPrefix() {
+        return `h${this.counter++}`
+    }
+
+    add(prefix, uri) {
+        this.prefixes[prefix] = uri
+    }
+
+    get(prefix) {
+        return this.prefixes[prefix]
+    }
+
+    entries() {
+        return this.prefixes
+    }
+
+    registerPrefixFrom(fact) {
+        let prefixedURIs = Object.values(this.prefixes)
+        for (let triple of [fact.subject, fact.predicate, fact.object]) {
+            if (!prefixedURIs.includes(triple)) {
+                RegularExpressions
+                this.add(this.forgeCustomPrefix(), triple)
+            }
+        }
+    }
+}
+
+module.exports = new Prefixes()
+},{"./RegularExpressions":13}],11:[function(require,module,exports){
 /**
 * Created by Spadon on 17/10/2014.
 */
 
-var ReasoningEngine = require('./ReasoningEngine'),
-    Logics = require('./Logics/Logics');
-
-var q = require('q');
+var ReasoningEngine = require('./ReasoningEngine');
 
 /**
  * The core reasoner or HyLAR.
@@ -1981,6 +1848,7 @@ module.exports = {
      */
     process: {
         it: {
+            none: null,
             incrementally: ReasoningEngine.incremental,
             incrementallyBf: ReasoningEngine.incrementalBf,
             naively: ReasoningEngine.naive,
@@ -1989,7 +1857,7 @@ module.exports = {
     }
 };
 
-},{"./Logics/Logics":5,"./ReasoningEngine":12,"q":45}],12:[function(require,module,exports){
+},{"./ReasoningEngine":12}],12:[function(require,module,exports){
 /**
  * Created by Spadon on 11/09/2015.
  */
@@ -2200,13 +2068,12 @@ ReasoningEngine = {
 };
 
 module.exports = {
-    naive: ReasoningEngine.naive,
     incrementalBf: ReasoningEngine.incrementalBf,
     incremental: ReasoningEngine.incremental,
     tagging: ReasoningEngine.tagging,
     tagFilter: ReasoningEngine.tagFilter
 };
-},{"../hylar":16,"./Logics/Logics":5,"./Logics/Solver":7,"./Utils":15,"q":45}],13:[function(require,module,exports){
+},{"../hylar":16,"./Logics/Logics":5,"./Logics/Solver":7,"./Utils":15,"q":51}],13:[function(require,module,exports){
 /**
  * Created by aifb on 25.07.16.
  */
@@ -2227,14 +2094,14 @@ module.exports = {
     NO_BRACKET_BODYQUERY: /^[^\{]*\{([^\{\}]*)\}\s*$/i,
     SINGLE_BRACKET_BODYQUERY: /^[^\{]*\{[^\{\}]*\{([^\{\}]*)\}\s*\}\s*$/i,
     CONSTRUCT_BODYQUERY_WITH_BRACKETS: /\s*CONSTRUCT\s*\{.*\}\s*WHERE\s*(.*)/i,
-    DELETE_OR_INSERT_STATEMENT: /^[\s]*(delete|insert)(.+)$/i
+    DELETE_OR_INSERT_STATEMENT: /^[\s]*(delete|insert)(.+)$/i,
+    CONSTRUCT_GRAPH_1ST_PATTERN: /(CONSTRUCT \{ )GRAPH <.+> \{( .+ )\}( \} WHERE.+)/i,
+    URI_AFTER_HASH_OR_SLASH: /[^/#]+$/g
 };
 },{}],14:[function(require,module,exports){
 /**
  * Created by pc on 20/11/2015.
  */
-
-var h = require('../hylar')
 
 var Prefixes = require('./Prefixes');
 
@@ -2279,17 +2146,17 @@ TripleStorageManager.prototype.init = function() {
  */
 TripleStorageManager.prototype.query = function(query) {
     var deferred = q.defer();    
-    query = query.replace(/\\/g, '').replace(/(\n|\r)/g, '\n');
+    query = query.replace(/\\/g, '').replace(/(\n|\r)/g, ' ');
     try {      
         this.storage.execute(query, function (err, r) {
             if(err) {            
-                deferred.reject(err);
+                deferred.reject(new Error(`(SPARQL) ${err}`));
             } else {
-                deferred.resolve(r);
+                deferred.resolve(r !== undefined ? r : true)
             }
         });
     } catch(e) {
-        deferred.resolve(true);
+        deferred.reject(e);
     }
     return deferred.promise;
 };
@@ -2305,10 +2172,8 @@ TripleStorageManager.prototype.load = function(data, format) {
 
     this.storage.load(format, data, function (err, r) {                
         if(err) {
-            h.displayError(err.toString());
             deferred.reject(err);
         } else {
-            h.notify(r + ' triples loaded.');
             deferred.resolve(r);
         }
     });
@@ -2329,14 +2194,11 @@ TripleStorageManager.prototype.clear = function()  {
  * @param ttl Triples to insert, in turtle.
  * @returns {*}
  */
-TripleStorageManager.prototype.insert = function(ttl, graph) {
-    var query;
-    if (graph === undefined) {
-        query = 'INSERT DATA { ' + ttl + ' }';
-    } else {
-        query = 'INSERT DATA { GRAPH <' + graph + '> { ' + ttl + ' } }'
-    }
-    return this.query(query);
+TripleStorageManager.prototype.insert = async function(ttl, graph) {
+    let ack = await this.query(`INSERT DATA { ${ttl} }`);
+    if (graph !== undefined) {
+        return (await this.query(`INSERT DATA { GRAPH <${graph}> { ${ttl} } }`)) && ack
+    } else return ack
 };
 
 /**
@@ -2345,14 +2207,11 @@ TripleStorageManager.prototype.insert = function(ttl, graph) {
  * @param ttl Triples to insert, in turtle.
  * @returns {*}
  */
-TripleStorageManager.prototype.delete = function(ttl, graph) {
-    var query;
-    if (graph === undefined) {
-        query = 'DELETE DATA { ' + ttl + ' }';
-    } else {
-        query = 'DELETE DATA { GRAPH <' + graph + '> { ' + ttl + ' } }'
-    }
-    return this.query(query);
+TripleStorageManager.prototype.delete = async function(ttl, graph) {
+    let ack = await this.query('DELETE DATA { ' + ttl + ' }');
+    if (graph !== undefined) {
+        return await this.query('DELETE DATA { GRAPH <' + graph + '> { ' + ttl + ' } { ' + ttl + ' } }')
+    } else return ack
 };
 
 /**
@@ -2418,7 +2277,7 @@ TripleStorageManager.prototype.querySideStore = function(query) {
 };
 
 module.exports = TripleStorageManager;
-},{"../hylar":16,"./Prefixes":10,"q":45,"rdfstore":76}],15:[function(require,module,exports){
+},{"./Prefixes":10,"q":51,"rdfstore":82}],15:[function(require,module,exports){
 /**
  * Created by Spadon on 13/02/2015.
  */
@@ -2440,7 +2299,7 @@ emitter.on('finished', function(task) {
     console.log('processed ' + task);
 });
 
-module.exports = {
+Utils = {
 
     _instanceid: 1,
 
@@ -2569,15 +2428,17 @@ module.exports = {
             return '"' + elem.replace(/[^a-zA-Z]/g,'') + '"';
         }        
     }
-};
+}
 
-},{"./RegularExpressions":13,"events":35,"q":45}],16:[function(require,module,exports){
+module.exports = Utils
+},{"./RegularExpressions":13,"events":39,"q":51}],16:[function(require,module,exports){
 /**
  * Created by MT on 01/12/2015.
  */
 
 var fs = require('fs'),
     chalk = require('chalk'),
+    chalkRainbow = require('chalk-rainbow')
     q = require('q');
 
 var Promise = require('bluebird');
@@ -2590,8 +2451,10 @@ var Dictionary = require('./core/Dictionary'),
     Logics = require('./core/Logics/Logics'),
     Reasoner = require('./core/Reasoner'),
     OWL2RL = require('./core/OWL2RL'),
-    Fact = require('./core/Logics/Fact'),
-    Utils = require('./core/Utils');
+    Utils = require('./core/Utils'),
+    Errors = require('./core/Errors'),
+    RegularExpressions = require('./core/RegularExpressions')
+
 
 var logFile = 'hylar.log';
 
@@ -2602,23 +2465,41 @@ var logFile = 'hylar.log';
  * @email mehdi.terdjimi@univ-lyon1.fr
  */
 
-Hylar = function() {
-    this.dict = new Dictionary();
-    this.sm = new TripleStorageManager();
-    this.rules = OWL2RL.test;
-    this.queryHistory = [];
-    this.sm.init();
-    this.computeRuleDependencies();  
-};
+Hylar = function(params = {}) {
+    this.dict = new Dictionary()
+    this.sm = new TripleStorageManager()
+    this.prefixes = require('./core/Prefixes')
+    this.rules = OWL2RL
+    this.queryHistory = []
+    this.allowPersist = params.hasOwnProperty('persistent') ? params.persistent : true
+    this.reasoning = true
+    this.sm.init()
+    this.computeRuleDependencies()
+    this.log = []
+    Hylar.currentInstance = this
+
+    this.restore()
+}
+
+Hylar.log = function(msg) {
+    let dateMsg = `[ ${new Date().toString()} ] ${msg}\n`
+    Hylar.currentInstance.log.push(msg)
+    fs.appendFileSync(logFile, dateMsg);
+}
+
+Hylar.prototype.lastLog = function() {
+    return this.log.length > 0 ? this.log[this.log.length-1] : ''
+}
 
 /**
  * Custom error display
  * @returns {*}
  */
-Hylar.displayError = function(msg) {
-    console.log(chalk.white.bgRed('[HyLAR]') + ' ' + chalk.bold('ERROR:') + ' ' + msg);
+Hylar.displayError = function(error) {
+    let msg = error.stack || error.toString()
+    console.log(`${chalk.red('[HyLAR] ')} 😰 ${chalk.bold('ERROR:')} ${msg}`);
     try {
-        fs.appendFileSync(logFile, new Date().toString() + ' ' + msg + '\n');
+        Hylar.log(msg)
     } catch (e) {
         return Errors.FileIO(logFile);
     }
@@ -2629,9 +2510,9 @@ Hylar.displayError = function(msg) {
  * @returns {*}
  */
 Hylar.displayWarning = function(msg) {
-    console.log(chalk.yellow('[HyLAR] WARNING: ') + msg);
+    console.log(`${chalk.yellow('[HyLAR] ')} 😐 WARNING: ${msg}`);
     try {
-        fs.appendFileSync(logFile, new Date().toString() + ' ' + msg + '\n');
+        Hylar.log(msg)
     } catch (e) {
         return Errors.FileIO(logFile);
     }
@@ -2641,13 +2522,31 @@ Hylar.displayWarning = function(msg) {
  * Notifications of HyLAR (similar to console.log behavior)
  * @returns {*}
  */
-Hylar.notify = function(msg) {
-    console.log(chalk.green('[HyLAR] ') + msg);
+Hylar.notify = function(msg, params = { silent: false }) {
+    if (params.silent == false) console.log(chalk.green('[HyLAR] ') + msg);
     try {
-        fs.appendFileSync(logFile, new Date().toString() + ' ' + msg + '\n');
+        Hylar.log(msg)
     } catch (e) {
         return Errors.FileIO(logFile);
     }
+}
+
+Hylar.success = function(msg) {
+    console.log(`${chalkRainbow('[HyLAR] ')} 👍 ${msg}`);
+    try {
+        Hylar.log(msg)
+    } catch (e) {
+        return Errors.FileIO(logFile);
+    }
+}
+
+Hylar.prototype.setReasoningOn = function() {
+    this.reasoning = true
+}
+
+Hylar.prototype.setReasoningOff = function() {
+    Hylar.displayWarning('Reasoning has been set off.')
+    this.reasoning = false
 }
 
 Hylar.prototype.computeRuleDependencies = function() {
@@ -2657,7 +2556,9 @@ Hylar.prototype.computeRuleDependencies = function() {
 Hylar.prototype.clean = function() {
     this.dict = new Dictionary();
     this.sm = new TripleStorageManager();
+    this.sm = new TripleStorageManager();
     this.sm.init();
+    this.persist()
 };
 
 /**
@@ -2678,14 +2579,6 @@ Hylar.prototype.setTagBased = function() {
     Hylar.notify('Reasoner set as tag-based.');
 };
 
-/**
- * Puts on tag-based reasoning using backward/forward algorithm
- */
-Hylar.prototype.setIncrementalBf = function() {
-    this.rMethod = Reasoner.process.it.incrementallyBf;
-    Hylar.notify('Reasoner set as incremental b/f.');
-};
-
 Hylar.prototype.setRules = function(rules) {
     this.rules = rules;
 };
@@ -2694,22 +2587,19 @@ Hylar.prototype.setRules = function(rules) {
  * Switches HyLAR's reasoning method
  * @param method Name of the method ('incremental' or 'tagBased')
  */
-Hylar.prototype.updateReasoningMethod = function(method) {
-    switch(method) {
-        case 'tagBased':
-            this.setTagBased();
-            break;
-        case 'incremental':
-            this.setIncremental();
-            break;
-        case 'incrementalBf':
-            this.setIncrementalBf();
-            break;
-        default:
-            if (this.rMethod === undefined) {
-                this.setIncremental();
-            }
-            break;
+Hylar.prototype.updateReasoningMethod = function(method = 'incremental') {
+    if (!this.rMethod) {
+        switch (method) {
+            case 'tagBased':
+                if (this.rMethod != Reasoner.process.it.tagBased) this.setTagBased()
+                break;
+            case 'incremental':
+                if (this.rMethod != Reasoner.process.it.incrementally) this.setIncremental()
+                break;
+            default:
+                Hylar.displayWarning(`Reasoning method ${method} not supported, using incremental instead.`)
+                this.setIncremental()
+        }
     }
 };
 
@@ -2723,39 +2613,40 @@ Hylar.prototype.updateReasoningMethod = function(method) {
  * @param keepOldValues (optional - default: false) Avoid storage cleaning if set to true.
  * @returns {*}
  */
-Hylar.prototype.load = function(ontologyTxt, mimeType, keepOldValues, graph, reasoningMethod) {
-    var that = this;
+Hylar.prototype.load = async function(ontologyTxt, mimeType, keepOldValues, graph, reasoningMethod) {
     emitter.emit('classif-started');
     this.updateReasoningMethod(reasoningMethod);
 
     if (!keepOldValues) {
         this.dict.clear();
-        return this.sm.init().then(function() {
-            return that.treatLoad(ontologyTxt, mimeType, graph);
-        });
+        await this.sm.init()
+        return this.treatLoad(ontologyTxt, mimeType, graph)
     } else {
-        return this.treatLoad(ontologyTxt, mimeType, graph);
+        return this.treatLoad(ontologyTxt, mimeType, graph)
     }
 };
 
-Hylar.prototype.treatLoad = function(ontologyTxt, mimeType, graph) {
-    var that = this;
+Hylar.prototype.treatLoad = async function(ontologyTxt, mimeType, graph) {
     switch(mimeType) {
         case 'application/xml':
         case 'application/rdf+xml':
         case false:
-            Hylar.error('Unrecognized or unsupported mimetype. ' +
-                'Supported formats are jsonld, turtle, n3');
+            Hylar.error(`Unrecognized or unsupported mimeType. Supported formats are json-ld, turtle, n3`)
             return false;
             break;
         default:
-            return that.sm.load(ontologyTxt, mimeType, graph)
-                .then(function() {
-                    return that.classify();
-                }, function(error) {                    
-                    Hylar.displayError(error);
-                    throw error;
-                });
+            try {
+                let r = await this.sm.load(ontologyTxt, mimeType)
+                Hylar.notify(r + ' triples loaded in the store.', {  })
+                if (this.reasoning == true) {
+                    return this.classify(graph)
+                } else {
+                    return r
+                }
+            } catch (error) {
+                Hylar.displayError(error)
+                throw error;
+            }
     }
 };
 
@@ -2764,43 +2655,125 @@ Hylar.prototype.treatLoad = function(ontologyTxt, mimeType, graph) {
  * @param query The SPARQL query text
  * @param reasoningMethod The desired reasoning method if inserting/deleting
  */
-Hylar.prototype.query = function(query, reasoningMethod) {
-    var sparql = ParsingInterface.parseSPARQL(query),
-        singleWhereQueries = [], that = this;
+Hylar.prototype.query = async function(query, reasoningMethod) {
+    let sparql, singleWhereQueries = [], result
+    Hylar.notify(`Received ${query}`, { silent: true })
+
+    try {
+        // Parse original query
+		sparql = ParsingInterface.parseSPARQL(query)
+        // Cleans out string query
+        query = ParsingInterface.deserializeQuery(sparql)
+	} catch (e) {
+		Hylar.displayError('Problem with SPARQL query: ' + query);
+		throw e;
+	}
+
+    if (this.reasoning == false) return this.sm.query(query)
 
     this.updateReasoningMethod(reasoningMethod);
 
-    if (this.sm.storage === undefined) {
-        this.sm.init();
-    } else {
-        switch (sparql.type) {
-            case 'update':
-                if (ParsingInterface.isUpdateWhere(sparql)) {
-                    return this.query(ParsingInterface.updateWhereToConstructWhere(query))
-                        .then(function(data) {
-                            return that.query(ParsingInterface.buildUpdateQueryWithConstructResults(sparql, data));
-                        });
-                } else {
-                    return this.treatUpdateWithGraph(query);
-                }
-                break;
-            default:
-                if (this.rMethod == Reasoner.process.it.incrementally) {
-                    return that.sm.query(query);
-                }
-                return that.sm.regenerateSideStore()
-                    .then(function(done) {
-                        for (var i = 0; i < sparql.where.length; i++) {
-                            singleWhereQueries.push(ParsingInterface.isolateWhereQuery(sparql, i));
+    switch (sparql.type) {
+        // Insert, delete queries
+        case 'update':
+            if (ParsingInterface.isUpdateWhere(sparql)) {
+                // Get construct results of the update where query
+                let sparqlConstruct = ParsingInterface.updateWhereToConstructWhere(sparql)
+                let data = await this.query(ParsingInterface.deserializeQuery(sparqlConstruct))
+
+                // Put them back in a simple update data manner to provide inner-graph inference
+                return this.query(ParsingInterface.buildUpdateQueryWithConstructResults(sparql, data));
+            } else {
+                return this.treatUpdateWithGraph(query);
+            }
+            break;
+
+        // Select, Ask, Construct queries
+        default:
+            // If incremental query
+            if (this.rMethod == Reasoner.process.it.incrementally) {
+                // To overcome rdfstore not supporting count; only supports count(*) though
+                let countStatements = []
+
+                if (sparql.hasOwnProperty('variables')) {
+                    sparql.variables.forEach((_var, index) => {
+                        if (_var.hasOwnProperty('expression') && _var.expression.aggregation == 'count') {
+                            // If this is a count statement on a wildcard select, process it
+                            if (_var.expression.expression == '*') {
+                                countStatements.push(_var)
+                                sparql.variables[index] = _var.expression.expression
+                            // Otherwise throw unsupported
+                            } else {
+                                throw Errors.CountNotImplemented(_var.expression.expression)
+                            }
                         }
-                        return Promise.reduce(singleWhereQueries, function(previous, singleWhereQuery) {
-                            return that.treatSelectOrConstruct(singleWhereQuery);
-                        }, 0);
                     })
-                    .then(function(done) {
-                        return that.sm.querySideStore(query);
-                    });
-        }
+                    if (countStatements.length > 0) query = ParsingInterface.deserializeQuery(sparql)
+                }
+
+                // Execute query against the store
+                try {
+                    results = await this.sm.query(query)
+                } catch(err) {
+                    throw err
+                }
+
+                // Reattach counted if relevant
+                if (countStatements.length > 0) {
+                    countStatements.forEach(cntStm => {
+                        if (cntStm.expression.expression == '*') {
+                            // The count result that will be attached
+                            let countResult = {
+                                token: 'literal',
+                                type: 'http://www.w3.org/2001/XMLSchema#integer',
+                                value: results.length
+                            }
+
+                            // Replace bindings
+                            results.forEach((binding, index) => {
+                                Object.keys(binding).forEach(_var => {
+                                    if (sparql.variables.indexOf(_var) == -1) {
+                                        delete binding[_var]
+                                    }
+                                })
+                                if (Object.keys(binding).length == 0) {
+                                    delete results[index]
+                                }
+                            })
+                            results = results.filter(binding => binding)
+
+                            // Either attach to remaining bindings or add a unique count binding
+                            if (results.length > 0) {
+                                results.forEach(binding => {
+                                    binding[cntStm.variable] = countResult
+                                })
+                            } else {
+                                let binding = {}
+                                binding[cntStm.variable] = countResult
+                                results.push(binding)
+                            }
+                        } else {
+                            throw Errors.CountNotImplemented(cntStm.expression.expression)
+                        }
+                    })
+                }
+
+                return results
+
+            // If tag-based query
+            } else {
+                await this.sm.regenerateSideStore()
+
+                for (var i = 0; i < sparql.where.length; i++) {
+                    singleWhereQueries.push(ParsingInterface.isolateWhereQuery(sparql, i))
+                }
+
+                await Promise.reduce(singleWhereQueries, (previous, singleWhereQuery) => {
+                    return this.treatSelectOrConstruct(singleWhereQuery);
+                }, 0)
+
+                return this.sm.querySideStore(query);
+            }
     }
 };
 
@@ -2808,7 +2781,7 @@ Hylar.prototype.query = function(query, reasoningMethod) {
  * High-level treatUpdate that takes graphs into account.
  * @returns Promise
  */
-Hylar.prototype.treatUpdateWithGraph = function(query) {    
+Hylar.prototype.treatUpdateWithGraph = async function(query) {
     var sparql = ParsingInterface.parseSPARQL(query),
         promises = [], updates;
 
@@ -2822,20 +2795,19 @@ Hylar.prototype.treatUpdateWithGraph = function(query) {
             promises.push(this.treatUpdate(updates[j], sparql.updates[i].updateType));
         }
     }
-    return Promise.all(promises).then(function(values) {
-        return [].concat.apply([], values);
-    });
+
+    let values = await Promise.all(promises)
+    return [].concat.apply([], values);
+
 };
 
 /**
  * Returns the content of the triplestore as turtle.
  * @returns {String}
  */
-Hylar.prototype.getStorage = function() {
-    return this.sm.getContent()
-        .then(function(content) {
-            return content.triples.toString();
-        });
+Hylar.prototype.getStorage = async function() {
+    let content = await this.sm.getContent()
+    return content.triples.toString();
 };
 
 /**
@@ -2870,6 +2842,7 @@ Hylar.prototype.getDictionary = function() {
  */
 Hylar.prototype.setDictionaryContent = function(dict) {
     this.dict.setContent(dict);
+    this.persist()
 };
 
 Hylar.prototype.import = function(dictionary) {
@@ -2884,8 +2857,68 @@ Hylar.prototype.import = function(dictionary) {
         }
     }
     this.setDictionaryContent(dictContent);
-    return this.sm.load(importedTriples, "text/turtle");
+    return this.sm.load(importedTriples, "text/turtle")
 };
+
+Hylar.prototype.persist = function() {
+    if (!this.allowPersist && fs) return
+
+    // Check if db folder exists
+    if (!fs.existsSync('./db')){
+        fs.mkdirSync('./db')
+    }
+
+    let dbconf = {
+        mappingsGraphDbFiles: {}
+    }
+
+    if (fs.existsSync('./db/db.conf')) {
+        dbconf = JSON.parse(fs.readFileSync('./db/db.conf').toString())
+    }
+
+    for (let graphUri in this.getDictionary().dict) {
+        // Write db content on file
+        let filename = `${graphUri.match(RegularExpressions.URI_AFTER_HASH_OR_SLASH)[0]}.n3`
+        let dbfilename = `./db/${filename}`
+        let graphContent = this.getDictionary().dict[graphUri]
+        let explicitEntries = []
+
+        for (let triple in graphContent) {
+            if (Logics.getOnlyExplicitFacts(graphContent[triple]).length > 0) explicitEntries.push(triple)
+        }
+        fs.writeFileSync(dbfilename, explicitEntries.join('\n'))
+
+        dbconf.mappingsGraphDbFiles[filename] = graphUri
+    }
+
+    fs.writeFileSync('./db/db.conf', JSON.stringify(dbconf, null, 3))
+}
+
+Hylar.prototype.restore = async function() {
+    if (!fs || !fs.existsSync('./db') || !this.allowPersist) return
+
+    Hylar.notify('... Recovering DB ...')
+
+    let files  = fs.readdirSync('./db')
+    let dbconf = {
+        mappingsGraphDbFiles: {}
+    }
+
+    if (fs.existsSync('./db/db.conf')) {
+        dbconf = JSON.parse(fs.readFileSync('./db/db.conf').toString())
+    }
+
+    for (let file of files.filter((file) => { return file != 'db.conf'})) {
+        try {
+            let content = fs.readFileSync(`./db/${file}`).toString()
+            await this.load(content, 'text/n3', true, dbconf.mappingsGraphDbFiles[file])
+        } catch (err) {
+            Hylar.displayWarning(Errors.DBParsing(file))
+        }
+    }
+
+    Hylar.notify('* DB recover finished *')
+}
 
 Hylar.prototype.checkConsistency = function() {
     var __FALSE__ = this.getDictionary().dict['#default']['__FALSE__'],
@@ -2917,19 +2950,17 @@ Hylar.prototype.isIncremental = function() {
  * @param sparql The query text.
  * @returns {Object} The results of this query.
  */
-Hylar.prototype.treatUpdate = function(update, type) {
-    var that = this,
-        graph = update.name,
+Hylar.prototype.treatUpdate = async function(update, type) {
+    let graph = update.name,
         iTriples = [],
         dTriples = [],
         FeIns, FeDel, F = this.getDictionary().values(graph),
-        turtle, insDel, deleteQueryBody, promises = [],
+        deleteQueryBody, promises = [],
         initialResponse = Utils.emptyPromise([ { triples:[] } ]);
 
     if(type == 'insert') {
         Hylar.notify('Starting insertion.');
         iTriples = iTriples.concat(update.triples);
-
     } else if(type  == 'delete') {
         Hylar.notify('Starting deletion.');
         for (var i = 0; i < update.triples.length; i++) {
@@ -2940,40 +2971,32 @@ Hylar.prototype.treatUpdate = function(update, type) {
                 dTriples.push(update.triples[i]);
             }
         }
+
         initialResponse = Promise.all(promises);
+        let results = await initialResponse
+
+        for (var i = 0; i < results.length; i++) {
+            dTriples = dTriples.concat(results[i].triples);
+        }
     }
 
-    return initialResponse
+    FeIns = ParsingInterface.triplesToFacts(iTriples, true, (this.rMethod == Reasoner.process.it.incrementally));
+    FeDel = ParsingInterface.triplesToFacts(dTriples, true, (this.rMethod == Reasoner.process.it.incrementally));
 
-        .then(function(results) {
-            for (var i = 0; i < results.length; i++) {
-                dTriples = dTriples.concat(results[i].triples);
-            }
-            FeIns = ParsingInterface.triplesToFacts(iTriples, true, (that.rMethod == Reasoner.process.it.incrementally));
-            FeDel = ParsingInterface.triplesToFacts(dTriples, true, (that.rMethod == Reasoner.process.it.incrementally));
-            return Reasoner.evaluate(FeIns, FeDel, F, that.rMethod, that.rules)
+    let derivations = await Reasoner.evaluate(FeIns, FeDel, F, this.rMethod, this.rules)
 
-        }).then(function(derivations) {
-            that.registerDerivations(derivations, graph);
-            insDel = {
-                insert: ParsingInterface.factsToTurtle(derivations.additions),
-                delete: ParsingInterface.factsToTurtle(derivations.deletions)
-            };
-            Hylar.notify('Update completed.');
-            return insDel;
-        })
+    this.registerDerivations(derivations, graph);
 
-        .then(function(obj) {
-            turtle = obj;
-            if(turtle.delete != '') return that.sm.delete(turtle.delete, graph);
-            else return true;
-        })
+    let updates = {
+        insert: ParsingInterface.factsToTurtle(derivations.additions),
+        delete: ParsingInterface.factsToTurtle(derivations.deletions)
+    }
 
-        .then(function() {
-            if(turtle.insert != '') return that.sm.insert(turtle.insert, graph);
-            else return true;
-        });
-};
+    if(updates.delete != '') return this.sm.delete(updates.delete, graph)
+    if(updates.insert != '') return this.sm.insert(updates.insert, graph)
+    return true
+}
+
 
 /**
  * Processes select or construct queries.
@@ -2981,29 +3004,23 @@ Hylar.prototype.treatUpdate = function(update, type) {
  * @returns {Object} The results of this query.
  */
 Hylar.prototype.treatSelectOrConstruct = function(query) {
-    var that = this;
     if (this.rMethod == Reasoner.process.it.tagBased) {
-        var val, blanknodes, facts, triples, temporaryData, sideStoreIndex,
-            parsedQuery= ParsingInterface.parseSPARQL(query),
+        let parsedQuery= ParsingInterface.parseSPARQL(query),
             graph = parsedQuery.where[0].name,
             constructEquivalentQuery = ParsingInterface.constructEquivalentQuery(query, graph);
 
-        return this.sm.query(constructEquivalentQuery)
-            .then(function(r) {
-                triples = r.triples;
-                val = that.dict.findValues(triples, graph);
-                facts = val.found;
-                blanknodes = val.notfound;
-                return {
-                    results: r,
-                    filtered: Reasoner.engine.tagFilter(facts, that.dict.values(graph))
-                }
-            })
-            .then(function(r) {
-                temporaryData = that.dict.findKeys(r.filtered, graph).found.join(' ');
-                return that.sm.loadIntoSideStore(temporaryData, graph);
-            });
+        let results = this.sm.query(constructEquivalentQuery)
+        let triples = results.triples;
+        let val = this.dict.findValues(triples, graph);
+        let facts = val.found;
 
+        let formattedResults = {
+            results: results,
+            filtered: Reasoner.engine.tagFilter(facts, this.dict.values(graph))
+        }
+
+        let temporaryData = this.dict.findKeys(formattedResults.filtered, graph).found.join(' ');
+        return this.sm.loadIntoSideStore(temporaryData, graph);
     } else {
         return this.sm.query(query);
     }
@@ -3015,12 +3032,12 @@ Hylar.prototype.treatSelectOrConstruct = function(query) {
  * @param derivations The derivations to be registered.
  */
 Hylar.prototype.registerDerivations = function(derivations, graph) {
-    var factsToBeAdded = derivations.additions,
+    let factsToBeAdded = derivations.additions,
         factsToBeDeleted = derivations.deletions;
     graph = this.dict.resolveGraph(graph);
     Hylar.notify('Registering derivations to dictionary...');
 
-    for (var i = 0; i < factsToBeDeleted.length; i++) {
+    for (let i = 0; i < factsToBeDeleted.length; i++) {
         if (factsToBeDeleted[i].toString() == 'IFALSE') {
             delete this.dict.dict[graph]['__FALSE__'];
         } else {
@@ -3030,9 +3047,11 @@ Hylar.prototype.registerDerivations = function(derivations, graph) {
 
     for (var i = 0; i < factsToBeAdded.length; i++) {
         this.dict.put(factsToBeAdded[i], graph);
+        this.prefixes.registerPrefixFrom(factsToBeAdded[i])
     }
 
-    Hylar.notify('Registered successfully.');
+    this.persist()
+    Hylar.success('Registered successfully.');
 };
 
 /**
@@ -3040,52 +3059,40 @@ Hylar.prototype.registerDerivations = function(derivations, graph) {
  * already loaded in the triplestore.
  * @returns {*}
  */
-Hylar.prototype.classify = function() {
-    var that = this, factsChunk, chunks = [], chunksNb = 5000, insertionPromises = [];
+Hylar.prototype.classify = async function(graph) {
     Hylar.notify('Classification started.');
     
-    return this.sm.query('CONSTRUCT { ?a ?b ?c } WHERE { ?a ?b ?c }')
-        .then(function(r) {
-            var facts = [], triple, _fs, f;
-            for (var i = 0; i <  r.triples.length; i++) {
-                triple = r.triples[i];
-                /*if(!(
-                        triple.subject.interfaceName == "BlankNode" ||
-                        triple.predicate.interfaceName == "BlankNode" ||
-                        triple.object.interfaceName == "BlankNode"
-                    )) {*/
-                    _fs = that.dict.get(triple);
-                    if(!_fs) {
-                        f = ParsingInterface.tripleToFact(triple, true, (that.rMethod == Reasoner.process.it.incrementally));
-                        that.dict.put(f);
-                        facts.push(f);
-                    } else {
-                        facts = facts.concat(_fs);
-                    }
-                //}
+    let r = await this.sm.query('CONSTRUCT { ?a ?b ?c } WHERE { ?a ?b ?c }')
+    let facts = []
 
-            }
-            return Reasoner.evaluate(facts, [], [], that.rMethod, that.rules);
-        })
-        .then(function(r) {                                   
-            that.registerDerivations(r);
-            for (var i = 0, j = r.additions.length; i < j; i += chunksNb) {
-                factsChunk = r.additions.slice(i,i+chunksNb);
-                chunks.push(ParsingInterface.factsToTurtle(factsChunk));
-            }
-            return;
-        })
-        .then(function() {            
-            Hylar.notify('Classification succeeded.');
+    for (let i = 0; i <  r.triples.length; i++) {
+        let triple = r.triples[i];
+            let _fs = this.dict.get(triple);
+            if(!_fs) {
+                let f = ParsingInterface.tripleToFact(triple, true, (this.rMethod == Reasoner.process.it.incrementally))
+                this.dict.put(f, graph)
+                facts.push(f)
+            } else facts = facts.concat(_fs)
+    }
+
+    let derivations = await Reasoner.evaluate(facts, [], [], this.rMethod, this.rules)
+    this.registerDerivations(derivations, graph);
+
+    let chunks = [], chunksNb = 5000
+
+    for (var i = 0, j = derivations.additions.length; i < j; i += chunksNb) {
+        let factsChunk = derivations.additions.slice(i,i+chunksNb);
+        chunks.push(ParsingInterface.factsToTurtle(factsChunk));
+    }
+
+    Hylar.notify('Classification succeeded.');
             
-            return Promise.reduce(chunks, function(previous, chunk) {                
-                return that.sm.insert(chunk);
-            }, 0);
-        })
-        .then(function() {
-            emitter.emit('classif-ended');
-            return true;
-        });
+    await Promise.reduce(chunks, (previous, chunk) => {
+        return this.sm.insert(chunk);
+    }, 0)
+
+    emitter.emit('classif-ended');
+    return true
 };
 
 /**
@@ -3189,7 +3196,7 @@ Hylar.prototype.quiet = function() {
 
 module.exports = Hylar;
 
-},{"./core/Dictionary":1,"./core/Emitter":2,"./core/Logics/Fact":4,"./core/Logics/Logics":5,"./core/OWL2RL":8,"./core/ParsingInterface":9,"./core/Reasoner":11,"./core/TripleStorageManager":14,"./core/Utils":15,"bluebird":19,"chalk":24,"fs":21,"q":45}],17:[function(require,module,exports){
+},{"./core/Dictionary":1,"./core/Emitter":2,"./core/Errors":3,"./core/Logics/Logics":5,"./core/OWL2RL":8,"./core/ParsingInterface":9,"./core/Prefixes":10,"./core/Reasoner":11,"./core/RegularExpressions":13,"./core/TripleStorageManager":14,"./core/Utils":15,"bluebird":19,"chalk":28,"chalk-rainbow":24,"fs":21,"q":51}],17:[function(require,module,exports){
 'use strict';
 const colorConvert = require('color-convert');
 
@@ -3356,7 +3363,7 @@ Object.defineProperty(module, 'exports', {
 	get: assembleStyles
 });
 
-},{"color-convert":28}],18:[function(require,module,exports){
+},{"color-convert":32}],18:[function(require,module,exports){
 'use strict'
 
 exports.byteLength = byteLength
@@ -9135,7 +9142,7 @@ module.exports = ret;
 },{"./es5":13}]},{},[4])(4)
 });                    ;if (typeof window !== 'undefined' && window !== null) {                               window.P = window.Promise;                                                     } else if (typeof self !== 'undefined' && self !== null) {                             self.P = self.Promise;                                                         }
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("timers").setImmediate)
-},{"_process":43,"timers":102}],20:[function(require,module,exports){
+},{"_process":49,"timers":110}],20:[function(require,module,exports){
 
 },{}],21:[function(require,module,exports){
 arguments[4][20][0].apply(exports,arguments)
@@ -9188,7 +9195,7 @@ function typedArraySupport () {
   // Can typed array instances can be augmented?
   try {
     var arr = new Uint8Array(1)
-    arr.__proto__ = {__proto__: Uint8Array.prototype, foo: function () { return 42 }}
+    arr.__proto__ = { __proto__: Uint8Array.prototype, foo: function () { return 42 } }
     return arr.foo() === 42
   } catch (e) {
     return false
@@ -10918,7 +10925,7 @@ function numberIsNaN (obj) {
   return obj !== obj // eslint-disable-line no-self-compare
 }
 
-},{"base64-js":18,"ieee754":37}],23:[function(require,module,exports){
+},{"base64-js":18,"ieee754":43}],23:[function(require,module,exports){
 module.exports = {
   "100": "Continue",
   "101": "Switching Protocols",
@@ -10985,6 +10992,265 @@ module.exports = {
 }
 
 },{}],24:[function(require,module,exports){
+const chalk = require('chalk')
+
+module.exports = function chalkRainbow (str) {
+  if (typeof str !== 'string') {
+    throw new TypeError('chalk-rainbow expected a string')
+  }
+
+  const letters = str.split('')
+  const colors = ['red', 'yellow', 'green', 'cyan', 'blue', 'magenta']
+  const colorsCount = colors.length
+
+  return letters.map((l, i) => {
+    const color = colors[i%colorsCount]
+    return chalk[color](l)
+  }).join('')
+}
+
+},{"chalk":26}],25:[function(require,module,exports){
+'use strict';
+
+function assembleStyles () {
+	var styles = {
+		modifiers: {
+			reset: [0, 0],
+			bold: [1, 22], // 21 isn't widely supported and 22 does the same thing
+			dim: [2, 22],
+			italic: [3, 23],
+			underline: [4, 24],
+			inverse: [7, 27],
+			hidden: [8, 28],
+			strikethrough: [9, 29]
+		},
+		colors: {
+			black: [30, 39],
+			red: [31, 39],
+			green: [32, 39],
+			yellow: [33, 39],
+			blue: [34, 39],
+			magenta: [35, 39],
+			cyan: [36, 39],
+			white: [37, 39],
+			gray: [90, 39]
+		},
+		bgColors: {
+			bgBlack: [40, 49],
+			bgRed: [41, 49],
+			bgGreen: [42, 49],
+			bgYellow: [43, 49],
+			bgBlue: [44, 49],
+			bgMagenta: [45, 49],
+			bgCyan: [46, 49],
+			bgWhite: [47, 49]
+		}
+	};
+
+	// fix humans
+	styles.colors.grey = styles.colors.gray;
+
+	Object.keys(styles).forEach(function (groupName) {
+		var group = styles[groupName];
+
+		Object.keys(group).forEach(function (styleName) {
+			var style = group[styleName];
+
+			styles[styleName] = group[styleName] = {
+				open: '\u001b[' + style[0] + 'm',
+				close: '\u001b[' + style[1] + 'm'
+			};
+		});
+
+		Object.defineProperty(styles, groupName, {
+			value: group,
+			enumerable: false
+		});
+	});
+
+	return styles;
+}
+
+Object.defineProperty(module, 'exports', {
+	enumerable: true,
+	get: assembleStyles
+});
+
+},{}],26:[function(require,module,exports){
+(function (process){
+'use strict';
+var escapeStringRegexp = require('escape-string-regexp');
+var ansiStyles = require('ansi-styles');
+var stripAnsi = require('strip-ansi');
+var hasAnsi = require('has-ansi');
+var supportsColor = require('supports-color');
+var defineProps = Object.defineProperties;
+var isSimpleWindowsTerm = process.platform === 'win32' && !/^xterm/i.test(process.env.TERM);
+
+function Chalk(options) {
+	// detect mode if not set manually
+	this.enabled = !options || options.enabled === undefined ? supportsColor : options.enabled;
+}
+
+// use bright blue on Windows as the normal blue color is illegible
+if (isSimpleWindowsTerm) {
+	ansiStyles.blue.open = '\u001b[94m';
+}
+
+var styles = (function () {
+	var ret = {};
+
+	Object.keys(ansiStyles).forEach(function (key) {
+		ansiStyles[key].closeRe = new RegExp(escapeStringRegexp(ansiStyles[key].close), 'g');
+
+		ret[key] = {
+			get: function () {
+				return build.call(this, this._styles.concat(key));
+			}
+		};
+	});
+
+	return ret;
+})();
+
+var proto = defineProps(function chalk() {}, styles);
+
+function build(_styles) {
+	var builder = function () {
+		return applyStyle.apply(builder, arguments);
+	};
+
+	builder._styles = _styles;
+	builder.enabled = this.enabled;
+	// __proto__ is used because we must return a function, but there is
+	// no way to create a function with a different prototype.
+	/* eslint-disable no-proto */
+	builder.__proto__ = proto;
+
+	return builder;
+}
+
+function applyStyle() {
+	// support varags, but simply cast to string in case there's only one arg
+	var args = arguments;
+	var argsLen = args.length;
+	var str = argsLen !== 0 && String(arguments[0]);
+
+	if (argsLen > 1) {
+		// don't slice `arguments`, it prevents v8 optimizations
+		for (var a = 1; a < argsLen; a++) {
+			str += ' ' + args[a];
+		}
+	}
+
+	if (!this.enabled || !str) {
+		return str;
+	}
+
+	var nestedStyles = this._styles;
+	var i = nestedStyles.length;
+
+	// Turns out that on Windows dimmed gray text becomes invisible in cmd.exe,
+	// see https://github.com/chalk/chalk/issues/58
+	// If we're on Windows and we're dealing with a gray color, temporarily make 'dim' a noop.
+	var originalDim = ansiStyles.dim.open;
+	if (isSimpleWindowsTerm && (nestedStyles.indexOf('gray') !== -1 || nestedStyles.indexOf('grey') !== -1)) {
+		ansiStyles.dim.open = '';
+	}
+
+	while (i--) {
+		var code = ansiStyles[nestedStyles[i]];
+
+		// Replace any instances already present with a re-opening code
+		// otherwise only the part of the string until said closing code
+		// will be colored, and the rest will simply be 'plain'.
+		str = code.open + str.replace(code.closeRe, code.open) + code.close;
+	}
+
+	// Reset the original 'dim' if we changed it to work around the Windows dimmed gray issue.
+	ansiStyles.dim.open = originalDim;
+
+	return str;
+}
+
+function init() {
+	var ret = {};
+
+	Object.keys(styles).forEach(function (name) {
+		ret[name] = {
+			get: function () {
+				return build.call(this, [name]);
+			}
+		};
+	});
+
+	return ret;
+}
+
+defineProps(Chalk.prototype, init());
+
+module.exports = new Chalk();
+module.exports.styles = ansiStyles;
+module.exports.hasColor = hasAnsi;
+module.exports.stripColor = stripAnsi;
+module.exports.supportsColor = supportsColor;
+
+}).call(this,require('_process'))
+},{"_process":49,"ansi-styles":25,"escape-string-regexp":38,"has-ansi":40,"strip-ansi":107,"supports-color":27}],27:[function(require,module,exports){
+(function (process){
+'use strict';
+var argv = process.argv;
+
+var terminator = argv.indexOf('--');
+var hasFlag = function (flag) {
+	flag = '--' + flag;
+	var pos = argv.indexOf(flag);
+	return pos !== -1 && (terminator !== -1 ? pos < terminator : true);
+};
+
+module.exports = (function () {
+	if ('FORCE_COLOR' in process.env) {
+		return true;
+	}
+
+	if (hasFlag('no-color') ||
+		hasFlag('no-colors') ||
+		hasFlag('color=false')) {
+		return false;
+	}
+
+	if (hasFlag('color') ||
+		hasFlag('colors') ||
+		hasFlag('color=true') ||
+		hasFlag('color=always')) {
+		return true;
+	}
+
+	if (process.stdout && !process.stdout.isTTY) {
+		return false;
+	}
+
+	if (process.platform === 'win32') {
+		return true;
+	}
+
+	if ('COLORTERM' in process.env) {
+		return true;
+	}
+
+	if (process.env.TERM === 'dumb') {
+		return false;
+	}
+
+	if (/^screen|^xterm|^vt100|color|ansi|cygwin|linux/i.test(process.env.TERM)) {
+		return true;
+	}
+
+	return false;
+})();
+
+}).call(this,require('_process'))
+},{"_process":49}],28:[function(require,module,exports){
 (function (process){
 'use strict';
 const escapeStringRegexp = require('escape-string-regexp');
@@ -11216,7 +11482,7 @@ module.exports.supportsColor = stdoutColor;
 module.exports.default = module.exports; // For TypeScript
 
 }).call(this,require('_process'))
-},{"./templates.js":25,"_process":43,"ansi-styles":17,"escape-string-regexp":34,"supports-color":101}],25:[function(require,module,exports){
+},{"./templates.js":29,"_process":49,"ansi-styles":17,"escape-string-regexp":38,"supports-color":109}],29:[function(require,module,exports){
 'use strict';
 const TEMPLATE_REGEX = /(?:\\(u[a-f\d]{4}|x[a-f\d]{2}|.))|(?:\{(~)?(\w+(?:\([^)]*\))?(?:\.\w+(?:\([^)]*\))?)*)(?:[ \t]|(?=\r?\n)))|(\})|((?:.|[\r\n\f])+?)/gi;
 const STYLE_REGEX = /(?:^|\.)(\w+)(?:\(([^)]*)\))?/g;
@@ -11346,7 +11612,7 @@ module.exports = (chalk, tmp) => {
 	return chunks.join('');
 };
 
-},{}],26:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 var charenc = {
   // UTF-8 encoding
   utf8: {
@@ -11381,7 +11647,7 @@ var charenc = {
 
 module.exports = charenc;
 
-},{}],27:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 /* MIT license */
 var cssKeywords = require('color-name');
 
@@ -12251,7 +12517,7 @@ convert.rgb.gray = function (rgb) {
 	return [val / 255 * 100];
 };
 
-},{"color-name":30}],28:[function(require,module,exports){
+},{"color-name":34}],32:[function(require,module,exports){
 var conversions = require('./conversions');
 var route = require('./route');
 
@@ -12331,7 +12597,7 @@ models.forEach(function (fromModel) {
 
 module.exports = convert;
 
-},{"./conversions":27,"./route":29}],29:[function(require,module,exports){
+},{"./conversions":31,"./route":33}],33:[function(require,module,exports){
 var conversions = require('./conversions');
 
 /*
@@ -12430,7 +12696,7 @@ module.exports = function (fromModel) {
 };
 
 
-},{"./conversions":27}],30:[function(require,module,exports){
+},{"./conversions":31}],34:[function(require,module,exports){
 module.exports = {
 	"aliceblue": [240, 248, 255],
 	"antiquewhite": [250, 235, 215],
@@ -12581,7 +12847,7 @@ module.exports = {
 	"yellow": [255, 255, 0],
 	"yellowgreen": [154, 205, 50]
 };
-},{}],31:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 (function (Buffer){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -12692,7 +12958,7 @@ function objectToString(o) {
 }
 
 }).call(this,{"isBuffer":require("../../is-buffer/index.js")})
-},{"../../is-buffer/index.js":39}],32:[function(require,module,exports){
+},{"../../is-buffer/index.js":45}],36:[function(require,module,exports){
 (function() {
   var base64map
       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',
@@ -12790,7 +13056,7 @@ function objectToString(o) {
   module.exports = crypt;
 })();
 
-},{}],33:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 (function (process,global,setImmediate){
 /*!
  * @overview es6-promise - a tiny implementation of Promises/A+.
@@ -13766,7 +14032,7 @@ function objectToString(o) {
 
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("timers").setImmediate)
-},{"_process":43,"timers":102}],34:[function(require,module,exports){
+},{"_process":49,"timers":110}],38:[function(require,module,exports){
 'use strict';
 
 var matchOperatorsRe = /[|\\{}()[\]^$+*?.]/g;
@@ -13779,7 +14045,7 @@ module.exports = function (str) {
 	return str.replace(matchOperatorsRe, '\\$&');
 };
 
-},{}],35:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -14304,7 +14570,19 @@ function functionBindPolyfill(context) {
   };
 }
 
-},{}],36:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
+'use strict';
+var ansiRegex = require('ansi-regex');
+var re = new RegExp(ansiRegex().source); // remove the `g` flag
+module.exports = re.test.bind(re);
+
+},{"ansi-regex":41}],41:[function(require,module,exports){
+'use strict';
+module.exports = function () {
+	return /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-PRZcf-nqry=><]/g;
+};
+
+},{}],42:[function(require,module,exports){
 var http = require('http')
 var url = require('url')
 
@@ -14337,7 +14615,7 @@ function validateParams (params) {
   return params
 }
 
-},{"http":96,"url":104}],37:[function(require,module,exports){
+},{"http":102,"url":112}],43:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = (nBytes * 8) - mLen - 1
@@ -14423,7 +14701,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],38:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -14448,7 +14726,7 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],39:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 /*!
  * Determine if an object is a Buffer
  *
@@ -14471,14 +14749,14 @@ function isSlowBuffer (obj) {
   return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
 }
 
-},{}],40:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 var toString = {}.toString;
 
 module.exports = Array.isArray || function (arr) {
   return toString.call(arr) == '[object Array]';
 };
 
-},{}],41:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 (function(){
   var crypt = require('crypt'),
       utf8 = require('charenc').utf8,
@@ -14640,7 +14918,7 @@ module.exports = Array.isArray || function (arr) {
 
 })();
 
-},{"charenc":26,"crypt":32,"is-buffer":39}],42:[function(require,module,exports){
+},{"charenc":30,"crypt":36,"is-buffer":45}],48:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -14688,7 +14966,7 @@ function nextTick(fn, arg1, arg2, arg3) {
 
 
 }).call(this,require('_process'))
-},{"_process":43}],43:[function(require,module,exports){
+},{"_process":49}],49:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -14874,7 +15152,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],44:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 ;(function(root) {
@@ -15411,7 +15689,7 @@ process.umask = function() { return 0; };
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],45:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 (function (process,setImmediate){
 // vim:ts=4:sts=4:sw=4:
 /*!
@@ -17491,7 +17769,7 @@ return Q;
 });
 
 }).call(this,require('_process'),require("timers").setImmediate)
-},{"_process":43,"timers":102}],46:[function(require,module,exports){
+},{"_process":49,"timers":110}],52:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -17577,7 +17855,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],47:[function(require,module,exports){
+},{}],53:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -17664,15 +17942,15 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],48:[function(require,module,exports){
+},{}],54:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":46,"./encode":47}],49:[function(require,module,exports){
+},{"./decode":52,"./encode":53}],55:[function(require,module,exports){
 // Ignore module for browserify (see package.json)
-},{}],50:[function(require,module,exports){
+},{}],56:[function(require,module,exports){
 (function (process,global,setImmediate,__argument0,__argument1,__argument2,__argument3,__dirname){
 /**
  * A JavaScript implementation of the JSON-LD API.
@@ -25867,7 +26145,7 @@ return factory;
 })();
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("timers").setImmediate,arguments[3],arguments[4],arguments[5],arguments[6],"/node_modules/rdfstore/node_modules/jsonld/js")
-},{"_process":43,"crypto":49,"es6-promise":33,"http":49,"jsonld-request":49,"pkginfo":49,"request":49,"timers":102,"util":49,"xmldom":49}],51:[function(require,module,exports){
+},{"_process":49,"crypto":55,"es6-promise":37,"http":55,"jsonld-request":55,"pkginfo":55,"request":55,"timers":110,"util":55,"xmldom":55}],57:[function(require,module,exports){
 // Replace local require by a lazy loader
 var globalRequire = require;
 require = function () {};
@@ -25895,7 +26173,7 @@ Object.keys(exports).forEach(function (submodule) {
   });
 });
 
-},{"./lib/N3Lexer":52,"./lib/N3Parser":53,"./lib/N3Store":54,"./lib/N3StreamParser":55,"./lib/N3StreamWriter":56,"./lib/N3Util":57,"./lib/N3Writer":58}],52:[function(require,module,exports){
+},{"./lib/N3Lexer":58,"./lib/N3Parser":59,"./lib/N3Store":60,"./lib/N3StreamParser":61,"./lib/N3StreamWriter":62,"./lib/N3Util":63,"./lib/N3Writer":64}],58:[function(require,module,exports){
 (function (setImmediate){
 // **N3Lexer** tokenizes N3 documents.
 var fromCharCode = String.fromCharCode;
@@ -26258,7 +26536,7 @@ N3Lexer.prototype = {
 module.exports = N3Lexer;
 
 }).call(this,require("timers").setImmediate)
-},{"timers":102}],53:[function(require,module,exports){
+},{"timers":110}],59:[function(require,module,exports){
 // **N3Parser** parses N3 documents.
 var N3Lexer = require('./N3Lexer');
 
@@ -26960,7 +27238,7 @@ function noop() {}
 // Export the `N3Parser` class as a whole.
 module.exports = N3Parser;
 
-},{"./N3Lexer":52}],54:[function(require,module,exports){
+},{"./N3Lexer":58}],60:[function(require,module,exports){
 // **N3Store** objects store N3 triples by graph in memory.
 
 var expandPrefixedName = require('./N3Util').expandPrefixedName;
@@ -27338,7 +27616,7 @@ N3Store.prototype = {
 // Export the `N3Store` class as a whole.
 module.exports = N3Store;
 
-},{"./N3Util":57}],55:[function(require,module,exports){
+},{"./N3Util":63}],61:[function(require,module,exports){
 // **N3StreamParser** parses an N3 stream into a triple stream
 var Transform = require('stream').Transform,
     util = require('util'),
@@ -27374,7 +27652,7 @@ util.inherits(N3StreamParser, Transform);
 // Export the `N3StreamParser` class as a whole.
 module.exports = N3StreamParser;
 
-},{"./N3Parser.js":53,"stream":95,"util":108}],56:[function(require,module,exports){
+},{"./N3Parser.js":59,"stream":101,"util":116}],62:[function(require,module,exports){
 // **N3StreamWriter** serializes a triple stream into an N3 stream
 var Transform = require('stream').Transform,
     util = require('util'),
@@ -27406,7 +27684,7 @@ util.inherits(N3StreamWriter, Transform);
 // Export the `N3StreamWriter` class as a whole.
 module.exports = N3StreamWriter;
 
-},{"./N3Writer.js":58,"stream":95,"util":108}],57:[function(require,module,exports){
+},{"./N3Writer.js":64,"stream":101,"util":116}],63:[function(require,module,exports){
 // **N3Util** provides N3 utility functions
 
 var Xsd = 'http://www.w3.org/2001/XMLSchema#';
@@ -27553,7 +27831,7 @@ function applyToThis(f) {
 // Expose N3Util, attaching all functions to it
 module.exports = addN3Util(addN3Util);
 
-},{}],58:[function(require,module,exports){
+},{}],64:[function(require,module,exports){
 // **N3Writer** writes N3 documents.
 
 // Matches a literal as represented in memory by the N3 library
@@ -27883,7 +28161,7 @@ function characterReplacer(character) {
 // Export the `N3Writer` class as a whole.
 module.exports = N3Writer;
 
-},{}],59:[function(require,module,exports){
+},{}],65:[function(require,module,exports){
 // imports
 var SparqlParser = require("./parser");
 var Utils = require("./utils");
@@ -28548,7 +28826,7 @@ module.exports = {
     SparqlParserError: SparqlParserError
 };
 
-},{"./parser":65,"./utils":77}],60:[function(require,module,exports){
+},{"./parser":71,"./utils":83}],66:[function(require,module,exports){
 "use strict";
 
 var utils = require('./utils');
@@ -29515,7 +29793,7 @@ module.exports = {
     Tree: Tree,
     Node: Node
 };
-},{"./utils":77}],61:[function(require,module,exports){
+},{"./utils":83}],67:[function(require,module,exports){
 //imports
 var _ = require('./utils');
 var async = require('./utils');
@@ -30022,7 +30300,7 @@ Callbacks.CallbacksBackend.eventsFlushed = Callbacks.eventsFlushed;
 
 module.exports = Callbacks;
 
-},{"./abstract_query_tree":59,"./quad_index":69,"./rdf_model":74,"./utils":77}],62:[function(require,module,exports){
+},{"./abstract_query_tree":65,"./quad_index":75,"./rdf_model":80,"./utils":83}],68:[function(require,module,exports){
 var jsonld = require('jsonld');
 
 var toTriples = function (input, graph, cb) {
@@ -30104,7 +30382,7 @@ module.exports = {
     JSONLDParser: JSONLDParser
 };
 
-},{"jsonld":50}],63:[function(require,module,exports){
+},{"jsonld":56}],69:[function(require,module,exports){
 var async = require('./utils');
 var Tree = require('./btree').Tree;
 
@@ -30641,7 +30919,7 @@ module.exports = {
     Lexicon: Lexicon
 };
 
-},{"./btree":60,"./utils":77}],64:[function(require,module,exports){
+},{"./btree":66,"./utils":83}],70:[function(require,module,exports){
 var utils = require("./utils");
 if(!utils.isWorker()) {
     var http = require("http");
@@ -30710,7 +30988,7 @@ if(!utils.isWorker()) {
         NetworkTransport: NetworkTransport
     };
 }
-},{"./utils":77,"http":96,"https":36,"url":104}],65:[function(require,module,exports){
+},{"./utils":83,"http":102,"https":42,"url":112}],71:[function(require,module,exports){
 module.exports = /*
  * Generated by PEG.js 0.10.0.
  *
@@ -50419,7 +50697,7 @@ module.exports = /*
     parse:       peg$parse
   };
 })()
-},{}],66:[function(require,module,exports){
+},{}],72:[function(require,module,exports){
 var Tree = require('./btree').Tree;
 var utils = require('./utils');
 var async = utils;
@@ -50899,7 +51177,7 @@ module.exports = {
     PersistentLexicon: PersistentLexicon
 };
 
-},{"./btree":60,"./lexicon":63,"./utils":77}],67:[function(require,module,exports){
+},{"./btree":66,"./lexicon":69,"./utils":83}],73:[function(require,module,exports){
 
 // imports
 var utils = require('./utils');
@@ -51100,7 +51378,7 @@ PersistentQuadBackend.prototype.clear = function(callback) {
 
 module.exports.PersistentQuadBackend = PersistentQuadBackend;
 
-},{"./utils":77}],68:[function(require,module,exports){
+},{"./utils":83}],74:[function(require,module,exports){
 
 // imports
 var QuadIndex = require("./quad_index").QuadIndex;
@@ -51231,7 +51509,7 @@ QuadBackend.prototype.clear = function(callback) {
 
 module.exports.QuadBackend = QuadBackend;
 
-},{"./quad_index":69,"./utils":77}],69:[function(require,module,exports){
+},{"./quad_index":75,"./utils":83}],75:[function(require,module,exports){
 var BaseTree = require("./btree").Tree;
 var _ = require('./utils');
 var async = require('./utils');
@@ -51472,7 +51750,7 @@ module.exports = {
 };
 
 
-},{"./btree":60,"./utils":77}],70:[function(require,module,exports){
+},{"./btree":66,"./utils":83}],76:[function(require,module,exports){
 //imports
 var AbstractQueryTree = require("./abstract_query_tree").AbstractQueryTree;
 var NonSupportedSparqlFeatureError = require("./abstract_query_tree").NonSupportedSparqlFeatureError;
@@ -53395,7 +53673,7 @@ module.exports = {
     QueryEngine: QueryEngine
 };
 
-},{"./abstract_query_tree":59,"./graph_callbacks":61,"./quad_index":69,"./query_filters":71,"./query_plan":72,"./rdf_loader":73,"./rdf_model":74,"./utils":77}],71:[function(require,module,exports){
+},{"./abstract_query_tree":65,"./graph_callbacks":67,"./quad_index":75,"./query_filters":77,"./query_plan":78,"./rdf_loader":79,"./rdf_model":80,"./utils":83}],77:[function(require,module,exports){
 var Utils = require('./utils');
 var     _ = Utils;
 var async = require('./utils');
@@ -55201,7 +55479,7 @@ module.exports = {
     QueryFilters: QueryFilters
 };
 
-},{"./utils":77}],72:[function(require,module,exports){
+},{"./utils":83}],78:[function(require,module,exports){
 var _ = require('./utils');
 var async = require('./utils');
 
@@ -55939,7 +56217,7 @@ module.exports = {
     QueryPlan: QueryPlanDPSize
 };
 
-},{"./utils":77}],73:[function(require,module,exports){
+},{"./utils":83}],79:[function(require,module,exports){
 var NetworkTransport = require("./network_transport").NetworkTransport;
 var RVN3Parser = require("./rvn3_parser").RVN3Parser;
 var JSONLDParser = require("./jsonld_parser").JSONLDParser;
@@ -56082,7 +56360,7 @@ module.exports = {
 
 // var loader = require("./js-communication/src/rdf_loader").RDFLoader; loader = new loader.RDFLoader(); loader.load('http://dbpedialite.org/titles/Lisp_%28programming_language%29', function(success, results){console.log("hey"); console.log(success); console.log(results)})
 
-},{"./jsonld_parser":62,"./network_transport":64,"./rvn3_parser":75,"./utils":77,"fs":21}],74:[function(require,module,exports){
+},{"./jsonld_parser":68,"./network_transport":70,"./rvn3_parser":81,"./utils":83,"fs":21}],80:[function(require,module,exports){
 // imports
 var _ = require("./utils");
 var QueryFilters = require("./query_filters").QueryFilters;
@@ -56746,7 +57024,7 @@ RDFModel.rdf = new RDFModel.RDFEnvironment();
 
 module.exports = RDFModel;
 
-},{"./query_filters":71,"./utils":77}],75:[function(require,module,exports){
+},{"./query_filters":77,"./utils":83}],81:[function(require,module,exports){
 var N3Parser = require('n3').Parser;
 //var N3Parser = require('../node_modules/n3/lib/N3Parser');
 
@@ -56811,7 +57089,7 @@ function convertEntity(entity) {
 module.exports = {
     RVN3Parser: RVN3Parser
 };
-},{"n3":51}],76:[function(require,module,exports){
+},{"n3":57}],82:[function(require,module,exports){
 // imports
 var QueryEngine = require("./query_engine").QueryEngine;
 var InMemoryQuadBackend = require("./quad_backend").QuadBackend;
@@ -57738,7 +58016,7 @@ module.exports.Store = Store;
 module.exports.create = create;
 module.exports.connect = connect;
 
-},{"./lexicon":63,"./persistent_lexicon":66,"./persistent_quad_backend":67,"./quad_backend":68,"./query_engine":70,"./rdf_model":74,"./utils":77}],77:[function(require,module,exports){
+},{"./lexicon":69,"./persistent_lexicon":72,"./persistent_quad_backend":73,"./quad_backend":74,"./query_engine":76,"./rdf_model":80,"./utils":83}],83:[function(require,module,exports){
 (function (process){
 var slowNextTick = (function () {
 
@@ -58251,10 +58529,10 @@ module.exports = {
 };
 
 }).call(this,require('_process'))
-},{"_process":43}],78:[function(require,module,exports){
+},{"_process":49}],84:[function(require,module,exports){
 module.exports = require('./lib/_stream_duplex.js');
 
-},{"./lib/_stream_duplex.js":79}],79:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":85}],85:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -58386,7 +58664,7 @@ Duplex.prototype._destroy = function (err, cb) {
 
   pna.nextTick(cb, err);
 };
-},{"./_stream_readable":81,"./_stream_writable":83,"core-util-is":31,"inherits":38,"process-nextick-args":42}],80:[function(require,module,exports){
+},{"./_stream_readable":87,"./_stream_writable":89,"core-util-is":35,"inherits":44,"process-nextick-args":48}],86:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -58434,7 +58712,7 @@ function PassThrough(options) {
 PassThrough.prototype._transform = function (chunk, encoding, cb) {
   cb(null, chunk);
 };
-},{"./_stream_transform":82,"core-util-is":31,"inherits":38}],81:[function(require,module,exports){
+},{"./_stream_transform":88,"core-util-is":35,"inherits":44}],87:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -59456,7 +59734,7 @@ function indexOf(xs, x) {
   return -1;
 }
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./_stream_duplex":79,"./internal/streams/BufferList":84,"./internal/streams/destroy":85,"./internal/streams/stream":86,"_process":43,"core-util-is":31,"events":35,"inherits":38,"isarray":40,"process-nextick-args":42,"safe-buffer":91,"string_decoder/":100,"util":20}],82:[function(require,module,exports){
+},{"./_stream_duplex":85,"./internal/streams/BufferList":90,"./internal/streams/destroy":91,"./internal/streams/stream":92,"_process":49,"core-util-is":35,"events":39,"inherits":44,"isarray":46,"process-nextick-args":48,"safe-buffer":97,"string_decoder/":106,"util":20}],88:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -59671,7 +59949,7 @@ function done(stream, er, data) {
 
   return stream.push(null);
 }
-},{"./_stream_duplex":79,"core-util-is":31,"inherits":38}],83:[function(require,module,exports){
+},{"./_stream_duplex":85,"core-util-is":35,"inherits":44}],89:[function(require,module,exports){
 (function (process,global,setImmediate){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -60361,7 +60639,7 @@ Writable.prototype._destroy = function (err, cb) {
   cb(err);
 };
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("timers").setImmediate)
-},{"./_stream_duplex":79,"./internal/streams/destroy":85,"./internal/streams/stream":86,"_process":43,"core-util-is":31,"inherits":38,"process-nextick-args":42,"safe-buffer":91,"timers":102,"util-deprecate":106}],84:[function(require,module,exports){
+},{"./_stream_duplex":85,"./internal/streams/destroy":91,"./internal/streams/stream":92,"_process":49,"core-util-is":35,"inherits":44,"process-nextick-args":48,"safe-buffer":97,"timers":110,"util-deprecate":114}],90:[function(require,module,exports){
 'use strict';
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -60441,7 +60719,7 @@ if (util && util.inspect && util.inspect.custom) {
     return this.constructor.name + ' ' + obj;
   };
 }
-},{"safe-buffer":91,"util":20}],85:[function(require,module,exports){
+},{"safe-buffer":97,"util":20}],91:[function(require,module,exports){
 'use strict';
 
 /*<replacement>*/
@@ -60516,13 +60794,13 @@ module.exports = {
   destroy: destroy,
   undestroy: undestroy
 };
-},{"process-nextick-args":42}],86:[function(require,module,exports){
+},{"process-nextick-args":48}],92:[function(require,module,exports){
 module.exports = require('events').EventEmitter;
 
-},{"events":35}],87:[function(require,module,exports){
+},{"events":39}],93:[function(require,module,exports){
 module.exports = require('./readable').PassThrough
 
-},{"./readable":88}],88:[function(require,module,exports){
+},{"./readable":94}],94:[function(require,module,exports){
 exports = module.exports = require('./lib/_stream_readable.js');
 exports.Stream = exports;
 exports.Readable = exports;
@@ -60531,13 +60809,13 @@ exports.Duplex = require('./lib/_stream_duplex.js');
 exports.Transform = require('./lib/_stream_transform.js');
 exports.PassThrough = require('./lib/_stream_passthrough.js');
 
-},{"./lib/_stream_duplex.js":79,"./lib/_stream_passthrough.js":80,"./lib/_stream_readable.js":81,"./lib/_stream_transform.js":82,"./lib/_stream_writable.js":83}],89:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":85,"./lib/_stream_passthrough.js":86,"./lib/_stream_readable.js":87,"./lib/_stream_transform.js":88,"./lib/_stream_writable.js":89}],95:[function(require,module,exports){
 module.exports = require('./readable').Transform
 
-},{"./readable":88}],90:[function(require,module,exports){
+},{"./readable":94}],96:[function(require,module,exports){
 module.exports = require('./lib/_stream_writable.js');
 
-},{"./lib/_stream_writable.js":83}],91:[function(require,module,exports){
+},{"./lib/_stream_writable.js":89}],97:[function(require,module,exports){
 /* eslint-disable node/no-deprecated-api */
 var buffer = require('buffer')
 var Buffer = buffer.Buffer
@@ -60601,7 +60879,7 @@ SafeBuffer.allocUnsafeSlow = function (size) {
   return buffer.SlowBuffer(size)
 }
 
-},{"buffer":22}],92:[function(require,module,exports){
+},{"buffer":22}],98:[function(require,module,exports){
 var XSD_INTEGER = 'http://www.w3.org/2001/XMLSchema#integer';
 
 function Generator(options, prefixes) {
@@ -60621,6 +60899,8 @@ function Generator(options, prefixes) {
   this._prefixRegex = new RegExp('^(' + iriList + ')([a-zA-Z][\\-_a-zA-Z0-9]*)$');
   this._usedPrefixes = {};
 }
+
+var INDENTATION = '  ';
 
 // Converts the parsed query object into a SPARQL query
 Generator.prototype.toQuery = function (q) {
@@ -60704,8 +60984,40 @@ Generator.prototype.array = function (items) {
 };
 
 Generator.prototype.bgp = function (bgp) {
-  return mapJoin(bgp.triples, '\n', this.triple, this);
+  return this.encodeTriples(bgp.triples);
 };
+
+Generator.prototype.encodeTriples = function (triples) {
+  if (!triples.length)
+    return '';
+
+  var parts = [], subject = '', predicate = '';
+  for (var i = 0; i < triples.length; i++) {
+    var triple = triples[i];
+    // Triple with different subject
+    if (triple.subject !== subject) {
+      // Terminate previous triple
+      if (subject)
+        parts.push('.\n');
+      subject = triple.subject;
+      predicate = triple.predicate;
+      parts.push(this.toEntity(subject), ' ', this.toEntity(predicate));
+    }
+    // Triple with same subject but different predicate
+    else if (triple.predicate !== predicate) {
+      predicate = triple.predicate;
+      parts.push(';\n', INDENTATION, this.toEntity(predicate));
+    }
+    // Triple with same subject and predicate
+    else {
+      parts.push(',');
+    }
+    parts.push(' ', this.toEntity(triple.object));
+  }
+  parts.push('.');
+
+  return parts.join('');
+}
 
 Generator.prototype.graph = function (graph) {
   return 'GRAPH ' + this.toEntity(graph.name) + ' ' + this.group(graph);
@@ -60900,6 +61212,14 @@ Generator.prototype.toUpdate = function (update) {
   case 'move':
     return update.type.toUpperCase() + (update.source.default ? ' DEFAULT ' : ' ') +
            'TO ' + this.toEntity(update.destination.name);
+  case 'clear':
+  case 'drop':
+    return update.type.toUpperCase() + (update.silent ? ' SILENT ' : ' ') + (
+      update.graph.default ? 'DEFAULT' :
+      update.graph.named ? 'NAMED' :
+      update.graph.all ? 'ALL' :
+      ('GRAPH ' + this.toEntity(update.graph.name))
+    );
   default:
     throw new Error('Unknown update query type: ' + update.type);
   }
@@ -60914,7 +61234,7 @@ function mapJoin(array, sep, func, self) {
 }
 
 // Indents each line of the string
-function indent(text) { return text.replace(/^/gm, '  '); }
+function indent(text) { return text.replace(/^/gm, INDENTATION); }
 
 /**
  * @param options {
@@ -60927,7 +61247,7 @@ module.exports = function SparqlGenerator(options) {
   };
 };
 
-},{}],93:[function(require,module,exports){
+},{}],99:[function(require,module,exports){
 (function (process){
 /* parser generated by jison 0.4.18 */
 /*
@@ -61003,12 +61323,12 @@ module.exports = function SparqlGenerator(options) {
   }
 */
 var SparqlParser = (function(){
-var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[6,12,15,24,34,43,48,97,107,110,112,113,122,123,128,295,296,297,298,299],$V1=[2,194],$V2=[97,107,110,112,113,122,123,128,295,296,297,298,299],$V3=[1,18],$V4=[1,27],$V5=[6,83],$V6=[38,39,51],$V7=[38,51],$V8=[1,55],$V9=[1,57],$Va=[1,53],$Vb=[1,56],$Vc=[28,29,290],$Vd=[13,16,283],$Ve=[109,131,293,300],$Vf=[13,16,109,131,283],$Vg=[1,79],$Vh=[1,83],$Vi=[1,85],$Vj=[109,131,293,294,300],$Vk=[13,16,109,131,283,294],$Vl=[1,91],$Vm=[2,234],$Vn=[1,90],$Vo=[13,16,28,29,80,165,212,215,216,269,270,271,272,273,274,275,276,277,278,279,280,281,282,283],$Vp=[6,38,39,51,61,68,71,79,81,83],$Vq=[6,13,16,28,38,39,51,61,68,71,79,81,83,283],$Vr=[6,13,16,28,29,31,32,38,39,41,51,61,68,71,79,80,81,83,90,106,109,122,123,125,130,157,158,160,163,164,165,183,194,205,210,212,213,215,216,220,224,228,243,248,265,269,270,271,272,273,274,275,276,277,278,279,280,281,282,283,290,301,304,305,307,308,309,310,311,312,313,314],$Vs=[1,106],$Vt=[1,107],$Vu=[6,13,16,28,29,39,41,80,83,109,157,158,160,163,164,165,212,215,216,269,270,271,272,273,274,275,276,277,278,279,280,281,282,283,301],$Vv=[28,32],$Vw=[2,291],$Vx=[1,122],$Vy=[1,120],$Vz=[6,194],$VA=[2,308],$VB=[2,296],$VC=[38,125],$VD=[6,41,68,71,79,81,83],$VE=[2,236],$VF=[1,136],$VG=[1,138],$VH=[1,148],$VI=[1,154],$VJ=[1,157],$VK=[1,153],$VL=[1,155],$VM=[1,151],$VN=[1,152],$VO=[1,158],$VP=[1,159],$VQ=[1,162],$VR=[1,163],$VS=[1,164],$VT=[1,165],$VU=[1,166],$VV=[1,167],$VW=[1,168],$VX=[1,169],$VY=[1,170],$VZ=[1,171],$V_=[1,172],$V$=[1,173],$V01=[6,61,68,71,79,81,83],$V11=[28,29,38,39,51],$V21=[13,16,28,29,80,245,246,247,249,251,252,254,255,258,260,269,270,271,272,273,274,275,276,277,278,279,280,281,282,283,314,315,316,317,318,319],$V31=[2,405],$V41=[1,186],$V51=[1,187],$V61=[1,188],$V71=[13,16,41,80,90,269,270,271,272,273,274,275,276,277,278,279,280,281,282,283],$V81=[6,106,194],$V91=[41,109],$Va1=[6,41,71,79,81,83],$Vb1=[2,320],$Vc1=[2,312],$Vd1=[13,16,28,183,283],$Ve1=[2,348],$Vf1=[2,344],$Vg1=[13,16,28,29,32,39,41,80,83,109,157,158,160,163,164,165,183,194,205,210,212,213,215,216,248,269,270,271,272,273,274,275,276,277,278,279,280,281,282,283,301],$Vh1=[13,16,28,29,31,32,39,41,80,83,90,109,157,158,160,163,164,165,183,194,205,210,212,213,215,216,220,224,228,243,248,265,269,270,271,272,273,274,275,276,277,278,279,280,281,282,283,290,301,305,308,309,310,311,312,313,314],$Vi1=[13,16,28,29,31,32,39,41,80,83,90,109,157,158,160,163,164,165,183,194,205,210,212,213,215,216,220,224,228,243,248,265,267,268,269,270,271,272,273,274,275,276,277,278,279,280,281,282,283,290,301,305,308,309,310,311,312,313,314],$Vj1=[31,32,194,220,248],$Vk1=[31,32,194,220,224,248],$Vl1=[31,32,194,220,224,228,243,248,265,277,278,279,280,281,282,308,309,310,311,312,313,314],$Vm1=[31,32,194,220,224,228,243,248,265,277,278,279,280,281,282,290,305,308,309,310,311,312,313,314],$Vn1=[1,252],$Vo1=[1,253],$Vp1=[1,255],$Vq1=[1,256],$Vr1=[1,257],$Vs1=[1,258],$Vt1=[1,260],$Vu1=[1,261],$Vv1=[2,412],$Vw1=[1,263],$Vx1=[1,264],$Vy1=[1,265],$Vz1=[1,271],$VA1=[1,266],$VB1=[1,267],$VC1=[1,268],$VD1=[1,269],$VE1=[1,270],$VF1=[1,278],$VG1=[1,289],$VH1=[6,41,79,81,83],$VI1=[1,306],$VJ1=[1,305],$VK1=[39,41,83,109,157,158,160,163,164],$VL1=[1,314],$VM1=[1,315],$VN1=[41,109,301],$VO1=[13,16,28,29,32,80,165,212,215,216,269,270,271,272,273,274,275,276,277,278,279,280,281,282,283],$VP1=[13,16,28,29,32,39,41,80,83,109,157,158,160,163,164,165,194,212,213,215,216,248,269,270,271,272,273,274,275,276,277,278,279,280,281,282,283,301],$VQ1=[13,16,28,29,80,205,243,245,246,247,249,251,252,254,255,258,260,269,270,271,272,273,274,275,276,277,278,279,280,281,282,283,308,314,315,316,317,318,319],$VR1=[1,341],$VS1=[1,342],$VT1=[1,344],$VU1=[1,343],$VV1=[6,13,16,28,29,31,32,39,41,68,71,74,76,79,80,81,83,109,157,158,160,163,164,165,194,212,215,216,220,224,228,243,245,246,247,248,249,251,252,254,255,258,260,265,269,270,271,272,273,274,275,276,277,278,279,280,281,282,283,290,301,305,308,309,310,311,312,313,314,315,316,317,318,319],$VW1=[1,352],$VX1=[1,351],$VY1=[29,165],$VZ1=[13,16,32,41,80,90,269,270,271,272,273,274,275,276,277,278,279,280,281,282,283],$V_1=[29,41],$V$1=[2,311],$V02=[6,41,83],$V12=[6,13,16,29,41,71,79,81,83,245,246,247,249,251,252,254,255,258,260,283,314,315,316,317,318,319],$V22=[6,13,16,28,29,39,41,71,74,76,79,80,81,83,109,157,158,160,163,164,165,212,215,216,245,246,247,249,251,252,254,255,258,260,269,270,271,272,273,274,275,276,277,278,279,280,281,282,283,301,314,315,316,317,318,319],$V32=[6,13,16,28,29,41,68,71,79,81,83,245,246,247,249,251,252,254,255,258,260,283,314,315,316,317,318,319],$V42=[6,13,16,28,29,31,32,39,41,61,68,71,74,76,79,80,81,83,109,157,158,160,163,164,165,194,212,215,216,220,224,228,243,245,246,247,248,249,251,252,254,255,258,260,265,269,270,271,272,273,274,275,276,277,278,279,280,281,282,283,290,301,302,305,308,309,310,311,312,313,314,315,316,317,318,319],$V52=[13,16,29,183,205,210,283],$V62=[2,362],$V72=[1,393],$V82=[39,41,83,109,157,158,160,163,164,301],$V92=[2,350],$Va2=[13,16,28,29,32,39,41,80,83,109,157,158,160,163,164,165,183,194,212,213,215,216,248,269,270,271,272,273,274,275,276,277,278,279,280,281,282,283,301],$Vb2=[13,16,28,29,80,205,243,245,246,247,249,251,252,254,255,258,260,269,270,271,272,273,274,275,276,277,278,279,280,281,282,283,290,308,314,315,316,317,318,319],$Vc2=[1,443],$Vd2=[1,440],$Ve2=[1,441],$Vf2=[13,16,28,29,39,41,80,83,109,157,158,160,163,164,165,212,215,216,269,270,271,272,273,274,275,276,277,278,279,280,281,282,283],$Vg2=[13,16,28,283],$Vh2=[13,16,28,29,39,41,80,83,109,157,158,160,163,164,165,212,215,216,269,270,271,272,273,274,275,276,277,278,279,280,281,282,283,301],$Vi2=[2,323],$Vj2=[13,16,28,183,194,283],$Vk2=[13,16,32,80,90,269,270,271,272,273,274,275,276,277,278,279,280,281,282,283],$Vl2=[6,13,16,28,29,41,74,76,79,81,83,245,246,247,249,251,252,254,255,258,260,283,314,315,316,317,318,319],$Vm2=[2,318],$Vn2=[13,16,29,183,205,283],$Vo2=[39,41,83,109,157,158,160,163,164,194,213,301],$Vp2=[13,16,28,29,41,80,109,165,212,215,216,269,270,271,272,273,274,275,276,277,278,279,280,281,282,283],$Vq2=[13,16,28,29,32,80,165,212,215,216,269,270,271,272,273,274,275,276,277,278,279,280,281,282,283,304,305],$Vr2=[13,16,28,29,32,80,165,212,215,216,269,270,271,272,273,274,275,276,277,278,279,280,281,282,283,290,304,305,307,308],$Vs2=[1,553],$Vt2=[1,554],$Vu2=[2,306],$Vv2=[13,16,32,183,210,283];
-var parser = {trace: function trace() { },
+var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[6,12,15,24,34,43,48,97,107,110,112,113,122,123,128,297,298,299,300,301],$V1=[2,195],$V2=[97,107,110,112,113,122,123,128,297,298,299,300,301],$V3=[1,18],$V4=[1,27],$V5=[6,83],$V6=[38,39,51],$V7=[38,51],$V8=[1,55],$V9=[1,57],$Va=[1,53],$Vb=[1,56],$Vc=[28,29,292],$Vd=[13,16,285],$Ve=[109,131,295,302],$Vf=[13,16,109,131,285],$Vg=[1,79],$Vh=[1,83],$Vi=[1,85],$Vj=[109,131,295,296,302],$Vk=[13,16,109,131,285,296],$Vl=[1,91],$Vm=[2,235],$Vn=[1,90],$Vo=[13,16,28,29,80,165,214,217,218,271,272,273,274,275,276,277,278,279,280,281,282,283,284,285],$Vp=[6,38,39,51,61,68,71,79,81,83],$Vq=[6,13,16,28,38,39,51,61,68,71,79,81,83,285],$Vr=[6,13,16,28,29,31,32,38,39,41,51,61,68,71,79,80,81,83,90,106,109,122,123,125,130,157,158,160,163,164,165,182,186,207,212,214,215,217,218,222,226,230,245,250,267,271,272,273,274,275,276,277,278,279,280,281,282,283,284,285,292,303,305,306,308,309,310,311,312,313,314,315],$Vs=[1,106],$Vt=[1,107],$Vu=[6,13,16,28,29,39,41,80,83,109,157,158,160,163,164,165,214,217,218,271,272,273,274,275,276,277,278,279,280,281,282,283,284,285,303],$Vv=[28,32],$Vw=[2,292],$Vx=[1,122],$Vy=[1,120],$Vz=[6,182],$VA=[2,309],$VB=[2,297],$VC=[38,125],$VD=[6,41,68,71,79,81,83],$VE=[2,237],$VF=[1,136],$VG=[1,138],$VH=[1,148],$VI=[1,154],$VJ=[1,157],$VK=[1,153],$VL=[1,155],$VM=[1,151],$VN=[1,152],$VO=[1,158],$VP=[1,159],$VQ=[1,162],$VR=[1,163],$VS=[1,164],$VT=[1,165],$VU=[1,166],$VV=[1,167],$VW=[1,168],$VX=[1,169],$VY=[1,170],$VZ=[1,171],$V_=[1,172],$V$=[1,173],$V01=[6,61,68,71,79,81,83],$V11=[28,29,38,39,51],$V21=[13,16,28,29,80,247,248,249,251,253,254,256,257,260,262,271,272,273,274,275,276,277,278,279,280,281,282,283,284,285,315,316,317,318,319,320],$V31=[2,406],$V41=[1,186],$V51=[1,187],$V61=[1,188],$V71=[13,16,41,80,90,271,272,273,274,275,276,277,278,279,280,281,282,283,284,285],$V81=[6,106,182],$V91=[41,109],$Va1=[6,41,71,79,81,83],$Vb1=[2,321],$Vc1=[2,313],$Vd1=[1,222],$Ve1=[1,224],$Vf1=[41,109,303],$Vg1=[13,16,28,29,32,39,41,80,83,109,157,158,160,163,164,165,182,186,207,212,214,215,217,218,250,271,272,273,274,275,276,277,278,279,280,281,282,283,284,285,303],$Vh1=[13,16,28,29,31,32,39,41,80,83,90,109,157,158,160,163,164,165,182,186,207,212,214,215,217,218,222,226,230,245,250,267,271,272,273,274,275,276,277,278,279,280,281,282,283,284,285,292,303,306,309,310,311,312,313,314,315],$Vi1=[13,16,28,29,31,32,39,41,80,83,90,109,157,158,160,163,164,165,182,186,207,212,214,215,217,218,222,226,230,245,250,267,269,270,271,272,273,274,275,276,277,278,279,280,281,282,283,284,285,292,303,306,309,310,311,312,313,314,315],$Vj1=[31,32,182,222,250],$Vk1=[31,32,182,222,226,250],$Vl1=[31,32,182,222,226,230,245,250,267,279,280,281,282,283,284,309,310,311,312,313,314,315],$Vm1=[31,32,182,222,226,230,245,250,267,279,280,281,282,283,284,292,306,309,310,311,312,313,314,315],$Vn1=[1,256],$Vo1=[1,257],$Vp1=[1,259],$Vq1=[1,260],$Vr1=[1,261],$Vs1=[1,262],$Vt1=[1,264],$Vu1=[1,265],$Vv1=[2,413],$Vw1=[1,267],$Vx1=[1,268],$Vy1=[1,269],$Vz1=[1,275],$VA1=[1,270],$VB1=[1,271],$VC1=[1,272],$VD1=[1,273],$VE1=[1,274],$VF1=[1,282],$VG1=[1,293],$VH1=[6,41,79,81,83],$VI1=[1,310],$VJ1=[1,309],$VK1=[39,41,83,109,157,158,160,163,164],$VL1=[1,318],$VM1=[1,319],$VN1=[41,109,182,215,303],$VO1=[2,351],$VP1=[13,16,28,29,32,80,165,214,217,218,271,272,273,274,275,276,277,278,279,280,281,282,283,284,285],$VQ1=[13,16,28,29,32,39,41,80,83,109,157,158,160,163,164,165,182,214,215,217,218,250,271,272,273,274,275,276,277,278,279,280,281,282,283,284,285,303],$VR1=[13,16,28,29,80,207,245,247,248,249,251,253,254,256,257,260,262,271,272,273,274,275,276,277,278,279,280,281,282,283,284,285,309,315,316,317,318,319,320],$VS1=[1,343],$VT1=[1,344],$VU1=[1,346],$VV1=[1,345],$VW1=[6,13,16,28,29,31,32,39,41,68,71,74,76,79,80,81,83,109,157,158,160,163,164,165,182,214,217,218,222,226,230,245,247,248,249,250,251,253,254,256,257,260,262,267,271,272,273,274,275,276,277,278,279,280,281,282,283,284,285,292,303,306,309,310,311,312,313,314,315,316,317,318,319,320],$VX1=[1,354],$VY1=[1,353],$VZ1=[29,165],$V_1=[13,16,32,41,80,90,271,272,273,274,275,276,277,278,279,280,281,282,283,284,285],$V$1=[29,41],$V02=[2,312],$V12=[6,41,83],$V22=[6,13,16,29,41,71,79,81,83,247,248,249,251,253,254,256,257,260,262,285,315,316,317,318,319,320],$V32=[6,13,16,28,29,39,41,71,74,76,79,80,81,83,109,157,158,160,163,164,165,214,217,218,247,248,249,251,253,254,256,257,260,262,271,272,273,274,275,276,277,278,279,280,281,282,283,284,285,303,315,316,317,318,319,320],$V42=[6,13,16,28,29,41,68,71,79,81,83,247,248,249,251,253,254,256,257,260,262,285,315,316,317,318,319,320],$V52=[6,13,16,28,29,31,32,39,41,61,68,71,74,76,79,80,81,83,109,157,158,160,163,164,165,182,214,217,218,222,226,230,245,247,248,249,250,251,253,254,256,257,260,262,267,271,272,273,274,275,276,277,278,279,280,281,282,283,284,285,292,303,304,306,309,310,311,312,313,314,315,316,317,318,319,320],$V62=[13,16,29,186,207,212,285],$V72=[2,363],$V82=[1,395],$V92=[39,41,83,109,157,158,160,163,164,303],$Va2=[13,16,28,29,32,39,41,80,83,109,157,158,160,163,164,165,182,186,214,215,217,218,250,271,272,273,274,275,276,277,278,279,280,281,282,283,284,285,303],$Vb2=[13,16,28,29,80,207,245,247,248,249,251,253,254,256,257,260,262,271,272,273,274,275,276,277,278,279,280,281,282,283,284,285,292,309,315,316,317,318,319,320],$Vc2=[1,444],$Vd2=[1,441],$Ve2=[1,442],$Vf2=[13,16,28,29,39,41,80,83,109,157,158,160,163,164,165,214,217,218,271,272,273,274,275,276,277,278,279,280,281,282,283,284,285],$Vg2=[13,16,28,285],$Vh2=[13,16,28,29,39,41,80,83,109,157,158,160,163,164,165,214,217,218,271,272,273,274,275,276,277,278,279,280,281,282,283,284,285,303],$Vi2=[2,324],$Vj2=[39,41,83,109,157,158,160,163,164,182,215,303],$Vk2=[13,16,32,80,90,271,272,273,274,275,276,277,278,279,280,281,282,283,284,285],$Vl2=[6,13,16,28,29,41,74,76,79,81,83,247,248,249,251,253,254,256,257,260,262,285,315,316,317,318,319,320],$Vm2=[2,319],$Vn2=[13,16,29,186,207,285],$Vo2=[13,16,28,29,41,80,109,165,214,217,218,271,272,273,274,275,276,277,278,279,280,281,282,283,284,285],$Vp2=[13,16,28,29,32,80,165,214,217,218,271,272,273,274,275,276,277,278,279,280,281,282,283,284,285,305,306],$Vq2=[13,16,28,29,32,80,165,214,217,218,271,272,273,274,275,276,277,278,279,280,281,282,283,284,285,292,305,306,308,309],$Vr2=[1,554],$Vs2=[1,555],$Vt2=[2,307],$Vu2=[13,16,32,186,212,285];
+var parser = {trace: function trace () { },
 yy: {},
-symbols_: {"error":2,"QueryOrUpdate":3,"Prologue":4,"QueryOrUpdate_group0":5,"EOF":6,"Prologue_repetition0":7,"Query":8,"Query_group0":9,"Query_option0":10,"BaseDecl":11,"BASE":12,"IRIREF":13,"PrefixDecl":14,"PREFIX":15,"PNAME_NS":16,"SelectQuery":17,"SelectClause":18,"SelectQuery_repetition0":19,"WhereClause":20,"SolutionModifier":21,"SubSelect":22,"SubSelect_option0":23,"SELECT":24,"SelectClause_option0":25,"SelectClause_group0":26,"SelectClauseItem":27,"VAR":28,"(":29,"Expression":30,"AS":31,")":32,"ConstructQuery":33,"CONSTRUCT":34,"ConstructTemplate":35,"ConstructQuery_repetition0":36,"ConstructQuery_repetition1":37,"WHERE":38,"{":39,"ConstructQuery_option0":40,"}":41,"DescribeQuery":42,"DESCRIBE":43,"DescribeQuery_group0":44,"DescribeQuery_repetition0":45,"DescribeQuery_option0":46,"AskQuery":47,"ASK":48,"AskQuery_repetition0":49,"DatasetClause":50,"FROM":51,"DatasetClause_option0":52,"iri":53,"WhereClause_option0":54,"GroupGraphPattern":55,"SolutionModifier_option0":56,"SolutionModifier_option1":57,"SolutionModifier_option2":58,"SolutionModifier_option3":59,"GroupClause":60,"GROUP":61,"BY":62,"GroupClause_repetition_plus0":63,"GroupCondition":64,"BuiltInCall":65,"FunctionCall":66,"HavingClause":67,"HAVING":68,"HavingClause_repetition_plus0":69,"OrderClause":70,"ORDER":71,"OrderClause_repetition_plus0":72,"OrderCondition":73,"ASC":74,"BrackettedExpression":75,"DESC":76,"Constraint":77,"LimitOffsetClauses":78,"LIMIT":79,"INTEGER":80,"OFFSET":81,"ValuesClause":82,"VALUES":83,"InlineData":84,"InlineData_repetition0":85,"InlineData_repetition1":86,"InlineData_repetition2":87,"DataBlockValue":88,"Literal":89,"UNDEF":90,"DataBlockValueList":91,"DataBlockValueList_repetition0":92,"Update":93,"Update_repetition0":94,"Update1":95,"Update_option0":96,"LOAD":97,"Update1_option0":98,"Update1_option1":99,"Update1_group0":100,"Update1_option2":101,"GraphRefAll":102,"Update1_group1":103,"Update1_option3":104,"GraphOrDefault":105,"TO":106,"CREATE":107,"Update1_option4":108,"GRAPH":109,"INSERTDATA":110,"QuadPattern":111,"DELETEDATA":112,"DELETEWHERE":113,"Update1_option5":114,"InsertClause":115,"Update1_option6":116,"Update1_repetition0":117,"Update1_option7":118,"DeleteClause":119,"Update1_option8":120,"Update1_repetition1":121,"DELETE":122,"INSERT":123,"UsingClause":124,"USING":125,"UsingClause_option0":126,"WithClause":127,"WITH":128,"IntoGraphClause":129,"INTO":130,"DEFAULT":131,"GraphOrDefault_option0":132,"GraphRefAll_group0":133,"QuadPattern_option0":134,"QuadPattern_repetition0":135,"QuadsNotTriples":136,"QuadsNotTriples_group0":137,"QuadsNotTriples_option0":138,"QuadsNotTriples_option1":139,"QuadsNotTriples_option2":140,"TriplesTemplate":141,"TriplesTemplate_repetition0":142,"TriplesSameSubject":143,"TriplesTemplate_option0":144,"GroupGraphPatternSub":145,"GroupGraphPatternSub_option0":146,"GroupGraphPatternSub_repetition0":147,"GroupGraphPatternSubTail":148,"GraphPatternNotTriples":149,"GroupGraphPatternSubTail_option0":150,"GroupGraphPatternSubTail_option1":151,"TriplesBlock":152,"TriplesBlock_repetition0":153,"TriplesSameSubjectPath":154,"TriplesBlock_option0":155,"GraphPatternNotTriples_repetition0":156,"OPTIONAL":157,"MINUS":158,"GraphPatternNotTriples_group0":159,"SERVICE":160,"GraphPatternNotTriples_option0":161,"GraphPatternNotTriples_group1":162,"FILTER":163,"BIND":164,"NIL":165,"FunctionCall_option0":166,"FunctionCall_repetition0":167,"ExpressionList":168,"ExpressionList_repetition0":169,"ConstructTemplate_option0":170,"ConstructTriples":171,"ConstructTriples_repetition0":172,"ConstructTriples_option0":173,"VarOrTerm":174,"PropertyListNotEmpty":175,"TriplesNode":176,"PropertyList":177,"PropertyList_option0":178,"PropertyListNotEmpty_repetition0":179,"VerbObjectList":180,"Verb":181,"ObjectList":182,"a":183,"ObjectList_repetition0":184,"GraphNode":185,"PropertyListPathNotEmpty":186,"TriplesNodePath":187,"TriplesSameSubjectPath_option0":188,"PropertyListPathNotEmpty_group0":189,"PropertyListPathNotEmpty_repetition0":190,"GraphNodePath":191,"PropertyListPathNotEmpty_repetition1":192,"PropertyListPathNotEmptyTail":193,";":194,"PropertyListPathNotEmptyTail_group0":195,"Path":196,"Path_repetition0":197,"PathSequence":198,"PathSequence_repetition0":199,"PathEltOrInverse":200,"PathElt":201,"PathPrimary":202,"PathElt_option0":203,"PathEltOrInverse_option0":204,"!":205,"PathNegatedPropertySet":206,"PathOneInPropertySet":207,"PathNegatedPropertySet_repetition0":208,"PathNegatedPropertySet_option0":209,"^":210,"TriplesNode_repetition_plus0":211,"[":212,"]":213,"TriplesNodePath_repetition_plus0":214,"BLANK_NODE_LABEL":215,"ANON":216,"ConditionalAndExpression":217,"Expression_repetition0":218,"ExpressionTail":219,"||":220,"RelationalExpression":221,"ConditionalAndExpression_repetition0":222,"ConditionalAndExpressionTail":223,"&&":224,"AdditiveExpression":225,"RelationalExpression_group0":226,"RelationalExpression_option0":227,"IN":228,"MultiplicativeExpression":229,"AdditiveExpression_repetition0":230,"AdditiveExpressionTail":231,"AdditiveExpressionTail_group0":232,"NumericLiteralPositive":233,"AdditiveExpressionTail_repetition0":234,"NumericLiteralNegative":235,"AdditiveExpressionTail_repetition1":236,"UnaryExpression":237,"MultiplicativeExpression_repetition0":238,"MultiplicativeExpressionTail":239,"MultiplicativeExpressionTail_group0":240,"UnaryExpression_option0":241,"PrimaryExpression":242,"-":243,"Aggregate":244,"FUNC_ARITY0":245,"FUNC_ARITY1":246,"FUNC_ARITY2":247,",":248,"IF":249,"BuiltInCall_group0":250,"BOUND":251,"BNODE":252,"BuiltInCall_option0":253,"EXISTS":254,"COUNT":255,"Aggregate_option0":256,"Aggregate_group0":257,"FUNC_AGGREGATE":258,"Aggregate_option1":259,"GROUP_CONCAT":260,"Aggregate_option2":261,"Aggregate_option3":262,"GroupConcatSeparator":263,"SEPARATOR":264,"=":265,"String":266,"LANGTAG":267,"^^":268,"DECIMAL":269,"DOUBLE":270,"true":271,"false":272,"STRING_LITERAL1":273,"STRING_LITERAL2":274,"STRING_LITERAL_LONG1":275,"STRING_LITERAL_LONG2":276,"INTEGER_POSITIVE":277,"DECIMAL_POSITIVE":278,"DOUBLE_POSITIVE":279,"INTEGER_NEGATIVE":280,"DECIMAL_NEGATIVE":281,"DOUBLE_NEGATIVE":282,"PNAME_LN":283,"QueryOrUpdate_group0_option0":284,"Prologue_repetition0_group0":285,"SelectClause_option0_group0":286,"DISTINCT":287,"REDUCED":288,"SelectClause_group0_repetition_plus0":289,"*":290,"DescribeQuery_group0_repetition_plus0_group0":291,"DescribeQuery_group0_repetition_plus0":292,"NAMED":293,"SILENT":294,"CLEAR":295,"DROP":296,"ADD":297,"MOVE":298,"COPY":299,"ALL":300,".":301,"UNION":302,"PropertyListNotEmpty_repetition0_repetition_plus0":303,"|":304,"/":305,"PathElt_option0_group0":306,"?":307,"+":308,"!=":309,"<":310,">":311,"<=":312,">=":313,"NOT":314,"CONCAT":315,"COALESCE":316,"SUBSTR":317,"REGEX":318,"REPLACE":319,"$accept":0,"$end":1},
-terminals_: {2:"error",6:"EOF",12:"BASE",13:"IRIREF",15:"PREFIX",16:"PNAME_NS",24:"SELECT",28:"VAR",29:"(",31:"AS",32:")",34:"CONSTRUCT",38:"WHERE",39:"{",41:"}",43:"DESCRIBE",48:"ASK",51:"FROM",61:"GROUP",62:"BY",68:"HAVING",71:"ORDER",74:"ASC",76:"DESC",79:"LIMIT",80:"INTEGER",81:"OFFSET",83:"VALUES",90:"UNDEF",97:"LOAD",106:"TO",107:"CREATE",109:"GRAPH",110:"INSERTDATA",112:"DELETEDATA",113:"DELETEWHERE",122:"DELETE",123:"INSERT",125:"USING",128:"WITH",130:"INTO",131:"DEFAULT",157:"OPTIONAL",158:"MINUS",160:"SERVICE",163:"FILTER",164:"BIND",165:"NIL",183:"a",194:";",205:"!",210:"^",212:"[",213:"]",215:"BLANK_NODE_LABEL",216:"ANON",220:"||",224:"&&",228:"IN",243:"-",245:"FUNC_ARITY0",246:"FUNC_ARITY1",247:"FUNC_ARITY2",248:",",249:"IF",251:"BOUND",252:"BNODE",254:"EXISTS",255:"COUNT",258:"FUNC_AGGREGATE",260:"GROUP_CONCAT",264:"SEPARATOR",265:"=",267:"LANGTAG",268:"^^",269:"DECIMAL",270:"DOUBLE",271:"true",272:"false",273:"STRING_LITERAL1",274:"STRING_LITERAL2",275:"STRING_LITERAL_LONG1",276:"STRING_LITERAL_LONG2",277:"INTEGER_POSITIVE",278:"DECIMAL_POSITIVE",279:"DOUBLE_POSITIVE",280:"INTEGER_NEGATIVE",281:"DECIMAL_NEGATIVE",282:"DOUBLE_NEGATIVE",283:"PNAME_LN",287:"DISTINCT",288:"REDUCED",290:"*",293:"NAMED",294:"SILENT",295:"CLEAR",296:"DROP",297:"ADD",298:"MOVE",299:"COPY",300:"ALL",301:".",302:"UNION",304:"|",305:"/",307:"?",308:"+",309:"!=",310:"<",311:">",312:"<=",313:">=",314:"NOT",315:"CONCAT",316:"COALESCE",317:"SUBSTR",318:"REGEX",319:"REPLACE"},
-productions_: [0,[3,3],[4,1],[8,2],[11,2],[14,3],[17,4],[22,4],[18,3],[27,1],[27,5],[33,5],[33,7],[42,5],[47,4],[50,3],[20,2],[21,4],[60,3],[64,1],[64,1],[64,3],[64,5],[64,1],[67,2],[70,3],[73,2],[73,2],[73,1],[73,1],[78,2],[78,2],[78,4],[78,4],[82,2],[84,4],[84,6],[88,1],[88,1],[88,1],[91,3],[93,3],[95,4],[95,3],[95,5],[95,4],[95,2],[95,2],[95,2],[95,6],[95,6],[119,2],[115,2],[124,3],[127,2],[129,3],[105,1],[105,2],[102,2],[102,1],[111,4],[136,7],[141,3],[55,3],[55,3],[145,2],[148,3],[152,3],[149,2],[149,2],[149,2],[149,3],[149,4],[149,2],[149,6],[149,1],[77,1],[77,1],[77,1],[66,2],[66,6],[168,1],[168,4],[35,3],[171,3],[143,2],[143,2],[177,1],[175,2],[180,2],[181,1],[181,1],[181,1],[182,2],[154,2],[154,2],[186,4],[193,1],[193,3],[196,2],[198,2],[201,2],[200,2],[202,1],[202,1],[202,2],[202,3],[206,1],[206,1],[206,4],[207,1],[207,1],[207,2],[207,2],[176,3],[176,3],[187,3],[187,3],[185,1],[185,1],[191,1],[191,1],[174,1],[174,1],[174,1],[174,1],[174,1],[174,1],[30,2],[219,2],[217,2],[223,2],[221,1],[221,3],[221,4],[225,2],[231,2],[231,2],[231,2],[229,2],[239,2],[237,2],[237,2],[237,2],[242,1],[242,1],[242,1],[242,1],[242,1],[242,1],[75,3],[65,1],[65,2],[65,4],[65,6],[65,8],[65,2],[65,4],[65,2],[65,4],[65,3],[244,5],[244,5],[244,6],[263,4],[89,1],[89,2],[89,3],[89,1],[89,1],[89,1],[89,1],[89,1],[89,1],[89,1],[266,1],[266,1],[266,1],[266,1],[233,1],[233,1],[233,1],[235,1],[235,1],[235,1],[53,1],[53,1],[53,1],[284,0],[284,1],[5,1],[5,1],[285,1],[285,1],[7,0],[7,2],[9,1],[9,1],[9,1],[9,1],[10,0],[10,1],[19,0],[19,2],[23,0],[23,1],[286,1],[286,1],[25,0],[25,1],[289,1],[289,2],[26,1],[26,1],[36,0],[36,2],[37,0],[37,2],[40,0],[40,1],[291,1],[291,1],[292,1],[292,2],[44,1],[44,1],[45,0],[45,2],[46,0],[46,1],[49,0],[49,2],[52,0],[52,1],[54,0],[54,1],[56,0],[56,1],[57,0],[57,1],[58,0],[58,1],[59,0],[59,1],[63,1],[63,2],[69,1],[69,2],[72,1],[72,2],[85,0],[85,2],[86,0],[86,2],[87,0],[87,2],[92,0],[92,2],[94,0],[94,4],[96,0],[96,2],[98,0],[98,1],[99,0],[99,1],[100,1],[100,1],[101,0],[101,1],[103,1],[103,1],[103,1],[104,0],[104,1],[108,0],[108,1],[114,0],[114,1],[116,0],[116,1],[117,0],[117,2],[118,0],[118,1],[120,0],[120,1],[121,0],[121,2],[126,0],[126,1],[132,0],[132,1],[133,1],[133,1],[133,1],[134,0],[134,1],[135,0],[135,2],[137,1],[137,1],[138,0],[138,1],[139,0],[139,1],[140,0],[140,1],[142,0],[142,3],[144,0],[144,1],[146,0],[146,1],[147,0],[147,2],[150,0],[150,1],[151,0],[151,1],[153,0],[153,3],[155,0],[155,1],[156,0],[156,3],[159,1],[159,1],[161,0],[161,1],[162,1],[162,1],[166,0],[166,1],[167,0],[167,3],[169,0],[169,3],[170,0],[170,1],[172,0],[172,3],[173,0],[173,1],[178,0],[178,1],[303,1],[303,2],[179,0],[179,3],[184,0],[184,3],[188,0],[188,1],[189,1],[189,1],[190,0],[190,3],[192,0],[192,2],[195,1],[195,1],[197,0],[197,3],[199,0],[199,3],[306,1],[306,1],[306,1],[203,0],[203,1],[204,0],[204,1],[208,0],[208,3],[209,0],[209,1],[211,1],[211,2],[214,1],[214,2],[218,0],[218,2],[222,0],[222,2],[226,1],[226,1],[226,1],[226,1],[226,1],[226,1],[227,0],[227,1],[230,0],[230,2],[232,1],[232,1],[234,0],[234,2],[236,0],[236,2],[238,0],[238,2],[240,1],[240,1],[241,0],[241,1],[250,1],[250,1],[250,1],[250,1],[250,1],[253,0],[253,1],[256,0],[256,1],[257,1],[257,1],[259,0],[259,1],[261,0],[261,1],[262,0],[262,1]],
+symbols_: {"error":2,"QueryOrUpdate":3,"Prologue":4,"QueryOrUpdate_group0":5,"EOF":6,"Prologue_repetition0":7,"Query":8,"Query_group0":9,"Query_option0":10,"BaseDecl":11,"BASE":12,"IRIREF":13,"PrefixDecl":14,"PREFIX":15,"PNAME_NS":16,"SelectQuery":17,"SelectClause":18,"SelectQuery_repetition0":19,"WhereClause":20,"SolutionModifier":21,"SubSelect":22,"SubSelect_option0":23,"SELECT":24,"SelectClause_option0":25,"SelectClause_group0":26,"SelectClauseItem":27,"VAR":28,"(":29,"Expression":30,"AS":31,")":32,"ConstructQuery":33,"CONSTRUCT":34,"ConstructTemplate":35,"ConstructQuery_repetition0":36,"ConstructQuery_repetition1":37,"WHERE":38,"{":39,"ConstructQuery_option0":40,"}":41,"DescribeQuery":42,"DESCRIBE":43,"DescribeQuery_group0":44,"DescribeQuery_repetition0":45,"DescribeQuery_option0":46,"AskQuery":47,"ASK":48,"AskQuery_repetition0":49,"DatasetClause":50,"FROM":51,"DatasetClause_option0":52,"iri":53,"WhereClause_option0":54,"GroupGraphPattern":55,"SolutionModifier_option0":56,"SolutionModifier_option1":57,"SolutionModifier_option2":58,"SolutionModifier_option3":59,"GroupClause":60,"GROUP":61,"BY":62,"GroupClause_repetition_plus0":63,"GroupCondition":64,"BuiltInCall":65,"FunctionCall":66,"HavingClause":67,"HAVING":68,"HavingClause_repetition_plus0":69,"OrderClause":70,"ORDER":71,"OrderClause_repetition_plus0":72,"OrderCondition":73,"ASC":74,"BrackettedExpression":75,"DESC":76,"Constraint":77,"LimitOffsetClauses":78,"LIMIT":79,"INTEGER":80,"OFFSET":81,"ValuesClause":82,"VALUES":83,"InlineData":84,"InlineData_repetition0":85,"InlineData_repetition1":86,"InlineData_repetition2":87,"DataBlockValue":88,"Literal":89,"UNDEF":90,"DataBlockValueList":91,"DataBlockValueList_repetition0":92,"Update":93,"Update_repetition0":94,"Update1":95,"Update_option0":96,"LOAD":97,"Update1_option0":98,"Update1_option1":99,"Update1_group0":100,"Update1_option2":101,"GraphRefAll":102,"Update1_group1":103,"Update1_option3":104,"GraphOrDefault":105,"TO":106,"CREATE":107,"Update1_option4":108,"GRAPH":109,"INSERTDATA":110,"QuadPattern":111,"DELETEDATA":112,"DELETEWHERE":113,"Update1_option5":114,"InsertClause":115,"Update1_option6":116,"Update1_repetition0":117,"Update1_option7":118,"DeleteClause":119,"Update1_option8":120,"Update1_repetition1":121,"DELETE":122,"INSERT":123,"UsingClause":124,"USING":125,"UsingClause_option0":126,"WithClause":127,"WITH":128,"IntoGraphClause":129,"INTO":130,"DEFAULT":131,"GraphOrDefault_option0":132,"GraphRefAll_group0":133,"QuadPattern_option0":134,"QuadPattern_repetition0":135,"QuadsNotTriples":136,"QuadsNotTriples_group0":137,"QuadsNotTriples_option0":138,"QuadsNotTriples_option1":139,"QuadsNotTriples_option2":140,"TriplesTemplate":141,"TriplesTemplate_repetition0":142,"TriplesSameSubject":143,"TriplesTemplate_option0":144,"GroupGraphPatternSub":145,"GroupGraphPatternSub_option0":146,"GroupGraphPatternSub_repetition0":147,"GroupGraphPatternSubTail":148,"GraphPatternNotTriples":149,"GroupGraphPatternSubTail_option0":150,"GroupGraphPatternSubTail_option1":151,"TriplesBlock":152,"TriplesBlock_repetition0":153,"TriplesSameSubjectPath":154,"TriplesBlock_option0":155,"GraphPatternNotTriples_repetition0":156,"OPTIONAL":157,"MINUS":158,"GraphPatternNotTriples_group0":159,"SERVICE":160,"GraphPatternNotTriples_option0":161,"GraphPatternNotTriples_group1":162,"FILTER":163,"BIND":164,"NIL":165,"FunctionCall_option0":166,"FunctionCall_repetition0":167,"ExpressionList":168,"ExpressionList_repetition0":169,"ConstructTemplate_option0":170,"ConstructTriples":171,"ConstructTriples_repetition0":172,"ConstructTriples_option0":173,"VarOrTerm":174,"PropertyListNotEmpty":175,"TriplesNode":176,"PropertyList":177,"PropertyList_option0":178,"VerbObjectList":179,"PropertyListNotEmpty_repetition0":180,"SemiOptionalVerbObjectList":181,";":182,"SemiOptionalVerbObjectList_option0":183,"Verb":184,"ObjectList":185,"a":186,"ObjectList_repetition0":187,"GraphNode":188,"PropertyListPathNotEmpty":189,"TriplesNodePath":190,"TriplesSameSubjectPath_option0":191,"PropertyListPathNotEmpty_group0":192,"PropertyListPathNotEmpty_repetition0":193,"GraphNodePath":194,"PropertyListPathNotEmpty_repetition1":195,"PropertyListPathNotEmptyTail":196,"PropertyListPathNotEmptyTail_group0":197,"Path":198,"Path_repetition0":199,"PathSequence":200,"PathSequence_repetition0":201,"PathEltOrInverse":202,"PathElt":203,"PathPrimary":204,"PathElt_option0":205,"PathEltOrInverse_option0":206,"!":207,"PathNegatedPropertySet":208,"PathOneInPropertySet":209,"PathNegatedPropertySet_repetition0":210,"PathNegatedPropertySet_option0":211,"^":212,"TriplesNode_repetition_plus0":213,"[":214,"]":215,"TriplesNodePath_repetition_plus0":216,"BLANK_NODE_LABEL":217,"ANON":218,"ConditionalAndExpression":219,"Expression_repetition0":220,"ExpressionTail":221,"||":222,"RelationalExpression":223,"ConditionalAndExpression_repetition0":224,"ConditionalAndExpressionTail":225,"&&":226,"AdditiveExpression":227,"RelationalExpression_group0":228,"RelationalExpression_option0":229,"IN":230,"MultiplicativeExpression":231,"AdditiveExpression_repetition0":232,"AdditiveExpressionTail":233,"AdditiveExpressionTail_group0":234,"NumericLiteralPositive":235,"AdditiveExpressionTail_repetition0":236,"NumericLiteralNegative":237,"AdditiveExpressionTail_repetition1":238,"UnaryExpression":239,"MultiplicativeExpression_repetition0":240,"MultiplicativeExpressionTail":241,"MultiplicativeExpressionTail_group0":242,"UnaryExpression_option0":243,"PrimaryExpression":244,"-":245,"Aggregate":246,"FUNC_ARITY0":247,"FUNC_ARITY1":248,"FUNC_ARITY2":249,",":250,"IF":251,"BuiltInCall_group0":252,"BOUND":253,"BNODE":254,"BuiltInCall_option0":255,"EXISTS":256,"COUNT":257,"Aggregate_option0":258,"Aggregate_group0":259,"FUNC_AGGREGATE":260,"Aggregate_option1":261,"GROUP_CONCAT":262,"Aggregate_option2":263,"Aggregate_option3":264,"GroupConcatSeparator":265,"SEPARATOR":266,"=":267,"String":268,"LANGTAG":269,"^^":270,"DECIMAL":271,"DOUBLE":272,"true":273,"false":274,"STRING_LITERAL1":275,"STRING_LITERAL2":276,"STRING_LITERAL_LONG1":277,"STRING_LITERAL_LONG2":278,"INTEGER_POSITIVE":279,"DECIMAL_POSITIVE":280,"DOUBLE_POSITIVE":281,"INTEGER_NEGATIVE":282,"DECIMAL_NEGATIVE":283,"DOUBLE_NEGATIVE":284,"PNAME_LN":285,"QueryOrUpdate_group0_option0":286,"Prologue_repetition0_group0":287,"SelectClause_option0_group0":288,"DISTINCT":289,"REDUCED":290,"SelectClause_group0_repetition_plus0":291,"*":292,"DescribeQuery_group0_repetition_plus0_group0":293,"DescribeQuery_group0_repetition_plus0":294,"NAMED":295,"SILENT":296,"CLEAR":297,"DROP":298,"ADD":299,"MOVE":300,"COPY":301,"ALL":302,".":303,"UNION":304,"|":305,"/":306,"PathElt_option0_group0":307,"?":308,"+":309,"!=":310,"<":311,">":312,"<=":313,">=":314,"NOT":315,"CONCAT":316,"COALESCE":317,"SUBSTR":318,"REGEX":319,"REPLACE":320,"$accept":0,"$end":1},
+terminals_: {2:"error",6:"EOF",12:"BASE",13:"IRIREF",15:"PREFIX",16:"PNAME_NS",24:"SELECT",28:"VAR",29:"(",31:"AS",32:")",34:"CONSTRUCT",38:"WHERE",39:"{",41:"}",43:"DESCRIBE",48:"ASK",51:"FROM",61:"GROUP",62:"BY",68:"HAVING",71:"ORDER",74:"ASC",76:"DESC",79:"LIMIT",80:"INTEGER",81:"OFFSET",83:"VALUES",90:"UNDEF",97:"LOAD",106:"TO",107:"CREATE",109:"GRAPH",110:"INSERTDATA",112:"DELETEDATA",113:"DELETEWHERE",122:"DELETE",123:"INSERT",125:"USING",128:"WITH",130:"INTO",131:"DEFAULT",157:"OPTIONAL",158:"MINUS",160:"SERVICE",163:"FILTER",164:"BIND",165:"NIL",182:";",186:"a",207:"!",212:"^",214:"[",215:"]",217:"BLANK_NODE_LABEL",218:"ANON",222:"||",226:"&&",230:"IN",245:"-",247:"FUNC_ARITY0",248:"FUNC_ARITY1",249:"FUNC_ARITY2",250:",",251:"IF",253:"BOUND",254:"BNODE",256:"EXISTS",257:"COUNT",260:"FUNC_AGGREGATE",262:"GROUP_CONCAT",266:"SEPARATOR",267:"=",269:"LANGTAG",270:"^^",271:"DECIMAL",272:"DOUBLE",273:"true",274:"false",275:"STRING_LITERAL1",276:"STRING_LITERAL2",277:"STRING_LITERAL_LONG1",278:"STRING_LITERAL_LONG2",279:"INTEGER_POSITIVE",280:"DECIMAL_POSITIVE",281:"DOUBLE_POSITIVE",282:"INTEGER_NEGATIVE",283:"DECIMAL_NEGATIVE",284:"DOUBLE_NEGATIVE",285:"PNAME_LN",289:"DISTINCT",290:"REDUCED",292:"*",295:"NAMED",296:"SILENT",297:"CLEAR",298:"DROP",299:"ADD",300:"MOVE",301:"COPY",302:"ALL",303:".",304:"UNION",305:"|",306:"/",308:"?",309:"+",310:"!=",311:"<",312:">",313:"<=",314:">=",315:"NOT",316:"CONCAT",317:"COALESCE",318:"SUBSTR",319:"REGEX",320:"REPLACE"},
+productions_: [0,[3,3],[4,1],[8,2],[11,2],[14,3],[17,4],[22,4],[18,3],[27,1],[27,5],[33,5],[33,7],[42,5],[47,4],[50,3],[20,2],[21,4],[60,3],[64,1],[64,1],[64,3],[64,5],[64,1],[67,2],[70,3],[73,2],[73,2],[73,1],[73,1],[78,2],[78,2],[78,4],[78,4],[82,2],[84,4],[84,6],[88,1],[88,1],[88,1],[91,3],[93,3],[95,4],[95,3],[95,5],[95,4],[95,2],[95,2],[95,2],[95,6],[95,6],[119,2],[115,2],[124,3],[127,2],[129,3],[105,1],[105,2],[102,2],[102,1],[111,4],[136,7],[141,3],[55,3],[55,3],[145,2],[148,3],[152,3],[149,2],[149,2],[149,2],[149,3],[149,4],[149,2],[149,6],[149,1],[77,1],[77,1],[77,1],[66,2],[66,6],[168,1],[168,4],[35,3],[171,3],[143,2],[143,2],[177,1],[175,2],[181,2],[179,2],[184,1],[184,1],[184,1],[185,2],[154,2],[154,2],[189,4],[196,1],[196,3],[198,2],[200,2],[203,2],[202,2],[204,1],[204,1],[204,2],[204,3],[208,1],[208,1],[208,4],[209,1],[209,1],[209,2],[209,2],[176,3],[176,3],[190,3],[190,3],[188,1],[188,1],[194,1],[194,1],[174,1],[174,1],[174,1],[174,1],[174,1],[174,1],[30,2],[221,2],[219,2],[225,2],[223,1],[223,3],[223,4],[227,2],[233,2],[233,2],[233,2],[231,2],[241,2],[239,2],[239,2],[239,2],[244,1],[244,1],[244,1],[244,1],[244,1],[244,1],[75,3],[65,1],[65,2],[65,4],[65,6],[65,8],[65,2],[65,4],[65,2],[65,4],[65,3],[246,5],[246,5],[246,6],[265,4],[89,1],[89,2],[89,3],[89,1],[89,1],[89,1],[89,1],[89,1],[89,1],[89,1],[268,1],[268,1],[268,1],[268,1],[235,1],[235,1],[235,1],[237,1],[237,1],[237,1],[53,1],[53,1],[53,1],[286,0],[286,1],[5,1],[5,1],[287,1],[287,1],[7,0],[7,2],[9,1],[9,1],[9,1],[9,1],[10,0],[10,1],[19,0],[19,2],[23,0],[23,1],[288,1],[288,1],[25,0],[25,1],[291,1],[291,2],[26,1],[26,1],[36,0],[36,2],[37,0],[37,2],[40,0],[40,1],[293,1],[293,1],[294,1],[294,2],[44,1],[44,1],[45,0],[45,2],[46,0],[46,1],[49,0],[49,2],[52,0],[52,1],[54,0],[54,1],[56,0],[56,1],[57,0],[57,1],[58,0],[58,1],[59,0],[59,1],[63,1],[63,2],[69,1],[69,2],[72,1],[72,2],[85,0],[85,2],[86,0],[86,2],[87,0],[87,2],[92,0],[92,2],[94,0],[94,4],[96,0],[96,2],[98,0],[98,1],[99,0],[99,1],[100,1],[100,1],[101,0],[101,1],[103,1],[103,1],[103,1],[104,0],[104,1],[108,0],[108,1],[114,0],[114,1],[116,0],[116,1],[117,0],[117,2],[118,0],[118,1],[120,0],[120,1],[121,0],[121,2],[126,0],[126,1],[132,0],[132,1],[133,1],[133,1],[133,1],[134,0],[134,1],[135,0],[135,2],[137,1],[137,1],[138,0],[138,1],[139,0],[139,1],[140,0],[140,1],[142,0],[142,3],[144,0],[144,1],[146,0],[146,1],[147,0],[147,2],[150,0],[150,1],[151,0],[151,1],[153,0],[153,3],[155,0],[155,1],[156,0],[156,3],[159,1],[159,1],[161,0],[161,1],[162,1],[162,1],[166,0],[166,1],[167,0],[167,3],[169,0],[169,3],[170,0],[170,1],[172,0],[172,3],[173,0],[173,1],[178,0],[178,1],[180,0],[180,2],[183,0],[183,1],[187,0],[187,3],[191,0],[191,1],[192,1],[192,1],[193,0],[193,3],[195,0],[195,2],[197,1],[197,1],[199,0],[199,3],[201,0],[201,3],[307,1],[307,1],[307,1],[205,0],[205,1],[206,0],[206,1],[210,0],[210,3],[211,0],[211,1],[213,1],[213,2],[216,1],[216,2],[220,0],[220,2],[224,0],[224,2],[228,1],[228,1],[228,1],[228,1],[228,1],[228,1],[229,0],[229,1],[232,0],[232,2],[234,1],[234,1],[236,0],[236,2],[238,0],[238,2],[240,0],[240,2],[242,1],[242,1],[243,0],[243,1],[252,1],[252,1],[252,1],[252,1],[252,1],[255,0],[255,1],[258,0],[258,1],[259,1],[259,1],[261,0],[261,1],[263,0],[263,1],[264,0],[264,1]],
 performAction: function anonymous(yytext, yyleng, yylineno, yy, yystate /* action[1] */, $$ /* vstack */, _$ /* lstack */) {
 /* this == yyval */
 
@@ -61016,7 +61336,7 @@ var $0 = $$.length - 1;
 switch (yystate) {
 case 1:
 
-      $$[$0-1] = $$[$0-1] || {};
+      $$[$0-1] = $$[$0-1] || {};
       if (Parser.base)
         $$[$0-1].base = Parser.base;
       Parser.base = base = basePath = baseRoot = '';
@@ -61051,7 +61371,7 @@ break;
 case 8:
 this.$ = extend({ queryType: 'SELECT', variables: $$[$0] === '*' ? ['*'] : $$[$0] }, $$[$0-1] && ($$[$0-2] = lowercase($$[$0-1]), $$[$0-1] = {}, $$[$0-1][$$[$0-2]] = true, $$[$0-1]));
 break;
-case 9: case 90: case 122: case 149:
+case 9: case 91: case 123: case 150:
 this.$ = toVar($$[$0]);
 break;
 case 10: case 22:
@@ -61137,7 +61457,7 @@ break;
 case 39:
 this.$ = undefined;
 break;
-case 40: case 83: case 106: case 150:
+case 40: case 83: case 107: case 151:
 this.$ = $$[$0-1];
 break;
 case 41:
@@ -61170,7 +61490,7 @@ break;
 case 50:
 this.$ = extend({ updateType: 'insertdelete' }, $$[$0-5], { delete: $$[$0-4] || [] }, { insert: $$[$0-3] || [] }, groupDatasets($$[$0-2]), { where: $$[$0].patterns });
 break;
-case 51: case 52: case 55: case 141:
+case 51: case 52: case 55: case 142:
 this.$ = $$[$0];
 break;
 case 54:
@@ -61241,7 +61561,7 @@ break;
 case 80:
 this.$ = { type: 'functionCall', function: $$[$0-5], args: appendTo($$[$0-2], $$[$0-1]), distinct: !!$$[$0-3] };
 break;
-case 81: case 97: case 108: case 194: case 202: case 214: case 216: case 226: case 230: case 250: case 252: case 254: case 256: case 258: case 281: case 287: case 298: case 308: case 314: case 320: case 324: case 334: case 336: case 340: case 348: case 350: case 356: case 358: case 362: case 364: case 373: case 381: case 383: case 393: case 397: case 399: case 401:
+case 81: case 98: case 109: case 195: case 203: case 215: case 217: case 227: case 231: case 251: case 253: case 255: case 257: case 259: case 282: case 288: case 299: case 309: case 315: case 321: case 325: case 335: case 337: case 341: case 347: case 351: case 357: case 359: case 363: case 365: case 374: case 382: case 384: case 394: case 398: case 400: case 402:
 this.$ = [];
 break;
 case 82:
@@ -61250,178 +61570,181 @@ break;
 case 84:
 this.$ = unionAll($$[$0-2], [$$[$0-1]]);
 break;
-case 85: case 94:
+case 85: case 95:
 this.$ = $$[$0].map(function (t) { return extend(triple($$[$0-1]), t); });
 break;
 case 86:
 this.$ = appendAllTo($$[$0].map(function (t) { return extend(triple($$[$0-1].entity), t); }), $$[$0-1].triples) /* the subject is a blank node, possibly with more triples */;
 break;
 case 88:
-this.$ = unionAll($$[$0-1], [$$[$0]]);
+this.$ = unionAll([$$[$0-1]], $$[$0]);
 break;
 case 89:
+this.$ = unionAll($$[$0]);
+break;
+case 90:
 this.$ = objectListToTriples($$[$0-1], $$[$0]);
 break;
-case 92: case 104: case 111:
+case 93: case 105: case 112:
 this.$ = RDF_TYPE;
 break;
-case 93:
+case 94:
 this.$ = appendTo($$[$0-1], $$[$0]);
 break;
-case 95:
+case 96:
 this.$ = !$$[$0] ? $$[$0-1].triples : appendAllTo($$[$0].map(function (t) { return extend(triple($$[$0-1].entity), t); }), $$[$0-1].triples) /* the subject is a blank node, possibly with more triples */;
 break;
-case 96:
+case 97:
 this.$ = objectListToTriples(toVar($$[$0-3]), appendTo($$[$0-2], $$[$0-1]), $$[$0]);
 break;
-case 98:
+case 99:
 this.$ = objectListToTriples(toVar($$[$0-1]), $$[$0]);
 break;
-case 99:
+case 100:
 this.$ = $$[$0-1].length ? path('|',appendTo($$[$0-1], $$[$0])) : $$[$0];
 break;
-case 100:
+case 101:
 this.$ = $$[$0-1].length ? path('/', appendTo($$[$0-1], $$[$0])) : $$[$0];
 break;
-case 101:
+case 102:
 this.$ = $$[$0] ? path($$[$0], [$$[$0-1]]) : $$[$0-1];
 break;
-case 102:
+case 103:
 this.$ = $$[$0-1] ? path($$[$0-1], [$$[$0]]) : $$[$0];;
 break;
-case 105: case 112:
+case 106: case 113:
 this.$ = path($$[$0-1], [$$[$0]]);
 break;
-case 109:
+case 110:
 this.$ = path('|', appendTo($$[$0-2], $$[$0-1]));
 break;
-case 113:
+case 114:
 this.$ = path($$[$0-1], [RDF_TYPE]);
 break;
-case 114: case 116:
+case 115: case 117:
 this.$ = createList($$[$0-1]);
 break;
-case 115: case 117:
+case 116: case 118:
 this.$ = createAnonymousObject($$[$0-1]);
 break;
-case 118:
+case 119:
 this.$ = { entity: $$[$0], triples: [] } /* for consistency with TriplesNode */;
 break;
-case 120:
+case 121:
 this.$ = { entity: $$[$0], triples: [] } /* for consistency with TriplesNodePath */;
 break;
-case 126:
+case 127:
 this.$ = blank();
 break;
-case 127:
+case 128:
 this.$ = RDF_NIL;
 break;
-case 128: case 130: case 135: case 139:
+case 129: case 131: case 136: case 140:
 this.$ = createOperationTree($$[$0-1], $$[$0]);
 break;
-case 129:
+case 130:
 this.$ = ['||', $$[$0]];
 break;
-case 131:
+case 132:
 this.$ = ['&&', $$[$0]];
 break;
-case 133:
+case 134:
 this.$ = operation($$[$0-1], [$$[$0-2], $$[$0]]);
 break;
-case 134:
+case 135:
 this.$ = operation($$[$0-2] ? 'notin' : 'in', [$$[$0-3], $$[$0]]);
 break;
-case 136: case 140:
+case 137: case 141:
 this.$ = [$$[$0-1], $$[$0]];
 break;
-case 137:
+case 138:
 this.$ = ['+', createOperationTree($$[$0-1], $$[$0])];
 break;
-case 138:
+case 139:
 this.$ = ['-', createOperationTree($$[$0-1].replace('-', ''), $$[$0])];
 break;
-case 142:
+case 143:
 this.$ = operation($$[$0-1], [$$[$0]]);
 break;
-case 143:
+case 144:
 this.$ = operation('UMINUS', [$$[$0]]);
 break;
-case 152:
+case 153:
 this.$ = operation(lowercase($$[$0-1]));
 break;
-case 153:
+case 154:
 this.$ = operation(lowercase($$[$0-3]), [$$[$0-1]]);
 break;
-case 154:
+case 155:
 this.$ = operation(lowercase($$[$0-5]), [$$[$0-3], $$[$0-1]]);
 break;
-case 155:
+case 156:
 this.$ = operation(lowercase($$[$0-7]), [$$[$0-5], $$[$0-3], $$[$0-1]]);
 break;
-case 156:
+case 157:
 this.$ = operation(lowercase($$[$0-1]), $$[$0]);
 break;
-case 157:
+case 158:
 this.$ = operation('bound', [toVar($$[$0-1])]);
 break;
-case 158:
+case 159:
 this.$ = operation($$[$0-1], []);
 break;
-case 159:
+case 160:
 this.$ = operation($$[$0-3], [$$[$0-1]]);
 break;
-case 160:
+case 161:
 this.$ = operation($$[$0-2] ? 'notexists' :'exists', [degroupSingle($$[$0])]);
 break;
-case 161: case 162:
+case 162: case 163:
 this.$ = expression($$[$0-1], { type: 'aggregate', aggregation: lowercase($$[$0-4]), distinct: !!$$[$0-2] });
 break;
-case 163:
+case 164:
 this.$ = expression($$[$0-2], { type: 'aggregate', aggregation: lowercase($$[$0-5]), distinct: !!$$[$0-3], separator: $$[$0-1] || ' ' });
 break;
-case 164:
+case 165:
 this.$ = $$[$0].substr(1, $$[$0].length - 2);
 break;
-case 166:
+case 167:
 this.$ = $$[$0-1] + lowercase($$[$0]);
 break;
-case 167:
+case 168:
 this.$ = $$[$0-2] + '^^' + $$[$0];
 break;
-case 168: case 182:
+case 169: case 183:
 this.$ = createLiteral($$[$0], XSD_INTEGER);
 break;
-case 169: case 183:
+case 170: case 184:
 this.$ = createLiteral($$[$0], XSD_DECIMAL);
 break;
-case 170: case 184:
+case 171: case 185:
 this.$ = createLiteral(lowercase($$[$0]), XSD_DOUBLE);
 break;
-case 173:
+case 174:
 this.$ = XSD_TRUE;
 break;
-case 174:
+case 175:
 this.$ = XSD_FALSE;
 break;
-case 175: case 176:
+case 176: case 177:
 this.$ = unescapeString($$[$0], 1);
 break;
-case 177: case 178:
+case 178: case 179:
 this.$ = unescapeString($$[$0], 3);
 break;
-case 179:
+case 180:
 this.$ = createLiteral($$[$0].substr(1), XSD_INTEGER);
 break;
-case 180:
+case 181:
 this.$ = createLiteral($$[$0].substr(1), XSD_DECIMAL);
 break;
-case 181:
+case 182:
 this.$ = createLiteral($$[$0].substr(1).toLowerCase(), XSD_DOUBLE);
 break;
-case 185:
+case 186:
 this.$ = resolveIRI($$[$0]);
 break;
-case 186:
+case 187:
 
       var namePos = $$[$0].indexOf(':'),
           prefix = $$[$0].substr(0, namePos),
@@ -61430,30 +61753,30 @@ case 186:
       this.$ = resolveIRI(expansion + $$[$0].substr(namePos + 1));
     
 break;
-case 187:
+case 188:
 
       $$[$0] = $$[$0].substr(0, $$[$0].length - 1);
       if (!($$[$0] in Parser.prefixes)) throw new Error('Unknown prefix: ' + $$[$0]);
       this.$ = resolveIRI(Parser.prefixes[$$[$0]]);
     
 break;
-case 195: case 203: case 211: case 215: case 217: case 223: case 227: case 231: case 245: case 247: case 249: case 251: case 253: case 255: case 257: case 282: case 288: case 299: case 315: case 347: case 359: case 378: case 380: case 382: case 384: case 394: case 398: case 400: case 402:
+case 196: case 204: case 212: case 216: case 218: case 224: case 228: case 232: case 246: case 248: case 250: case 252: case 254: case 256: case 258: case 283: case 289: case 300: case 316: case 348: case 360: case 379: case 381: case 383: case 385: case 395: case 399: case 401: case 403:
 $$[$0-1].push($$[$0]);
 break;
-case 210: case 222: case 244: case 246: case 248: case 346: case 377: case 379:
+case 211: case 223: case 245: case 247: case 249: case 378: case 380:
 this.$ = [$$[$0]];
 break;
-case 259:
+case 260:
 $$[$0-3].push($$[$0-2]);
 break;
-case 309: case 321: case 325: case 335: case 337: case 341: case 349: case 351: case 357: case 363: case 365: case 374:
+case 310: case 322: case 326: case 336: case 338: case 342: case 352: case 358: case 364: case 366: case 375:
 $$[$0-2].push($$[$0-1]);
 break;
 }
 },
-table: [o($V0,$V1,{3:1,4:2,7:3}),{1:[3]},o($V2,[2,258],{5:4,8:5,284:6,9:7,93:8,17:9,33:10,42:11,47:12,94:13,18:14,6:[2,188],24:$V3,34:[1,15],43:[1,16],48:[1,17]}),o([6,24,34,43,48,97,107,110,112,113,122,123,128,295,296,297,298,299],[2,2],{285:19,11:20,14:21,12:[1,22],15:[1,23]}),{6:[1,24]},{6:[2,190]},{6:[2,191]},{6:[2,200],10:25,82:26,83:$V4},{6:[2,189]},o($V5,[2,196]),o($V5,[2,197]),o($V5,[2,198]),o($V5,[2,199]),{95:28,97:[1,29],100:30,103:31,107:[1,32],110:[1,33],112:[1,34],113:[1,35],114:36,118:37,122:[2,283],123:[2,277],127:43,128:[1,44],295:[1,38],296:[1,39],297:[1,40],298:[1,41],299:[1,42]},o($V6,[2,202],{19:45}),o($V7,[2,216],{35:46,37:47,39:[1,48]}),{13:$V8,16:$V9,28:$Va,44:49,53:54,283:$Vb,290:[1,51],291:52,292:50},o($V6,[2,230],{49:58}),o($Vc,[2,208],{25:59,286:60,287:[1,61],288:[1,62]}),o($V0,[2,195]),o($V0,[2,192]),o($V0,[2,193]),{13:[1,63]},{16:[1,64]},{1:[2,1]},{6:[2,3]},{6:[2,201]},{28:[1,66],29:[1,67],84:65},{6:[2,260],96:68,194:[1,69]},o($Vd,[2,262],{98:70,294:[1,71]}),o($Ve,[2,268],{101:72,294:[1,73]}),o($Vf,[2,273],{104:74,294:[1,75]}),{108:76,109:[2,275],294:[1,77]},{39:$Vg,111:78},{39:$Vg,111:80},{39:$Vg,111:81},{115:82,123:$Vh},{119:84,122:$Vi},o($Vj,[2,266]),o($Vj,[2,267]),o($Vk,[2,270]),o($Vk,[2,271]),o($Vk,[2,272]),{122:[2,284],123:[2,278]},{13:$V8,16:$V9,53:86,283:$Vb},{20:87,38:$Vl,39:$Vm,50:88,51:$Vn,54:89},o($V6,[2,214],{36:92}),{38:[1,93],50:94,51:$Vn},o($Vo,[2,340],{170:95,171:96,172:97,41:[2,338]}),o($Vp,[2,226],{45:98}),o($Vp,[2,224],{53:54,291:99,13:$V8,16:$V9,28:$Va,283:$Vb}),o($Vp,[2,225]),o($Vq,[2,222]),o($Vq,[2,220]),o($Vq,[2,221]),o($Vr,[2,185]),o($Vr,[2,186]),o($Vr,[2,187]),{20:100,38:$Vl,39:$Vm,50:101,51:$Vn,54:89},{26:102,27:105,28:$Vs,29:$Vt,289:103,290:[1,104]},o($Vc,[2,209]),o($Vc,[2,206]),o($Vc,[2,207]),o($V0,[2,4]),{13:[1,108]},o($Vu,[2,34]),{39:[1,109]},o($Vv,[2,252],{86:110}),{6:[2,41]},o($V0,$V1,{7:3,4:111}),{13:$V8,16:$V9,53:112,283:$Vb},o($Vd,[2,263]),{102:113,109:[1,114],131:[1,116],133:115,293:[1,117],300:[1,118]},o($Ve,[2,269]),o($Vd,$Vw,{105:119,132:121,109:$Vx,131:$Vy}),o($Vf,[2,274]),{109:[1,123]},{109:[2,276]},o($Vz,[2,46]),o($Vo,$VA,{134:124,141:125,142:126,41:$VB,109:$VB}),o($Vz,[2,47]),o($Vz,[2,48]),o($VC,[2,279],{116:127,119:128,122:$Vi}),{39:$Vg,111:129},o($VC,[2,285],{120:130,115:131,123:$Vh}),{39:$Vg,111:132},o([122,123],[2,54]),o($VD,$VE,{21:133,56:134,60:135,61:$VF}),o($V6,[2,203]),{39:$VG,55:137},o($Vd,[2,232],{52:139,293:[1,140]}),{39:[2,235]},{20:141,38:$Vl,39:$Vm,50:142,51:$Vn,54:89},{39:[1,143]},o($V7,[2,217]),{41:[1,144]},{41:[2,339]},{13:$V8,16:$V9,28:$VH,29:$VI,53:149,80:$VJ,89:150,143:145,165:$VK,174:146,176:147,212:$VL,215:$VM,216:$VN,233:160,235:161,266:156,269:$VO,270:$VP,271:$VQ,272:$VR,273:$VS,274:$VT,275:$VU,276:$VV,277:$VW,278:$VX,279:$VY,280:$VZ,281:$V_,282:$V$,283:$Vb},o($V01,[2,228],{54:89,46:174,50:175,20:176,38:$Vl,39:$Vm,51:$Vn}),o($Vq,[2,223]),o($VD,$VE,{56:134,60:135,21:177,61:$VF}),o($V6,[2,231]),o($V6,[2,8]),o($V6,[2,212],{27:178,28:$Vs,29:$Vt}),o($V6,[2,213]),o($V11,[2,210]),o($V11,[2,9]),o($V21,$V31,{30:179,217:180,221:181,225:182,229:183,237:184,241:185,205:$V41,243:$V51,308:$V61}),o($V0,[2,5]),o($V71,[2,250],{85:189}),{28:[1,191],32:[1,190]},o($V2,[2,259],{6:[2,261]}),o($Vz,[2,264],{99:192,129:193,130:[1,194]}),o($Vz,[2,43]),{13:$V8,16:$V9,53:195,283:$Vb},o($Vz,[2,59]),o($Vz,[2,293]),o($Vz,[2,294]),o($Vz,[2,295]),{106:[1,196]},o($V81,[2,56]),{13:$V8,16:$V9,53:197,283:$Vb},o($Vd,[2,292]),{13:$V8,16:$V9,53:198,283:$Vb},o($V91,[2,298],{135:199}),o($V91,[2,297]),{13:$V8,16:$V9,28:$VH,29:$VI,53:149,80:$VJ,89:150,143:200,165:$VK,174:146,176:147,212:$VL,215:$VM,216:$VN,233:160,235:161,266:156,269:$VO,270:$VP,271:$VQ,272:$VR,273:$VS,274:$VT,275:$VU,276:$VV,277:$VW,278:$VX,279:$VY,280:$VZ,281:$V_,282:$V$,283:$Vb},o($VC,[2,281],{117:201}),o($VC,[2,280]),o([38,122,125],[2,52]),o($VC,[2,287],{121:202}),o($VC,[2,286]),o([38,123,125],[2,51]),o($V5,[2,6]),o($Va1,[2,238],{57:203,67:204,68:[1,205]}),o($VD,[2,237]),{62:[1,206]},o([6,41,61,68,71,79,81,83],[2,16]),o($Vo,$Vb1,{22:207,145:208,18:209,146:210,152:211,153:212,24:$V3,39:$Vc1,41:$Vc1,83:$Vc1,109:$Vc1,157:$Vc1,158:$Vc1,160:$Vc1,163:$Vc1,164:$Vc1}),{13:$V8,16:$V9,53:213,283:$Vb},o($Vd,[2,233]),o($VD,$VE,{56:134,60:135,21:214,61:$VF}),o($V6,[2,215]),o($Vo,$VA,{142:126,40:215,141:216,41:[2,218]}),o($V6,[2,83]),{41:[2,342],173:217,301:[1,218]},o($Vd1,$Ve1,{175:219,179:220}),o($Vd1,$Ve1,{179:220,177:221,178:222,175:223,41:$Vf1,109:$Vf1,301:$Vf1}),o($Vg1,[2,122]),o($Vg1,[2,123]),o($Vg1,[2,124]),o($Vg1,[2,125]),o($Vg1,[2,126]),o($Vg1,[2,127]),{13:$V8,16:$V9,28:$VH,29:$VI,53:149,80:$VJ,89:150,165:$VK,174:226,176:227,185:225,211:224,212:$VL,215:$VM,216:$VN,233:160,235:161,266:156,269:$VO,270:$VP,271:$VQ,272:$VR,273:$VS,274:$VT,275:$VU,276:$VV,277:$VW,278:$VX,279:$VY,280:$VZ,281:$V_,282:$V$,283:$Vb},o($Vd1,$Ve1,{179:220,175:228}),o($Vh1,[2,165],{267:[1,229],268:[1,230]}),o($Vh1,[2,168]),o($Vh1,[2,169]),o($Vh1,[2,170]),o($Vh1,[2,171]),o($Vh1,[2,172]),o($Vh1,[2,173]),o($Vh1,[2,174]),o($Vi1,[2,175]),o($Vi1,[2,176]),o($Vi1,[2,177]),o($Vi1,[2,178]),o($Vh1,[2,179]),o($Vh1,[2,180]),o($Vh1,[2,181]),o($Vh1,[2,182]),o($Vh1,[2,183]),o($Vh1,[2,184]),o($VD,$VE,{56:134,60:135,21:231,61:$VF}),o($Vp,[2,227]),o($V01,[2,229]),o($V5,[2,14]),o($V11,[2,211]),{31:[1,232]},o($Vj1,[2,381],{218:233}),o($Vk1,[2,383],{222:234}),o($Vk1,[2,132],{226:235,227:236,228:[2,391],265:[1,237],309:[1,238],310:[1,239],311:[1,240],312:[1,241],313:[1,242],314:[1,243]}),o($Vl1,[2,393],{230:244}),o($Vm1,[2,401],{238:245}),{13:$V8,16:$V9,28:$Vn1,29:$Vo1,53:249,65:248,66:250,75:247,80:$VJ,89:251,233:160,235:161,242:246,244:254,245:$Vp1,246:$Vq1,247:$Vr1,249:$Vs1,250:259,251:$Vt1,252:$Vu1,253:262,254:$Vv1,255:$Vw1,258:$Vx1,260:$Vy1,266:156,269:$VO,270:$VP,271:$VQ,272:$VR,273:$VS,274:$VT,275:$VU,276:$VV,277:$VW,278:$VX,279:$VY,280:$VZ,281:$V_,282:$V$,283:$Vb,314:$Vz1,315:$VA1,316:$VB1,317:$VC1,318:$VD1,319:$VE1},{13:$V8,16:$V9,28:$Vn1,29:$Vo1,53:249,65:248,66:250,75:247,80:$VJ,89:251,233:160,235:161,242:272,244:254,245:$Vp1,246:$Vq1,247:$Vr1,249:$Vs1,250:259,251:$Vt1,252:$Vu1,253:262,254:$Vv1,255:$Vw1,258:$Vx1,260:$Vy1,266:156,269:$VO,270:$VP,271:$VQ,272:$VR,273:$VS,274:$VT,275:$VU,276:$VV,277:$VW,278:$VX,279:$VY,280:$VZ,281:$V_,282:$V$,283:$Vb,314:$Vz1,315:$VA1,316:$VB1,317:$VC1,318:$VD1,319:$VE1},{13:$V8,16:$V9,28:$Vn1,29:$Vo1,53:249,65:248,66:250,75:247,80:$VJ,89:251,233:160,235:161,242:273,244:254,245:$Vp1,246:$Vq1,247:$Vr1,249:$Vs1,250:259,251:$Vt1,252:$Vu1,253:262,254:$Vv1,255:$Vw1,258:$Vx1,260:$Vy1,266:156,269:$VO,270:$VP,271:$VQ,272:$VR,273:$VS,274:$VT,275:$VU,276:$VV,277:$VW,278:$VX,279:$VY,280:$VZ,281:$V_,282:$V$,283:$Vb,314:$Vz1,315:$VA1,316:$VB1,317:$VC1,318:$VD1,319:$VE1},o($V21,[2,406]),{13:$V8,16:$V9,41:[1,274],53:276,80:$VJ,88:275,89:277,90:$VF1,233:160,235:161,266:156,269:$VO,270:$VP,271:$VQ,272:$VR,273:$VS,274:$VT,275:$VU,276:$VV,277:$VW,278:$VX,279:$VY,280:$VZ,281:$V_,282:$V$,283:$Vb},{39:[1,279]},o($Vv,[2,253]),o($Vz,[2,42]),o($Vz,[2,265]),{109:[1,280]},o($Vz,[2,58]),o($Vd,$Vw,{132:121,105:281,109:$Vx,131:$Vy}),o($V81,[2,57]),o($Vz,[2,45]),{41:[1,282],109:[1,284],136:283},o($V91,[2,310],{144:285,301:[1,286]}),{38:[1,287],124:288,125:$VG1},{38:[1,290],124:291,125:$VG1},o($VH1,[2,240],{58:292,70:293,71:[1,294]}),o($Va1,[2,239]),{13:$V8,16:$V9,29:$Vo1,53:300,65:298,66:299,69:295,75:297,77:296,244:254,245:$Vp1,246:$Vq1,247:$Vr1,249:$Vs1,250:259,251:$Vt1,252:$Vu1,253:262,254:$Vv1,255:$Vw1,258:$Vx1,260:$Vy1,283:$Vb,314:$Vz1,315:$VA1,316:$VB1,317:$VC1,318:$VD1,319:$VE1},{13:$V8,16:$V9,28:$VI1,29:$VJ1,53:300,63:301,64:302,65:303,66:304,244:254,245:$Vp1,246:$Vq1,247:$Vr1,249:$Vs1,250:259,251:$Vt1,252:$Vu1,253:262,254:$Vv1,255:$Vw1,258:$Vx1,260:$Vy1,283:$Vb,314:$Vz1,315:$VA1,316:$VB1,317:$VC1,318:$VD1,319:$VE1},{41:[1,307]},{41:[1,308]},{20:309,38:$Vl,39:$Vm,54:89},o($VK1,[2,314],{147:310}),o($VK1,[2,313]),{13:$V8,16:$V9,28:$VH,29:$VL1,53:149,80:$VJ,89:150,154:311,165:$VK,174:312,187:313,212:$VM1,215:$VM,216:$VN,233:160,235:161,266:156,269:$VO,270:$VP,271:$VQ,272:$VR,273:$VS,274:$VT,275:$VU,276:$VV,277:$VW,278:$VX,279:$VY,280:$VZ,281:$V_,282:$V$,283:$Vb},o($Vp,[2,15]),o($V5,[2,11]),{41:[1,316]},{41:[2,219]},{41:[2,84]},o($Vo,[2,341],{41:[2,343]}),o($VN1,[2,85]),{13:$V8,16:$V9,28:[1,319],53:320,180:317,181:318,183:[1,321],283:$Vb},o($VN1,[2,86]),o($VN1,[2,87]),o($VN1,[2,345]),{13:$V8,16:$V9,28:$VH,29:$VI,32:[1,322],53:149,80:$VJ,89:150,165:$VK,174:226,176:227,185:323,212:$VL,215:$VM,216:$VN,233:160,235:161,266:156,269:$VO,270:$VP,271:$VQ,272:$VR,273:$VS,274:$VT,275:$VU,276:$VV,277:$VW,278:$VX,279:$VY,280:$VZ,281:$V_,282:$V$,283:$Vb},o($VO1,[2,377]),o($VP1,[2,118]),o($VP1,[2,119]),{213:[1,324]},o($Vh1,[2,166]),{13:$V8,16:$V9,53:325,283:$Vb},o($V5,[2,13]),{28:[1,326]},o([31,32,194,248],[2,128],{219:327,220:[1,328]}),o($Vj1,[2,130],{223:329,224:[1,330]}),o($V21,$V31,{229:183,237:184,241:185,225:331,205:$V41,243:$V51,308:$V61}),{228:[1,332]},o($VQ1,[2,385]),o($VQ1,[2,386]),o($VQ1,[2,387]),o($VQ1,[2,388]),o($VQ1,[2,389]),o($VQ1,[2,390]),{228:[2,392]},o([31,32,194,220,224,228,248,265,309,310,311,312,313,314],[2,135],{231:333,232:334,233:335,235:336,243:[1,338],277:$VW,278:$VX,279:$VY,280:$VZ,281:$V_,282:$V$,308:[1,337]}),o($Vl1,[2,139],{239:339,240:340,290:$VR1,305:$VS1}),o($Vm1,[2,141]),o($Vm1,[2,144]),o($Vm1,[2,145]),o($Vm1,[2,146],{29:$VT1,165:$VU1}),o($Vm1,[2,147]),o($Vm1,[2,148]),o($Vm1,[2,149]),o($V21,$V31,{217:180,221:181,225:182,229:183,237:184,241:185,30:345,205:$V41,243:$V51,308:$V61}),o($VV1,[2,151]),{165:[1,346]},{29:[1,347]},{29:[1,348]},{29:[1,349]},{29:$VW1,165:$VX1,168:350},{29:[1,353]},{29:[1,355],165:[1,354]},{254:[1,356]},{29:[1,357]},{29:[1,358]},{29:[1,359]},o($VY1,[2,407]),o($VY1,[2,408]),o($VY1,[2,409]),o($VY1,[2,410]),o($VY1,[2,411]),{254:[2,413]},o($Vm1,[2,142]),o($Vm1,[2,143]),o($Vu,[2,35]),o($V71,[2,251]),o($VZ1,[2,37]),o($VZ1,[2,38]),o($VZ1,[2,39]),o($V_1,[2,254],{87:360}),{13:$V8,16:$V9,53:361,283:$Vb},o($Vz,[2,44]),o([6,38,122,123,125,194],[2,60]),o($V91,[2,299]),{13:$V8,16:$V9,28:[1,363],53:364,137:362,283:$Vb},o($V91,[2,62]),o($Vo,[2,309],{41:$V$1,109:$V$1}),{39:$VG,55:365},o($VC,[2,282]),o($Vd,[2,289],{126:366,293:[1,367]}),{39:$VG,55:368},o($VC,[2,288]),o($V02,[2,242],{59:369,78:370,79:[1,371],81:[1,372]}),o($VH1,[2,241]),{62:[1,373]},o($Va1,[2,24],{244:254,250:259,253:262,75:297,65:298,66:299,53:300,77:374,13:$V8,16:$V9,29:$Vo1,245:$Vp1,246:$Vq1,247:$Vr1,249:$Vs1,251:$Vt1,252:$Vu1,254:$Vv1,255:$Vw1,258:$Vx1,260:$Vy1,283:$Vb,314:$Vz1,315:$VA1,316:$VB1,317:$VC1,318:$VD1,319:$VE1}),o($V12,[2,246]),o($V22,[2,76]),o($V22,[2,77]),o($V22,[2,78]),{29:$VT1,165:$VU1},o($VD,[2,18],{244:254,250:259,253:262,53:300,65:303,66:304,64:375,13:$V8,16:$V9,28:$VI1,29:$VJ1,245:$Vp1,246:$Vq1,247:$Vr1,249:$Vs1,251:$Vt1,252:$Vu1,254:$Vv1,255:$Vw1,258:$Vx1,260:$Vy1,283:$Vb,314:$Vz1,315:$VA1,316:$VB1,317:$VC1,318:$VD1,319:$VE1}),o($V32,[2,244]),o($V32,[2,19]),o($V32,[2,20]),o($V21,$V31,{217:180,221:181,225:182,229:183,237:184,241:185,30:376,205:$V41,243:$V51,308:$V61}),o($V32,[2,23]),o($V42,[2,63]),o($V42,[2,64]),o($VD,$VE,{56:134,60:135,21:377,61:$VF}),{39:[2,324],41:[2,65],82:387,83:$V4,109:[1,383],148:378,149:379,156:380,157:[1,381],158:[1,382],160:[1,384],163:[1,385],164:[1,386]},o($VK1,[2,322],{155:388,301:[1,389]}),o($V52,$V62,{186:390,189:391,196:392,197:394,28:$V72}),o($V82,[2,352],{189:391,196:392,197:394,188:395,186:396,13:$V62,16:$V62,29:$V62,183:$V62,205:$V62,210:$V62,283:$V62,28:$V72}),{13:$V8,16:$V9,28:$VH,29:$VL1,53:149,80:$VJ,89:150,165:$VK,174:399,187:400,191:398,212:$VM1,214:397,215:$VM,216:$VN,233:160,235:161,266:156,269:$VO,270:$VP,271:$VQ,272:$VR,273:$VS,274:$VT,275:$VU,276:$VV,277:$VW,278:$VX,279:$VY,280:$VZ,281:$V_,282:$V$,283:$Vb},o($V52,$V62,{189:391,196:392,197:394,186:401,28:$V72}),o($VD,$VE,{56:134,60:135,21:402,61:$VF}),o([41,109,213,301],[2,88],{303:403,194:[1,404]}),o($Vo,$V92,{182:405,184:406}),o($Vo,[2,90]),o($Vo,[2,91]),o($Vo,[2,92]),o($Va2,[2,114]),o($VO1,[2,378]),o($Va2,[2,115]),o($Vh1,[2,167]),{32:[1,407]},o($Vj1,[2,382]),o($V21,$V31,{221:181,225:182,229:183,237:184,241:185,217:408,205:$V41,243:$V51,308:$V61}),o($Vk1,[2,384]),o($V21,$V31,{225:182,229:183,237:184,241:185,221:409,205:$V41,243:$V51,308:$V61}),o($Vk1,[2,133]),{29:$VW1,165:$VX1,168:410},o($Vl1,[2,394]),o($V21,$V31,{237:184,241:185,229:411,205:$V41,243:$V51,308:$V61}),o($Vm1,[2,397],{234:412}),o($Vm1,[2,399],{236:413}),o($VQ1,[2,395]),o($VQ1,[2,396]),o($Vm1,[2,402]),o($V21,$V31,{241:185,237:414,205:$V41,243:$V51,308:$V61}),o($VQ1,[2,403]),o($VQ1,[2,404]),o($VV1,[2,79]),o($VQ1,[2,332],{166:415,287:[1,416]}),{32:[1,417]},o($VV1,[2,152]),o($V21,$V31,{217:180,221:181,225:182,229:183,237:184,241:185,30:418,205:$V41,243:$V51,308:$V61}),o($V21,$V31,{217:180,221:181,225:182,229:183,237:184,241:185,30:419,205:$V41,243:$V51,308:$V61}),o($V21,$V31,{217:180,221:181,225:182,229:183,237:184,241:185,30:420,205:$V41,243:$V51,308:$V61}),o($VV1,[2,156]),o($VV1,[2,81]),o($VQ1,[2,336],{169:421}),{28:[1,422]},o($VV1,[2,158]),o($V21,$V31,{217:180,221:181,225:182,229:183,237:184,241:185,30:423,205:$V41,243:$V51,308:$V61}),{39:$VG,55:424},o($Vb2,[2,414],{256:425,287:[1,426]}),o($VQ1,[2,418],{259:427,287:[1,428]}),o($VQ1,[2,420],{261:429,287:[1,430]}),{29:[1,433],41:[1,431],91:432},o($Vz,[2,55]),{39:[1,434]},{39:[2,300]},{39:[2,301]},o($Vz,[2,49]),{13:$V8,16:$V9,53:435,283:$Vb},o($Vd,[2,290]),o($Vz,[2,50]),o($V02,[2,17]),o($V02,[2,243]),{80:[1,436]},{80:[1,437]},{13:$V8,16:$V9,28:$Vc2,29:$Vo1,53:300,65:298,66:299,72:438,73:439,74:$Vd2,75:297,76:$Ve2,77:442,244:254,245:$Vp1,246:$Vq1,247:$Vr1,249:$Vs1,250:259,251:$Vt1,252:$Vu1,253:262,254:$Vv1,255:$Vw1,258:$Vx1,260:$Vy1,283:$Vb,314:$Vz1,315:$VA1,316:$VB1,317:$VC1,318:$VD1,319:$VE1},o($V12,[2,247]),o($V32,[2,245]),{31:[1,445],32:[1,444]},{23:446,41:[2,204],82:447,83:$V4},o($VK1,[2,315]),o($Vf2,[2,316],{150:448,301:[1,449]}),{39:$VG,55:450},{39:$VG,55:451},{39:$VG,55:452},{13:$V8,16:$V9,28:[1,454],53:455,159:453,283:$Vb},o($Vg2,[2,328],{161:456,294:[1,457]}),{13:$V8,16:$V9,29:$Vo1,53:300,65:298,66:299,75:297,77:458,244:254,245:$Vp1,246:$Vq1,247:$Vr1,249:$Vs1,250:259,251:$Vt1,252:$Vu1,253:262,254:$Vv1,255:$Vw1,258:$Vx1,260:$Vy1,283:$Vb,314:$Vz1,315:$VA1,316:$VB1,317:$VC1,318:$VD1,319:$VE1},{29:[1,459]},o($Vh2,[2,75]),o($VK1,[2,67]),o($Vo,[2,321],{39:$Vi2,41:$Vi2,83:$Vi2,109:$Vi2,157:$Vi2,158:$Vi2,160:$Vi2,163:$Vi2,164:$Vi2}),o($V82,[2,94]),o($Vo,[2,356],{190:460}),o($Vo,[2,354]),o($Vo,[2,355]),o($V52,[2,364],{198:461,199:462}),o($V82,[2,95]),o($V82,[2,353]),{13:$V8,16:$V9,28:$VH,29:$VL1,32:[1,463],53:149,80:$VJ,89:150,165:$VK,174:399,187:400,191:464,212:$VM1,215:$VM,216:$VN,233:160,235:161,266:156,269:$VO,270:$VP,271:$VQ,272:$VR,273:$VS,274:$VT,275:$VU,276:$VV,277:$VW,278:$VX,279:$VY,280:$VZ,281:$V_,282:$V$,283:$Vb},o($VO1,[2,379]),o($VP1,[2,120]),o($VP1,[2,121]),{213:[1,465]},o($V5,[2,12]),o($Vd1,[2,349],{194:[1,466]}),o($Vj2,[2,346]),o([41,109,194,213,301],[2,89]),{13:$V8,16:$V9,28:$VH,29:$VI,53:149,80:$VJ,89:150,165:$VK,174:226,176:227,185:467,212:$VL,215:$VM,216:$VN,233:160,235:161,266:156,269:$VO,270:$VP,271:$VQ,272:$VR,273:$VS,274:$VT,275:$VU,276:$VV,277:$VW,278:$VX,279:$VY,280:$VZ,281:$V_,282:$V$,283:$Vb},o($V11,[2,10]),o($Vj1,[2,129]),o($Vk1,[2,131]),o($Vk1,[2,134]),o($Vl1,[2,136]),o($Vl1,[2,137],{240:340,239:468,290:$VR1,305:$VS1}),o($Vl1,[2,138],{240:340,239:469,290:$VR1,305:$VS1}),o($Vm1,[2,140]),o($VQ1,[2,334],{167:470}),o($VQ1,[2,333]),o([6,13,16,28,29,31,32,39,41,71,74,76,79,80,81,83,109,157,158,160,163,164,165,194,212,215,216,220,224,228,243,245,246,247,248,249,251,252,254,255,258,260,265,269,270,271,272,273,274,275,276,277,278,279,280,281,282,283,290,301,305,308,309,310,311,312,313,314,315,316,317,318,319],[2,150]),{32:[1,471]},{248:[1,472]},{248:[1,473]},o($V21,$V31,{217:180,221:181,225:182,229:183,237:184,241:185,30:474,205:$V41,243:$V51,308:$V61}),{32:[1,475]},{32:[1,476]},o($VV1,[2,160]),o($V21,$V31,{217:180,221:181,225:182,229:183,237:184,241:185,257:477,30:479,205:$V41,243:$V51,290:[1,478],308:$V61}),o($Vb2,[2,415]),o($V21,$V31,{217:180,221:181,225:182,229:183,237:184,241:185,30:480,205:$V41,243:$V51,308:$V61}),o($VQ1,[2,419]),o($V21,$V31,{217:180,221:181,225:182,229:183,237:184,241:185,30:481,205:$V41,243:$V51,308:$V61}),o($VQ1,[2,421]),o($Vu,[2,36]),o($V_1,[2,255]),o($Vk2,[2,256],{92:482}),o($Vo,$VA,{142:126,138:483,141:484,41:[2,302]}),o($VC,[2,53]),o($V02,[2,30],{81:[1,485]}),o($V02,[2,31],{79:[1,486]}),o($VH1,[2,25],{244:254,250:259,253:262,75:297,65:298,66:299,53:300,77:442,73:487,13:$V8,16:$V9,28:$Vc2,29:$Vo1,74:$Vd2,76:$Ve2,245:$Vp1,246:$Vq1,247:$Vr1,249:$Vs1,251:$Vt1,252:$Vu1,254:$Vv1,255:$Vw1,258:$Vx1,260:$Vy1,283:$Vb,314:$Vz1,315:$VA1,316:$VB1,317:$VC1,318:$VD1,319:$VE1}),o($Vl2,[2,248]),{29:$Vo1,75:488},{29:$Vo1,75:489},o($Vl2,[2,28]),o($Vl2,[2,29]),o($V32,[2,21]),{28:[1,490]},{41:[2,7]},{41:[2,205]},o($Vo,$Vb1,{153:212,151:491,152:492,39:$Vm2,41:$Vm2,83:$Vm2,109:$Vm2,157:$Vm2,158:$Vm2,160:$Vm2,163:$Vm2,164:$Vm2}),o($Vf2,[2,317]),o($Vh2,[2,68],{302:[1,493]}),o($Vh2,[2,69]),o($Vh2,[2,70]),{39:$VG,55:494},{39:[2,326]},{39:[2,327]},{13:$V8,16:$V9,28:[1,496],53:497,162:495,283:$Vb},o($Vg2,[2,329]),o($Vh2,[2,73]),o($V21,$V31,{217:180,221:181,225:182,229:183,237:184,241:185,30:498,205:$V41,243:$V51,308:$V61}),{13:$V8,16:$V9,28:$VH,29:$VL1,53:149,80:$VJ,89:150,165:$VK,174:399,187:400,191:499,212:$VM1,215:$VM,216:$VN,233:160,235:161,266:156,269:$VO,270:$VP,271:$VQ,272:$VR,273:$VS,274:$VT,275:$VU,276:$VV,277:$VW,278:$VX,279:$VY,280:$VZ,281:$V_,282:$V$,283:$Vb},o($VO1,[2,99],{304:[1,500]}),o($Vn2,[2,371],{200:501,204:502,210:[1,503]}),o($Vg1,[2,116]),o($VO1,[2,380]),o($Vg1,[2,117]),o($Vj2,[2,347]),o($Vo2,[2,93],{248:[1,504]}),o($Vm1,[2,398]),o($Vm1,[2,400]),o($V21,$V31,{217:180,221:181,225:182,229:183,237:184,241:185,30:505,205:$V41,243:$V51,308:$V61}),o($VV1,[2,153]),o($V21,$V31,{217:180,221:181,225:182,229:183,237:184,241:185,30:506,205:$V41,243:$V51,308:$V61}),o($V21,$V31,{217:180,221:181,225:182,229:183,237:184,241:185,30:507,205:$V41,243:$V51,308:$V61}),{32:[1,508],248:[1,509]},o($VV1,[2,157]),o($VV1,[2,159]),{32:[1,510]},{32:[2,416]},{32:[2,417]},{32:[1,511]},{32:[2,422],194:[1,514],262:512,263:513},{13:$V8,16:$V9,32:[1,515],53:276,80:$VJ,88:516,89:277,90:$VF1,233:160,235:161,266:156,269:$VO,270:$VP,271:$VQ,272:$VR,273:$VS,274:$VT,275:$VU,276:$VV,277:$VW,278:$VX,279:$VY,280:$VZ,281:$V_,282:$V$,283:$Vb},{41:[1,517]},{41:[2,303]},{80:[1,518]},{80:[1,519]},o($Vl2,[2,249]),o($Vl2,[2,26]),o($Vl2,[2,27]),{32:[1,520]},o($VK1,[2,66]),o($VK1,[2,319]),{39:[2,325]},o($Vh2,[2,71]),{39:$VG,55:521},{39:[2,330]},{39:[2,331]},{31:[1,522]},o($Vo2,[2,358],{192:523,248:[1,524]}),o($V52,[2,363]),o([13,16,28,29,32,80,165,212,215,216,269,270,271,272,273,274,275,276,277,278,279,280,281,282,283,304],[2,100],{305:[1,525]}),{13:$V8,16:$V9,29:[1,531],53:528,183:[1,529],201:526,202:527,205:[1,530],283:$Vb},o($Vn2,[2,372]),o($Vo,[2,351]),{32:[1,532],248:[1,533]},{32:[1,534]},{248:[1,535]},o($VV1,[2,82]),o($VQ1,[2,337]),o($VV1,[2,161]),o($VV1,[2,162]),{32:[1,536]},{32:[2,423]},{264:[1,537]},o($V_1,[2,40]),o($Vk2,[2,257]),o($Vp2,[2,304],{139:538,301:[1,539]}),o($V02,[2,32]),o($V02,[2,33]),o($V32,[2,22]),o($Vh2,[2,72]),{28:[1,540]},o([39,41,83,109,157,158,160,163,164,213,301],[2,96],{193:541,194:[1,542]}),o($Vo,[2,357]),o($V52,[2,365]),o($Vq2,[2,102]),o($Vq2,[2,369],{203:543,306:544,290:[1,546],307:[1,545],308:[1,547]}),o($Vr2,[2,103]),o($Vr2,[2,104]),{13:$V8,16:$V9,29:[1,551],53:552,165:[1,550],183:$Vs2,206:548,207:549,210:$Vt2,283:$Vb},o($V52,$V62,{197:394,196:555}),o($VV1,[2,80]),o($VQ1,[2,335]),o($VV1,[2,154]),o($V21,$V31,{217:180,221:181,225:182,229:183,237:184,241:185,30:556,205:$V41,243:$V51,308:$V61}),o($VV1,[2,163]),{265:[1,557]},o($Vo,$VA,{142:126,140:558,141:559,41:$Vu2,109:$Vu2}),o($Vp2,[2,305]),{32:[1,560]},o($Vo2,[2,359]),o($Vo2,[2,97],{197:394,195:561,196:562,13:$V62,16:$V62,29:$V62,183:$V62,205:$V62,210:$V62,283:$V62,28:[1,563]}),o($Vq2,[2,101]),o($Vq2,[2,370]),o($Vq2,[2,366]),o($Vq2,[2,367]),o($Vq2,[2,368]),o($Vr2,[2,105]),o($Vr2,[2,107]),o($Vr2,[2,108]),o($Vv2,[2,373],{208:564}),o($Vr2,[2,110]),o($Vr2,[2,111]),{13:$V8,16:$V9,53:565,183:[1,566],283:$Vb},{32:[1,567]},{32:[1,568]},{266:569,273:$VS,274:$VT,275:$VU,276:$VV},o($V91,[2,61]),o($V91,[2,307]),o($Vh2,[2,74]),o($Vo,$V92,{184:406,182:570}),o($Vo,[2,360]),o($Vo,[2,361]),{13:$V8,16:$V9,32:[2,375],53:552,183:$Vs2,207:572,209:571,210:$Vt2,283:$Vb},o($Vr2,[2,112]),o($Vr2,[2,113]),o($Vr2,[2,106]),o($VV1,[2,155]),{32:[2,164]},o($Vo2,[2,98]),{32:[1,573]},{32:[2,376],304:[1,574]},o($Vr2,[2,109]),o($Vv2,[2,374])],
-defaultActions: {5:[2,190],6:[2,191],8:[2,189],24:[2,1],25:[2,3],26:[2,201],68:[2,41],77:[2,276],91:[2,235],96:[2,339],216:[2,219],217:[2,84],243:[2,392],271:[2,413],363:[2,300],364:[2,301],446:[2,7],447:[2,205],454:[2,326],455:[2,327],478:[2,416],479:[2,417],484:[2,303],493:[2,325],496:[2,330],497:[2,331],513:[2,423],569:[2,164]},
-parseError: function parseError(str, hash) {
+table: [o($V0,$V1,{3:1,4:2,7:3}),{1:[3]},o($V2,[2,259],{5:4,8:5,286:6,9:7,93:8,17:9,33:10,42:11,47:12,94:13,18:14,6:[2,189],24:$V3,34:[1,15],43:[1,16],48:[1,17]}),o([6,24,34,43,48,97,107,110,112,113,122,123,128,297,298,299,300,301],[2,2],{287:19,11:20,14:21,12:[1,22],15:[1,23]}),{6:[1,24]},{6:[2,191]},{6:[2,192]},{6:[2,201],10:25,82:26,83:$V4},{6:[2,190]},o($V5,[2,197]),o($V5,[2,198]),o($V5,[2,199]),o($V5,[2,200]),{95:28,97:[1,29],100:30,103:31,107:[1,32],110:[1,33],112:[1,34],113:[1,35],114:36,118:37,122:[2,284],123:[2,278],127:43,128:[1,44],297:[1,38],298:[1,39],299:[1,40],300:[1,41],301:[1,42]},o($V6,[2,203],{19:45}),o($V7,[2,217],{35:46,37:47,39:[1,48]}),{13:$V8,16:$V9,28:$Va,44:49,53:54,285:$Vb,292:[1,51],293:52,294:50},o($V6,[2,231],{49:58}),o($Vc,[2,209],{25:59,288:60,289:[1,61],290:[1,62]}),o($V0,[2,196]),o($V0,[2,193]),o($V0,[2,194]),{13:[1,63]},{16:[1,64]},{1:[2,1]},{6:[2,3]},{6:[2,202]},{28:[1,66],29:[1,67],84:65},{6:[2,261],96:68,182:[1,69]},o($Vd,[2,263],{98:70,296:[1,71]}),o($Ve,[2,269],{101:72,296:[1,73]}),o($Vf,[2,274],{104:74,296:[1,75]}),{108:76,109:[2,276],296:[1,77]},{39:$Vg,111:78},{39:$Vg,111:80},{39:$Vg,111:81},{115:82,123:$Vh},{119:84,122:$Vi},o($Vj,[2,267]),o($Vj,[2,268]),o($Vk,[2,271]),o($Vk,[2,272]),o($Vk,[2,273]),{122:[2,285],123:[2,279]},{13:$V8,16:$V9,53:86,285:$Vb},{20:87,38:$Vl,39:$Vm,50:88,51:$Vn,54:89},o($V6,[2,215],{36:92}),{38:[1,93],50:94,51:$Vn},o($Vo,[2,341],{170:95,171:96,172:97,41:[2,339]}),o($Vp,[2,227],{45:98}),o($Vp,[2,225],{53:54,293:99,13:$V8,16:$V9,28:$Va,285:$Vb}),o($Vp,[2,226]),o($Vq,[2,223]),o($Vq,[2,221]),o($Vq,[2,222]),o($Vr,[2,186]),o($Vr,[2,187]),o($Vr,[2,188]),{20:100,38:$Vl,39:$Vm,50:101,51:$Vn,54:89},{26:102,27:105,28:$Vs,29:$Vt,291:103,292:[1,104]},o($Vc,[2,210]),o($Vc,[2,207]),o($Vc,[2,208]),o($V0,[2,4]),{13:[1,108]},o($Vu,[2,34]),{39:[1,109]},o($Vv,[2,253],{86:110}),{6:[2,41]},o($V0,$V1,{7:3,4:111}),{13:$V8,16:$V9,53:112,285:$Vb},o($Vd,[2,264]),{102:113,109:[1,114],131:[1,116],133:115,295:[1,117],302:[1,118]},o($Ve,[2,270]),o($Vd,$Vw,{105:119,132:121,109:$Vx,131:$Vy}),o($Vf,[2,275]),{109:[1,123]},{109:[2,277]},o($Vz,[2,46]),o($Vo,$VA,{134:124,141:125,142:126,41:$VB,109:$VB}),o($Vz,[2,47]),o($Vz,[2,48]),o($VC,[2,280],{116:127,119:128,122:$Vi}),{39:$Vg,111:129},o($VC,[2,286],{120:130,115:131,123:$Vh}),{39:$Vg,111:132},o([122,123],[2,54]),o($VD,$VE,{21:133,56:134,60:135,61:$VF}),o($V6,[2,204]),{39:$VG,55:137},o($Vd,[2,233],{52:139,295:[1,140]}),{39:[2,236]},{20:141,38:$Vl,39:$Vm,50:142,51:$Vn,54:89},{39:[1,143]},o($V7,[2,218]),{41:[1,144]},{41:[2,340]},{13:$V8,16:$V9,28:$VH,29:$VI,53:149,80:$VJ,89:150,143:145,165:$VK,174:146,176:147,214:$VL,217:$VM,218:$VN,235:160,237:161,268:156,271:$VO,272:$VP,273:$VQ,274:$VR,275:$VS,276:$VT,277:$VU,278:$VV,279:$VW,280:$VX,281:$VY,282:$VZ,283:$V_,284:$V$,285:$Vb},o($V01,[2,229],{54:89,46:174,50:175,20:176,38:$Vl,39:$Vm,51:$Vn}),o($Vq,[2,224]),o($VD,$VE,{56:134,60:135,21:177,61:$VF}),o($V6,[2,232]),o($V6,[2,8]),o($V6,[2,213],{27:178,28:$Vs,29:$Vt}),o($V6,[2,214]),o($V11,[2,211]),o($V11,[2,9]),o($V21,$V31,{30:179,219:180,223:181,227:182,231:183,239:184,243:185,207:$V41,245:$V51,309:$V61}),o($V0,[2,5]),o($V71,[2,251],{85:189}),{28:[1,191],32:[1,190]},o($V2,[2,260],{6:[2,262]}),o($Vz,[2,265],{99:192,129:193,130:[1,194]}),o($Vz,[2,43]),{13:$V8,16:$V9,53:195,285:$Vb},o($Vz,[2,59]),o($Vz,[2,294]),o($Vz,[2,295]),o($Vz,[2,296]),{106:[1,196]},o($V81,[2,56]),{13:$V8,16:$V9,53:197,285:$Vb},o($Vd,[2,293]),{13:$V8,16:$V9,53:198,285:$Vb},o($V91,[2,299],{135:199}),o($V91,[2,298]),{13:$V8,16:$V9,28:$VH,29:$VI,53:149,80:$VJ,89:150,143:200,165:$VK,174:146,176:147,214:$VL,217:$VM,218:$VN,235:160,237:161,268:156,271:$VO,272:$VP,273:$VQ,274:$VR,275:$VS,276:$VT,277:$VU,278:$VV,279:$VW,280:$VX,281:$VY,282:$VZ,283:$V_,284:$V$,285:$Vb},o($VC,[2,282],{117:201}),o($VC,[2,281]),o([38,122,125],[2,52]),o($VC,[2,288],{121:202}),o($VC,[2,287]),o([38,123,125],[2,51]),o($V5,[2,6]),o($Va1,[2,239],{57:203,67:204,68:[1,205]}),o($VD,[2,238]),{62:[1,206]},o([6,41,61,68,71,79,81,83],[2,16]),o($Vo,$Vb1,{22:207,145:208,18:209,146:210,152:211,153:212,24:$V3,39:$Vc1,41:$Vc1,83:$Vc1,109:$Vc1,157:$Vc1,158:$Vc1,160:$Vc1,163:$Vc1,164:$Vc1}),{13:$V8,16:$V9,53:213,285:$Vb},o($Vd,[2,234]),o($VD,$VE,{56:134,60:135,21:214,61:$VF}),o($V6,[2,216]),o($Vo,$VA,{142:126,40:215,141:216,41:[2,219]}),o($V6,[2,83]),{41:[2,343],173:217,303:[1,218]},{13:$V8,16:$V9,28:$Vd1,53:223,175:219,179:220,184:221,186:$Ve1,285:$Vb},o($Vf1,[2,345],{179:220,184:221,53:223,177:225,178:226,175:227,13:$V8,16:$V9,28:$Vd1,186:$Ve1,285:$Vb}),o($Vg1,[2,123]),o($Vg1,[2,124]),o($Vg1,[2,125]),o($Vg1,[2,126]),o($Vg1,[2,127]),o($Vg1,[2,128]),{13:$V8,16:$V9,28:$VH,29:$VI,53:149,80:$VJ,89:150,165:$VK,174:230,176:231,188:229,213:228,214:$VL,217:$VM,218:$VN,235:160,237:161,268:156,271:$VO,272:$VP,273:$VQ,274:$VR,275:$VS,276:$VT,277:$VU,278:$VV,279:$VW,280:$VX,281:$VY,282:$VZ,283:$V_,284:$V$,285:$Vb},{13:$V8,16:$V9,28:$Vd1,53:223,175:232,179:220,184:221,186:$Ve1,285:$Vb},o($Vh1,[2,166],{269:[1,233],270:[1,234]}),o($Vh1,[2,169]),o($Vh1,[2,170]),o($Vh1,[2,171]),o($Vh1,[2,172]),o($Vh1,[2,173]),o($Vh1,[2,174]),o($Vh1,[2,175]),o($Vi1,[2,176]),o($Vi1,[2,177]),o($Vi1,[2,178]),o($Vi1,[2,179]),o($Vh1,[2,180]),o($Vh1,[2,181]),o($Vh1,[2,182]),o($Vh1,[2,183]),o($Vh1,[2,184]),o($Vh1,[2,185]),o($VD,$VE,{56:134,60:135,21:235,61:$VF}),o($Vp,[2,228]),o($V01,[2,230]),o($V5,[2,14]),o($V11,[2,212]),{31:[1,236]},o($Vj1,[2,382],{220:237}),o($Vk1,[2,384],{224:238}),o($Vk1,[2,133],{228:239,229:240,230:[2,392],267:[1,241],310:[1,242],311:[1,243],312:[1,244],313:[1,245],314:[1,246],315:[1,247]}),o($Vl1,[2,394],{232:248}),o($Vm1,[2,402],{240:249}),{13:$V8,16:$V9,28:$Vn1,29:$Vo1,53:253,65:252,66:254,75:251,80:$VJ,89:255,235:160,237:161,244:250,246:258,247:$Vp1,248:$Vq1,249:$Vr1,251:$Vs1,252:263,253:$Vt1,254:$Vu1,255:266,256:$Vv1,257:$Vw1,260:$Vx1,262:$Vy1,268:156,271:$VO,272:$VP,273:$VQ,274:$VR,275:$VS,276:$VT,277:$VU,278:$VV,279:$VW,280:$VX,281:$VY,282:$VZ,283:$V_,284:$V$,285:$Vb,315:$Vz1,316:$VA1,317:$VB1,318:$VC1,319:$VD1,320:$VE1},{13:$V8,16:$V9,28:$Vn1,29:$Vo1,53:253,65:252,66:254,75:251,80:$VJ,89:255,235:160,237:161,244:276,246:258,247:$Vp1,248:$Vq1,249:$Vr1,251:$Vs1,252:263,253:$Vt1,254:$Vu1,255:266,256:$Vv1,257:$Vw1,260:$Vx1,262:$Vy1,268:156,271:$VO,272:$VP,273:$VQ,274:$VR,275:$VS,276:$VT,277:$VU,278:$VV,279:$VW,280:$VX,281:$VY,282:$VZ,283:$V_,284:$V$,285:$Vb,315:$Vz1,316:$VA1,317:$VB1,318:$VC1,319:$VD1,320:$VE1},{13:$V8,16:$V9,28:$Vn1,29:$Vo1,53:253,65:252,66:254,75:251,80:$VJ,89:255,235:160,237:161,244:277,246:258,247:$Vp1,248:$Vq1,249:$Vr1,251:$Vs1,252:263,253:$Vt1,254:$Vu1,255:266,256:$Vv1,257:$Vw1,260:$Vx1,262:$Vy1,268:156,271:$VO,272:$VP,273:$VQ,274:$VR,275:$VS,276:$VT,277:$VU,278:$VV,279:$VW,280:$VX,281:$VY,282:$VZ,283:$V_,284:$V$,285:$Vb,315:$Vz1,316:$VA1,317:$VB1,318:$VC1,319:$VD1,320:$VE1},o($V21,[2,407]),{13:$V8,16:$V9,41:[1,278],53:280,80:$VJ,88:279,89:281,90:$VF1,235:160,237:161,268:156,271:$VO,272:$VP,273:$VQ,274:$VR,275:$VS,276:$VT,277:$VU,278:$VV,279:$VW,280:$VX,281:$VY,282:$VZ,283:$V_,284:$V$,285:$Vb},{39:[1,283]},o($Vv,[2,254]),o($Vz,[2,42]),o($Vz,[2,266]),{109:[1,284]},o($Vz,[2,58]),o($Vd,$Vw,{132:121,105:285,109:$Vx,131:$Vy}),o($V81,[2,57]),o($Vz,[2,45]),{41:[1,286],109:[1,288],136:287},o($V91,[2,311],{144:289,303:[1,290]}),{38:[1,291],124:292,125:$VG1},{38:[1,294],124:295,125:$VG1},o($VH1,[2,241],{58:296,70:297,71:[1,298]}),o($Va1,[2,240]),{13:$V8,16:$V9,29:$Vo1,53:304,65:302,66:303,69:299,75:301,77:300,246:258,247:$Vp1,248:$Vq1,249:$Vr1,251:$Vs1,252:263,253:$Vt1,254:$Vu1,255:266,256:$Vv1,257:$Vw1,260:$Vx1,262:$Vy1,285:$Vb,315:$Vz1,316:$VA1,317:$VB1,318:$VC1,319:$VD1,320:$VE1},{13:$V8,16:$V9,28:$VI1,29:$VJ1,53:304,63:305,64:306,65:307,66:308,246:258,247:$Vp1,248:$Vq1,249:$Vr1,251:$Vs1,252:263,253:$Vt1,254:$Vu1,255:266,256:$Vv1,257:$Vw1,260:$Vx1,262:$Vy1,285:$Vb,315:$Vz1,316:$VA1,317:$VB1,318:$VC1,319:$VD1,320:$VE1},{41:[1,311]},{41:[1,312]},{20:313,38:$Vl,39:$Vm,54:89},o($VK1,[2,315],{147:314}),o($VK1,[2,314]),{13:$V8,16:$V9,28:$VH,29:$VL1,53:149,80:$VJ,89:150,154:315,165:$VK,174:316,190:317,214:$VM1,217:$VM,218:$VN,235:160,237:161,268:156,271:$VO,272:$VP,273:$VQ,274:$VR,275:$VS,276:$VT,277:$VU,278:$VV,279:$VW,280:$VX,281:$VY,282:$VZ,283:$V_,284:$V$,285:$Vb},o($Vp,[2,15]),o($V5,[2,11]),{41:[1,320]},{41:[2,220]},{41:[2,84]},o($Vo,[2,342],{41:[2,344]}),o($Vf1,[2,85]),o($VN1,[2,347],{180:321}),o($Vo,$VO1,{185:322,187:323}),o($Vo,[2,91]),o($Vo,[2,92]),o($Vo,[2,93]),o($Vf1,[2,86]),o($Vf1,[2,87]),o($Vf1,[2,346]),{13:$V8,16:$V9,28:$VH,29:$VI,32:[1,324],53:149,80:$VJ,89:150,165:$VK,174:230,176:231,188:325,214:$VL,217:$VM,218:$VN,235:160,237:161,268:156,271:$VO,272:$VP,273:$VQ,274:$VR,275:$VS,276:$VT,277:$VU,278:$VV,279:$VW,280:$VX,281:$VY,282:$VZ,283:$V_,284:$V$,285:$Vb},o($VP1,[2,378]),o($VQ1,[2,119]),o($VQ1,[2,120]),{215:[1,326]},o($Vh1,[2,167]),{13:$V8,16:$V9,53:327,285:$Vb},o($V5,[2,13]),{28:[1,328]},o([31,32,182,250],[2,129],{221:329,222:[1,330]}),o($Vj1,[2,131],{225:331,226:[1,332]}),o($V21,$V31,{231:183,239:184,243:185,227:333,207:$V41,245:$V51,309:$V61}),{230:[1,334]},o($VR1,[2,386]),o($VR1,[2,387]),o($VR1,[2,388]),o($VR1,[2,389]),o($VR1,[2,390]),o($VR1,[2,391]),{230:[2,393]},o([31,32,182,222,226,230,250,267,310,311,312,313,314,315],[2,136],{233:335,234:336,235:337,237:338,245:[1,340],279:$VW,280:$VX,281:$VY,282:$VZ,283:$V_,284:$V$,309:[1,339]}),o($Vl1,[2,140],{241:341,242:342,292:$VS1,306:$VT1}),o($Vm1,[2,142]),o($Vm1,[2,145]),o($Vm1,[2,146]),o($Vm1,[2,147],{29:$VU1,165:$VV1}),o($Vm1,[2,148]),o($Vm1,[2,149]),o($Vm1,[2,150]),o($V21,$V31,{219:180,223:181,227:182,231:183,239:184,243:185,30:347,207:$V41,245:$V51,309:$V61}),o($VW1,[2,152]),{165:[1,348]},{29:[1,349]},{29:[1,350]},{29:[1,351]},{29:$VX1,165:$VY1,168:352},{29:[1,355]},{29:[1,357],165:[1,356]},{256:[1,358]},{29:[1,359]},{29:[1,360]},{29:[1,361]},o($VZ1,[2,408]),o($VZ1,[2,409]),o($VZ1,[2,410]),o($VZ1,[2,411]),o($VZ1,[2,412]),{256:[2,414]},o($Vm1,[2,143]),o($Vm1,[2,144]),o($Vu,[2,35]),o($V71,[2,252]),o($V_1,[2,37]),o($V_1,[2,38]),o($V_1,[2,39]),o($V$1,[2,255],{87:362}),{13:$V8,16:$V9,53:363,285:$Vb},o($Vz,[2,44]),o([6,38,122,123,125,182],[2,60]),o($V91,[2,300]),{13:$V8,16:$V9,28:[1,365],53:366,137:364,285:$Vb},o($V91,[2,62]),o($Vo,[2,310],{41:$V02,109:$V02}),{39:$VG,55:367},o($VC,[2,283]),o($Vd,[2,290],{126:368,295:[1,369]}),{39:$VG,55:370},o($VC,[2,289]),o($V12,[2,243],{59:371,78:372,79:[1,373],81:[1,374]}),o($VH1,[2,242]),{62:[1,375]},o($Va1,[2,24],{246:258,252:263,255:266,75:301,65:302,66:303,53:304,77:376,13:$V8,16:$V9,29:$Vo1,247:$Vp1,248:$Vq1,249:$Vr1,251:$Vs1,253:$Vt1,254:$Vu1,256:$Vv1,257:$Vw1,260:$Vx1,262:$Vy1,285:$Vb,315:$Vz1,316:$VA1,317:$VB1,318:$VC1,319:$VD1,320:$VE1}),o($V22,[2,247]),o($V32,[2,76]),o($V32,[2,77]),o($V32,[2,78]),{29:$VU1,165:$VV1},o($VD,[2,18],{246:258,252:263,255:266,53:304,65:307,66:308,64:377,13:$V8,16:$V9,28:$VI1,29:$VJ1,247:$Vp1,248:$Vq1,249:$Vr1,251:$Vs1,253:$Vt1,254:$Vu1,256:$Vv1,257:$Vw1,260:$Vx1,262:$Vy1,285:$Vb,315:$Vz1,316:$VA1,317:$VB1,318:$VC1,319:$VD1,320:$VE1}),o($V42,[2,245]),o($V42,[2,19]),o($V42,[2,20]),o($V21,$V31,{219:180,223:181,227:182,231:183,239:184,243:185,30:378,207:$V41,245:$V51,309:$V61}),o($V42,[2,23]),o($V52,[2,63]),o($V52,[2,64]),o($VD,$VE,{56:134,60:135,21:379,61:$VF}),{39:[2,325],41:[2,65],82:389,83:$V4,109:[1,385],148:380,149:381,156:382,157:[1,383],158:[1,384],160:[1,386],163:[1,387],164:[1,388]},o($VK1,[2,323],{155:390,303:[1,391]}),o($V62,$V72,{189:392,192:393,198:394,199:396,28:$V82}),o($V92,[2,353],{192:393,198:394,199:396,191:397,189:398,13:$V72,16:$V72,29:$V72,186:$V72,207:$V72,212:$V72,285:$V72,28:$V82}),{13:$V8,16:$V9,28:$VH,29:$VL1,53:149,80:$VJ,89:150,165:$VK,174:401,190:402,194:400,214:$VM1,216:399,217:$VM,218:$VN,235:160,237:161,268:156,271:$VO,272:$VP,273:$VQ,274:$VR,275:$VS,276:$VT,277:$VU,278:$VV,279:$VW,280:$VX,281:$VY,282:$VZ,283:$V_,284:$V$,285:$Vb},o($V62,$V72,{192:393,198:394,199:396,189:403,28:$V82}),o($VD,$VE,{56:134,60:135,21:404,61:$VF}),o([41,109,215,303],[2,88],{181:405,182:[1,406]}),o($VN1,[2,90]),{13:$V8,16:$V9,28:$VH,29:$VI,53:149,80:$VJ,89:150,165:$VK,174:230,176:231,188:407,214:$VL,217:$VM,218:$VN,235:160,237:161,268:156,271:$VO,272:$VP,273:$VQ,274:$VR,275:$VS,276:$VT,277:$VU,278:$VV,279:$VW,280:$VX,281:$VY,282:$VZ,283:$V_,284:$V$,285:$Vb},o($Va2,[2,115]),o($VP1,[2,379]),o($Va2,[2,116]),o($Vh1,[2,168]),{32:[1,408]},o($Vj1,[2,383]),o($V21,$V31,{223:181,227:182,231:183,239:184,243:185,219:409,207:$V41,245:$V51,309:$V61}),o($Vk1,[2,385]),o($V21,$V31,{227:182,231:183,239:184,243:185,223:410,207:$V41,245:$V51,309:$V61}),o($Vk1,[2,134]),{29:$VX1,165:$VY1,168:411},o($Vl1,[2,395]),o($V21,$V31,{239:184,243:185,231:412,207:$V41,245:$V51,309:$V61}),o($Vm1,[2,398],{236:413}),o($Vm1,[2,400],{238:414}),o($VR1,[2,396]),o($VR1,[2,397]),o($Vm1,[2,403]),o($V21,$V31,{243:185,239:415,207:$V41,245:$V51,309:$V61}),o($VR1,[2,404]),o($VR1,[2,405]),o($VW1,[2,79]),o($VR1,[2,333],{166:416,289:[1,417]}),{32:[1,418]},o($VW1,[2,153]),o($V21,$V31,{219:180,223:181,227:182,231:183,239:184,243:185,30:419,207:$V41,245:$V51,309:$V61}),o($V21,$V31,{219:180,223:181,227:182,231:183,239:184,243:185,30:420,207:$V41,245:$V51,309:$V61}),o($V21,$V31,{219:180,223:181,227:182,231:183,239:184,243:185,30:421,207:$V41,245:$V51,309:$V61}),o($VW1,[2,157]),o($VW1,[2,81]),o($VR1,[2,337],{169:422}),{28:[1,423]},o($VW1,[2,159]),o($V21,$V31,{219:180,223:181,227:182,231:183,239:184,243:185,30:424,207:$V41,245:$V51,309:$V61}),{39:$VG,55:425},o($Vb2,[2,415],{258:426,289:[1,427]}),o($VR1,[2,419],{261:428,289:[1,429]}),o($VR1,[2,421],{263:430,289:[1,431]}),{29:[1,434],41:[1,432],91:433},o($Vz,[2,55]),{39:[1,435]},{39:[2,301]},{39:[2,302]},o($Vz,[2,49]),{13:$V8,16:$V9,53:436,285:$Vb},o($Vd,[2,291]),o($Vz,[2,50]),o($V12,[2,17]),o($V12,[2,244]),{80:[1,437]},{80:[1,438]},{13:$V8,16:$V9,28:$Vc2,29:$Vo1,53:304,65:302,66:303,72:439,73:440,74:$Vd2,75:301,76:$Ve2,77:443,246:258,247:$Vp1,248:$Vq1,249:$Vr1,251:$Vs1,252:263,253:$Vt1,254:$Vu1,255:266,256:$Vv1,257:$Vw1,260:$Vx1,262:$Vy1,285:$Vb,315:$Vz1,316:$VA1,317:$VB1,318:$VC1,319:$VD1,320:$VE1},o($V22,[2,248]),o($V42,[2,246]),{31:[1,446],32:[1,445]},{23:447,41:[2,205],82:448,83:$V4},o($VK1,[2,316]),o($Vf2,[2,317],{150:449,303:[1,450]}),{39:$VG,55:451},{39:$VG,55:452},{39:$VG,55:453},{13:$V8,16:$V9,28:[1,455],53:456,159:454,285:$Vb},o($Vg2,[2,329],{161:457,296:[1,458]}),{13:$V8,16:$V9,29:$Vo1,53:304,65:302,66:303,75:301,77:459,246:258,247:$Vp1,248:$Vq1,249:$Vr1,251:$Vs1,252:263,253:$Vt1,254:$Vu1,255:266,256:$Vv1,257:$Vw1,260:$Vx1,262:$Vy1,285:$Vb,315:$Vz1,316:$VA1,317:$VB1,318:$VC1,319:$VD1,320:$VE1},{29:[1,460]},o($Vh2,[2,75]),o($VK1,[2,67]),o($Vo,[2,322],{39:$Vi2,41:$Vi2,83:$Vi2,109:$Vi2,157:$Vi2,158:$Vi2,160:$Vi2,163:$Vi2,164:$Vi2}),o($V92,[2,95]),o($Vo,[2,357],{193:461}),o($Vo,[2,355]),o($Vo,[2,356]),o($V62,[2,365],{200:462,201:463}),o($V92,[2,96]),o($V92,[2,354]),{13:$V8,16:$V9,28:$VH,29:$VL1,32:[1,464],53:149,80:$VJ,89:150,165:$VK,174:401,190:402,194:465,214:$VM1,217:$VM,218:$VN,235:160,237:161,268:156,271:$VO,272:$VP,273:$VQ,274:$VR,275:$VS,276:$VT,277:$VU,278:$VV,279:$VW,280:$VX,281:$VY,282:$VZ,283:$V_,284:$V$,285:$Vb},o($VP1,[2,380]),o($VQ1,[2,121]),o($VQ1,[2,122]),{215:[1,466]},o($V5,[2,12]),o($VN1,[2,348]),o($VN1,[2,349],{184:221,53:223,183:467,179:468,13:$V8,16:$V9,28:$Vd1,186:$Ve1,285:$Vb}),o($Vj2,[2,94],{250:[1,469]}),o($V11,[2,10]),o($Vj1,[2,130]),o($Vk1,[2,132]),o($Vk1,[2,135]),o($Vl1,[2,137]),o($Vl1,[2,138],{242:342,241:470,292:$VS1,306:$VT1}),o($Vl1,[2,139],{242:342,241:471,292:$VS1,306:$VT1}),o($Vm1,[2,141]),o($VR1,[2,335],{167:472}),o($VR1,[2,334]),o([6,13,16,28,29,31,32,39,41,71,74,76,79,80,81,83,109,157,158,160,163,164,165,182,214,217,218,222,226,230,245,247,248,249,250,251,253,254,256,257,260,262,267,271,272,273,274,275,276,277,278,279,280,281,282,283,284,285,292,303,306,309,310,311,312,313,314,315,316,317,318,319,320],[2,151]),{32:[1,473]},{250:[1,474]},{250:[1,475]},o($V21,$V31,{219:180,223:181,227:182,231:183,239:184,243:185,30:476,207:$V41,245:$V51,309:$V61}),{32:[1,477]},{32:[1,478]},o($VW1,[2,161]),o($V21,$V31,{219:180,223:181,227:182,231:183,239:184,243:185,259:479,30:481,207:$V41,245:$V51,292:[1,480],309:$V61}),o($Vb2,[2,416]),o($V21,$V31,{219:180,223:181,227:182,231:183,239:184,243:185,30:482,207:$V41,245:$V51,309:$V61}),o($VR1,[2,420]),o($V21,$V31,{219:180,223:181,227:182,231:183,239:184,243:185,30:483,207:$V41,245:$V51,309:$V61}),o($VR1,[2,422]),o($Vu,[2,36]),o($V$1,[2,256]),o($Vk2,[2,257],{92:484}),o($Vo,$VA,{142:126,138:485,141:486,41:[2,303]}),o($VC,[2,53]),o($V12,[2,30],{81:[1,487]}),o($V12,[2,31],{79:[1,488]}),o($VH1,[2,25],{246:258,252:263,255:266,75:301,65:302,66:303,53:304,77:443,73:489,13:$V8,16:$V9,28:$Vc2,29:$Vo1,74:$Vd2,76:$Ve2,247:$Vp1,248:$Vq1,249:$Vr1,251:$Vs1,253:$Vt1,254:$Vu1,256:$Vv1,257:$Vw1,260:$Vx1,262:$Vy1,285:$Vb,315:$Vz1,316:$VA1,317:$VB1,318:$VC1,319:$VD1,320:$VE1}),o($Vl2,[2,249]),{29:$Vo1,75:490},{29:$Vo1,75:491},o($Vl2,[2,28]),o($Vl2,[2,29]),o($V42,[2,21]),{28:[1,492]},{41:[2,7]},{41:[2,206]},o($Vo,$Vb1,{153:212,151:493,152:494,39:$Vm2,41:$Vm2,83:$Vm2,109:$Vm2,157:$Vm2,158:$Vm2,160:$Vm2,163:$Vm2,164:$Vm2}),o($Vf2,[2,318]),o($Vh2,[2,68],{304:[1,495]}),o($Vh2,[2,69]),o($Vh2,[2,70]),{39:$VG,55:496},{39:[2,327]},{39:[2,328]},{13:$V8,16:$V9,28:[1,498],53:499,162:497,285:$Vb},o($Vg2,[2,330]),o($Vh2,[2,73]),o($V21,$V31,{219:180,223:181,227:182,231:183,239:184,243:185,30:500,207:$V41,245:$V51,309:$V61}),{13:$V8,16:$V9,28:$VH,29:$VL1,53:149,80:$VJ,89:150,165:$VK,174:401,190:402,194:501,214:$VM1,217:$VM,218:$VN,235:160,237:161,268:156,271:$VO,272:$VP,273:$VQ,274:$VR,275:$VS,276:$VT,277:$VU,278:$VV,279:$VW,280:$VX,281:$VY,282:$VZ,283:$V_,284:$V$,285:$Vb},o($VP1,[2,100],{305:[1,502]}),o($Vn2,[2,372],{202:503,206:504,212:[1,505]}),o($Vg1,[2,117]),o($VP1,[2,381]),o($Vg1,[2,118]),o($VN1,[2,89]),o($VN1,[2,350]),o($Vo,[2,352]),o($Vm1,[2,399]),o($Vm1,[2,401]),o($V21,$V31,{219:180,223:181,227:182,231:183,239:184,243:185,30:506,207:$V41,245:$V51,309:$V61}),o($VW1,[2,154]),o($V21,$V31,{219:180,223:181,227:182,231:183,239:184,243:185,30:507,207:$V41,245:$V51,309:$V61}),o($V21,$V31,{219:180,223:181,227:182,231:183,239:184,243:185,30:508,207:$V41,245:$V51,309:$V61}),{32:[1,509],250:[1,510]},o($VW1,[2,158]),o($VW1,[2,160]),{32:[1,511]},{32:[2,417]},{32:[2,418]},{32:[1,512]},{32:[2,423],182:[1,515],264:513,265:514},{13:$V8,16:$V9,32:[1,516],53:280,80:$VJ,88:517,89:281,90:$VF1,235:160,237:161,268:156,271:$VO,272:$VP,273:$VQ,274:$VR,275:$VS,276:$VT,277:$VU,278:$VV,279:$VW,280:$VX,281:$VY,282:$VZ,283:$V_,284:$V$,285:$Vb},{41:[1,518]},{41:[2,304]},{80:[1,519]},{80:[1,520]},o($Vl2,[2,250]),o($Vl2,[2,26]),o($Vl2,[2,27]),{32:[1,521]},o($VK1,[2,66]),o($VK1,[2,320]),{39:[2,326]},o($Vh2,[2,71]),{39:$VG,55:522},{39:[2,331]},{39:[2,332]},{31:[1,523]},o($Vj2,[2,359],{195:524,250:[1,525]}),o($V62,[2,364]),o([13,16,28,29,32,80,165,214,217,218,271,272,273,274,275,276,277,278,279,280,281,282,283,284,285,305],[2,101],{306:[1,526]}),{13:$V8,16:$V9,29:[1,532],53:529,186:[1,530],203:527,204:528,207:[1,531],285:$Vb},o($Vn2,[2,373]),{32:[1,533],250:[1,534]},{32:[1,535]},{250:[1,536]},o($VW1,[2,82]),o($VR1,[2,338]),o($VW1,[2,162]),o($VW1,[2,163]),{32:[1,537]},{32:[2,424]},{266:[1,538]},o($V$1,[2,40]),o($Vk2,[2,258]),o($Vo2,[2,305],{139:539,303:[1,540]}),o($V12,[2,32]),o($V12,[2,33]),o($V42,[2,22]),o($Vh2,[2,72]),{28:[1,541]},o([39,41,83,109,157,158,160,163,164,215,303],[2,97],{196:542,182:[1,543]}),o($Vo,[2,358]),o($V62,[2,366]),o($Vp2,[2,103]),o($Vp2,[2,370],{205:544,307:545,292:[1,547],308:[1,546],309:[1,548]}),o($Vq2,[2,104]),o($Vq2,[2,105]),{13:$V8,16:$V9,29:[1,552],53:553,165:[1,551],186:$Vr2,208:549,209:550,212:$Vs2,285:$Vb},o($V62,$V72,{199:396,198:556}),o($VW1,[2,80]),o($VR1,[2,336]),o($VW1,[2,155]),o($V21,$V31,{219:180,223:181,227:182,231:183,239:184,243:185,30:557,207:$V41,245:$V51,309:$V61}),o($VW1,[2,164]),{267:[1,558]},o($Vo,$VA,{142:126,140:559,141:560,41:$Vt2,109:$Vt2}),o($Vo2,[2,306]),{32:[1,561]},o($Vj2,[2,360]),o($Vj2,[2,98],{199:396,197:562,198:563,13:$V72,16:$V72,29:$V72,186:$V72,207:$V72,212:$V72,285:$V72,28:[1,564]}),o($Vp2,[2,102]),o($Vp2,[2,371]),o($Vp2,[2,367]),o($Vp2,[2,368]),o($Vp2,[2,369]),o($Vq2,[2,106]),o($Vq2,[2,108]),o($Vq2,[2,109]),o($Vu2,[2,374],{210:565}),o($Vq2,[2,111]),o($Vq2,[2,112]),{13:$V8,16:$V9,53:566,186:[1,567],285:$Vb},{32:[1,568]},{32:[1,569]},{268:570,275:$VS,276:$VT,277:$VU,278:$VV},o($V91,[2,61]),o($V91,[2,308]),o($Vh2,[2,74]),o($Vo,$VO1,{187:323,185:571}),o($Vo,[2,361]),o($Vo,[2,362]),{13:$V8,16:$V9,32:[2,376],53:553,186:$Vr2,209:573,211:572,212:$Vs2,285:$Vb},o($Vq2,[2,113]),o($Vq2,[2,114]),o($Vq2,[2,107]),o($VW1,[2,156]),{32:[2,165]},o($Vj2,[2,99]),{32:[1,574]},{32:[2,377],305:[1,575]},o($Vq2,[2,110]),o($Vu2,[2,375])],
+defaultActions: {5:[2,191],6:[2,192],8:[2,190],24:[2,1],25:[2,3],26:[2,202],68:[2,41],77:[2,277],91:[2,236],96:[2,340],216:[2,220],217:[2,84],247:[2,393],275:[2,414],365:[2,301],366:[2,302],447:[2,7],448:[2,206],455:[2,327],456:[2,328],480:[2,417],481:[2,418],486:[2,304],495:[2,326],498:[2,331],499:[2,332],514:[2,424],570:[2,165]},
+parseError: function parseError (str, hash) {
     if (hash.recoverable) {
         this.trace(str);
     } else {
@@ -61995,7 +62318,7 @@ showPosition:function () {
     },
 
 // test the lexed token: return FALSE when not a match, otherwise return token
-test_match:function (match, indexed_rule) {
+test_match:function(match, indexed_rule) {
         var token,
             lines,
             backup;
@@ -62125,7 +62448,7 @@ next:function () {
     },
 
 // return next match that has a token
-lex:function lex() {
+lex:function lex () {
         var r = this.next();
         if (r) {
             return r;
@@ -62135,12 +62458,12 @@ lex:function lex() {
     },
 
 // activates a new lexer condition state (pushes the new lexer condition state onto the condition stack)
-begin:function begin(condition) {
+begin:function begin (condition) {
         this.conditionStack.push(condition);
     },
 
 // pop the previously active lexer condition state off the condition stack
-popState:function popState() {
+popState:function popState () {
         var n = this.conditionStack.length - 1;
         if (n > 0) {
             return this.conditionStack.pop();
@@ -62150,7 +62473,7 @@ popState:function popState() {
     },
 
 // produce the lexer rule set which is active for the currently active lexer condition state
-_currentRules:function _currentRules() {
+_currentRules:function _currentRules () {
         if (this.conditionStack.length && this.conditionStack[this.conditionStack.length - 1]) {
             return this.conditions[this.conditionStack[this.conditionStack.length - 1]].rules;
         } else {
@@ -62159,7 +62482,7 @@ _currentRules:function _currentRules() {
     },
 
 // return the currently active lexer condition state; when an index argument is provided it produces the N-th previous condition state, if available
-topState:function topState(n) {
+topState:function topState (n) {
         n = this.conditionStack.length - 1 - Math.abs(n || 0);
         if (n >= 0) {
             return this.conditionStack[n];
@@ -62169,7 +62492,7 @@ topState:function topState(n) {
     },
 
 // alias for begin(condition)
-pushState:function pushState(condition) {
+pushState:function pushState (condition) {
         this.begin(condition);
     },
 
@@ -62189,9 +62512,9 @@ case 2:return 15
 break;
 case 3:return 24
 break;
-case 4:return 287
+case 4:return 289
 break;
-case 5:return 288
+case 5:return 290
 break;
 case 6:return 29
 break;
@@ -62199,7 +62522,7 @@ case 7:return 31
 break;
 case 8:return 32
 break;
-case 9:return 290
+case 9:return 292
 break;
 case 10:return 34
 break;
@@ -62215,7 +62538,7 @@ case 15:return 48
 break;
 case 16:return 51
 break;
-case 17:return 293
+case 17:return 295
 break;
 case 18:return 61
 break;
@@ -62235,27 +62558,27 @@ case 25:return 81
 break;
 case 26:return 83
 break;
-case 27:return 194
+case 27:return 182
 break;
 case 28:return 97
 break;
-case 29:return 294
+case 29:return 296
 break;
 case 30:return 130
 break;
-case 31:return 295
+case 31:return 297
 break;
-case 32:return 296
+case 32:return 298
 break;
 case 33:return 107
 break;
-case 34:return 297
+case 34:return 299
 break;
 case 35:return 106
 break;
-case 36:return 298
+case 36:return 300
 break;
-case 37:return 299
+case 37:return 301
 break;
 case 38:return 110
 break;
@@ -62275,9 +62598,9 @@ case 45:return 131
 break;
 case 46:return 109
 break;
-case 47:return 300
+case 47:return 302
 break;
-case 48:return 301
+case 48:return 303
 break;
 case 49:return 157
 break;
@@ -62289,133 +62612,133 @@ case 52:return 90
 break;
 case 53:return 158
 break;
-case 54:return 302
+case 54:return 304
 break;
 case 55:return 163
 break;
-case 56:return 248
+case 56:return 250
 break;
-case 57:return 183
+case 57:return 186
 break;
-case 58:return 304
+case 58:return 305
 break;
-case 59:return 305
+case 59:return 306
 break;
-case 60:return 210
+case 60:return 212
 break;
-case 61:return 307
+case 61:return 308
 break;
-case 62:return 308
+case 62:return 309
 break;
-case 63:return 205
+case 63:return 207
 break;
-case 64:return 212
+case 64:return 214
 break;
-case 65:return 213
+case 65:return 215
 break;
-case 66:return 220
+case 66:return 222
 break;
-case 67:return 224
+case 67:return 226
 break;
-case 68:return 265
+case 68:return 267
 break;
-case 69:return 309
+case 69:return 310
 break;
-case 70:return 310
+case 70:return 311
 break;
-case 71:return 311
+case 71:return 312
 break;
-case 72:return 312
+case 72:return 313
 break;
-case 73:return 313
+case 73:return 314
 break;
-case 74:return 228
+case 74:return 230
 break;
-case 75:return 314
+case 75:return 315
 break;
-case 76:return 243
+case 76:return 245
 break;
-case 77:return 251
+case 77:return 253
 break;
-case 78:return 252
+case 78:return 254
 break;
-case 79:return 245
+case 79:return 247
 break;
-case 80:return 246
+case 80:return 248
 break;
-case 81:return 247
+case 81:return 249
 break;
-case 82:return 315
+case 82:return 316
 break;
-case 83:return 316
+case 83:return 317
 break;
-case 84:return 249
+case 84:return 251
 break;
-case 85:return 318
+case 85:return 319
 break;
-case 86:return 317
+case 86:return 318
 break;
-case 87:return 319
+case 87:return 320
 break;
-case 88:return 254
+case 88:return 256
 break;
-case 89:return 255
+case 89:return 257
 break;
-case 90:return 258
+case 90:return 260
 break;
-case 91:return 260
+case 91:return 262
 break;
-case 92:return 264
+case 92:return 266
 break;
-case 93:return 268
+case 93:return 270
 break;
-case 94:return 271
+case 94:return 273
 break;
-case 95:return 272
+case 95:return 274
 break;
 case 96:return 13
 break;
 case 97:return 16
 break;
-case 98:return 283
+case 98:return 285
 break;
-case 99:return 215
+case 99:return 217
 break;
 case 100:return 28
 break;
-case 101:return 267
+case 101:return 269
 break;
 case 102:return 80
 break;
-case 103:return 269
+case 103:return 271
 break;
-case 104:return 270
+case 104:return 272
 break;
-case 105:return 277
+case 105:return 279
 break;
-case 106:return 278
+case 106:return 280
 break;
-case 107:return 279
+case 107:return 281
 break;
-case 108:return 280
+case 108:return 282
 break;
-case 109:return 281
+case 109:return 283
 break;
-case 110:return 282
+case 110:return 284
 break;
 case 111:return 'EXPONENT'
 break;
-case 112:return 273
+case 112:return 275
 break;
-case 113:return 274
+case 113:return 276
 break;
-case 114:return 275
+case 114:return 277
 break;
-case 115:return 276
+case 115:return 278
 break;
 case 116:return 165
 break;
-case 117:return 216
+case 117:return 218
 break;
 case 118:return 6
 break;
@@ -62443,7 +62766,7 @@ if (typeof require !== 'undefined' && typeof exports !== 'undefined') {
 exports.parser = SparqlParser;
 exports.Parser = SparqlParser.Parser;
 exports.parse = function () { return SparqlParser.parse.apply(SparqlParser, arguments); };
-exports.main = function commonjsMain(args) {
+exports.main = function commonjsMain (args) {
     if (!args[1]) {
         console.log('Usage: '+args[0]+' FILE');
         process.exit(1);
@@ -62456,7 +62779,7 @@ if (typeof module !== 'undefined' && require.main === module) {
 }
 }
 }).call(this,require('_process'))
-},{"_process":20,"fs":20,"path":20}],94:[function(require,module,exports){
+},{"_process":20,"fs":20,"path":20}],100:[function(require,module,exports){
 var Parser = require('./lib/SparqlParser').Parser;
 var Generator = require('./lib/SparqlGenerator');
 
@@ -62486,7 +62809,7 @@ module.exports = {
   Generator: Generator,
 };
 
-},{"./lib/SparqlGenerator":92,"./lib/SparqlParser":93}],95:[function(require,module,exports){
+},{"./lib/SparqlGenerator":98,"./lib/SparqlParser":99}],101:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -62615,7 +62938,7 @@ Stream.prototype.pipe = function(dest, options) {
   return dest;
 };
 
-},{"events":35,"inherits":38,"readable-stream/duplex.js":78,"readable-stream/passthrough.js":87,"readable-stream/readable.js":88,"readable-stream/transform.js":89,"readable-stream/writable.js":90}],96:[function(require,module,exports){
+},{"events":39,"inherits":44,"readable-stream/duplex.js":84,"readable-stream/passthrough.js":93,"readable-stream/readable.js":94,"readable-stream/transform.js":95,"readable-stream/writable.js":96}],102:[function(require,module,exports){
 (function (global){
 var ClientRequest = require('./lib/request')
 var response = require('./lib/response')
@@ -62703,7 +63026,7 @@ http.METHODS = [
 	'UNSUBSCRIBE'
 ]
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./lib/request":98,"./lib/response":99,"builtin-status-codes":23,"url":104,"xtend":109}],97:[function(require,module,exports){
+},{"./lib/request":104,"./lib/response":105,"builtin-status-codes":23,"url":112,"xtend":117}],103:[function(require,module,exports){
 (function (global){
 exports.fetch = isFunction(global.fetch) && isFunction(global.ReadableStream)
 
@@ -62780,7 +63103,7 @@ function isFunction (value) {
 xhr = null // Help gc
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],98:[function(require,module,exports){
+},{}],104:[function(require,module,exports){
 (function (process,global,Buffer){
 var capability = require('./capability')
 var inherits = require('inherits')
@@ -63111,7 +63434,7 @@ var unsafeHeaders = [
 ]
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer)
-},{"./capability":97,"./response":99,"_process":43,"buffer":22,"inherits":38,"readable-stream":88,"to-arraybuffer":103}],99:[function(require,module,exports){
+},{"./capability":103,"./response":105,"_process":49,"buffer":22,"inherits":44,"readable-stream":94,"to-arraybuffer":111}],105:[function(require,module,exports){
 (function (process,global,Buffer){
 var capability = require('./capability')
 var inherits = require('inherits')
@@ -63339,7 +63662,7 @@ IncomingMessage.prototype._onXHRProgress = function () {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer)
-},{"./capability":97,"_process":43,"buffer":22,"inherits":38,"readable-stream":88}],100:[function(require,module,exports){
+},{"./capability":103,"_process":49,"buffer":22,"inherits":44,"readable-stream":94}],106:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -63636,14 +63959,24 @@ function simpleWrite(buf) {
 function simpleEnd(buf) {
   return buf && buf.length ? this.write(buf) : '';
 }
-},{"safe-buffer":91}],101:[function(require,module,exports){
+},{"safe-buffer":97}],107:[function(require,module,exports){
+'use strict';
+var ansiRegex = require('ansi-regex')();
+
+module.exports = function (str) {
+	return typeof str === 'string' ? str.replace(ansiRegex, '') : str;
+};
+
+},{"ansi-regex":108}],108:[function(require,module,exports){
+arguments[4][41][0].apply(exports,arguments)
+},{"dup":41}],109:[function(require,module,exports){
 'use strict';
 module.exports = {
 	stdout: false,
 	stderr: false
 };
 
-},{}],102:[function(require,module,exports){
+},{}],110:[function(require,module,exports){
 (function (setImmediate,clearImmediate){
 var nextTick = require('process/browser.js').nextTick;
 var apply = Function.prototype.apply;
@@ -63722,7 +64055,7 @@ exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate :
   delete immediateIds[id];
 };
 }).call(this,require("timers").setImmediate,require("timers").clearImmediate)
-},{"process/browser.js":43,"timers":102}],103:[function(require,module,exports){
+},{"process/browser.js":49,"timers":110}],111:[function(require,module,exports){
 var Buffer = require('buffer').Buffer
 
 module.exports = function (buf) {
@@ -63751,7 +64084,7 @@ module.exports = function (buf) {
 	}
 }
 
-},{"buffer":22}],104:[function(require,module,exports){
+},{"buffer":22}],112:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -64485,7 +64818,7 @@ Url.prototype.parseHost = function() {
   if (host) this.hostname = host;
 };
 
-},{"./util":105,"punycode":44,"querystring":48}],105:[function(require,module,exports){
+},{"./util":113,"punycode":50,"querystring":54}],113:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -64503,7 +64836,7 @@ module.exports = {
   }
 };
 
-},{}],106:[function(require,module,exports){
+},{}],114:[function(require,module,exports){
 (function (global){
 
 /**
@@ -64574,14 +64907,14 @@ function config (name) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],107:[function(require,module,exports){
+},{}],115:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],108:[function(require,module,exports){
+},{}],116:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -65171,7 +65504,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":107,"_process":43,"inherits":38}],109:[function(require,module,exports){
+},{"./support/isBuffer":115,"_process":49,"inherits":44}],117:[function(require,module,exports){
 module.exports = extend
 
 var hasOwnProperty = Object.prototype.hasOwnProperty;

@@ -17,7 +17,6 @@ var Dictionary = require('./core/Dictionary'),
     Logics = require('./core/Logics/Logics'),
     Reasoner = require('./core/Reasoner'),
     OWL2RL = require('./core/OWL2RL'),
-    Fact = require('./core/Logics/Fact'),
     Utils = require('./core/Utils'),
     Errors = require('./core/Errors'),
     RegularExpressions = require('./core/RegularExpressions')
@@ -428,7 +427,7 @@ Hylar.prototype.import = function(dictionary) {
 };
 
 Hylar.prototype.persist = function() {
-    if (!this.allowPersist) return
+    if (!this.allowPersist && fs) return
 
     // Check if db folder exists
     if (!fs.existsSync('./db')){
@@ -462,7 +461,7 @@ Hylar.prototype.persist = function() {
 }
 
 Hylar.prototype.restore = async function() {
-    if (!fs.existsSync('./db') || !this.allowPersist) return
+    if (!fs || !fs.existsSync('./db') || !this.allowPersist) return
 
     Hylar.notify('... Recovering DB ...')
 

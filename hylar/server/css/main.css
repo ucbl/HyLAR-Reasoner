@@ -208,3 +208,9 @@ div.powered-by .yasqe {
     padding-right: 10px;
     margin-top: 10px;
 }
+
+.is-proof {
+    margin-bottom: 50px;
+    margin-top: -50px;
+    border: 1px solid #3273dc;
+}

@@ -46,6 +46,7 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use('/css', express.static(__dirname + '/css'));
 app.use('/img', express.static(__dirname + '/images'));
 app.use('/js', express.static(__dirname + '/js'));
+app.use('/hylar-client.js', express.static('./hylar-client.js'));
 // parse application/json
 app.use(bodyParser.json());
 

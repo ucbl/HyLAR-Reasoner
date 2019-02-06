@@ -46,8 +46,68 @@ const checkStatus = () => {
         })
 }
 
+const prove = async(factIds) => {
+    let facts = []
+
+    for (let factId of factIds) {
+        let sub = document.getElementById(`subject-${factId}`).innerText
+        let pred = document.getElementById(`predicate-${factId}`).innerText
+        let obj = document.getElementById(`object-${factId}`).innerText
+        facts.push(new Fact(pred, sub, obj))
+    }
+
+    let proofChain = [facts]
+
+    const evalLoop = async() => {
+        let values = await Solver.evaluateRuleSet(OWL2RL.rules, proofChain.flat(), true)
+        if (Utils.uniques(proofChain.flat(), values.cons).length > proofChain.flat().length) {
+            let previousDerivations = proofChain[proofChain.length-1]
+            let currentDerivations = []
+            for (let derivation of values.cons) {
+                if (!previousDerivations.map(d => { return d.asString }).includes(derivation.asString)) {
+                    currentDerivations.push(derivation)
+                }
+            }
+            proofChain.push(currentDerivations)
+            await evalLoop()
+        }
+    }
+
+    await evalLoop()
+
+    document.getElementById('proof') ? document.getElementById('proof').remove() : ''
+
+    let container = '<div class="container"><article id="proof" class="message is-link is-proof"><div class="message-header">Proof<button class="delete" aria-label="delete" onclick="closeProof()"></button></div><div class="message-body">'
+
+    for (let proof of proofChain) {
+        container = `${container}<div class="subtitle">Loop #${proofChain.indexOf(proof)}</div><p>`
+        for (let fact of proof) {
+            container = `
+                ${container}
+                <div class="columns">
+                    <div class="column is-one-fifth">
+                        <span class="fact fact-state ${fact.explicit ? 'explicit' : 'implicit'}">
+                            ${typeof fact.graphs.name == 'string' ? fact.graphs.name : 'asserted'}
+                        </span>
+                    </div>                    
+                    <div class="column">
+                    <span class="proof-fact">${fact.subject} ${fact.predicate} ${fact.object}</span>
+                    </div>                        
+                </div>
+            `
+        }
+        container = `${container}</p>`
+    }
+
+    container = `${container}</div></article></div>`
+
+    document.getElementById('facts-list').insertAdjacentHTML('beforebegin', container)
+    document.getElementById('proof').scrollIntoView()
+}
+
 const highlightFacts = (ev) => {
     let blocks = Object.keys(ev.dataset).map(blockId => { return document.getElementById(blockId) })
+    let factIds = blocks.map(block => { return block.dataset.factId })
 
     for (let block of document.getElementsByClassName('fact-entry')) {
         block.classList.remove("fact-highlight")
@@ -62,6 +122,8 @@ const highlightFacts = (ev) => {
         block.classList.add('fact-highlight')
         block.scrollIntoView({ block: 'center' })
     }
+
+    prove(factIds)
 }
 
 const appendPrefix = (ev) => {
@@ -132,7 +194,11 @@ const sparql = (ev, contextPath) => {
     })
 }
 
-function putSparql(i) {
+const closeProof = () => {
+    document.getElementById('proof').remove()
+}
+
+const putSparql = (i) => {
     var query = $('#'+i).text();
     $('#query').val(query);
     $('html, body').animate({ scrollTop: 0 }, 0);
