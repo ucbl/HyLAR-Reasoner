@@ -32,8 +32,8 @@ const areYouSure = (ev, url) => {
     }
 }
 
-const checkStatus = () => {
-    $.get('/status')
+const checkStatus = (contextPath = '') => {
+    $.get(`${contextPath}/status`)
         .success((result) => {
             $('#hylar-status').html(`<span class="status-ok"></span><i class="fas fa-check"></i> HyLAR is currently used on the <b>server-side</b></span>  |<span class="last-log">${result.lastLog}</span>`)
             $('footer').addClass('status-ok')
@@ -207,6 +207,3 @@ const putSparql = (i) => {
 const copy = (el) => {
     sparqlQuery.setValue(`${sparqlQuery.getValue()}${el.innerText}`)
 }
-
-checkStatus()
-window.setInterval(checkStatus, 1000)
