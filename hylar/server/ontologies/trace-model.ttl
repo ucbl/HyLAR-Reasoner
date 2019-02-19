@@ -1,342 +1,309 @@
-@prefix ktbs: <http://liris.cnrs.fr/silex/2009/ktbs#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
-
-ktbs:ObselType,
-ktbs:AssistanceEvent,
-ktbs:UserEvent,
-ktbs:TargetApplicationEvent,
-ktbs:SystemNotice,
-ktbs:ErrorNotice,
-	a owl:Class .
-	
-ktbs:AssistanceEvent,
-ktbs:UserEvent,
-ktbs:TargetApplicationEvent,
-	a ktbs:ObselType
-	
-ktbs:subject, ktbs:message a owl:ObjectProperty .
-ktbs:subject, ktbs:message a ktbs:AttributeType .
-
-ktbs:SystemNotice rdfs:subClassOf ktbs:TargetApplicationEvent .
-ktbs:ErrorNotice rdfs:subClassOf ktbs:SystemNotice .
-
-ktbs:ObselType;
-    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .
-
-<https://www.aidaxis.com/ns/assistanceLaunch/sessionBegin> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/assistanceLaunch> ;
-    ktbs:hasAttributeRange xsd:dateTime ;
-    skos:prefLabel "horodatage du début de session utilisateur" .
-
-<https://www.aidaxis.com/ns/assistanceLaunch/sourceId> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/assistanceLaunch> ;
-    ktbs:hasAttributeRange xsd:string ;
-    skos:prefLabel "identifiant du composant générant l'évènement" .
-
-<https://www.aidaxis.com/ns/assistanceLaunch/assistanceFile> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/assistanceLaunch> ;
-    ktbs:hasAttributeRange xsd:string ;
-    skos:prefLabel "nom du fichier d'assistance" .
-
-
-
-<https://www.aidaxis.com/ns/assistanceStop> a ktbs:ObselType ;
-    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .
-
-<https://www.aidaxis.com/ns/assistanceStop/sessionBegin> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/assistanceStop> ;
-    ktbs:hasAttributeRange xsd:dateTime ;
-    skos:prefLabel "horodatage du début de session utilisateur" .
-
-<https://www.aidaxis.com/ns/assistanceStop/sourceId> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/assistanceStop> ;
-    ktbs:hasAttributeRange xsd:string ;
-    skos:prefLabel "identifiant du composant générant l'évènement" .
-
-<https://www.aidaxis.com/ns/assistanceStop/assistanceFile> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/assistanceStop> ;
-    ktbs:hasAttributeRange xsd:string ;
-    skos:prefLabel "nom du fichier d'assistance" .
-
-<https://www.aidaxis.com/ns/assistanceStop/hasStart> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/assistanceStop> ;
-    ktbs:hasAttributeRange <https://www.aidaxis.com/ns/assistanceLaunch> ;
-    skos:prefLabel "lien vers l'obsel de départ" .
-
-
-
-<https://www.aidaxis.com/ns/consultationAnswer> a ktbs:ObselType ;
-    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .
-
-<https://www.aidaxis.com/ns/consultationAnswer/sessionBegin> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/consultationAnswer> ;
-    ktbs:hasAttributeRange xsd:dateTime ;
-    skos:prefLabel "horodatage du début de session utilisateur" .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
-<https://www.aidaxis.com/ns/consultationAnswer/sourceId> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/consultationAnswer> ;
-    ktbs:hasAttributeRange xsd:string ;
-    skos:prefLabel "identifiant du composant générant l'évènement" .
+[ rdf:type owl:Ontology
+ ] .
 
-<https://www.aidaxis.com/ns/consultationAnswer/assistanceFile> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/consultationAnswer> ;
-    ktbs:hasAttributeRange xsd:string ;
-    skos:prefLabel "nom du fichier d'assistance" .
+#################################################################
+#    Object Properties
+#################################################################
 
-<https://www.aidaxis.com/ns/consultationAnswer/value> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/consultationAnswer> ;
-    ktbs:hasAttributeRange xsd:string ;
-    skos:prefLabel "valeur de la réponse à la consultation" .
+###  http://liris.cnrs.fr/silex/2009/ktbs#application
+<http://liris.cnrs.fr/silex/2009/ktbs#application> rdf:type owl:ObjectProperty ;
+                                                   rdfs:domain <http://liris.cnrs.fr/silex/2009/ktbs#AssistanceImport> .
 
-<https://www.aidaxis.com/ns/consultationAnswer/options> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/consultationAnswer> ;
-    ktbs:hasAttributeRange xsd:string ; # incorrect type ! should be array
-    skos:prefLabel "options de la consultation" .
 
+###  http://liris.cnrs.fr/silex/2009/ktbs#assistanceFile
+<http://liris.cnrs.fr/silex/2009/ktbs#assistanceFile> rdf:type owl:ObjectProperty ;
+                                                      rdfs:domain <http://liris.cnrs.fr/silex/2009/ktbs#AssistanceImport> .
 
-<https://www.aidaxis.com/ns/end> a ktbs:ObselType ;
-    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .
 
-<https://www.aidaxis.com/ns/end/sessionBegin> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/end> ;
-    ktbs:hasAttributeRange xsd:dateTime ;
-    skos:prefLabel "horodatage du début de session utilisateur" .
+###  http://liris.cnrs.fr/silex/2009/ktbs#blockId
+<http://liris.cnrs.fr/silex/2009/ktbs#blockId> rdf:type owl:ObjectProperty ;
+                                               rdfs:domain <http://liris.cnrs.fr/silex/2009/ktbs#BlockEvent> .
 
-<https://www.aidaxis.com/ns/end/sourceId> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/end> ;
-    ktbs:hasAttributeRange xsd:string ;
-    skos:prefLabel "identifiant du composant générant l'évènement" .
 
-<https://www.aidaxis.com/ns/end/assistanceFile> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/end> ;
-    ktbs:hasAttributeRange xsd:string ;
-    skos:prefLabel "nom du fichier d'assistance" .
+###  http://liris.cnrs.fr/silex/2009/ktbs#componentLabel
+<http://liris.cnrs.fr/silex/2009/ktbs#componentLabel> rdf:type owl:ObjectProperty ;
+                                                      rdfs:domain <http://liris.cnrs.fr/silex/2009/ktbs#BlockEvent> .
 
-<https://www.aidaxis.com/ns/end/hasStart> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/end> ;
-    ktbs:hasAttributeRange <https://www.aidaxis.com/ns/trigger> ;
-    skos:prefLabel "lien vers l'obsel de départ" .
 
+###  http://liris.cnrs.fr/silex/2009/ktbs#message
+<http://liris.cnrs.fr/silex/2009/ktbs#message> rdf:type owl:ObjectProperty ;
+                                               rdfs:domain <http://liris.cnrs.fr/silex/2009/ktbs#SystemNotice> .
 
-<https://www.aidaxis.com/ns/trigger> a ktbs:ObselType ;
-    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .
 
-<https://www.aidaxis.com/ns/trigger/sessionBegin> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/trigger> ;
-    ktbs:hasAttributeRange xsd:dateTime ;
-    skos:prefLabel "horodatage du début de session utilisateur" .
+###  http://liris.cnrs.fr/silex/2009/ktbs#sessionBegin
+<http://liris.cnrs.fr/silex/2009/ktbs#sessionBegin> rdf:type owl:ObjectProperty ;
+                                                    rdfs:domain <http://liris.cnrs.fr/silex/2009/ktbs#TargetApplicationEvent> .
 
-<https://www.aidaxis.com/ns/trigger/sourceId> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/trigger> ;
-    ktbs:hasAttributeRange xsd:string ;
-    skos:prefLabel "identifiant du composant générant l'évènement" .
 
-<https://www.aidaxis.com/ns/trigger/assistanceFile> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/trigger> ;
-    ktbs:hasAttributeRange xsd:string ;
-    skos:prefLabel "nom du fichier d'assistance" .
+###  http://liris.cnrs.fr/silex/2009/ktbs#subject
+<http://liris.cnrs.fr/silex/2009/ktbs#subject> rdf:type owl:ObjectProperty ;
+                                               rdfs:domain <http://liris.cnrs.fr/silex/2009/ktbs#TargetApplicationEvent> .
 
-<https://www.aidaxis.com/ns/trigger/targetType> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/trigger> ;
-    ktbs:hasAttributeRange rdf:type ;
-    skos:prefLabel "type de l'interaction cible" .
 
-<https://www.aidaxis.com/ns/trigger/targetId> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/trigger> ;
-    ktbs:hasAttributeRange <https://www.aidaxis.com/ns/AssistanceEvent> ;
-    skos:prefLabel "identifiant de l'interaction cible" .
+#################################################################
+#    Data properties
+#################################################################
 
+###  http://liris.cnrs.fr/silex/2009/ktbs#application
+<http://liris.cnrs.fr/silex/2009/ktbs#application> rdf:type owl:DatatypeProperty ;
+                                                   rdfs:subPropertyOf <http://liris.cnrs.fr/silex/2009/ktbs#assistanceFile> ,
+                                                                      owl:topDataProperty ;
+                                                   rdfs:range xsd:string .
 
 
-# user events
-<https://www.aidaxis.com/ns/caretEvent> a ktbs:ObselType ;
-    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .
+###  http://liris.cnrs.fr/silex/2009/ktbs#assistanceFile
+<http://liris.cnrs.fr/silex/2009/ktbs#assistanceFile> rdf:type owl:DatatypeProperty ;
+                                                      rdfs:subPropertyOf owl:topDataProperty ;
+                                                      rdfs:range xsd:string .
 
-<https://www.aidaxis.com/ns/caretEvent/sessionBegin> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/caretEvent> ;
-    ktbs:hasAttributeRange xsd:dateTime ;
-    skos:prefLabel "horodatage du début de session utilisateur" .
 
-<https://www.aidaxis.com/ns/caretEvent/sourceId> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/caretEvent> ;
-    ktbs:hasAttributeRange xsd:string ;
-    skos:prefLabel "identifiant du composant générant l'évènement" .
+###  http://liris.cnrs.fr/silex/2009/ktbs#blockId
+<http://liris.cnrs.fr/silex/2009/ktbs#blockId> rdf:type owl:DatatypeProperty ;
+                                               rdfs:subPropertyOf owl:topDataProperty ;
+                                               rdfs:range xsd:string .
 
-<https://www.aidaxis.com/ns/caretEvent/assistanceFile> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/caretEvent> ;
-    ktbs:hasAttributeRange xsd:string ;
-    skos:prefLabel "nom du fichier d'assistance" .
 
+###  http://liris.cnrs.fr/silex/2009/ktbs#componentLabel
+<http://liris.cnrs.fr/silex/2009/ktbs#componentLabel> rdf:type owl:DatatypeProperty ;
+                                                      rdfs:subPropertyOf owl:topDataProperty ;
+                                                      rdfs:range xsd:string .
 
 
-<https://www.aidaxis.com/ns/focusGained> a ktbs:ObselType ;
-    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .
+###  http://liris.cnrs.fr/silex/2009/ktbs#message
+<http://liris.cnrs.fr/silex/2009/ktbs#message> rdf:type owl:DatatypeProperty ;
+                                               rdfs:range xsd:string .
 
-<https://www.aidaxis.com/ns/focusGained/sessionBegin> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/focusGained> ;
-    ktbs:hasAttributeRange xsd:dateTime ;
-    skos:prefLabel "horodatage du début de session utilisateur" .
 
-<https://www.aidaxis.com/ns/focusGained/sourceId> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/focusGained> ;
-    ktbs:hasAttributeRange xsd:string ;
-    skos:prefLabel "identifiant du composant générant l'évènement" .
+###  http://liris.cnrs.fr/silex/2009/ktbs#sessionBegin
+<http://liris.cnrs.fr/silex/2009/ktbs#sessionBegin> rdf:type owl:DatatypeProperty ;
+                                                    rdfs:subPropertyOf owl:topDataProperty ;
+                                                    rdfs:range xsd:dateTime .
 
-<https://www.aidaxis.com/ns/focusGained/assistanceFile> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/focusGained> ;
-    ktbs:hasAttributeRange xsd:string ;
-    skos:prefLabel "nom du fichier d'assistance" .
 
+###  http://liris.cnrs.fr/silex/2009/ktbs#subject
+<http://liris.cnrs.fr/silex/2009/ktbs#subject> rdf:type owl:DatatypeProperty ;
+                                               rdfs:range xsd:string .
 
 
-<https://www.aidaxis.com/ns/focusLost> a ktbs:ObselType ;
-    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .
+#################################################################
+#    Classes
+#################################################################
 
-<https://www.aidaxis.com/ns/focusLost/sessionBegin> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/focusLost> ;
-    ktbs:hasAttributeRange xsd:dateTime ;
-    skos:prefLabel "horodatage du début de session utilisateur" .
+###  http://liris.cnrs.fr/silex/2009/ktbs#ActionBlockCreated
+<http://liris.cnrs.fr/silex/2009/ktbs#ActionBlockCreated> rdf:type owl:Class ;
+                                                          rdfs:subClassOf <http://liris.cnrs.fr/silex/2009/ktbs#ActionBlockEvent> ,
+                                                                          <http://liris.cnrs.fr/silex/2009/ktbs#BlockCreated> .
 
-<https://www.aidaxis.com/ns/focusLost/sourceId> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/focusLost> ;
-    ktbs:hasAttributeRange xsd:string ;
-    skos:prefLabel "identifiant du composant générant l'évènement" .
 
-<https://www.aidaxis.com/ns/focusLost/assistanceFile> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/focusLost> ;
-    ktbs:hasAttributeRange xsd:string ;
-    skos:prefLabel "nom du fichier d'assistance" .
+###  http://liris.cnrs.fr/silex/2009/ktbs#ActionBlockDeleted
+<http://liris.cnrs.fr/silex/2009/ktbs#ActionBlockDeleted> rdf:type owl:Class ;
+                                                          rdfs:subClassOf <http://liris.cnrs.fr/silex/2009/ktbs#ActionBlockEvent> ,
+                                                                          <http://liris.cnrs.fr/silex/2009/ktbs#BlockDeleted> .
 
 
+###  http://liris.cnrs.fr/silex/2009/ktbs#ActionBlockEvent
+<http://liris.cnrs.fr/silex/2009/ktbs#ActionBlockEvent> rdf:type owl:Class ;
+                                                        rdfs:subClassOf <http://liris.cnrs.fr/silex/2009/ktbs#BlockEvent> .
 
-<https://www.aidaxis.com/ns/mouseClicked> a ktbs:ObselType ;
-    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .
 
-<https://www.aidaxis.com/ns/mouseClicked/sessionBegin> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/mouseClicked> ;
-    ktbs:hasAttributeRange xsd:dateTime ;
-    skos:prefLabel "horodatage du début de session utilisateur" .
+###  http://liris.cnrs.fr/silex/2009/ktbs#ActionBlockUpdated
+<http://liris.cnrs.fr/silex/2009/ktbs#ActionBlockUpdated> rdf:type owl:Class ;
+                                                          rdfs:subClassOf <http://liris.cnrs.fr/silex/2009/ktbs#ActionBlockEvent> ,
+                                                                          <http://liris.cnrs.fr/silex/2009/ktbs#BlockUpdated> .
 
-<https://www.aidaxis.com/ns/mouseClicked/sourceId> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/mouseClicked> ;
-    ktbs:hasAttributeRange xsd:string ;
-    skos:prefLabel "identifiant du composant générant l'évènement" .
 
-<https://www.aidaxis.com/ns/mouseClicked/assistanceFile> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/mouseClicked> ;
-    ktbs:hasAttributeRange xsd:string ;
-    skos:prefLabel "nom du fichier d'assistance" .
+###  http://liris.cnrs.fr/silex/2009/ktbs#AssistanceEvent
+<http://liris.cnrs.fr/silex/2009/ktbs#AssistanceEvent> rdf:type owl:Class .
 
 
+###  http://liris.cnrs.fr/silex/2009/ktbs#AssistanceImport
+<http://liris.cnrs.fr/silex/2009/ktbs#AssistanceImport> rdf:type owl:Class ;
+                                                        rdfs:subClassOf <http://liris.cnrs.fr/silex/2009/ktbs#TargetApplicationEvent> .
 
-<https://www.aidaxis.com/ns/mouseExited> a ktbs:ObselType ;
-    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .
 
-<https://www.aidaxis.com/ns/mouseExited/sessionBegin> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/mouseExited> ;
-    ktbs:hasAttributeRange xsd:dateTime ;
-    skos:prefLabel "horodatage du début de session utilisateur" .
+###  http://liris.cnrs.fr/silex/2009/ktbs#AttributeType
+<http://liris.cnrs.fr/silex/2009/ktbs#AttributeType> rdf:type owl:Class ;
+                                                     rdfs:subClassOf owl:DatatypeProperty ,
+                                                                     owl:ObjectProperty .
 
-<https://www.aidaxis.com/ns/mouseExited/sourceId> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/mouseExited> ;
-    ktbs:hasAttributeRange xsd:string ;
-    skos:prefLabel "identifiant du composant générant l'évènement" .
 
-<https://www.aidaxis.com/ns/mouseExited/assistanceFile> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/mouseExited> ;
-    ktbs:hasAttributeRange xsd:string ;
-    skos:prefLabel "nom du fichier d'assistance" .
+###  http://liris.cnrs.fr/silex/2009/ktbs#BlockCreated
+<http://liris.cnrs.fr/silex/2009/ktbs#BlockCreated> rdf:type owl:Class ;
+                                                    rdfs:subClassOf <http://liris.cnrs.fr/silex/2009/ktbs#BlockEvent> .
 
 
+###  http://liris.cnrs.fr/silex/2009/ktbs#BlockDeleted
+<http://liris.cnrs.fr/silex/2009/ktbs#BlockDeleted> rdf:type owl:Class ;
+                                                    rdfs:subClassOf <http://liris.cnrs.fr/silex/2009/ktbs#BlockEvent> .
 
-<https://www.aidaxis.com/ns/mouseMoved> a ktbs:ObselType ;
-    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .
 
-<https://www.aidaxis.com/ns/mouseMoved/sessionBegin> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/mouseMoved> ;
-    ktbs:hasAttributeRange xsd:dateTime ;
-    skos:prefLabel "horodatage du début de session utilisateur" .
+###  http://liris.cnrs.fr/silex/2009/ktbs#BlockEvent
+<http://liris.cnrs.fr/silex/2009/ktbs#BlockEvent> rdf:type owl:Class ;
+                                                  rdfs:subClassOf <http://liris.cnrs.fr/silex/2009/ktbs#TargetApplicationEvent> .
 
-<https://www.aidaxis.com/ns/mouseMoved/sourceId> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/mouseMoved> ;
-    ktbs:hasAttributeRange xsd:string ;
-    skos:prefLabel "identifiant du composant générant l'évènement" .
 
-<https://www.aidaxis.com/ns/mouseMoved/assistanceFile> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/mouseMoved> ;
-    ktbs:hasAttributeRange xsd:string ;
-    skos:prefLabel "nom du fichier d'assistance" .
+###  http://liris.cnrs.fr/silex/2009/ktbs#BlockUpdated
+<http://liris.cnrs.fr/silex/2009/ktbs#BlockUpdated> rdf:type owl:Class ;
+                                                    rdfs:subClassOf <http://liris.cnrs.fr/silex/2009/ktbs#BlockEvent> .
 
 
+###  http://liris.cnrs.fr/silex/2009/ktbs#ConditionBlockCreated
+<http://liris.cnrs.fr/silex/2009/ktbs#ConditionBlockCreated> rdf:type owl:Class ;
+                                                             rdfs:subClassOf <http://liris.cnrs.fr/silex/2009/ktbs#BlockCreated> ,
+                                                                             <http://liris.cnrs.fr/silex/2009/ktbs#ConditionBlockEvent> .
 
-<https://www.aidaxis.com/ns/mouseOver> a ktbs:ObselType ;
-    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .
 
-<https://www.aidaxis.com/ns/mouseOver/sessionBegin> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/mouseOver> ;
-    ktbs:hasAttributeRange xsd:dateTime ;
-    skos:prefLabel "horodatage du début de session utilisateur" .
+###  http://liris.cnrs.fr/silex/2009/ktbs#ConditionBlockDeleted
+<http://liris.cnrs.fr/silex/2009/ktbs#ConditionBlockDeleted> rdf:type owl:Class ;
+                                                             rdfs:subClassOf <http://liris.cnrs.fr/silex/2009/ktbs#BlockDeleted> ,
+                                                                             <http://liris.cnrs.fr/silex/2009/ktbs#ConditionBlockEvent> .
 
-<https://www.aidaxis.com/ns/mouseOver/sourceId> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/mouseOver> ;
-    ktbs:hasAttributeRange xsd:string ;
-    skos:prefLabel "identifiant du composant générant l'évènement" .
 
-<https://www.aidaxis.com/ns/mouseOver/assistanceFile> a ktbs:AttributeType ;
-    ktbs:hasAttributeDomain <https://www.aidaxis.com/ns/mouseOver> ;
-    ktbs:hasAttributeRange xsd:string ;
-    skos:prefLabel "nom du fichier d'assistance" .
+###  http://liris.cnrs.fr/silex/2009/ktbs#ConditionBlockEvent
+<http://liris.cnrs.fr/silex/2009/ktbs#ConditionBlockEvent> rdf:type owl:Class ;
+                                                           rdfs:subClassOf <http://liris.cnrs.fr/silex/2009/ktbs#BlockEvent> .
 
 
-#super type
-<https://www.aidaxis.com/ns/AssistanceEvent> a ktbs:ObselType .
+###  http://liris.cnrs.fr/silex/2009/ktbs#ConditionBlockUpdated
+<http://liris.cnrs.fr/silex/2009/ktbs#ConditionBlockUpdated> rdf:type owl:Class ;
+                                                             rdfs:subClassOf <http://liris.cnrs.fr/silex/2009/ktbs#BlockUpdated> ,
+                                                                             <http://liris.cnrs.fr/silex/2009/ktbs#ConditionBlockEvent> .
 
-<https://www.aidaxis.com/ns/UserEvent> a ktbs:ObselType .
 
-<https://www.aidaxis.com/ns/TargetApplicationEvent> a ktbs:ObselType .
+###  http://liris.cnrs.fr/silex/2009/ktbs#ErrorNotice
+<http://liris.cnrs.fr/silex/2009/ktbs#ErrorNotice> rdf:type owl:Class ;
+                                                   rdfs:subClassOf <http://liris.cnrs.fr/silex/2009/ktbs#SystemNotice> .
 
 
-#Assistance events
-<https://www.aidaxis.com/ns/end> a ktbs:ObselType ;
-    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .
+###  http://liris.cnrs.fr/silex/2009/ktbs#EventBlockCreated
+<http://liris.cnrs.fr/silex/2009/ktbs#EventBlockCreated> rdf:type owl:Class ;
+                                                         rdfs:subClassOf <http://liris.cnrs.fr/silex/2009/ktbs#BlockCreated> ,
+                                                                         <http://liris.cnrs.fr/silex/2009/ktbs#EventBlockEvent> .
 
-<https://www.aidaxis.com/ns/trigger> a ktbs:ObselType ;
-    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .
 
-<https://www.aidaxis.com/ns/assistanceLaunch> a ktbs:ObselType ;
-    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .
+###  http://liris.cnrs.fr/silex/2009/ktbs#EventBlockDeleted
+<http://liris.cnrs.fr/silex/2009/ktbs#EventBlockDeleted> rdf:type owl:Class ;
+                                                         rdfs:subClassOf <http://liris.cnrs.fr/silex/2009/ktbs#BlockDeleted> ,
+                                                                         <http://liris.cnrs.fr/silex/2009/ktbs#EventBlockEvent> .
 
-<https://www.aidaxis.com/ns/assistanceStop> a ktbs:ObselType ;
-    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .
 
-<https://www.aidaxis.com/ns/consultationAnswer> a ktbs:ObselType ;
-    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/AssistanceEvent> .
+###  http://liris.cnrs.fr/silex/2009/ktbs#EventBlockEvent
+<http://liris.cnrs.fr/silex/2009/ktbs#EventBlockEvent> rdf:type owl:Class ;
+                                                       rdfs:subClassOf <http://liris.cnrs.fr/silex/2009/ktbs#BlockEvent> .
 
 
+###  http://liris.cnrs.fr/silex/2009/ktbs#EventBlockUpdated
+<http://liris.cnrs.fr/silex/2009/ktbs#EventBlockUpdated> rdf:type owl:Class ;
+                                                         rdfs:subClassOf <http://liris.cnrs.fr/silex/2009/ktbs#BlockUpdated> ,
+                                                                         <http://liris.cnrs.fr/silex/2009/ktbs#EventBlockEvent> .
 
-#User event
-<https://www.aidaxis.com/ns/caretEvent> a ktbs:ObselType ;
-    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/UserEvent> .
 
-<https://www.aidaxis.com/ns/focusGained> a ktbs:ObselType ;
-    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/UserEvent> .
+###  http://liris.cnrs.fr/silex/2009/ktbs#Obsel
+<http://liris.cnrs.fr/silex/2009/ktbs#Obsel> rdf:type owl:Class .
 
-<https://www.aidaxis.com/ns/focusLost> a ktbs:ObselType ;
-    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/UserEvent> .
 
-<https://www.aidaxis.com/ns/mouseClicked> a ktbs:ObselType ;
-    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/UserEvent> .
+###  http://liris.cnrs.fr/silex/2009/ktbs#ObselType
+<http://liris.cnrs.fr/silex/2009/ktbs#ObselType> rdf:type owl:Class .
 
-<https://www.aidaxis.com/ns/mouseExited> a ktbs:ObselType ;
-    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/UserEvent> .
 
-<https://www.aidaxis.com/ns/mouseMoved> a ktbs:ObselType ;
-    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/UserEvent> .
+###  http://liris.cnrs.fr/silex/2009/ktbs#SystemNotice
+<http://liris.cnrs.fr/silex/2009/ktbs#SystemNotice> rdf:type owl:Class ;
+                                                    rdfs:subClassOf <http://liris.cnrs.fr/silex/2009/ktbs#TargetApplicationEvent> .
 
-<https://www.aidaxis.com/ns/mouseOver> a ktbs:ObselType ;
-    ktbs:hasSuperObselType <https://www.aidaxis.com/ns/UserEvent> .
+
+###  http://liris.cnrs.fr/silex/2009/ktbs#TargetApplicationEvent
+<http://liris.cnrs.fr/silex/2009/ktbs#TargetApplicationEvent> rdf:type owl:Class .
+
+
+###  http://liris.cnrs.fr/silex/2009/ktbs#TimerBlockCreated
+<http://liris.cnrs.fr/silex/2009/ktbs#TimerBlockCreated> rdf:type owl:Class ;
+                                                         rdfs:subClassOf <http://liris.cnrs.fr/silex/2009/ktbs#BlockCreated> ,
+                                                                         <http://liris.cnrs.fr/silex/2009/ktbs#TimerBlockEvent> .
+
+
+###  http://liris.cnrs.fr/silex/2009/ktbs#TimerBlockDeleted
+<http://liris.cnrs.fr/silex/2009/ktbs#TimerBlockDeleted> rdf:type owl:Class ;
+                                                         rdfs:subClassOf <http://liris.cnrs.fr/silex/2009/ktbs#BlockDeleted> ,
+                                                                         <http://liris.cnrs.fr/silex/2009/ktbs#TimerBlockEvent> .
+
+
+###  http://liris.cnrs.fr/silex/2009/ktbs#TimerBlockEvent
+<http://liris.cnrs.fr/silex/2009/ktbs#TimerBlockEvent> rdf:type owl:Class ;
+                                                       rdfs:subClassOf <http://liris.cnrs.fr/silex/2009/ktbs#BlockEvent> .
+
+
+###  http://liris.cnrs.fr/silex/2009/ktbs#TimerBlockUpdated
+<http://liris.cnrs.fr/silex/2009/ktbs#TimerBlockUpdated> rdf:type owl:Class ;
+                                                         rdfs:subClassOf <http://liris.cnrs.fr/silex/2009/ktbs#BlockUpdated> ,
+                                                                         <http://liris.cnrs.fr/silex/2009/ktbs#TimerBlockEvent> .
+
+
+###  http://www.w3.org/2001/XMLSchema#dateTime
+xsd:dateTime rdf:type owl:Class .
+
+
+###  http://www.w3.org/2001/XMLSchema#literal
+xsd:literal rdf:type owl:Class .
+
+
+###  http://www.w3.org/2002/07/owl#DatatypeProperty
+owl:DatatypeProperty rdf:type owl:Class .
+
+
+###  http://www.w3.org/2002/07/owl#ObjectProperty
+owl:ObjectProperty rdf:type owl:Class .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  http://liris.cnrs.fr/silex/2009/ktbs#AssistanceEvent
+<http://liris.cnrs.fr/silex/2009/ktbs#AssistanceEvent> rdf:type owl:NamedIndividual ,
+                                                                <http://liris.cnrs.fr/silex/2009/ktbs#ObselType> .
+
+
+###  http://liris.cnrs.fr/silex/2009/ktbs#TargetApplicationEvent
+<http://liris.cnrs.fr/silex/2009/ktbs#TargetApplicationEvent> rdf:type owl:NamedIndividual ,
+                                                                       <http://liris.cnrs.fr/silex/2009/ktbs#ObselType> .
+
+
+###  http://liris.cnrs.fr/silex/2009/ktbs#UserEvent
+<http://liris.cnrs.fr/silex/2009/ktbs#UserEvent> rdf:type owl:NamedIndividual ,
+                                                          <http://liris.cnrs.fr/silex/2009/ktbs#ObselType> .
+
+
+###  http://liris.cnrs.fr/silex/2009/ktbs#application
+<http://liris.cnrs.fr/silex/2009/ktbs#application> rdf:type owl:NamedIndividual ,
+                                                            <http://liris.cnrs.fr/silex/2009/ktbs#AttributeType> .
+
+
+###  http://liris.cnrs.fr/silex/2009/ktbs#assistanceFile
+<http://liris.cnrs.fr/silex/2009/ktbs#assistanceFile> rdf:type owl:NamedIndividual ,
+                                                               <http://liris.cnrs.fr/silex/2009/ktbs#AttributeType> .
+
+
+###  http://liris.cnrs.fr/silex/2009/ktbs#message
+<http://liris.cnrs.fr/silex/2009/ktbs#message> rdf:type owl:NamedIndividual ,
+                                                        <http://liris.cnrs.fr/silex/2009/ktbs#AttributeType> .
+
+
+###  http://liris.cnrs.fr/silex/2009/ktbs#subject
+<http://liris.cnrs.fr/silex/2009/ktbs#subject> rdf:type owl:NamedIndividual ,
+                                                        <http://liris.cnrs.fr/silex/2009/ktbs#AttributeType> .
+
+
+#################################################################
+#    Annotations
+#################################################################
+
+<http://liris.cnrs.fr/silex/2009/ktbs#AssistanceEvent> rdfs:label "AssistanceEvent" .
+
+
+###  Generated by the OWL API (version 4.5.6) https://github.com/owlcs/owlapi

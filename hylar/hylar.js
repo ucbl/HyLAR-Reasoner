@@ -218,24 +218,24 @@ Hylar.prototype.treatLoad = async function(ontologyTxt, mimeType, graph) {
 
 /**
  * Launches a SPARQL query against the triplestore.
- * @param query The SPARQL query text
+ * @param deserializedQuery The SPARQL query text
  * @param reasoningMethod The desired reasoning method if inserting/deleting
  */
 Hylar.prototype.query = async function(query, reasoningMethod) {
-    let sparql, singleWhereQueries = [], result
+    let sparql, singleWhereQueries = [], result, deserializedQuery
     Hylar.notify(`Received ${query}`, { silent: true })
 
     try {
         // Parse original query
 		sparql = ParsingInterface.parseSPARQL(query)
         // Cleans out string query
-        query = ParsingInterface.deserializeQuery(sparql)
+        deserializedQuery = ParsingInterface.deserializeQuery(sparql)
 	} catch (e) {
-		Hylar.displayError('Problem with SPARQL query: ' + query);
+		Hylar.displayError('Problem with SPARQL query: ' + deserializedQuery);
 		throw e;
 	}
 
-    if (this.reasoning == false) return this.sm.query(query)
+    if (this.reasoning == false) return this.sm.query(deserializedQuery)
 
     this.updateReasoningMethod(reasoningMethod);
 
@@ -250,7 +250,7 @@ Hylar.prototype.query = async function(query, reasoningMethod) {
                 // Put them back in a simple update data manner to provide inner-graph inference
                 return this.query(ParsingInterface.buildUpdateQueryWithConstructResults(sparql, data));
             } else {
-                return this.treatUpdateWithGraph(query);
+                return this.treatUpdateWithGraph(deserializedQuery);
             }
             break;
 
@@ -274,12 +274,12 @@ Hylar.prototype.query = async function(query, reasoningMethod) {
                             }
                         }
                     })
-                    if (countStatements.length > 0) query = ParsingInterface.deserializeQuery(sparql)
+                    if (countStatements.length > 0) deserializedQuery = ParsingInterface.deserializeQuery(sparql)
                 }
 
                 // Execute query against the store
                 try {
-                    results = await this.sm.query(query)
+                    results = await this.sm.query(deserializedQuery)
                 } catch(err) {
                     throw err
                 }
@@ -338,7 +338,9 @@ Hylar.prototype.query = async function(query, reasoningMethod) {
                     return this.treatSelectOrConstruct(singleWhereQuery);
                 }, 0)
 
-                return this.sm.querySideStore(query);
+                let results = await this.sm.querySideStore(query);
+
+                return results
             }
     }
 };
@@ -569,13 +571,13 @@ Hylar.prototype.treatUpdate = async function(update, type) {
  * @param query The query text.
  * @returns {Object} The results of this query.
  */
-Hylar.prototype.treatSelectOrConstruct = function(query) {
+Hylar.prototype.treatSelectOrConstruct = async function(query) {
     if (this.rMethod == Reasoner.process.it.tagBased) {
         let parsedQuery= ParsingInterface.parseSPARQL(query),
             graph = parsedQuery.where[0].name,
             constructEquivalentQuery = ParsingInterface.constructEquivalentQuery(query, graph);
 
-        let results = this.sm.query(constructEquivalentQuery)
+        let results = await this.sm.query(constructEquivalentQuery)
         let triples = results.triples;
         let val = this.dict.findValues(triples, graph);
         let facts = val.found;

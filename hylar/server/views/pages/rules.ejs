@@ -89,7 +89,7 @@
             <tr>
                 <th>Name</th>
                 <th>Rule</th>
-                <th>Remove</th>
+                <<th>Remove</th>
             </tr>
             <% for (var i = 0; i < rules.length; i++) { %>
                 <tr>
@@ -100,7 +100,7 @@
                         <small><%- rules[i].rule %></small>
                     </td>
                     <td class="status">
-                        <a href="<%- contextPath %>/rule/remove/<%- i %>"><span class="glyphicon glyphicon-remove"/></a>
+                        <a href="<%- contextPath %>/rule/remove/<%- i %>"><i class="fas fa-trash"></i></a>
                     </td>
                 </tr>
             <% } %>
