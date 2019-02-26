@@ -59,7 +59,7 @@ const prove = async(factIds) => {
     let proofChain = [facts]
 
     const evalLoop = async() => {
-        let values = await Solver.evaluateRuleSet(OWL2RL.rules, proofChain.flat(), true)
+        let values = await Solver.evaluateRuleSet(Rules.owl2rl, proofChain.flat(), true)
         if (Utils.uniques(proofChain.flat(), values.cons).length > proofChain.flat().length) {
             let previousDerivations = proofChain[proofChain.length-1]
             let currentDerivations = []

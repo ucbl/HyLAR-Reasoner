@@ -211,7 +211,7 @@ Dictionary.prototype.getFactFromStringRepresentation = function(factStr, graph) 
 }
 
 module.exports = Dictionary;
-},{"./ParsingInterface":9,"./Utils":15}],2:[function(require,module,exports){
+},{"./ParsingInterface":8,"./Utils":15}],2:[function(require,module,exports){
 const EventEmitter = require('events').EventEmitter;
 const Emitter = new EventEmitter();
 
@@ -912,7 +912,7 @@ Logics = {
 };
 
 module.exports = Logics;
-},{"../Errors":3,"../RegularExpressions":13,"../Utils":15,"./Fact":4,"./Rule":6,"md5":47}],6:[function(require,module,exports){
+},{"../Errors":3,"../RegularExpressions":12,"../Utils":15,"./Fact":4,"./Rule":6,"md5":47}],6:[function(require,module,exports){
 /**
  * Created by mt on 21/12/2015.
  */
@@ -1378,79 +1378,6 @@ Solver = {
 
 module.exports = Solver;
 },{"../Emitter":2,"../Utils":15,"./Fact":4,"./Logics":5,"q":51}],8:[function(require,module,exports){
-/**
- * Created by MT on 17/09/2015.
- */
-
-/**
- * Partial owl2RL spec from http://www.w3.org/TR/owl2-profiles
- * @author Mehdi Terdjimi
- * @type {{rules: *[]}}
- */
-
-const Logics = require('./Logics/Logics')
-
-OWL2RL = {
-    rules: Logics.parseRules([
-        "prp-dom = (?p http://www.w3.org/2000/01/rdf-schema#domain ?c) ^ (?x ?p ?y) -> (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c)",
-        "prp-rng = (?p http://www.w3.org/2000/01/rdf-schema#range ?c) ^ (?x ?p ?y) -> (?y http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c)",
-        "prp-fp = (?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#FunctionalProperty) ^ (?x ?p ?y1) ^ (?x ?p ?y2) -> (?y1 http://www.w3.org/2002/07/owl#sameAs ?y2)",
-        "prp-ifp = (?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#InverseFunctionalProperty) ^ (?x1 ?p ?y) ^ (?x2 ?p ?y) -> (?x1 http://www.w3.org/2002/07/owl#sameAs ?x2)",
-        "prp-irp = (?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#IrreflexiveProperty) ^ (?x ?p ?x) -> false",
-        "prp-symp = (?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#SymmetricProperty) ^ (?x ?p ?y) -> (?y ?p ?x)",
-        "prp-asyp = (?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#AsymmetricProperty) ^ (?x ?p ?y) ^ (?y ?p ?x) -> false",
-        "prp-trp = (?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#TransitiveProperty) ^ (?x ?p ?y) ^ (?y ?p ?z) -> (?x ?p ?z)",
-        "prp-spo1 = (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) ^ (?x ?p1 ?y) -> (?x ?p2 ?y)",
-        "prp-spo2 = (?x ?p1 ?y) ^ (?p2 http://www.w3.org/2002/07/owl#propertyChainAxiom ?n) ^ (?n http://www.w3.org/1999/02/22-rdf-syntax-ns#first ?p1) ^ (?n http://www.w3.org/1999/02/22-rdf-syntax-ns#rest ?n2) ^ (?n2 http://www.w3.org/1999/02/22-rdf-syntax-ns#first ?p2) ^ (?y ?p2 ?z) -> (?x ?p2 ?z)",
-        "prp-eqp1 = (?p1 http://www.w3.org/2002/07/owl#equivalentProperty ?p2) ^ (?x ?p1 ?y) -> (?x ?p2 ?y)",
-        "prp-eqp2 = (?p1 http://www.w3.org/2002/07/owl#equivalentProperty ?p2) ^ (?x ?p2 ?y) -> (?x ?p1 ?y)",
-        "prp-pdw = (?p1 http://www.w3.org/2002/07/owl#propertyDisjointWith ?p2) ^ (?x ?p1 ?y) ^ (?x ?p2 ?y) -> false",
-        "prp-inv1 = (?p1 http://www.w3.org/2002/07/owl#inverseOf ?p2) ^ (?x ?p1 ?y) -> (?y ?p2 ?x)",
-        "prp-inv2 = (?p1 http://www.w3.org/2002/07/owl#inverseOf ?p2) ^ (?x ?p2 ?y) -> (?y ?p1 ?x)",
-        "prp-npa1 = (?x http://www.w3.org/2002/07/owl#sourceIndividual ?i1) ^ (?x http://www.w3.org/2002/07/owl#assertionProperty ?p) ^ (?x http://www.w3.org/2002/07/owl#targetIndividual ?i2) ^ (?i1 ?p ?i2) -> false",
-        "prp-npa2 = (?x http://www.w3.org/2002/07/owl#sourceIndividual ?i) ^ (?x http://www.w3.org/2002/07/owl#assertionProperty ?p) ^ (?x http://www.w3.org/2002/07/owl#targetValue ?lt) ^ (?i ?p ?lt) -> false",
-        "cls-nothing2 = (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#Nothing) -> false",
-        "cls-com = (?c1 http://www.w3.org/2002/07/owl#complementOf ?c2) ^ (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c1) ^ (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c2) -> false",
-        "cls-svf1 = (?x http://www.w3.org/2002/07/owl#someValuesFrom ?y) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u ?p ?v) ^ (?v http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?y) -> (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x)",
-        "cls-svf2 = (?x http://www.w3.org/2002/07/owl#someValuesFrom http://www.w3.org/2002/07/owl#Thing) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u ?p ?v) -> (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x)",
-        "cls-avf = (?x http://www.w3.org/2002/07/owl#allValuesFrom ?y) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x) ^ (?u ?p ?v) -> (?v http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?y)",
-        "cls-hv1 = (?x http://www.w3.org/2002/07/owl#hasValue ?y) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x) -> (?u ?p ?y)",
-        "cls-hv2 = (?x http://www.w3.org/2002/07/owl#hasValue ?y) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u ?p ?y) -> (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x)",
-        "cls-maxc1 = (?x http://www.w3.org/2002/07/owl#maxCardinality \"0\"^^xsd:nonNegativeInteger) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x) ^ (?u ?p ?y) -> false",
-        "cls-maxc2 = (?x http://www.w3.org/2002/07/owl#maxCardinality \"1\"^^xsd:nonNegativeInteger) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x) ^ (?u ?p ?y1) ^ (?u ?p ?y2) -> (?y1 http://www.w3.org/2002/07/owl#sameAs ?y2)",
-        "cls-maxqc1 = (?x http://www.w3.org/2002/07/owl#maxQualifiedCardinality \"0\"^^xsd:nonNegativeInteger) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?x http://www.w3.org/2002/07/owl#onClass ?c) ^ (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x) ^ (?u ?p ?y) ^ (?y http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c) -> false",
-        "cls-maxqc2 = (?x http://www.w3.org/2002/07/owl#maxQualifiedCardinality \"0\"^^xsd:nonNegativeInteger) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?x http://www.w3.org/2002/07/owl#onClass http://www.w3.org/2002/07/owl#Thing) ^ (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x) ^ (?u ?p ?y) -> false",
-        "cls-maxqc3 = (?x http://www.w3.org/2002/07/owl#maxQualifiedCardinality \"1\"^^xsd:nonNegativeInteger) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?x http://www.w3.org/2002/07/owl#onClass ?c) ^ (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x) ^ (?u ?p ?y1) ^ (?y1 http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c) ^ (?u ?p ?y2) ^ (?y2 http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c) -> (?y1 http://www.w3.org/2002/07/owl#sameAs ?y2)",
-        "cls-maxqc4 = (?x http://www.w3.org/2002/07/owl#maxQualifiedCardinality \"1\"^^xsd:nonNegativeInteger) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?x http://www.w3.org/2002/07/owl#onClass http://www.w3.org/2002/07/owl#Thing) ^ (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x) ^ (?u ?p ?y1) ^ (?u ?p ?y2) -> (?y1 http://www.w3.org/2002/07/owl#sameAs ?y2)",
-        "cax-sco = (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2) ^ (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c1) -> (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c2)",
-        "cax-eqc1 = (?c1 http://www.w3.org/2002/07/owl#equivalentClass ?c2) ^ (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c1) -> (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c2)",
-        "cax-eqc2 = (?c1 http://www.w3.org/2002/07/owl#equivalentClass ?c2) ^ (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c2) -> (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c1)",
-        "cax-dw = (?c1 http://www.w3.org/2002/07/owl#disjointWith ?c2) ^ (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c1) ^ (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c2) -> false",
-        "scm-cls = (?c http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#Class) -> (?c http://www.w3.org/2000/01/rdf-schema#subClassOf ?c) ^ (?c http://www.w3.org/2002/07/owl#equivalentClass ?c) ^ (?c http://www.w3.org/2000/01/rdf-schema#subClassOf http://www.w3.org/2002/07/owl#Thing) ^ (http://www.w3.org/2002/07/owl#Nothing http://www.w3.org/2000/01/rdf-schema#subClassOf ?c)",
-        "scm-sco = (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2) ^ (?c2 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c3) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c3)",
-        "scm-eqc1 = (?c1 http://www.w3.org/2002/07/owl#equivalentClass ?c2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2) ^ (?c2 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c1)",
-        "scm-eqc2 = (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2) ^ (?c2 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c1) -> (?c1 http://www.w3.org/2002/07/owl#equivalentClass ?c2)",
-        "scm-op = (?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#ObjectProperty) -> (?p http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p) ^ (?p http://www.w3.org/2002/07/owl#equivalentProperty ?p)",
-        "scm-dp = (?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#DatatypeProperty) -> (?p http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p) ^ (?p http://www.w3.org/2002/07/owl#equivalentProperty ?p)",
-        "scm-spo = (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) ^ (?p2 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p3) -> (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p3)",
-        "scm-eqp1 = (?p1 http://www.w3.org/2002/07/owl#equivalentProperty ?p2) -> (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) ^ (?p2 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p1)",
-        "scm-eqp2 = (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) ^ (?p2 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p1) -> (?p1 http://www.w3.org/2002/07/owl#equivalentProperty ?p2)",
-        "scm-dom1 = (?p http://www.w3.org/2000/01/rdf-schema#domain ?c1) ^ (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2) -> (?p http://www.w3.org/2000/01/rdf-schema#domain ?c2)",
-        "scm-dom2 = (?p2 http://www.w3.org/2000/01/rdf-schema#domain ?c) ^ (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) -> (?p1 http://www.w3.org/2000/01/rdf-schema#domain ?c)",
-        "scm-rng1 = (?p http://www.w3.org/2000/01/rdf-schema#range ?c1) ^ (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2) -> (?p http://www.w3.org/2000/01/rdf-schema#range ?c2)",
-        "scm-rng2 = (?p2 http://www.w3.org/2000/01/rdf-schema#range ?c) ^ (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) -> (?p1 http://www.w3.org/2000/01/rdf-schema#range ?c)",
-        "scm-hv = (?c1 http://www.w3.org/2002/07/owl#hasValue ?i) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p1) ^ (?c2 http://www.w3.org/2002/07/owl#hasValue ?i) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p2) ^ (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2)",
-        "scm-svf1 = (?c1 http://www.w3.org/2002/07/owl#someValuesFrom ?y1) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?c2 http://www.w3.org/2002/07/owl#someValuesFrom ?y2) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?y1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?y2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2)",
-        "scm-svf2 = (?c1 http://www.w3.org/2002/07/owl#someValuesFrom ?y) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p1) ^ (?c2 http://www.w3.org/2002/07/owl#someValuesFrom ?y) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p2) ^ (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2)",
-        "scm-avf1 = (?c1 http://www.w3.org/2002/07/owl#allValuesFrom ?y1) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?c2 http://www.w3.org/2002/07/owl#allValuesFrom ?y2) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?y1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?y2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2)",
-        "scm-avf2 = (?c1 http://www.w3.org/2002/07/owl#allValuesFrom ?y) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p1) ^ (?c2 http://www.w3.org/2002/07/owl#allValuesFrom ?y) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p2) ^ (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) -> (?c2 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c1)"
-    ])
-}
-
-module.exports = OWL2RL.rules
-
-
-},{"./Logics/Logics":5}],9:[function(require,module,exports){
 /*
  * Created by MT on 20/11/2015.
  */
@@ -1748,7 +1675,7 @@ ParsingInterface = {
 
 module.exports = ParsingInterface;
 
-},{"./Errors":3,"./Logics/Fact":4,"./RegularExpressions":13,"./Utils":15,"q":51,"sparqljs":100}],10:[function(require,module,exports){
+},{"./Errors":3,"./Logics/Fact":4,"./RegularExpressions":12,"./Utils":15,"q":51,"sparqljs":100}],9:[function(require,module,exports){
 /**
  * Created by mt on 23/11/2015.
  */
@@ -1798,7 +1725,7 @@ class Prefixes {
 }
 
 module.exports = new Prefixes()
-},{"./RegularExpressions":13}],11:[function(require,module,exports){
+},{"./RegularExpressions":12}],10:[function(require,module,exports){
 /**
 * Created by Spadon on 17/10/2014.
 */
@@ -1857,7 +1784,7 @@ module.exports = {
     }
 };
 
-},{"./ReasoningEngine":12}],12:[function(require,module,exports){
+},{"./ReasoningEngine":11}],11:[function(require,module,exports){
 /**
  * Created by Spadon on 11/09/2015.
  */
@@ -2073,7 +2000,7 @@ module.exports = {
     tagging: ReasoningEngine.tagging,
     tagFilter: ReasoningEngine.tagFilter
 };
-},{"../hylar":16,"./Logics/Logics":5,"./Logics/Solver":7,"./Utils":15,"q":51}],13:[function(require,module,exports){
+},{"../hylar":16,"./Logics/Logics":5,"./Logics/Solver":7,"./Utils":15,"q":51}],12:[function(require,module,exports){
 /**
  * Created by aifb on 25.07.16.
  */
@@ -2098,7 +2025,80 @@ module.exports = {
     CONSTRUCT_GRAPH_1ST_PATTERN: /(CONSTRUCT \{ )GRAPH <.+> \{( .+ )\}( \} WHERE.+)/i,
     URI_AFTER_HASH_OR_SLASH: /[^/#]+$/g
 };
-},{}],14:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
+/**
+ * Created by MT on 17/09/2015.
+ */
+
+/**
+ * Partial owl2RL spec from http://www.w3.org/TR/owl2-profiles
+ * @author Mehdi Terdjimi
+ * @type {{rules: *[]}}
+ */
+
+const Logics = require('./Logics/Logics')
+
+Rules = {
+    owl2rl: Logics.parseRules([
+        "prp-dom = (?p http://www.w3.org/2000/01/rdf-schema#domain ?c) ^ (?x ?p ?y) -> (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c)",
+        "prp-rng = (?p http://www.w3.org/2000/01/rdf-schema#range ?c) ^ (?x ?p ?y) -> (?y http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c)",
+        "prp-fp = (?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#FunctionalProperty) ^ (?x ?p ?y1) ^ (?x ?p ?y2) -> (?y1 http://www.w3.org/2002/07/owl#sameAs ?y2)",
+        "prp-ifp = (?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#InverseFunctionalProperty) ^ (?x1 ?p ?y) ^ (?x2 ?p ?y) -> (?x1 http://www.w3.org/2002/07/owl#sameAs ?x2)",
+        "prp-irp = (?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#IrreflexiveProperty) ^ (?x ?p ?x) -> false",
+        "prp-symp = (?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#SymmetricProperty) ^ (?x ?p ?y) -> (?y ?p ?x)",
+        "prp-asyp = (?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#AsymmetricProperty) ^ (?x ?p ?y) ^ (?y ?p ?x) -> false",
+        "prp-trp = (?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#TransitiveProperty) ^ (?x ?p ?y) ^ (?y ?p ?z) -> (?x ?p ?z)",
+        "prp-spo1 = (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) ^ (?x ?p1 ?y) -> (?x ?p2 ?y)",
+        "prp-spo2 = (?x ?p1 ?y) ^ (?p2 http://www.w3.org/2002/07/owl#propertyChainAxiom ?n) ^ (?n http://www.w3.org/1999/02/22-rdf-syntax-ns#first ?p1) ^ (?n http://www.w3.org/1999/02/22-rdf-syntax-ns#rest ?n2) ^ (?n2 http://www.w3.org/1999/02/22-rdf-syntax-ns#first ?p2) ^ (?y ?p2 ?z) -> (?x ?p2 ?z)",
+        "prp-eqp1 = (?p1 http://www.w3.org/2002/07/owl#equivalentProperty ?p2) ^ (?x ?p1 ?y) -> (?x ?p2 ?y)",
+        "prp-eqp2 = (?p1 http://www.w3.org/2002/07/owl#equivalentProperty ?p2) ^ (?x ?p2 ?y) -> (?x ?p1 ?y)",
+        "prp-pdw = (?p1 http://www.w3.org/2002/07/owl#propertyDisjointWith ?p2) ^ (?x ?p1 ?y) ^ (?x ?p2 ?y) -> false",
+        "prp-inv1 = (?p1 http://www.w3.org/2002/07/owl#inverseOf ?p2) ^ (?x ?p1 ?y) -> (?y ?p2 ?x)",
+        "prp-inv2 = (?p1 http://www.w3.org/2002/07/owl#inverseOf ?p2) ^ (?x ?p2 ?y) -> (?y ?p1 ?x)",
+        "prp-npa1 = (?x http://www.w3.org/2002/07/owl#sourceIndividual ?i1) ^ (?x http://www.w3.org/2002/07/owl#assertionProperty ?p) ^ (?x http://www.w3.org/2002/07/owl#targetIndividual ?i2) ^ (?i1 ?p ?i2) -> false",
+        "prp-npa2 = (?x http://www.w3.org/2002/07/owl#sourceIndividual ?i) ^ (?x http://www.w3.org/2002/07/owl#assertionProperty ?p) ^ (?x http://www.w3.org/2002/07/owl#targetValue ?lt) ^ (?i ?p ?lt) -> false",
+        "cls-nothing2 = (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#Nothing) -> false",
+        "cls-com = (?c1 http://www.w3.org/2002/07/owl#complementOf ?c2) ^ (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c1) ^ (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c2) -> false",
+        "cls-svf1 = (?x http://www.w3.org/2002/07/owl#someValuesFrom ?y) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u ?p ?v) ^ (?v http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?y) -> (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x)",
+        "cls-svf2 = (?x http://www.w3.org/2002/07/owl#someValuesFrom http://www.w3.org/2002/07/owl#Thing) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u ?p ?v) -> (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x)",
+        "cls-avf = (?x http://www.w3.org/2002/07/owl#allValuesFrom ?y) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x) ^ (?u ?p ?v) -> (?v http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?y)",
+        "cls-hv1 = (?x http://www.w3.org/2002/07/owl#hasValue ?y) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x) -> (?u ?p ?y)",
+        "cls-hv2 = (?x http://www.w3.org/2002/07/owl#hasValue ?y) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u ?p ?y) -> (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x)",
+        "cls-maxc1 = (?x http://www.w3.org/2002/07/owl#maxCardinality \"0\"^^xsd:nonNegativeInteger) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x) ^ (?u ?p ?y) -> false",
+        "cls-maxc2 = (?x http://www.w3.org/2002/07/owl#maxCardinality \"1\"^^xsd:nonNegativeInteger) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x) ^ (?u ?p ?y1) ^ (?u ?p ?y2) -> (?y1 http://www.w3.org/2002/07/owl#sameAs ?y2)",
+        "cls-maxqc1 = (?x http://www.w3.org/2002/07/owl#maxQualifiedCardinality \"0\"^^xsd:nonNegativeInteger) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?x http://www.w3.org/2002/07/owl#onClass ?c) ^ (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x) ^ (?u ?p ?y) ^ (?y http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c) -> false",
+        "cls-maxqc2 = (?x http://www.w3.org/2002/07/owl#maxQualifiedCardinality \"0\"^^xsd:nonNegativeInteger) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?x http://www.w3.org/2002/07/owl#onClass http://www.w3.org/2002/07/owl#Thing) ^ (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x) ^ (?u ?p ?y) -> false",
+        "cls-maxqc3 = (?x http://www.w3.org/2002/07/owl#maxQualifiedCardinality \"1\"^^xsd:nonNegativeInteger) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?x http://www.w3.org/2002/07/owl#onClass ?c) ^ (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x) ^ (?u ?p ?y1) ^ (?y1 http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c) ^ (?u ?p ?y2) ^ (?y2 http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c) -> (?y1 http://www.w3.org/2002/07/owl#sameAs ?y2)",
+        "cls-maxqc4 = (?x http://www.w3.org/2002/07/owl#maxQualifiedCardinality \"1\"^^xsd:nonNegativeInteger) ^ (?x http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?x http://www.w3.org/2002/07/owl#onClass http://www.w3.org/2002/07/owl#Thing) ^ (?u http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?x) ^ (?u ?p ?y1) ^ (?u ?p ?y2) -> (?y1 http://www.w3.org/2002/07/owl#sameAs ?y2)",
+        "cax-sco = (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2) ^ (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c1) -> (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c2)",
+        "cax-eqc1 = (?c1 http://www.w3.org/2002/07/owl#equivalentClass ?c2) ^ (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c1) -> (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c2)",
+        "cax-eqc2 = (?c1 http://www.w3.org/2002/07/owl#equivalentClass ?c2) ^ (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c2) -> (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c1)",
+        "cax-dw = (?c1 http://www.w3.org/2002/07/owl#disjointWith ?c2) ^ (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c1) ^ (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c2) -> false",
+        "scm-cls = (?c http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#Class) -> (?c http://www.w3.org/2000/01/rdf-schema#subClassOf ?c) ^ (?c http://www.w3.org/2002/07/owl#equivalentClass ?c) ^ (?c http://www.w3.org/2000/01/rdf-schema#subClassOf http://www.w3.org/2002/07/owl#Thing) ^ (http://www.w3.org/2002/07/owl#Nothing http://www.w3.org/2000/01/rdf-schema#subClassOf ?c)",
+        "scm-sco = (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2) ^ (?c2 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c3) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c3)",
+        "scm-eqc1 = (?c1 http://www.w3.org/2002/07/owl#equivalentClass ?c2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2) ^ (?c2 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c1)",
+        "scm-eqc2 = (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2) ^ (?c2 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c1) -> (?c1 http://www.w3.org/2002/07/owl#equivalentClass ?c2)",
+        "scm-op = (?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#ObjectProperty) -> (?p http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p) ^ (?p http://www.w3.org/2002/07/owl#equivalentProperty ?p)",
+        "scm-dp = (?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#DatatypeProperty) -> (?p http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p) ^ (?p http://www.w3.org/2002/07/owl#equivalentProperty ?p)",
+        "scm-spo = (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) ^ (?p2 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p3) -> (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p3)",
+        "scm-eqp1 = (?p1 http://www.w3.org/2002/07/owl#equivalentProperty ?p2) -> (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) ^ (?p2 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p1)",
+        "scm-eqp2 = (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) ^ (?p2 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p1) -> (?p1 http://www.w3.org/2002/07/owl#equivalentProperty ?p2)",
+        "scm-dom1 = (?p http://www.w3.org/2000/01/rdf-schema#domain ?c1) ^ (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2) -> (?p http://www.w3.org/2000/01/rdf-schema#domain ?c2)",
+        "scm-dom2 = (?p2 http://www.w3.org/2000/01/rdf-schema#domain ?c) ^ (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) -> (?p1 http://www.w3.org/2000/01/rdf-schema#domain ?c)",
+        "scm-rng1 = (?p http://www.w3.org/2000/01/rdf-schema#range ?c1) ^ (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2) -> (?p http://www.w3.org/2000/01/rdf-schema#range ?c2)",
+        "scm-rng2 = (?p2 http://www.w3.org/2000/01/rdf-schema#range ?c) ^ (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) -> (?p1 http://www.w3.org/2000/01/rdf-schema#range ?c)",
+        "scm-hv = (?c1 http://www.w3.org/2002/07/owl#hasValue ?i) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p1) ^ (?c2 http://www.w3.org/2002/07/owl#hasValue ?i) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p2) ^ (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2)",
+        "scm-svf1 = (?c1 http://www.w3.org/2002/07/owl#someValuesFrom ?y1) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?c2 http://www.w3.org/2002/07/owl#someValuesFrom ?y2) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?y1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?y2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2)",
+        "scm-svf2 = (?c1 http://www.w3.org/2002/07/owl#someValuesFrom ?y) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p1) ^ (?c2 http://www.w3.org/2002/07/owl#someValuesFrom ?y) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p2) ^ (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2)",
+        "scm-avf1 = (?c1 http://www.w3.org/2002/07/owl#allValuesFrom ?y1) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?c2 http://www.w3.org/2002/07/owl#allValuesFrom ?y2) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?y1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?y2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2)",
+        "scm-avf2 = (?c1 http://www.w3.org/2002/07/owl#allValuesFrom ?y) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p1) ^ (?c2 http://www.w3.org/2002/07/owl#allValuesFrom ?y) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p2) ^ (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) -> (?c2 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c1)"
+    ])
+}
+
+module.exports = Rules
+
+
+},{"./Logics/Logics":5}],14:[function(require,module,exports){
 /**
  * Created by pc on 20/11/2015.
  */
@@ -2277,7 +2277,7 @@ TripleStorageManager.prototype.querySideStore = function(query) {
 };
 
 module.exports = TripleStorageManager;
-},{"./Prefixes":10,"q":51,"rdfstore":82}],15:[function(require,module,exports){
+},{"./Prefixes":9,"q":51,"rdfstore":82}],15:[function(require,module,exports){
 /**
  * Created by Spadon on 13/02/2015.
  */
@@ -2431,7 +2431,7 @@ Utils = {
 }
 
 module.exports = Utils
-},{"./RegularExpressions":13,"events":39,"q":51}],16:[function(require,module,exports){
+},{"./RegularExpressions":12,"events":39,"q":51}],16:[function(require,module,exports){
 /**
  * Created by MT on 01/12/2015.
  */
@@ -2450,7 +2450,7 @@ var Dictionary = require('./core/Dictionary'),
     TripleStorageManager = require('./core/TripleStorageManager'),
     Logics = require('./core/Logics/Logics'),
     Reasoner = require('./core/Reasoner'),
-    OWL2RL = require('./core/OWL2RL'),
+    Rules = require('./core/Rules'),
     Utils = require('./core/Utils'),
     Errors = require('./core/Errors'),
     RegularExpressions = require('./core/RegularExpressions')
@@ -2469,7 +2469,7 @@ Hylar = function(params = {}) {
     this.dict = new Dictionary()
     this.sm = new TripleStorageManager()
     this.prefixes = require('./core/Prefixes')
-    this.rules = OWL2RL
+    this.rules = params.hasOwnProperty('entailment') ? Rules[params.entailment] : Rules.owl2rl
     this.queryHistory = []
     this.allowPersist = params.hasOwnProperty('persistent') ? params.persistent : true
     this.reasoning = true
@@ -2652,24 +2652,24 @@ Hylar.prototype.treatLoad = async function(ontologyTxt, mimeType, graph) {
 
 /**
  * Launches a SPARQL query against the triplestore.
- * @param query The SPARQL query text
+ * @param deserializedQuery The SPARQL query text
  * @param reasoningMethod The desired reasoning method if inserting/deleting
  */
 Hylar.prototype.query = async function(query, reasoningMethod) {
-    let sparql, singleWhereQueries = [], result
+    let sparql, singleWhereQueries = [], result, deserializedQuery
     Hylar.notify(`Received ${query}`, { silent: true })
 
     try {
         // Parse original query
 		sparql = ParsingInterface.parseSPARQL(query)
         // Cleans out string query
-        query = ParsingInterface.deserializeQuery(sparql)
+        deserializedQuery = ParsingInterface.deserializeQuery(sparql)
 	} catch (e) {
-		Hylar.displayError('Problem with SPARQL query: ' + query);
+		Hylar.displayError('Problem with SPARQL query: ' + deserializedQuery);
 		throw e;
 	}
 
-    if (this.reasoning == false) return this.sm.query(query)
+    if (this.reasoning == false) return this.sm.query(deserializedQuery)
 
     this.updateReasoningMethod(reasoningMethod);
 
@@ -2684,7 +2684,7 @@ Hylar.prototype.query = async function(query, reasoningMethod) {
                 // Put them back in a simple update data manner to provide inner-graph inference
                 return this.query(ParsingInterface.buildUpdateQueryWithConstructResults(sparql, data));
             } else {
-                return this.treatUpdateWithGraph(query);
+                return this.treatUpdateWithGraph(deserializedQuery);
             }
             break;
 
@@ -2708,12 +2708,12 @@ Hylar.prototype.query = async function(query, reasoningMethod) {
                             }
                         }
                     })
-                    if (countStatements.length > 0) query = ParsingInterface.deserializeQuery(sparql)
+                    if (countStatements.length > 0) deserializedQuery = ParsingInterface.deserializeQuery(sparql)
                 }
 
                 // Execute query against the store
                 try {
-                    results = await this.sm.query(query)
+                    results = await this.sm.query(deserializedQuery)
                 } catch(err) {
                     throw err
                 }
@@ -2772,7 +2772,9 @@ Hylar.prototype.query = async function(query, reasoningMethod) {
                     return this.treatSelectOrConstruct(singleWhereQuery);
                 }, 0)
 
-                return this.sm.querySideStore(query);
+                let results = await this.sm.querySideStore(query);
+
+                return results
             }
     }
 };
@@ -3003,13 +3005,13 @@ Hylar.prototype.treatUpdate = async function(update, type) {
  * @param query The query text.
  * @returns {Object} The results of this query.
  */
-Hylar.prototype.treatSelectOrConstruct = function(query) {
+Hylar.prototype.treatSelectOrConstruct = async function(query) {
     if (this.rMethod == Reasoner.process.it.tagBased) {
         let parsedQuery= ParsingInterface.parseSPARQL(query),
             graph = parsedQuery.where[0].name,
             constructEquivalentQuery = ParsingInterface.constructEquivalentQuery(query, graph);
 
-        let results = this.sm.query(constructEquivalentQuery)
+        let results = await this.sm.query(constructEquivalentQuery)
         let triples = results.triples;
         let val = this.dict.findValues(triples, graph);
         let facts = val.found;
@@ -3187,7 +3189,7 @@ Hylar.prototype.addToQueryHistory = function(query, noError) {
 };
 
 Hylar.prototype.resetRules = function() {
-    this.rules = OWL2RL.rules;
+    this.rules = Rules.rules;
 };
 
 Hylar.prototype.quiet = function() {
@@ -3196,7 +3198,7 @@ Hylar.prototype.quiet = function() {
 
 module.exports = Hylar;
 
-},{"./core/Dictionary":1,"./core/Emitter":2,"./core/Errors":3,"./core/Logics/Logics":5,"./core/OWL2RL":8,"./core/ParsingInterface":9,"./core/Prefixes":10,"./core/Reasoner":11,"./core/RegularExpressions":13,"./core/TripleStorageManager":14,"./core/Utils":15,"bluebird":19,"chalk":28,"chalk-rainbow":24,"fs":21,"q":51}],17:[function(require,module,exports){
+},{"./core/Dictionary":1,"./core/Emitter":2,"./core/Errors":3,"./core/Logics/Logics":5,"./core/ParsingInterface":8,"./core/Prefixes":9,"./core/Reasoner":10,"./core/RegularExpressions":12,"./core/Rules":13,"./core/TripleStorageManager":14,"./core/Utils":15,"bluebird":19,"chalk":28,"chalk-rainbow":24,"fs":21,"q":51}],17:[function(require,module,exports){
 'use strict';
 const colorConvert = require('color-convert');
 

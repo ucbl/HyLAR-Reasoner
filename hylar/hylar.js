@@ -16,7 +16,7 @@ var Dictionary = require('./core/Dictionary'),
     TripleStorageManager = require('./core/TripleStorageManager'),
     Logics = require('./core/Logics/Logics'),
     Reasoner = require('./core/Reasoner'),
-    OWL2RL = require('./core/OWL2RL'),
+    Rules = require('./core/Rules'),
     Utils = require('./core/Utils'),
     Errors = require('./core/Errors'),
     RegularExpressions = require('./core/RegularExpressions')
@@ -35,7 +35,7 @@ Hylar = function(params = {}) {
     this.dict = new Dictionary()
     this.sm = new TripleStorageManager()
     this.prefixes = require('./core/Prefixes')
-    this.rules = OWL2RL
+    this.rules = params.hasOwnProperty('entailment') ? Rules[params.entailment] : Rules.owl2rl
     this.queryHistory = []
     this.allowPersist = params.hasOwnProperty('persistent') ? params.persistent : true
     this.reasoning = true
@@ -755,7 +755,7 @@ Hylar.prototype.addToQueryHistory = function(query, noError) {
 };
 
 Hylar.prototype.resetRules = function() {
-    this.rules = OWL2RL.rules;
+    this.rules = Rules.rules;
 };
 
 Hylar.prototype.quiet = function() {

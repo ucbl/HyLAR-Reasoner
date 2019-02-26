@@ -10,8 +10,8 @@
 
 const Logics = require('./Logics/Logics')
 
-OWL2RL = {
-    rules: Logics.parseRules([
+Rules = {
+    owl2rl: Logics.parseRules([
         "prp-dom = (?p http://www.w3.org/2000/01/rdf-schema#domain ?c) ^ (?x ?p ?y) -> (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c)",
         "prp-rng = (?p http://www.w3.org/2000/01/rdf-schema#range ?c) ^ (?x ?p ?y) -> (?y http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c)",
         "prp-fp = (?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#FunctionalProperty) ^ (?x ?p ?y1) ^ (?x ?p ?y2) -> (?y1 http://www.w3.org/2002/07/owl#sameAs ?y2)",
@@ -67,5 +67,5 @@ OWL2RL = {
     ])
 }
 
-module.exports = OWL2RL.rules
+module.exports = Rules
 

@@ -443,12 +443,7 @@ module.exports = {
     },
 
     geoloc: function(req, res) {
-        Hylar.setRules(OWL2RL.rules.classSubsumption
-            .concat(OWL2RL.rules.propertySubsumption)
-            .concat(OWL2RL.rules.transitivity)
-            .concat(OWL2RL.rules.inverse)
-            .concat(OWL2RL.rules.equivalence)
-            .concat(OWL2RL.rules.equality));
+        Hylar.setRules(Rules.owl2rl);
         res.render(htmlDir + '/pages/blend_geoloc', {});
     },
 
