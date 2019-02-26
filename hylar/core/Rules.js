@@ -12,7 +12,20 @@ const Logics = require('./Logics/Logics')
 
 Rules = {
     rdfs: Logics.parseRules([
-       "rdf1 = (?uuu ?aaa ?yyy) -> (aaa rdf:type rdf:Property)"
+        "rdf1 = (?uuu ?aaa ?yyy) -> (?aaa rdf:type rdf:Property)",
+        "rdfs2 = (?aaa rdfs:domain ?xxx) ^ (?uuu ?aaa ?yyy) -> (?uuu rdf:type ?xxx)",
+        "rdfs3 = (?aaa rdfs:range ?xxx) ^ (?uuu ?aaa ?vvv) -> (?vvv rdf:type ?xxx)",
+        "rdfs4a = (?uuu ?aaa ?xxx) -> (?uuu rdf:type rdfs:Resource)",
+        "rdfs4b = (?uuu ?aaa ?vvv) -> (?vvv rdf:type rdfs:Resource)",
+        "rdfs5 = (?uuu rdfs:subPropertyOf ?vvv) ^ (?vvv rdfs:subPropertyOf ?xxx) -> (?uuu rdfs:subPropertyOf ?xxx)",
+        "rdfs6 = (?uuu rdf:type ?rdf:Property) -> (?uuu rdfs:subPropertyOf ?uuu)",
+        "rdfs7 = (?aaa rdfs:subPropertyOf ?bbb) ^ (?uuu ?aaa ?yyy) -> (?uuu ?bbb ?yyy)",
+        "rdfs8 = (?uuu rdf:type rdfs:Class) -> (?uuu rdfs:subClassOf rdfs:Resource)",
+        "rdfs9 = (?uuu rdfs:subClassOf ?xxx) ^ (?vvv rdf:type ?uuu) -> (?vvv rdf:type ?xxx)",
+        "rdfs10 = (?uuu rdf:type rdfs:Class) -> (?uuu rdfs:subClassOf ?uuu)",
+        "rdfs11 = (?uuu rdfs:subClassOf ?vvv) ^ (?vvv rdfs:subClassOf ?xxx) -> (?uuu rdfs:subClassOf ?xxx)",
+        "rdfs12 = (?uuu rdf:type rdfs:ContainerMembershipProperty) -> (?uuu rdfs:subPropertyOf rdfs:member)",
+        "rdfs13 = (?uuu rdf:type rdfs:Datatype) -> (?uuu rdfs:subClassOf rdfs:Literal)"
     ]),
     owl2rl: Logics.parseRules([
         "prp-dom = (?p http://www.w3.org/2000/01/rdf-schema#domain ?c) ^ (?x ?p ?y) -> (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c)",
