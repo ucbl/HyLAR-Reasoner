@@ -28,18 +28,21 @@ class Prefixes {
     }
 
     get(prefix) {
-        return this.prefixes[prefix]
+        return this.prefixes.hasOwnProperty(prefix) ? this.prefixes[prefix] : `${prefix}:`
     }
 
     entries() {
         return this.prefixes
     }
 
+    replacePrefixWithUri(prefixedUri, prefix) {
+        return prefixedUri.replace(new RegExp(`^${prefix}:`), this.get(prefix))
+    }
+
     registerPrefixFrom(fact) {
         let prefixedURIs = Object.values(this.prefixes)
         for (let triple of [fact.subject, fact.predicate, fact.object]) {
             if (!prefixedURIs.includes(triple)) {
-                RegularExpressions
                 this.add(this.forgeCustomPrefix(), triple)
             }
         }

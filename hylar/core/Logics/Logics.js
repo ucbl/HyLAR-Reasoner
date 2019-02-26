@@ -8,6 +8,7 @@ var Fact = require('./Fact');
 var Utils = require('../Utils');
 var Errors = require('../Errors');
 var RegularExpressions = require('../RegularExpressions');
+var Prefixes = require('../Prefixes')
 
 var md5 = require('md5');
 
@@ -384,29 +385,34 @@ Logics = {
     },
 
     parseRule: function(strRule, name) {
+        let bodyTriples = strRule.split('->')[1].match(RegularExpressions.TRIPLE)
+        let headTriples = strRule.split('->')[0].match(RegularExpressions.TRIPLE)
 
-        var tripleRegex = RegularExpressions.TRIPLE,
-            atomRegex = RegularExpressions.ATOM,
-            head = strRule.split('->')[0],
-            body = strRule.split('->')[1],
-            bodyTriples = body.match(tripleRegex),
-            headTriples = head.match(tripleRegex),
-            causes = [], consequences = [], atoms;
+        let causes = this._createFactSetFromTriples(headTriples)
+        let consequences = this._createFactSetFromTriples(bodyTriples)
 
-        for (var i = 0; i < headTriples.length; i++) {
-            atoms = headTriples[i].match(atomRegex).splice(1);
-            causes.push(new Fact(atoms[1], atoms[0], atoms[2]));
-        }
-        if (body.toLowerCase().indexOf('false') !== -1) {
-            consequences.push(new Fact('FALSE'));
+        return new Rule(causes, consequences, name)
+    },
+
+    _createFactSetFromTriples(triples) {
+        let set = []
+        if (triples[0] == 'false') {
+            set.push(new Fact('FALSE'))
         } else {
-            for (var i = 0; i < bodyTriples.length; i++) {
-                atoms = bodyTriples[i].match(atomRegex).splice(1);
-                consequences.push(new Fact(atoms[1], atoms[0], atoms[2]));
+            for (var i = 0; i < triples.length; i++) {
+                let atoms = []
+
+                for (let atom of triples[i].match(RegularExpressions.ATOM).splice(1)) {
+                    if (atom.match(RegularExpressions.PREFIXED_URI)) {
+                        atom = Prefixes.replacePrefixWithUri(atom, atom.match(RegularExpressions.PREFIXED_URI)[1])
+                    }
+                    atoms.push(atom)
+                }
+
+                set.push(new Fact(atoms[1], atoms[0], atoms[2]));
             }
         }
-
-        return new Rule(causes, consequences, name);
+        return set
     },
 
     isBNode: function(elem) {

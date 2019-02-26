@@ -20,6 +20,7 @@ let appDir = path.dirname(require.main.filename),
     contextPath = ""
 
 let persistent = true
+let entailment = 'owl2rl'
 
 process.argv.forEach(function(value, index) {
     if((value=='--no-persist')) {
@@ -27,8 +28,14 @@ process.argv.forEach(function(value, index) {
     }
 });
 
+process.argv.forEach(function(value, index) {
+    if((value=='--entailment')) {
+        entailment = process.argv[index + 1]
+    }
+});
+
 const Hylar = new h({
-    persistent
+    persistent, entailment
 });
 
 process.argv.forEach(function(value, index) {

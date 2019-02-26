@@ -31,20 +31,26 @@ var logFile = 'hylar.log';
  * @email mehdi.terdjimi@univ-lyon1.fr
  */
 
-Hylar = function(params = {}) {
-    this.dict = new Dictionary()
-    this.sm = new TripleStorageManager()
-    this.prefixes = require('./core/Prefixes')
-    this.rules = params.hasOwnProperty('entailment') ? Rules[params.entailment] : Rules.owl2rl
-    this.queryHistory = []
-    this.allowPersist = params.hasOwnProperty('persistent') ? params.persistent : true
-    this.reasoning = true
-    this.sm.init()
-    this.computeRuleDependencies()
-    this.log = []
-    Hylar.currentInstance = this
+class Hylar {
+    constructor(params = {}) {
+        this.dict = new Dictionary()
+        this.sm = new TripleStorageManager()
+        this.prefixes = require('./core/Prefixes')
+        this.entailment = params.hasOwnProperty('entailment') ? params.entailment : 'owl2rl'
+        this.queryHistory = []
+        this.allowPersist = params.hasOwnProperty('persistent') ? params.persistent : true
+        this.reasoning = true
+        this.sm.init()
+        this.computeRuleDependencies()
+        this.log = []
+        Hylar.currentInstance = this
 
-    this.restore()
+        this.restore()
+    }
+
+    get rules() {
+        return Rules[this.entailment]
+    }
 }
 
 Hylar.log = function(msg) {

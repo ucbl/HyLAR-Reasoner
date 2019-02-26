@@ -101,7 +101,7 @@ app.get('/demo', Controller.geoloc);
                 Utils._instanceid = port;
                 asciify('HyLAR', {font: 'larry3d'}, function (err, result) {
                     console.log(chalkRainbow(result));
-                    h.notify(`⭐ [ Ver. ${require('../../package.json').version} ] Now running on port ${port} ⭐`)
+                    h.notify(`⭐ [ Ver. ${require('../../package.json').version} ] Now running on port ${port} with ${chalkRainbow(h.currentInstance.entailment.toUpperCase())} entailement ⭐`)
                     resolve()
                 })
             })

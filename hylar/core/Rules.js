@@ -11,6 +11,9 @@
 const Logics = require('./Logics/Logics')
 
 Rules = {
+    rdfs: Logics.parseRules([
+       "rdf1 = (?uuu ?aaa ?yyy) -> (aaa rdf:type rdf:Property)"
+    ]),
     owl2rl: Logics.parseRules([
         "prp-dom = (?p http://www.w3.org/2000/01/rdf-schema#domain ?c) ^ (?x ?p ?y) -> (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c)",
         "prp-rng = (?p http://www.w3.org/2000/01/rdf-schema#range ?c) ^ (?x ?p ?y) -> (?y http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c)",
