@@ -2,7 +2,7 @@
 * Created by Spadon on 17/10/2014.
 */
 
-var ReasoningEngine = require('./ReasoningEngine');
+const ReasoningEngine = require('./ReasoningEngine')
 
 /**
  * The core reasoner or HyLAR.
@@ -31,7 +31,7 @@ module.exports = {
      * @param alg The reasoning algorithm (function)
      * @returns {*}
      */
-    evaluate: function(fI, fD, F, alg, rules) {        
+    evaluate: function(fI, fD, F, alg, rules) {
         if (!alg) alg = ReasoningEngine.incremental;
         return alg(fI, fD, F, rules);
     },

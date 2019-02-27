@@ -287,6 +287,14 @@ ParsingInterface = {
         }
     },
 
+    turtleToTriples(turtle) {
+        return this.parseSPARQL(`insert data { ${turtle} }`).updates[0].insert[0].triples
+    },
+
+    turtleToFacts(turtle) {
+        return this.triplesToFacts(this.turtleToTriples(turtle))
+    },
+
     deserializeQuery(sparqlQuery) {
         let query = SparqlGenerator.stringify(sparqlQuery);
         return query;

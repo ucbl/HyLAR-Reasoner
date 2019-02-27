@@ -33,17 +33,15 @@ const areYouSure = (ev, url) => {
 }
 
 const checkStatus = (contextPath = '') => {
-    $.get(`${contextPath}/status`)
-        .success((result) => {
-            $('#hylar-status').html(`<span class="status-ok"></span><i class="fas fa-check"></i> HyLAR is currently used on the <b>server-side</b></span>  |<span class="last-log">${result.lastLog}</span>`)
-            $('footer').addClass('status-ok')
-            $('footer').removeClass('status-nok')
-        })
-        .error(() => {
-            $('#hylar-status').html(`<span class="status-nok"></span><i class="fas fa-exclamation-triangle"></i></i> HyLAR has disconnected</span>`)
-            $('footer').addClass('status-nok')
-            $('footer').removeClass('status-ok')
-        })
+    if (document.getElementById('hylar-navbar')) {
+        $.get(`${contextPath}/status`)
+            .success((result) => {
+                document.getElementById('hylar-navbar').classList.remove('is-warning')
+            })
+            .error(() => {
+                document.getElementById('hylar-navbar').classList.add('is-warning')
+            })
+    }
 }
 
 const prove = async(factIds) => {
@@ -159,7 +157,8 @@ const sparql = (ev, contextPath) => {
                         <a id="graph-download" href="">Download graph <i class="fas fa-file-download"></i></a>
                     </div>
                 `)
-                document.getElementById('graph-download').href = `${contextPath}/query?query=${query}`
+                document.getElementById('graph-download').href = `data:text/html;charset=utf-8,${result}`
+                document.getElementById('graph-download').download = 'graph.ttl'
                 return
             } else {
                 graphResultDiv.style.display = 'none'

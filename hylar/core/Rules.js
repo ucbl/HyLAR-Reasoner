@@ -3,7 +3,6 @@
  */
 
 /**
- * Partial owl2RL spec from http://www.w3.org/TR/owl2-profiles
  * @author Mehdi Terdjimi
  * @type {{rules: *[]}}
  */

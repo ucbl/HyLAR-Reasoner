@@ -23,6 +23,7 @@
             <i class="fas fa-database" style="font-size: 50px"></i>
             <div class="last-log">
                 <%- kb.length %> facts (<%- kb.filter(fact => { return fact.explicit }).length %> explicit, <%- kb.filter(fact => { return !fact.explicit }).length %>  implicit)
+                with <b><%- entailment %></b> reasoning
             </div>
         </div>
     </section>

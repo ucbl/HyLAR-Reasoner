@@ -289,7 +289,8 @@ module.exports = {
         res.render(htmlDir + '/pages/index', {
             kb: kb,
             ontologies: ontologies,
-            contextPath: contextPath
+            contextPath: contextPath,
+            entailment: Hylar.entailment.toUpperCase()
         });
     },
 
@@ -364,7 +365,9 @@ module.exports = {
             contextPath: contextPath,
             nbExplicit,
             nbImplicit,
-            consistent
+            consistent,
+            entailment: Hylar.entailment.toUpperCase(),
+            axioms: Hylar.axioms
         });
     },
 

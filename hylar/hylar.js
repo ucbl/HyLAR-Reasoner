@@ -2,16 +2,16 @@
  * Created by MT on 01/12/2015.
  */
 
-var fs = require('fs'),
+const fs = require('fs'),
     chalk = require('chalk'),
     chalkRainbow = require('chalk-rainbow')
     q = require('q');
 
-var Promise = require('bluebird');
+const Promise = require('bluebird');
 
-var emitter = require('./core/Emitter');
+const emitter = require('./core/Emitter');
 
-var Dictionary = require('./core/Dictionary'),
+const Dictionary = require('./core/Dictionary'),
     ParsingInterface = require('./core/ParsingInterface'),
     TripleStorageManager = require('./core/TripleStorageManager'),
     Logics = require('./core/Logics/Logics'),
@@ -19,10 +19,13 @@ var Dictionary = require('./core/Dictionary'),
     Rules = require('./core/Rules'),
     Utils = require('./core/Utils'),
     Errors = require('./core/Errors'),
-    RegularExpressions = require('./core/RegularExpressions')
+    RegularExpressions = require('./core/RegularExpressions'),
+    Prefixes = require('./core/Prefixes'),
+    Axioms = require('./core/Axioms')
 
 
-var logFile = 'hylar.log';
+
+const logFile = 'hylar.log';
 
 /**
  * HyLAR main module.
@@ -35,21 +38,59 @@ class Hylar {
     constructor(params = {}) {
         this.dict = new Dictionary()
         this.sm = new TripleStorageManager()
-        this.prefixes = require('./core/Prefixes')
-        this.entailment = params.hasOwnProperty('entailment') ? params.entailment : 'owl2rl'
-        this.queryHistory = []
-        this.allowPersist = params.hasOwnProperty('persistent') ? params.persistent : true
-        this.reasoning = true
         this.sm.init()
-        this.computeRuleDependencies()
-        this.log = []
-        Hylar.currentInstance = this
 
-        this.restore()
+        this.reasoning = true
+        this._setEntailment(params.entailment)
+        this._setupPersistence(params.persistent)
+
+        this.queryHistory = []
+        this.log = []
+
+        Hylar.currentInstance = this
     }
 
+    /**
+     * Rule set getter.
+     * Depends on the specified entailment
+     * @return {*}
+     */
     get rules() {
         return Rules[this.entailment]
+    }
+
+    /**
+     * Entailment-related axioms
+     */
+    get axioms() {
+        return Axioms.getAxioms(this.entailment)
+    }
+
+    /**
+     * Sets up specified entailement,
+     * then put axioms and compute rule dependencies
+     * to optimize reasoning task time performance
+     * @param entailment
+     * @return {Promise<void>}
+     * @private
+     */
+    async _setEntailment(entailment) {
+        this.entailment = entailment != null ? entailment : 'owl2rl'
+        Reasoner.updateRuleDependencies(this.rules);
+    }
+
+    /**
+     * Process persistence task if specified
+     * @param persistent
+     * @private
+     */
+    async _setupPersistence(persistent) {
+        if (persistent != null && persistent == true) {
+            this.allowPersist = true
+            this.restore()
+        } else {
+            this.allowPersist = false
+        }
     }
 }
 
@@ -121,13 +162,8 @@ Hylar.prototype.setReasoningOff = function() {
     this.reasoning = false
 }
 
-Hylar.prototype.computeRuleDependencies = function() {
-    Reasoner.updateRuleDependencies(this.rules);        
-};      
-
 Hylar.prototype.clean = function() {
     this.dict = new Dictionary();
-    this.sm = new TripleStorageManager();
     this.sm = new TripleStorageManager();
     this.sm.init();
     this.persist()
@@ -557,7 +593,7 @@ Hylar.prototype.treatUpdate = async function(update, type) {
     FeIns = ParsingInterface.triplesToFacts(iTriples, true, (this.rMethod == Reasoner.process.it.incrementally));
     FeDel = ParsingInterface.triplesToFacts(dTriples, true, (this.rMethod == Reasoner.process.it.incrementally));
 
-    let derivations = await Reasoner.evaluate(FeIns, FeDel, F, this.rMethod, this.rules)
+    let derivations = await Reasoner.evaluate(FeIns, FeDel, F.concat(this.axioms), this.rMethod, this.rules,)
 
     this.registerDerivations(derivations, graph);
 
@@ -621,7 +657,7 @@ Hylar.prototype.registerDerivations = function(derivations, graph) {
 
     for (var i = 0; i < factsToBeAdded.length; i++) {
         this.dict.put(factsToBeAdded[i], graph);
-        this.prefixes.registerPrefixFrom(factsToBeAdded[i])
+        Prefixes.registerPrefixFrom(factsToBeAdded[i])
     }
 
     this.persist()
@@ -649,7 +685,7 @@ Hylar.prototype.classify = async function(graph) {
             } else facts = facts.concat(_fs)
     }
 
-    let derivations = await Reasoner.evaluate(facts, [], [], this.rMethod, this.rules)
+    let derivations = await Reasoner.evaluate(facts, [], this.axioms, this.rMethod, this.rules)
     this.registerDerivations(derivations, graph);
 
     let chunks = [], chunksNb = 5000

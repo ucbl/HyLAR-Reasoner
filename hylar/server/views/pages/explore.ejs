@@ -24,6 +24,9 @@
                 <div class="message-body">
                     The knowledge base currently contains <%- kb.length %> facts (<%- kb.map(entry => { return entry.val }).filter(fact => { return fact.explicit }).length %> explicit, <%- kb.map(entry => { return entry.val }).filter(fact => { return !fact.explicit }).length %>  implicit).
                     <p>
+                        <b><%- entailment %></b> entailment is provided (<%- axioms.length || 'no' %> axioms).
+                    </p>
+                    <p>
                         <i class="fas fa-bolt"></i> <a onclick="areYouSure(this, '<%- contextPath %>/explore/resetKB')">Clear the knowledge base</a>
                     </p>
                 </div>

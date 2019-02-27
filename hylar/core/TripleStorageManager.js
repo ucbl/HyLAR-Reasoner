@@ -21,10 +21,10 @@ function TripleStorageManager() {
      * Register owl, rdfs and rdfs prefixes.
      * @returns {*}
      */
-TripleStorageManager.prototype.init = function() {
+TripleStorageManager.prototype.init = async function() {
     var deferred = q.defer(),
         that = this;
-    new rdfstore.create(function(err, store) {
+    await new rdfstore.create(function(err, store) {
         if(err) {
             deferred.reject(err);
         } else {
