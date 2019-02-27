@@ -44,20 +44,20 @@ const checkStatus = (contextPath = '') => {
     }
 }
 
-const prove = async(factIds) => {
+const prove = async(factIds, entailment) => {
     let facts = []
 
     for (let factId of factIds) {
-        let sub = document.getElementById(`subject-${factId}`).innerText
-        let pred = document.getElementById(`predicate-${factId}`).innerText
-        let obj = document.getElementById(`object-${factId}`).innerText
+        let sub = document.getElementById(`subject-${factId}`).dataset.atom
+        let pred = document.getElementById(`predicate-${factId}`).dataset.atom
+        let obj = document.getElementById(`object-${factId}`).dataset.atom
         facts.push(new Fact(pred, sub, obj))
     }
 
     let proofChain = [facts]
 
     const evalLoop = async() => {
-        let values = await Solver.evaluateRuleSet(Rules.owl2rl, proofChain.flat(), true)
+        let values = await Solver.evaluateRuleSet(Rules[entailment] ? Rules[entailment] : Rules.owl2rl, proofChain.flat(), true)
         if (Utils.uniques(proofChain.flat(), values.cons).length > proofChain.flat().length) {
             let previousDerivations = proofChain[proofChain.length-1]
             let currentDerivations = []
@@ -75,7 +75,7 @@ const prove = async(factIds) => {
 
     document.getElementById('proof') ? document.getElementById('proof').remove() : ''
 
-    let container = '<div class="container"><article id="proof" class="message is-link is-proof"><div class="message-header">Proof<button class="delete" aria-label="delete" onclick="closeProof()"></button></div><div class="message-body">'
+    let container = `<div class="container"><article id="proof" class="message is-link is-proof"><div class="message-header">Proof (${entailment})<button class="delete" aria-label="delete" onclick="closeProof()"></button></div><div class="message-body">`
 
     for (let proof of proofChain) {
         container = `${container}<div class="subtitle">Loop #${proofChain.indexOf(proof)}</div><p>`
@@ -85,7 +85,7 @@ const prove = async(factIds) => {
                 <div class="columns">
                     <div class="column is-one-fifth">
                         <span class="fact fact-state ${fact.explicit ? 'explicit' : 'implicit'}">
-                            ${typeof fact.graphs.name == 'string' ? fact.graphs.name : 'asserted'}
+                            ${fact.rule != null ? fact.rule.name : 'asserted'}
                         </span>
                     </div>                    
                     <div class="column">
@@ -103,7 +103,7 @@ const prove = async(factIds) => {
     document.getElementById('proof').scrollIntoView()
 }
 
-const highlightFacts = (ev) => {
+const highlightFacts = (ev, entailment) => {
     let blocks = Object.keys(ev.dataset).map(blockId => { return document.getElementById(blockId) })
     let factIds = blocks.map(block => { return block.dataset.factId })
 
@@ -121,7 +121,7 @@ const highlightFacts = (ev) => {
         block.scrollIntoView({ block: 'center' })
     }
 
-    prove(factIds)
+    prove(factIds, entailment)
 }
 
 const appendPrefix = (ev) => {

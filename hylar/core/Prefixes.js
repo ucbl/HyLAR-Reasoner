@@ -36,15 +36,24 @@ class Prefixes {
         return this.prefixes
     }
 
+    replaceUriWithPrefix(uri) {
+        for (let [prefix, uriRef] of Object.entries(this.prefixes)) {
+            if (uri.indexOf(uriRef) === 0) {
+                return uri.replace(new RegExp(`^${uriRef}`), `${prefix}:`)
+            }
+        }
+        return uri
+    }
+
     replacePrefixWithUri(prefixedUri, prefix) {
         return prefixedUri.replace(new RegExp(`^${prefix}:`), this.get(prefix))
     }
 
     registerPrefixFrom(fact) {
         let prefixedURIs = Object.values(this.prefixes)
-        for (let triple of [fact.subject, fact.predicate, fact.object]) {
-            if (!prefixedURIs.includes(triple)) {
-                this.add(this.forgeCustomPrefix(), triple)
+        for (let atom of [fact.subject, fact.predicate, fact.object]) {
+            if (!prefixedURIs.includes(atom)) {
+                this.add(this.forgeCustomPrefix(), atom.replace(RegularExpressions.URI_AFTER_HASH_OR_SLASH, ''))
             }
         }
     }

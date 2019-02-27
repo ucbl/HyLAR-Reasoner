@@ -40,7 +40,9 @@ class Hylar {
         this.sm = new TripleStorageManager()
         this.sm.init()
 
+        this.prefixes = Prefixes
         this.reasoning = true
+
         this._setEntailment(params.entailment)
         this._setupPersistence(params.persistent)
 
@@ -64,6 +66,19 @@ class Hylar {
      */
     get axioms() {
         return Axioms.getAxioms(this.entailment)
+    }
+
+    get reasoningMethod() {
+        switch(this.rMethod) {
+            case Reasoner.process.it.incrementally:
+                return 'incremental'
+                break
+            case Reasoner.process.it.tagBased:
+                return 'tagBased'
+                break
+            default:
+                return 'none'
+        }
     }
 
     /**
@@ -260,24 +275,22 @@ Hylar.prototype.treatLoad = async function(ontologyTxt, mimeType, graph) {
 
 /**
  * Launches a SPARQL query against the triplestore.
- * @param deserializedQuery The SPARQL query text
+ * @param query The SPARQL query text
  * @param reasoningMethod The desired reasoning method if inserting/deleting
  */
 Hylar.prototype.query = async function(query, reasoningMethod) {
-    let sparql, singleWhereQueries = [], result, deserializedQuery
+    let sparql, singleWhereQueries = [], result
     Hylar.notify(`Received ${query}`, { silent: true })
 
     try {
         // Parse original query
 		sparql = ParsingInterface.parseSPARQL(query)
-        // Cleans out string query
-        deserializedQuery = ParsingInterface.deserializeQuery(sparql)
 	} catch (e) {
-		Hylar.displayError('Problem with SPARQL query: ' + deserializedQuery);
+		Hylar.displayError('Problem with SPARQL query: ' + query);
 		throw e;
 	}
 
-    if (this.reasoning == false) return this.sm.query(deserializedQuery)
+    if (this.reasoning == false) return this.sm.query(query)
 
     this.updateReasoningMethod(reasoningMethod);
 
@@ -292,7 +305,7 @@ Hylar.prototype.query = async function(query, reasoningMethod) {
                 // Put them back in a simple update data manner to provide inner-graph inference
                 return this.query(ParsingInterface.buildUpdateQueryWithConstructResults(sparql, data));
             } else {
-                return this.treatUpdateWithGraph(deserializedQuery);
+                return this.treatUpdateWithGraph(query);
             }
             break;
 
@@ -316,12 +329,12 @@ Hylar.prototype.query = async function(query, reasoningMethod) {
                             }
                         }
                     })
-                    if (countStatements.length > 0) deserializedQuery = ParsingInterface.deserializeQuery(sparql)
                 }
 
                 // Execute query against the store
+                let results = []
                 try {
-                    results = await this.sm.query(deserializedQuery)
+                    results = await this.sm.query(query)
                 } catch(err) {
                     throw err
                 }

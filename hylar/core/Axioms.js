@@ -51,7 +51,14 @@ class Axioms {
     }
 
     getAxioms(entailment) {
-        return this.hasOwnProperty(entailment) ? ParsingInterface.turtleToFacts(this[entailment]) : []
+        let axioms = []
+        if (this.hasOwnProperty(entailment)) {
+            axioms = ParsingInterface.turtleToFacts(this[entailment]).map((axiom) => {
+                axiom.isAxiom = true;
+                return axiom
+            })
+        }
+        return axioms
     }
 }
 

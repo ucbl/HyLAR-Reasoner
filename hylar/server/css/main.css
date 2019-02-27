@@ -111,6 +111,12 @@ span.fact.fact-state.implicit {
     background-color: #ecf7fa;
     border: 1px solid #5283a4;
 }
+span.fact.fact-state.axiom {
+    color: #df682a;
+    text-align: center;
+    background-color: #fff8cf;
+    border: 1px solid #df9e27;
+}
 
 .fact.false {
     background-color: #ffeded;
@@ -149,6 +155,10 @@ tr.fact-entry.fact-highlight {
 
 tr.fact-entry.fact-highlight.fact-derived {
     background-color: #d0f0eb;
+}
+.fact-entry-axiom {
+    background-color: #f4f4f4;
+    border: 1px solid #dadada;
 }
 
 div.card {

@@ -17,12 +17,11 @@
     </div>
 </section>
 
-<% if (!fact) { %>
 <section class="section">
         <% if (kb.length != 0) { %>
             <article class="message is-info">
                 <div class="message-body">
-                    The knowledge base currently contains <%- kb.length %> facts (<%- kb.map(entry => { return entry.val }).filter(fact => { return fact.explicit }).length %> explicit, <%- kb.map(entry => { return entry.val }).filter(fact => { return !fact.explicit }).length %>  implicit).
+                    The knowledge base currently contains <%- kb.length %> facts (<%- kb.map(entry => { return entry }).filter(fact => { return fact.explicit }).length %> explicit, <%- kb.map(entry => { return entry }).filter(fact => { return !fact.explicit }).length %>  implicit).
                     <p>
                         <b><%- entailment %></b> entailment is provided (<%- axioms.length || 'no' %> axioms).
                     </p>
@@ -38,7 +37,6 @@
                 </div>
             </article>
 </section>
-<% } %>
 
 <section class="section">
     <table id="facts-list" class="table is-fullwidth is-bordered table-responsive">
@@ -49,51 +47,57 @@
             <th>Predicate</th>
             <th>Object</th>
             <th>Graph</th>
+            <% if (isTagBased) {%>
             <th>Validity</th>
+            <% } %>
             <th>Details</th>
         </tr>
         </thead>
         <tbody>
         <% for (var i = 0; i < kb.length; i++) { %>
-        <tr class="fact-entry" data-fact-id="<%- i %>" id="fact-<%- i %>">
+        <tr class="fact-entry <%- kb[i].isAxiom ? 'fact-entry-axiom' : '' %>" data-fact-id="<%- i %>" id="fact-<%- i %>">
             <td>
-                <% if (kb[i].val.explicit) { %>
+                <% if (kb[i].isAxiom) { %>
+                    <span class="fact fact-state axiom"><%- entailment %>.Axiom</span>
+                <% } else if (kb[i].explicit) { %>
                     <span class="fact fact-state explicit">Explicit</span>
                 <% } else { %>
                     <span class="fact fact-state implicit">Implicit</span>
                 <% } %>
             </td>
-            <% if (kb[i].val.predicate == 'FALSE') { %>
+            <% if (kb[i].predicate == 'FALSE') { %>
             <td colspan="6" class="fact is-light has-text-centered">
                  False fact
             </td>
             <% } else { %>
-            <td id="subject-<%- i %>">
-                <code><%- kb[i].val.subject %></code>
+            <td data-atom='<%- kb[i]._self.subject %>' id="subject-<%- i %>">
+                <code><%- kb[i].subject %></code>
             </td>
-            <td id="predicate-<%- i %>">
-                <code><%- kb[i].val.predicate %></code>
+            <td data-atom='<%- kb[i]._self.predicate %>'  id="predicate-<%- i %>">
+                <code><%- kb[i].predicate %></code>
             </td>
-            <td id="object-<%- i %>">
-                <code><%- kb[i].val.object %></code>
+            <td data-atom='<%- kb[i]._self.object %>'  id="object-<%- i %>">
+                <code><%- kb[i].object %></code>
             </td>
             <td>
                 <code><%- kb[i].graph %></code>
             </td>
+            <% if (isTagBased) { %>
             <td class="has-text-centered">
-                <% if (kb[i].val.isValid()) { %>
+                <% if (kb[i].isValid) { %>
                     <span class="fact fact-valid-true">Valid</span>
                 <% } else { %>
                     <span class="fact fact-valid-false">Invalid</span>
                 <% } %>
             </td>
+            <% } %>
             <td class="has-text-centered">
                 <!-- Analyzing consequences -->
-                <% if (kb[i].val.causedBy.length > 0) { %>
+                <% if (kb[i].causedBy.length > 0) { %>
                 <ul>
-                    <% for (let cause of kb[i].val.causedBy) { %>
+                    <% for (let cause of kb[i].causedBy) { %>
                     <li>
-                        <a <% for (let fact of cause) { %>data-fact-<%- kb.map(entry => { return entry.val }).indexOf(fact) %> <% } %> onclick="highlightFacts(this)">Derivation #<%- kb[i].val.causedBy.indexOf(cause) %></a>
+                        <a <% for (let fact of cause) { %>data-fact-<%- kb.map(entry => { return entry.asString }).indexOf(fact.asString) %> <% } %> onclick="highlightFacts(this, '<%- entailment.toLowerCase() %>')">Derivation #<%- kb[i].causedBy.indexOf(cause) %></a>
                     </li>
                     <% } %>
                 </ul>

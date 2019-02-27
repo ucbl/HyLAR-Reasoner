@@ -321,53 +321,51 @@ module.exports = {
         h.notify(`File ${req.file.originalname} loaded and ready to process`)
     },
 
-    renderFact: function(req, res) {
-        let uri = req.params.fact, dict = Hylar.getDictionary(), graph = decodeURIComponent(req.params.graph),
-            kb = [], content = dict.content(), lookup, key, fact, derivations, factName;
+    renderFacts: function(req, res) {
+        let dict = Hylar.getDictionary(), graph = decodeURIComponent(req.params.graph),
+            kb = [], content = dict.content(), key, fact, derivations, factName;
 
         let nbExplicit = Logics.getOnlyExplicitFacts(kb).length,
             nbImplicit = kb.length - nbExplicit,
             consistent = Hylar.checkConsistency().consistent
 
-        if (!uri) {
-            for (let graph in content) {
-                for (let dictKey in content[graph]) {
-                    let values = dict.get(dictKey, graph);
-                    for (let i = 0; i < values.length; i++) {
-                        kb.push({
-                            val: values[i],
-                            graph: graph
-                        });
-                    }
-                }
-            }
-        } else {
-            lookup = dict.getFactFromStringRepresentation(decodeURIComponent(uri), graph);
-            key = lookup.key;
-            fact = lookup.value;
-            if ((fact === undefined) && (key === undefined)) {
-                res.status(404).render(htmlDir + '/pages/404');
-                return;
-            } else {
-                factName = escape(fact.toString());
-                derivations = fact.derives(dict.values());
-                graph = lookup.graph;
+        const prepareFactForPresentation = (fact, graph) => {
+            return {
+                graph,
+                asString: fact.asString,
+                rule: fact.rule,
+                subject: Hylar.prefixes.replaceUriWithPrefix(fact.subject),
+                predicate: Hylar.prefixes.replaceUriWithPrefix(fact.predicate),
+                object: Hylar.prefixes.replaceUriWithPrefix(fact.object),
+                isValid: fact.isValid(),
+                isAxiom: fact.isAxiom,
+                explicit: fact.explicit,
+                causedBy: fact.causedBy,
+                _self: fact
             }
         }
 
+        for (let graph in content) {
+            for (let dictKey in content[graph]) {
+                let values = dict.get(dictKey, graph);
+                for (let i = 0; i < values.length; i++) {
+                    kb.push(prepareFactForPresentation(values[i], graph))
+                }
+            }
+        }
+
+        let axioms = Hylar.axioms.map(axiom => { return prepareFactForPresentation(axiom, 'rdfs:axiomatic_triples') })
+
         res.render(htmlDir + '/pages/explore', {
-            kb: kb,
-            fact: fact,
-            factName: factName,
-            factTriple: escape(key),
-            derivations: derivations,
+            kb: kb.concat(axioms),
             graph: graph,
             contextPath: contextPath,
             nbExplicit,
             nbImplicit,
             consistent,
             entailment: Hylar.entailment.toUpperCase(),
-            axioms: Hylar.axioms
+            axioms,
+            isTagBased: Hylar.reasoningMethod
         });
     },
 
