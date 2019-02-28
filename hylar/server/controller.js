@@ -322,12 +322,10 @@ module.exports = {
     },
 
     renderFacts: function(req, res) {
-        let dict = Hylar.getDictionary(), graph = decodeURIComponent(req.params.graph),
-            kb = [], content = dict.content(), key, fact, derivations, factName;
-
-        let nbExplicit = Logics.getOnlyExplicitFacts(kb).length,
-            nbImplicit = kb.length - nbExplicit,
-            consistent = Hylar.checkConsistency().consistent
+        let dict = Hylar.getDictionary()
+        let content = dict.content()
+        let graph = decodeURIComponent(req.params.graph)
+        let consistent = Hylar.checkConsistency().consistent
 
         const prepareFactForPresentation = (fact, graph) => {
             return {
@@ -345,6 +343,8 @@ module.exports = {
             }
         }
 
+        let kb = []
+
         for (let graph in content) {
             for (let dictKey in content[graph]) {
                 let values = dict.get(dictKey, graph);
@@ -354,14 +354,14 @@ module.exports = {
             }
         }
 
-        let axioms = Hylar.axioms.map(axiom => { return prepareFactForPresentation(axiom, 'rdfs:axiomatic_triples') })
+        let axioms = Hylar.axioms.map(axiom => {
+            return prepareFactForPresentation(axiom, '_:axiomatic_triples')
+        })
 
         res.render(htmlDir + '/pages/explore', {
             kb: kb.concat(axioms),
             graph: graph,
             contextPath: contextPath,
-            nbExplicit,
-            nbImplicit,
             consistent,
             entailment: Hylar.entailment.toUpperCase(),
             axioms,

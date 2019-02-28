@@ -230,11 +230,11 @@ Solver = {
         emitter.emit('rule-fired', rule.name);        
 
         // If an already existing uri has been mapped...
-        for (var key in localMapping) {
+        /*for (var key in localMapping) {
             if(constants.indexOf(localMapping[key]) !== -1) {
                 return false;
             }
-        }
+        }*/
 
         // Merges local and global mapping
         for (var mapKey in mapping) {

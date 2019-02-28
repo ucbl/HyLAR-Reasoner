@@ -670,7 +670,7 @@ Hylar.prototype.registerDerivations = function(derivations, graph) {
 
     for (var i = 0; i < factsToBeAdded.length; i++) {
         this.dict.put(factsToBeAdded[i], graph);
-        Prefixes.registerPrefixFrom(factsToBeAdded[i])
+        //Prefixes.registerPrefixFrom(factsToBeAdded[i])
     }
 
     this.persist()
