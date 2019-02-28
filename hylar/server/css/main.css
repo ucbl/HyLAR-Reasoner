@@ -206,7 +206,8 @@ div.powered-by .yasqe {
     color: rgba(69, 46, 91, 0.78);
     font-family: "Courier New", Courier, monospace;
     font-size: 14px;
-    overflow: hidden;
+    overflow-y: scroll;
+    max-height: 200px;
 }
 
 .graph-result-menu {

@@ -144,20 +144,23 @@ const sparql = (ev, contextPath) => {
             let resultsSection = document.getElementById('sparql-results-section')
             let resultsTable = document.getElementById('sparql-results-table')
             let graphResultDiv = document.getElementById('sparql-graph-result')
+            let graphDownloadDiv = document.getElementById('graph-result-menu')
 
             resultsTable.innerHTML = null
             graphResultDiv.innerText = null
+
+            if (graphDownloadDiv) graphDownloadDiv.remove()
 
             if (xhr.getResponseHeader('content-type').includes('text/turtle')) {
                 resultsSection.style.display = 'none'
                 graphResultDiv.style.display = null
                 graphResultDiv.innerText = `${result}`
-                graphResultDiv.insertAdjacentHTML('beforeend', `
-                    <div class="graph-result-menu">
+                graphResultDiv.insertAdjacentHTML('beforebegin', `
+                    <div id="graph-result-menu" class="graph-result-menu">
                         <a id="graph-download" href="">Download graph <i class="fas fa-file-download"></i></a>
                     </div>
                 `)
-                document.getElementById('graph-download').href = `data:text/html;charset=utf-8,${result}`
+                document.getElementById('graph-download').href = `data:text/html;charset=utf-8,${result.replace(/#/g, '%23')}`
                 document.getElementById('graph-download').download = 'graph.ttl'
                 return
             } else {
