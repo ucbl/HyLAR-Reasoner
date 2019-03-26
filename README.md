@@ -35,13 +35,11 @@ which takes three parameters:
 - keepOldValues: A boolean: true to keep old values while classfying, false to overwrite the KB. Default is **false**.
 
 ```javascript
-var Hylar = require('hylar'),
-    h = new Hylar();
+const Hylar = require('hylar');
+const h = new Hylar();
     
-h.load(rawOntology, mimeType, keepOldValues)
-    .then(function(reponse) {
-        console.log(response) // outputs true if succeeded
-    });
+// async function
+h.load(rawOntology, mimeType, keepOldValues);
 ```
 
 ### Querying an ontology
@@ -51,10 +49,7 @@ Once loaded, HyLAR is able to process SPARQL queries using `query()`, with the f
 - query: A string, the SPARQL query
 
 ```javascript
-h.query(query)
-    .then(function(results) {
-        console.log(results) // is a JSON object
-    });
+let results = await h.query(query);
 ```
 
 ### Create your own rules
@@ -92,7 +87,7 @@ HyLAR comes with a browserified version, available using bower: `bower install h
 ```html
 <script src="path-to/hylar-client.js"></script>
 ```
-As in the node module version, you can instantiate HyLAR with `var h = new Hylar();` and call the same methods `query()`, `load()` and `parseAndAddRule()`.
+As in the node module version, you can instantiate HyLAR with `const h = new Hylar();` and call the same methods `query()`, `load()` and `parseAndAddRule()`.
 
 ## Use HyLAR as a server
 
@@ -102,32 +97,37 @@ As in the node module version, you can instantiate HyLAR with `var h = new Hylar
 
 ### Run the server
 
-`hylar --port 3000 -od /usr/local/share/ontologies/`
+Command `hylar` with the following optional parameters
 
-> **Note:**  `--port <port_number>` or `-p <port_number>` is optional. HyLAR runs at port 3000 by default. 
-> 
-> `--ontology-directory </your/base/ontology/directory/>` or `-od </your/base/ontology/directory/>` is also optional.
-This parameter specifies the directory in which ontologies are located, in order to classify them. By default, HyLAR uses its module path, i.e. `{path_to_hylar}/server/ontologies/`.
+- `--port <port_number>` (port 3000 by default)
+- `--no-persist` deactivates database persistence (activated by default)
+- `--graph-directory </your/base/graph/directory/>` where local datasets are saved
+- `--entailment` either ```OWL2RL``` (default) or ```RDFS```
+- `--reasoning-method` either `incremental` (default) or `tag-based` (provides *reasoning proofs*)
 
-### Load and query your ontology
+### Hylar server API
 
-#### GET /classify/{FILE_NAME}
-Loads, parses and classify the file **{FILE_NAME}** from the ontology directory.
+- `/classify/{FILE_NAME}` (GET)
+
+Loads, parses and classify the file `{FILE_NAME}` from the ontology directory.
 > **Note:** You don't have to specify the ontology file's mimetype as it is detected automatically using its extension.
 
-#### GET /classify/
+- `/classify/` (GET)
+
 Allows classifying an ontology as a string, which requires its original serialization type.
 > **Body parameters** 
 >`filename` the absolute path of the ontology file to be processed.
 > `mimetype` the serialization of the ontology (mimetype, one of text/turtle, text/n3 or application/ld+json).
 
-#### GET /query
+- `/query`(GET)
+
 SPARQL queries your loaded ontology as does `Hylar.query()`.
 
 > **Body parameters**
 > `query` the SPARQL query string.
 
-#### PUT /rule
+- `/rule` (PUT)
+
 Puts an list of custom rules and adds it to the reasoner.
 
 > **Body parameters**
@@ -135,34 +135,11 @@ Puts an list of custom rules and adds it to the reasoner.
 
 ## Supported inferences
 
-The following OWL 2 rules are currently supported by HyLAR, based on the semantics detailed [here](https://www.w3.org/TR/owl2-profiles/#Reasoning_in_OWL_2_RL_and_RDF_Graphs_using_Rules):
-
-* `(?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2) ^ (?c2 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c3) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c3)`
-
-* `(?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2) ^ (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c1) -> (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c2)`
-
-* `(?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) ^ (?p2 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p3) -> (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p3)`
-
-* `(?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) ^ (?x ?p1 ?y) -> (?x ?p2 ?y)`
-
-* `(?x ?p ?y) ^ (?p http://www.w3.org/1999/02/22-rdf-syntax-ns#type http://www.w3.org/2002/07/owl#TransitiveProperty) ^ (?y ?p ?z) -> (?x ?p ?z)`
-
-* `(?p1 http://www.w3.org/2002/07/owl#inverseOf ?p2) ^ (?x ?p1 ?y) -> (?y ?p2 ?x)`
-
-* `(?p1 http://www.w3.org/2002/07/owl#inverseOf ?p2) ^ (?x ?p2 ?y) -> (?y ?p1 ?x)`
-
-* `(?c1 http://www.w3.org/2002/07/owl#equivalentClass ?c2) ^ (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c1) -> (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c2)`
-
-* `(?c1 http://www.w3.org/2002/07/owl#equivalentClass ?c2) ^ (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c2) -> (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c1)`
-
-* `(?p1 http://www.w3.org/2002/07/owl#equivalentProperty ?p2) ^ (?x ?p1 y) -> (?x ?p2 ?y)`
-
-* `(?p1 http://www.w3.org/2002/07/owl#equivalentProperty ?p2) ^ (?x ?p2 y) -> (?x ?p1 ?y)`
-
-* `(?s1 http://www.w3.org/2002/07/owl#sameAs ?s2) ^ (?s1 ?p ?o) -> (?s2 ?p ?o)`
-
-* `(?p1 http://www.w3.org/2002/07/owl#sameAs ?p2) ^ (?s ?p1 ?o) -> (?s ?p2 ?o)`
-
-* `(?o1 http://www.w3.org/2002/07/owl#sameAs ?o2) ^ (?s ?p ?o1) -> (?s ?p ?o2)`
-
-* `(?x http://www.w3.org/2002/07/owl#sameAs ?y) ^ (?y http://www.w3.org/2002/07/owl#sameAs ?z) -> (?x http://www.w3.org/2002/07/owl#sameAs ?z)`
+HyLAR supports a subset of OWL 2 RL and RDFS.
+- [RDFS](https://www.w3.org/TR/rdf-mt/#RDFSRules)
+    - Rules:
+`rdf1, rdfs2, rdfs3, rdfs4a, rdfs4b, rdfs5, rdfs6, rdfs7, rdfs8, rdfs9, rdfs10, rdfs11, rdfs12, rdfs13`.
+    - Supports all RDFS axiomatic triples, except axioms related to `rdf:Seq` and `rdf:Bag`.    
+- [OWL 2 RL](https://www.w3.org/TR/owl2-profiles/#Reasoning_in_OWL_2_RL_and_RDF_Graphs_using_Rules)
+    - Rules: `prp-dom, prp-rng, prp-fp, prp-ifp, prp-irp, prp-symp, prp-asyp, prp-trp, prp-spo1, prp-spo2, prp-eqp1, prp-eqp2, prp-pdw, prp-inv1, prp-inv2, prp-npa1, prp-npa2, cls-nothing2, cls-com, cls-svf1, cls-svf2, cls-avf, cls-hv1, cls-hv2, cls-maxc1, cls-maxc2, cls-maxqc1, cls-maxqc2, cls-maxqc3, cls-maxqc4, cax-sco, cax-eqc1, cax-eqc2, cax-dw, scm-cls, scm-sco, scm-eqc1, scm-eqc2, scm-op, scm-dp, scm-spo, scm-eqp1, scm-eqp2, scm-dom1, scm-dom2, scm-rng1, scm-rng2, scm-hv, scm-svf1, scm-svf2, scm-avf1, scm-avf2`
+    - Axiomatic triples are *not yet* supported.

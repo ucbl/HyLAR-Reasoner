@@ -29,7 +29,7 @@ process.argv.forEach(function(value, index) {
 });
 
 process.argv.forEach(function(value, index) {
-    if((value=='--entailment')) {
+    if((value=='--entailment') || (value = '-e')) {
         entailment = process.argv[index + 1]
     }
 });
@@ -39,7 +39,7 @@ const Hylar = new h({
 });
 
 process.argv.forEach(function(value, index) {
-    if ((value == '-od') || (value == '--ontology-directory')) {
+    if ((value == '-od') || (value == '--ontology-directory') || (value == '-gd') || (value == '--graph-directory')) {
         ontoDir = path.resolve(process.argv[index + 1]);
     }
 });
@@ -55,7 +55,7 @@ process.argv.forEach(function(value, index) {
 
 process.argv.forEach(function(value, index) {
     if((value=='-rm') || (value=='--reasoning-method')) {
-        if (process.argv[index + 1] == 'tagBased') {
+        if (['tagBased', 'tag-based'].includes(process.argv[index + 1])) {
             Hylar.setTagBased();
         } else {
             Hylar.setIncremental();
