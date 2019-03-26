@@ -4,9 +4,7 @@
 
 const fs = require('fs'),
     path = require('path'),
-    request = require('request'),
-    mime = require('mime-types'),
-    escape = require('escape-html');
+    mime = require('mime-types');
 
 const h = require('../hylar');
 const Logics = require('../core/Logics/Logics');
@@ -29,7 +27,7 @@ process.argv.forEach(function(value, index) {
 });
 
 process.argv.forEach(function(value, index) {
-    if((value=='--entailment') || (value = '-e')) {
+    if((value=='--entailment') || (value == '-e')) {
         entailment = process.argv[index + 1]
     }
 });
@@ -258,27 +256,6 @@ module.exports = {
     },
 
     /**
-     * External OWL File content to text
-     * @param req
-     * @param res
-     * @param next
-     */
-    getExternalOntology: function(req, res, next) {
-        let initialTime = 0,
-            receivedReqTime = new Date().getTime();
-
-        req.requestDelay =  receivedReqTime - initialTime;
-        let url = req.body.url;
-
-        request.get(url, function (error, response, body) {
-            if (!error && response.statusCode == 200) {
-                req.rawOntology = body.toString().replace(/(&)([a-z0-9]+)(;)/gi, '$2:');
-                next();
-            }
-        });
-    },
-
-    /**
      * Simple HelloWorld
      * @param req
      * @param res
@@ -365,7 +342,7 @@ module.exports = {
             consistent,
             entailment: Hylar.entailment.toUpperCase(),
             axioms,
-            isTagBased: Hylar.reasoningMethod
+            isTagBased: Hylar.reasoningMethod == 'tagBased'
         });
     },
 
@@ -449,10 +426,4 @@ module.exports = {
         Hylar.clean();
         next();
     },
-
-    geoloc: function(req, res) {
-        Hylar.setRules(Rules.owl2rl);
-        res.render(htmlDir + '/pages/blend_geoloc', {});
-    },
-
 };

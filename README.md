@@ -138,7 +138,7 @@ Puts an list of custom rules and adds it to the reasoner.
 HyLAR supports a subset of OWL 2 RL and RDFS.
 - [RDFS](https://www.w3.org/TR/rdf-mt/#RDFSRules)
     - Rules:
-`rdf1, rdfs2, rdfs3, rdfs4a, rdfs4b, rdfs5, rdfs6, rdfs7, rdfs8, rdfs9, rdfs10, rdfs11, rdfs12, rdfs13`.
+`rdf1, rdfs2, rdfs3, rdfs4a, rdfs4b, rdfs5, dfs6, rdfs7, rdfs8, rdfs9, rdfs10, rdfs11, rdfs12, rdfs13`.
     - Supports all RDFS axiomatic triples, except axioms related to `rdf:Seq` and `rdf:Bag`.    
 - [OWL 2 RL](https://www.w3.org/TR/owl2-profiles/#Reasoning_in_OWL_2_RL_and_RDF_Graphs_using_Rules)
     - Rules: `prp-dom, prp-rng, prp-fp, prp-ifp, prp-irp, prp-symp, prp-asyp, prp-trp, prp-spo1, prp-spo2, prp-eqp1, prp-eqp2, prp-pdw, prp-inv1, prp-inv2, prp-npa1, prp-npa2, cls-nothing2, cls-com, cls-svf1, cls-svf2, cls-avf, cls-hv1, cls-hv2, cls-maxc1, cls-maxc2, cls-maxqc1, cls-maxqc2, cls-maxqc3, cls-maxqc4, cax-sco, cax-eqc1, cax-eqc2, cax-dw, scm-cls, scm-sco, scm-eqc1, scm-eqc2, scm-op, scm-dp, scm-spo, scm-eqp1, scm-eqp2, scm-dom1, scm-dom2, scm-rng1, scm-rng2, scm-hv, scm-svf1, scm-svf2, scm-avf1, scm-avf2`

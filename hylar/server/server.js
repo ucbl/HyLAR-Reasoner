@@ -90,10 +90,6 @@ app.get('/explore/rules', Controller.renderRules);
 app.get('/explore/resetRules', Controller.resetRules, Controller.renderRules);
 app.post('/explore/rules', Controller.addRules, Controller.renderRules);
 
-// Launching server
-
-app.get('/demo', Controller.geoloc);
-
 (async() => {
     await new Promise((resolve, reject) => {
         try {

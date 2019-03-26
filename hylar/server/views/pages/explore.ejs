@@ -49,8 +49,8 @@
             <th>Graph</th>
             <% if (isTagBased) {%>
             <th>Validity</th>
-            <% } %>
             <th>Details</th>
+            <% } %>
         </tr>
         </thead>
         <tbody>
@@ -90,7 +90,6 @@
                     <span class="fact fact-valid-false">Invalid</span>
                 <% } %>
             </td>
-            <% } %>
             <td class="has-text-centered">
                 <!-- Analyzing consequences -->
                 <% if (kb[i].causedBy.length > 0) { %>
@@ -103,6 +102,7 @@
                 </ul>
                 <% } %>
             </td>
+            <% } %>
             <% } %>
         </tr>
         <% } %>
