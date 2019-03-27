@@ -236,9 +236,8 @@ Hylar.prototype.updateReasoningMethod = function(method = 'incremental') {
  * @param keepOldValues (optional - default: false) Avoid storage cleaning if set to true.
  * @returns {*}
  */
-Hylar.prototype.load = async function(ontologyTxt, mimeType, keepOldValues, graph, reasoningMethod) {
+Hylar.prototype.load = async function(ontologyTxt, mimeType, keepOldValues, graph) {
     emitter.emit('classif-started');
-    this.updateReasoningMethod(reasoningMethod);
 
     if (!keepOldValues) {
         this.dict.clear();

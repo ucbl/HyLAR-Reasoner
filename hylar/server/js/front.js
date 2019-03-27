@@ -44,14 +44,20 @@ const checkStatus = (contextPath = '') => {
     }
 }
 
-const prove = async(factIds, entailment) => {
+const prove = async(inferredFactId, assertedFactIds, entailment) => {
     let facts = []
 
-    for (let factId of factIds) {
+    const buildFact = (factId) => {
         let sub = document.getElementById(`subject-${factId}`).dataset.atom
         let pred = document.getElementById(`predicate-${factId}`).dataset.atom
         let obj = document.getElementById(`object-${factId}`).dataset.atom
-        facts.push(new Fact(pred, sub, obj))
+        return new Fact(pred, sub, obj)
+    }
+
+    let inferredFact = buildFact(inferredFactId)
+
+    for (let factId of assertedFactIds) {
+        facts.push(buildFact(factId))
     }
 
     let proofChain = [facts]
@@ -88,8 +94,10 @@ const prove = async(factIds, entailment) => {
                             ${fact.rule != null ? fact.rule.name : 'asserted'}
                         </span>
                     </div>                    
-                    <div class="column">
-                    <span class="proof-fact">${fact.subject} ${fact.predicate} ${fact.object}</span>
+                    <div class="column">                    
+                    <${fact.rule != null || fact.toRaw() != inferredFact.toRaw() ? 'span' : 'b'} class="proof-fact">
+                        ${fact.subject} ${fact.predicate} ${fact.object}
+                    </${fact.rule != null || fact.toRaw() != inferredFact.toRaw() ? 'span' : 'b'}>
                     </div>                        
                 </div>
             `
@@ -121,7 +129,7 @@ const highlightFacts = (ev, entailment) => {
         block.scrollIntoView({ block: 'center' })
     }
 
-    prove(factIds, entailment)
+    prove(ev.closest("tr").dataset.factId, factIds, entailment)
 }
 
 const appendPrefix = (ev) => {
