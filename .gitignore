@@ -9,3 +9,4 @@ hylar.log
 .vscode
 ./bench.txt
 bench_results
+/hylar/server/ontologies

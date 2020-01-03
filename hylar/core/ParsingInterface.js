@@ -9,7 +9,8 @@ var Fact = require('./Logics/Fact'),
 
 var q = require('q'),
     sparqlJs = require('sparqljs'),
-    SparqlParser = new sparqlJs.Parser()    
+    SparqlParser = new sparqlJs.Parser(),
+    SparqlGenerator = new sparqlJs.Generator()
 
 /**
  * The parsing interface, for transforming facts, triples, turtle or even results bindings
@@ -143,8 +144,30 @@ ParsingInterface = {
         return ttl;
     },
 
-    updateWhereToConstructWhere: function(query, doParse) {
-        return query.replace(RegularExpressions.DELETE_OR_INSERT_STATEMENT, 'CONSTRUCT$2');
+    /**
+     * Transforms a parsed update where query to a construct query
+     * @param parsedQuery as update where
+     * @returns parsedQuery as construct
+     */
+    updateWhereToConstructWhere: function(parsedQuery) {
+        parsedQuery.type = "query"
+        parsedQuery.queryType = "CONSTRUCT"
+
+        parsedQuery.where = []
+        parsedQuery.template = []
+
+        parsedQuery.updates.forEach(up => {
+            parsedQuery.where = parsedQuery.where.concat(up.where)
+            up.insert.forEach(ins => {
+                parsedQuery.template = parsedQuery.template.concat(ins.triples)
+            })
+            up.delete.forEach(del => {
+                parsedQuery.template = parsedQuery.template.concat(del.triples)
+            })
+        })
+
+        delete parsedQuery.updates
+        return parsedQuery
     },
 
     /**
@@ -153,6 +176,8 @@ ParsingInterface = {
      * @returns {*}
      */
     parseSPARQL: function(query) {
+        // Hack to remove potential CONSTRUCT issues with GRAPH in the first pattern
+        query = query.replace(RegularExpressions.CONSTRUCT_GRAPH_1ST_PATTERN, "$1$2$3");
         return SparqlParser.parse(query);
     },
 
@@ -225,7 +250,6 @@ ParsingInterface = {
     },
 
     isUpdateWhere: function(parsedQuery) {
-        var res;
         try {
             if ( (parsedQuery.updates[0].where)
                 || (parsedQuery.updates[0].updateType == "deletewhere")
@@ -250,13 +274,30 @@ ParsingInterface = {
     },
 
     buildUpdateQueryWithConstructResults: function(initialQuery, results) {
-        switch(this.isInsert(initialQuery)) {
-            case true:
-                return "INSERT DATA { " + this.triplesToTurtle(results.triples) + " }";
-                break;
-            default:
-                return "DELETE DATA { " + this.triplesToTurtle(results.triples) + " }";
+        if (results.hasOwnProperty('triples')) {
+            switch (this.isInsert(initialQuery)) {
+                case true:
+                    return "INSERT DATA { " + this.triplesToTurtle(results.triples) + " }";
+                    break;
+                default:
+                    return "DELETE DATA { " + this.triplesToTurtle(results.triples) + " }";
+            }
+        } else {
+            return ""
         }
+    },
+
+    turtleToTriples(turtle) {
+        return this.parseSPARQL(`insert data { ${turtle} }`).updates[0].insert[0].triples
+    },
+
+    turtleToFacts(turtle) {
+        return this.triplesToFacts(this.turtleToTriples(turtle))
+    },
+
+    deserializeQuery(sparqlQuery) {
+        let query = SparqlGenerator.stringify(sparqlQuery);
+        return query;
     }
 };
 

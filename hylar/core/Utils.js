@@ -19,7 +19,7 @@ emitter.on('finished', function(task) {
     console.log('processed ' + task);
 });
 
-module.exports = {
+Utils = {
 
     _instanceid: 1,
 
@@ -148,4 +148,6 @@ module.exports = {
             return '"' + elem.replace(/[^a-zA-Z]/g,'') + '"';
         }        
     }
-};
+}
+
+module.exports = Utils

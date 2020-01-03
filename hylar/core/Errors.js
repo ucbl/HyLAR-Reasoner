@@ -17,5 +17,13 @@ module.exports = {
 
     FileIO: function(filename) {
         return new Error('Cannot access ' + filename);
+    },
+
+    DBParsing: function(filename) {
+        return new Error(`Cannot parse '${filename}' as graph database.`)
+    },
+
+    CountNotImplemented: function(expr) {
+        return new Error(`COUNT statement currently only supports single wildcard (*) counts, got '${expr}'`)
     }
 };

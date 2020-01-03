@@ -1,8 +1,10 @@
-a.fact {
+span.fact {
     color: darkslategray;
     display: inline-block;
     border: 1px solid slategray;
     padding: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
     margin-right: 5px;
     margin-left: 5px;
     margin-bottom: 5px;
@@ -10,14 +12,20 @@ a.fact {
     width: auto;
     background: ghostwhite;
     box-shadow: slategray 1px 1px;
+    letter-spacing: 1px;
 }
 
-a.fact-valid-true {
+code {
+    background-color: unset;
+    color: #2c2c2c;
+}
+
+span.fact-valid-true {
     color: green;
     border-color: limegreen;
 }
 
-a.fact-valid-false {
+span.fact-valid-false {
     color: indianred;
     border-color: indianred;
 }
@@ -39,14 +47,6 @@ span.rule {
     width: auto;
     background: #FEFEFE;
     box-shadow: slategray 1px 1px;
-}
-
-h3 {
-    border-bottom: 1px solid slategray;
-    padding-bottom: 5px;
-    padding-left: 5px;
-    padding-top: 15px;
-    text-shadow: 1px 1px lightslategrey;
 }
 
 .error {
@@ -82,3 +82,146 @@ h3 {
     cursor: copy;
 }
 
+td.is-centered {
+    text-align: center;
+}
+
+.container div.file {
+    justify-content: center;
+}
+
+.table {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+span.fact .fact-state {
+    text-shadow: 0.5px 0.5px #d2d2d2;
+    letter-spacing: 0.75px;
+    cursor: default;
+}
+
+span.fact.fact-state.explicit {
+    color: #7c5fa4;
+    background-color: #f8f8fa;
+    border: 1px solid #7c5fa4;
+}
+span.fact.fact-state.implicit {
+    color: #5283a4;
+    background-color: #ecf7fa;
+    border: 1px solid #5283a4;
+}
+span.fact.fact-state.axiom {
+    color: #df682a;
+    text-align: center;
+    background-color: #fff8cf;
+    border: 1px solid #df9e27;
+}
+
+.fact.false {
+    background-color: #ffeded;
+    color: #ff6b62;
+}
+
+.footer {
+    position: fixed;
+    padding: 10px;
+    bottom: 0;
+    width: 100%;
+    z-index: 5;
+}
+
+.footer.status-ok {
+    background-color: #eeffe8;
+    border-top: 1px solid #b7dfc0;
+    color: #355335;
+}
+
+.footer.status-nok {
+    background-color: #fff0ed;
+    border-top: 1px solid #df682a;
+    color: #c24421;
+}
+
+.last-log {
+    padding: 5px;
+    font-family: "Courier New", Courier, monospace;
+    letter-spacing: -1px;
+}
+
+tr.fact-entry.fact-highlight {
+    background-color: #d9c5f0;
+}
+
+tr.fact-entry.fact-highlight.fact-derived {
+    background-color: #d0f0eb;
+}
+.fact-entry-axiom {
+    background-color: #f4f4f4;
+    border: 1px solid #dadada;
+}
+
+div.card {
+    margin-right: 30%;
+    margin-left: 30%;
+}
+
+.select, .select select {
+    width: 100%
+}
+
+div.powered-by {
+    margin-top: 10px;
+    text-align: right;
+}
+
+div.powered-by .rdfstore {
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+    font-size: 13px;
+    padding: 2px;
+    padding-bottom: 4px;
+    border: 1px solid #df9e27;
+    border-radius: 5px;
+    color: #df682a;
+    background-color: rgba(248, 236, 14, 0.2);
+    box-shadow: #dfc830 1px 1px;
+}
+div.powered-by .yasqe {
+    margin-bottom: 10px;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 2px;
+    padding-bottom: 4px;
+    border: 1px solid #5283a4;
+    border-radius: 5px;
+    color: #5283a4;
+    background-color: rgba(236, 247, 250, 0.2);
+    box-shadow: #b7dfc0 1px 1px;
+}
+
+.graph-result {
+    border: 1px solid #dbdbdb;
+    padding: 10px;
+    color: rgba(69, 46, 91, 0.78);
+    font-family: "Courier New", Courier, monospace;
+    font-size: 14px;
+    overflow-y: scroll;
+    max-height: 200px;
+}
+
+.graph-result-menu {
+    text-align: right;
+    font-size: 18px;
+    border-top: 1px solid #dbdbdb;
+    background-color: #ecf7fa;
+    padding: 3px;
+    padding-right: 10px;
+    margin-top: 10px;
+}
+
+.is-proof {
+    margin-bottom: 50px;
+    margin-top: -50px;
+    border: 1px solid #3273dc;
+}

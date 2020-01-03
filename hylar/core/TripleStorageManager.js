@@ -2,7 +2,6 @@
  * Created by pc on 20/11/2015.
  */
 
-var ParsingInterface = require('./ParsingInterface');
 var Prefixes = require('./Prefixes');
 
 var rdfstore = require('rdfstore');
@@ -22,10 +21,10 @@ function TripleStorageManager() {
      * Register owl, rdfs and rdfs prefixes.
      * @returns {*}
      */
-TripleStorageManager.prototype.init = function() {
+TripleStorageManager.prototype.init = async function() {
     var deferred = q.defer(),
         that = this;
-    new rdfstore.create(function(err, store) {
+    await new rdfstore.create(function(err, store) {
         if(err) {
             deferred.reject(err);
         } else {
@@ -46,17 +45,17 @@ TripleStorageManager.prototype.init = function() {
  */
 TripleStorageManager.prototype.query = function(query) {
     var deferred = q.defer();    
-    query = query.replace(/\\/g, '').replace(/(\n|\r)/g, '\n');
+    query = query.replace(/\\/g, '').replace(/(\n|\r)/g, ' ');
     try {      
         this.storage.execute(query, function (err, r) {
             if(err) {            
-                deferred.reject(err);
+                deferred.reject(new Error(`(SPARQL) ${err}`));
             } else {
-                deferred.resolve(r);
+                deferred.resolve(r !== undefined ? r : true)
             }
         });
     } catch(e) {
-        deferred.resolve(true);
+        deferred.reject(e);
     }
     return deferred.promise;
 };
@@ -72,10 +71,8 @@ TripleStorageManager.prototype.load = function(data, format) {
 
     this.storage.load(format, data, function (err, r) {                
         if(err) {
-            console.error(err.toString());
             deferred.reject(err);
         } else {
-            console.notify(r + ' triples loaded.');
             deferred.resolve(r);
         }
     });
@@ -96,14 +93,11 @@ TripleStorageManager.prototype.clear = function()  {
  * @param ttl Triples to insert, in turtle.
  * @returns {*}
  */
-TripleStorageManager.prototype.insert = function(ttl, graph) {
-    var query;
-    if (graph === undefined) {
-        query = 'INSERT DATA { ' + ttl + ' }';
-    } else {
-        query = 'INSERT DATA { GRAPH <' + graph + '> { ' + ttl + ' } }'
-    }
-    return this.query(query);
+TripleStorageManager.prototype.insert = async function(ttl, graph) {
+    let ack = await this.query(`INSERT DATA { ${ttl} }`);
+    if (graph !== undefined) {
+        return (await this.query(`INSERT DATA { GRAPH <${graph}> { ${ttl} } }`)) && ack
+    } else return ack
 };
 
 /**
@@ -112,14 +106,11 @@ TripleStorageManager.prototype.insert = function(ttl, graph) {
  * @param ttl Triples to insert, in turtle.
  * @returns {*}
  */
-TripleStorageManager.prototype.delete = function(ttl, graph) {
-    var query;
-    if (graph === undefined) {
-        query = 'DELETE DATA { ' + ttl + ' }';
-    } else {
-        query = 'DELETE DATA { GRAPH <' + graph + '> { ' + ttl + ' } }'
-    }
-    return this.query(query);
+TripleStorageManager.prototype.delete = async function(ttl, graph) {
+    let ack = await this.query('DELETE DATA { ' + ttl + ' }');
+    if (graph !== undefined) {
+        return await this.query('DELETE DATA { GRAPH <' + graph + '> { ' + ttl + ' } { ' + ttl + ' } }')
+    } else return ack
 };
 
 /**

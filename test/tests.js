@@ -2,18 +2,15 @@
  * Created by Spadon on 19/08/2015.
  */
 
-var should = require('should');
 var fs = require('fs');
 var path = require('path');
 var mime = require('mime-types');
 
-var OWL2RL = require('../hylar/core/OWL2RL')
-var Logics = require('../hylar/core/Logics/Logics');
 var H = require('../hylar/hylar');
 var queries = require('./query-examples');
-var owl, ontology, mimeType, Hylar = new H();
+var owl, mimeType, Hylar = new H();
 
-var a, b;
+var a;
 
 var reasoningMethod = process.env.rm, ontologyFilename = '/ontologies/fipa.ttl';
 
@@ -41,8 +38,8 @@ describe('File reading', function () {
 describe('Ontology Parsing and classification', function () {
     it('should parse and classify the ontology', function () {
 
-        console.notify('\nSTARTING TESTS -----------------------------------------\n')
-        console.notify('File: ' + ontologyFilename);
+        H.notify('\nSTARTING TESTS -----------------------------------------\n')
+        H.notify('File: ' + ontologyFilename);
 
         return Hylar.load(owl, mimeType, false, false, reasoningMethod)
         .then(function() {
@@ -51,7 +48,7 @@ describe('Ontology Parsing and classification', function () {
         })
         .then(function(r) {
             before = r.length;
-            b=r;
+            a=r;
             r.length.should.be.above(0);
         });
     });
