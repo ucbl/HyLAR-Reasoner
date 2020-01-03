@@ -2,7 +2,12 @@
 
 A rule-based incremental reasoner for the Web.
 
+To cite HyLAR: [HyLAR+: improving Hybrid Location-Agnostic Reasoning
+with Incremental Rule-based Update](https://hal.archives-ouvertes.fr/hal-01276558/file/Demo_www2016.pdf)
+
 ![Build status on node 8, 7, 6, 5](https://api.travis-ci.org/ucbl/HyLAR-Reasoner.svg?branch=master)
+
+
 
 ## Table of contents
 
@@ -11,6 +16,8 @@ A rule-based incremental reasoner for the Web.
 - [Use HyLAR in a browser](#use-hylar-in-a-browser)
 - [Use HyLAR as a server](#use-hylar-as-a-server)
 - [Supported Inferences](#supported-inferences)
+- [Publications](#publications)
+
 
 ## Description
 
@@ -143,3 +150,18 @@ HyLAR supports a subset of OWL 2 RL and RDFS.
 - [OWL 2 RL](https://www.w3.org/TR/owl2-profiles/#Reasoning_in_OWL_2_RL_and_RDF_Graphs_using_Rules)
     - Rules: `prp-dom, prp-rng, prp-fp, prp-ifp, prp-irp, prp-symp, prp-asyp, prp-trp, prp-spo1, prp-spo2, prp-eqp1, prp-eqp2, prp-pdw, prp-inv1, prp-inv2, prp-npa1, prp-npa2, cls-nothing2, cls-com, cls-svf1, cls-svf2, cls-avf, cls-hv1, cls-hv2, cls-maxc1, cls-maxc2, cls-maxqc1, cls-maxqc2, cls-maxqc3, cls-maxqc4, cax-sco, cax-eqc1, cax-eqc2, cax-dw, scm-cls, scm-sco, scm-eqc1, scm-eqc2, scm-op, scm-dp, scm-spo, scm-eqp1, scm-eqp2, scm-dom1, scm-dom2, scm-rng1, scm-rng2, scm-hv, scm-svf1, scm-svf2, scm-avf1, scm-avf2`
     - Axiomatic triples are *not yet* supported.
+
+## Publications
+
+### Location-agnostic mechanism
+
+Terdjimi, M., Médini, L., & Mrissa, M. (2015, May). [Hylar: Hybrid location-agnostic reasoning 📚](https://hal.archives-ouvertes.fr/hal-01154549/file/hylar.pdf) In ESWC Developers Workshop 2015 (p. 1).
+
+### Incremental reasoning on the Web with HyLAR
+
+Terdjimi, M., Médini, L., & Mrissa, M. (2016, April). [HyLAR+: improving hybrid location-agnostic reasoning with incremental rule-based update 📚](https://hal.archives-ouvertes.fr/hal-01276558/file/Demo_www2016.pdf) In Proceedings of the 25th International Conference Companion on World Wide Web (pp. 259-262). International World Wide Web Conferences Steering Committee. 
+
+### Tag-based maintenance
+
+Terdjimi, M., Médini, L., & Mrissa, M. (2018, April). [Web Reasoning Using Fact Tagging 📚](http://mmrissa.perso.univ-pau.fr/pub/Accepted-papers/2018-TheWebConf-RoD.pdf) In Companion of the The Web Conference 2018 on The Web Conference 2018 (pp. 1587-1594). International World Wide Web Conferences Steering Committee.
+
