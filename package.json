@@ -1,7 +1,7 @@
 {
   "name": "hylar",
   "main": "hylar/hylar.js",
-  "version": "1.8.5",
+  "version": "1.9.0",
   "dependencies": {
     "asciify": "^1.3.5",
     "bluebird": "^3.5.1",
@@ -28,7 +28,8 @@
     "browserify": "^16.2.3",
     "cross-env": "^5.2.0",
     "mocha": "^5.2.0",
-    "should": "^13.2.3"
+    "should": "^13.2.3",
+    "typescript": "^3.7.4"
   },
   "engines": {
     "node": ">=0.10.0"
@@ -38,7 +39,7 @@
     "test": "cross-env rm=incremental mocha test/logics_test.js",
     "build": "browserify -t brfs test/benchmark_tests_lite.js > bench.js",
     "start": "node hylar/server/server.js",
-	"start-tb": "node hylar/server/server.js -rm tagBased"
+    "start-tb": "node hylar/server/server.js -rm tagBased"
   },
   "bin": {
     "hylar": "hylar/server/server.js"
