@@ -37,7 +37,8 @@
     "clientize": "browserify hylar/hylar.js -o hylar-client.js",
     "test": "cross-env rm=incremental mocha test/logics_test.js",
     "build": "browserify -t brfs test/benchmark_tests_lite.js > bench.js",
-    "start": "node hylar/server/server.js"
+    "start": "node hylar/server/server.js",
+	"start-tb": "node hylar/server/server.js -rm tagBased"
   },
   "bin": {
     "hylar": "hylar/server/server.js"
