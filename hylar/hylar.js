@@ -159,7 +159,7 @@ class Hylar {
     }
 
     static success(msg) {
-        console.log(`${chalkRainbow('[HyLAR] ')} 👍 ${msg}`);
+        console.log(`${chalkRainbow('[HyLAR] ')} ✨ ${msg}`);
         try {
             Hylar.log(msg)
         } catch (e) {
