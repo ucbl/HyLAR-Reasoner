@@ -5,10 +5,6 @@ A rule-based incremental reasoner for the Web.
 To cite HyLAR: [HyLAR+: improving Hybrid Location-Agnostic Reasoning
 with Incremental Rule-based Update](https://hal.archives-ouvertes.fr/hal-01276558/file/Demo_www2016.pdf)
 
-![Build status on node 8, 7, 6, 5](https://api.travis-ci.org/ucbl/HyLAR-Reasoner.svg?branch=master)
-
-
-
 ## Table of contents
 
 - [Description](#description)
