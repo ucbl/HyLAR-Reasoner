@@ -14,6 +14,29 @@
         </p>
     </div>
 </section>
+
+<section id="sparql-errors-section" style="display:none; font-family: monospace" class="section">
+    <div class="container">
+        <article class="message is-danger">
+            <div class="message-header">
+                😰 QueryError
+            </div>
+            <div class="message-body" id="sparql-errors"></div>
+        </article>
+    </div>
+</section>
+
+<section id="sparql-success-section" style="display:none;" class="section">
+    <div class="container">
+        <article class="message is-success">
+            <div class="message-header">
+                ✨ Success
+            </div>
+            <div class="message-body" id="sparql-success"></div>
+        </article>
+    </div>
+</section>
+
 <section class="section">
     <div class="container">
         <textarea id="query" name="query"><%- sparqlQuery %></textarea>
@@ -35,7 +58,9 @@
 <section id="sparql-results-section" style="display:none;" class="section">
     <div class="container">
         <h1 class="subtitle">Results</h1>
-        <table id="sparql-results-table" class="table is-bordered table-responsive is-fullwidth"></table>
+        <div class="table-container">
+            <table id="sparql-results-table" class="table results-table is-bordered table-responsive is-fullwidth"></table>
+        </div>
     </div>
 </section>
 
@@ -44,29 +69,24 @@
     </div>
 </div>
 
+<!--
 <section class="section">
     <div class="container">
         <h1 class="subtitle">Query history</h1>
-        <table class="table is-warning is-bordered is-striped table-responsive is-fullwidth">
-            <tr>
-                <th>SPARQL query</th>
-                <th>Status</th>
-            </tr>
+        <table class="table is-warning is-bordered table-responsive is-fullwidth">
             <% for (var i = (history.length-1); i > -1; i--) { %>
-            <tr class="queryhistory" onclick="putSparql('q<%- i %>')">
-                <td id="q<%- i %>"><%= history[i].query %></td>
-                <td class="sparqlstatus">
-                    <% if(history[i].noError) { %>
-                    <span class="noerror glyphicon glyphicon-ok"> Passed</span>
-                    <% } else { %>
-                    <span class="error glyphicon glyphicon-remove-circle"> Errored</span>
-                    <% } %>
-                </td>
-            </tr>
+                <% if(history[i].noError) { %>
+                <tr class="message is-success">
+                <% } else { %>
+                <tr class="message is-danger">
+                <% } %>
+                    <td onclick="putSparql(this)"><%= history[i].query %></td>
+                </tr>
             <% } %>
         </table>
     </div>
 </section>
+-->
 
 <script>
     let sparqlQuery = YASQE.fromTextArea(document.getElementById('query'))
