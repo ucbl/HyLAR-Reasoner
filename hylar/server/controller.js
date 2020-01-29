@@ -230,9 +230,12 @@ module.exports = {
                 requestDelay: requestDelay,
                 serverTime: new Date().getTime()
             }
-            let params = { results, hylar_meta }
+            let totalTime = processedTime - receivedReqTime;
+            let params = { results, totalTime };
 
-            h.success("Evaluation finished in " + (processedTime - receivedReqTime) + "ms.");
+            h.success("Evaluation finished in " + (totalTime) + "ms.");
+
+            Hylar.addToQueryHistory(req.body.query, true);
 
             if (asString) {
                 if (results.triples && results.triples.length) {
@@ -246,7 +249,7 @@ module.exports = {
                 ContentNegotiator.answerSparqlWithContentNegotiation(req, res, params)
             }
         } catch(error) {
-            h.displayError(error);
+            Hylar.addToQueryHistory(req.body.query, false);
             res.status(500).send(error.message);
         }
     },

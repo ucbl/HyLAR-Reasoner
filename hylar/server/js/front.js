@@ -150,16 +150,23 @@ const sparql = (ev, contextPath) => {
         },
         success: function (result, status, xhr) {
             let resultsSection = document.getElementById('sparql-results-section')
+            let sparqlErrorsSection = document.getElementById('sparql-errors-section')
+            let sparqlSuccessSection = document.getElementById('sparql-success-section')
             let resultsTable = document.getElementById('sparql-results-table')
             let graphResultDiv = document.getElementById('sparql-graph-result')
             let graphDownloadDiv = document.getElementById('graph-result-menu')
+            let successContent = document.getElementById('sparql-success')
+
 
             resultsTable.innerHTML = null
             graphResultDiv.innerText = null
+            sparqlErrorsSection.style.display = 'none'
+            sparqlSuccessSection.style.display = ''
 
             if (graphDownloadDiv) graphDownloadDiv.remove()
 
             if (xhr.getResponseHeader('content-type').includes('text/turtle')) {
+                successContent.innerText = `Graph successfully built`
                 resultsSection.style.display = 'none'
                 graphResultDiv.style.display = null
                 graphResultDiv.innerText = `${result}`
@@ -172,6 +179,7 @@ const sparql = (ev, contextPath) => {
                 document.getElementById('graph-download').download = 'graph.ttl'
                 return
             } else {
+                successContent.innerText = `Query executed in ${result.metadata.time} ms`;
                 graphResultDiv.style.display = 'none'
                 resultsSection.style.display = null
             }
@@ -200,6 +208,14 @@ const sparql = (ev, contextPath) => {
             tbody = `${tbody}</tbody>`
 
             resultsTable.insertAdjacentHTML('afterbegin', `${thead}${tbody}`)
+        },
+        error: function(error) {
+            let sparqlErrorsSection = document.getElementById('sparql-errors-section')
+            let sparqlSuccessSection = document.getElementById('sparql-success-section')
+            let errorContent = document.getElementById('sparql-errors')
+            sparqlErrorsSection.style.display = '';
+            sparqlSuccessSection.style.display = 'none';
+            errorContent.innerText = `${error.responseText}`;
         }
     })
 }
@@ -208,8 +224,8 @@ const closeProof = () => {
     document.getElementById('proof').remove()
 }
 
-const putSparql = (i) => {
-    var query = $('#'+i).text();
+const putSparql = (el) => {
+    var query = $(el).text();
     $('#query').val(query);
     $('html, body').animate({ scrollTop: 0 }, 0);
 }

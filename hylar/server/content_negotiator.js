@@ -33,6 +33,9 @@ const generateJsonSparqlResults = () => {
         },
         "results": {
             "bindings": ['']
+        },
+        "metadata": {
+            "time": null
         }
     }
 }
@@ -43,7 +46,7 @@ module.exports = {
      * @param clientHttpRequest: The original request received from the controller
      * @param httpResponse: The response, with expected content type, sent back to the client
      */
-    answerSparqlWithContentNegotiation: function(clientHttpRequest, httpResponse, additionalParams = { hylar_meta: {}, response: {}}) {
+    answerSparqlWithContentNegotiation: function(clientHttpRequest, httpResponse, additionalParams = { totalTime: null, response: {}}) {
         if (additionalParams.results.hasOwnProperty('triples')) {
             // Send response to client as turtle
             httpResponse.set('Content-Type', acceptedContents.text_turtle)
@@ -63,6 +66,9 @@ module.exports = {
             sparqlJson.head.vars = Object.keys(additionalParams.results[0])
             sparqlJson.results.bindings = additionalParams.results
         }
+
+        sparqlJson.metadata.time = additionalParams.totalTime
+
 
         // Content negotiation
         if (clientHttpRequest.accepts('application/sparql-results+xml')) {
