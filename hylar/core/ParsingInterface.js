@@ -153,20 +153,34 @@ ParsingInterface = {
         parsedQuery.type = "query"
         parsedQuery.queryType = "CONSTRUCT"
 
-        parsedQuery.where = []
         parsedQuery.template = []
+        parsedQuery.where = []
 
         parsedQuery.updates.forEach(up => {
-            parsedQuery.where = parsedQuery.where.concat(up.where)
-            up.insert.forEach(ins => {
-                parsedQuery.template = parsedQuery.template.concat(ins.triples)
-            })
-            up.delete.forEach(del => {
-                parsedQuery.template = parsedQuery.template.concat(del.triples)
-            })
+            if (up.where != null) {
+                parsedQuery.where = parsedQuery.where.concat(up.where)
+            }
+            if (up.insert != null) {
+                up.insert.forEach(ins => {
+                    parsedQuery.template = parsedQuery.template.concat(ins.triples)
+                })
+            }
+            if (up.delete != null) {
+                up.delete.forEach(del => {
+                    parsedQuery.template = parsedQuery.template.concat(del.triples)
+                })
+            }
         })
 
         delete parsedQuery.updates
+
+        if (parsedQuery.where.length == 0) {
+            parsedQuery.where = {
+                "type": "bgp",
+                "triples": parsedQuery.template
+            }
+        }
+
         return parsedQuery
     },
 

@@ -65,8 +65,10 @@ module.exports = {
         if (additionalParams.results.length > 0) {
             sparqlJson.head.vars = Object.keys(additionalParams.results[0])
             sparqlJson.results.bindings = additionalParams.results
-            sparqlJson.metadata.time = additionalParams.totalTime
         }
+
+        sparqlJson.metadata.time = additionalParams.totalTime
+
 
         // Content negotiation
         if (clientHttpRequest.accepts('application/sparql-results+xml')) {
