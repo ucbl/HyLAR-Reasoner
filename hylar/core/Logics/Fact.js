@@ -68,7 +68,7 @@ Fact.prototype = {
         if(this.falseFact) {
             spo = 'FALSE';
         } else {
-            spo = '(' + Utils.removeBeforeSharp(this.subject) + ', ' + Utils.removeBeforeSharp(this.predicate) + ', ' + Utils.removeBeforeSharp(this.object) + ')'
+            spo = '(' + this.subject + ', ' + this.predicate + ', ' + this.object + ')'
         }
 
         this.explicit ? e = 'E' : e = 'I';

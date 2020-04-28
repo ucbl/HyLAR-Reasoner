@@ -86,7 +86,8 @@ h.removeRule('inverse-1');
 
 ## Use HyLAR in a browser
 
-HyLAR comes with a browserified version, available using bower: `bower install hylar`. Include the file `hylar-client.js` as a script in your page with this line:
+Run `npm run clientize`, which will generate the file `hylar-client.js`.
+Include this script in your page with this line:
 ```html
 <script src="path-to/hylar-client.js"></script>
 ```

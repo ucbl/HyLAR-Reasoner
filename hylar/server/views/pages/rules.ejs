@@ -69,15 +69,9 @@
 
             <div class="field">
                 <div class="control has-text-centered">
-                    <button onclick="addRule()" class="button is-dark is-link">Save rule</button>
+                    <button onclick="addRule('<%- contextPath %>')" class="button is-dark is-link">Save rule</button>
                 </div>
             </div>
-            <!--<form method="post" action="<%- contextPath %>/explore/rules">
-                Name: <input type="text" name="rulename"/><br/>
-                <textarea name="rule" style="font-family: 'Courier New'; font-size: 16px;" class="form-control" rows="6"></textarea>
-                <input type=submit value="Add rule"/>
-            </form>
-            <div style="padding-top: 10px; font-weight: bold; color:indianred;"><%- error %></div>-->
         </div>
     </div>
 </section>
@@ -89,7 +83,8 @@
             <tr>
                 <th>Name</th>
                 <th>Rule</th>
-                <<th>Remove</th>
+                <th>Entailment</th>
+                <th>Remove</th>
             </tr>
             <% for (var i = 0; i < rules.length; i++) { %>
                 <tr>
@@ -99,8 +94,14 @@
                     <td>
                         <small><%- rules[i].rule %></small>
                     </td>
+                    <td>
+                        <div class="<%- rules[i].type.toLowerCase() %>"><%- rules[i].type %></div>
+                    </td>
                     <td class="status">
-                        <a href="<%- contextPath %>/rule/remove/<%- i %>"><i class="fas fa-trash"></i></a>
+
+                        <% if (rules[i].type == "CUSTOM") { %>
+                        <a href="<%- contextPath %>/rule/remove/<%- rules[i].name %>"><i class="fas fa-trash"></i></a>
+                        <% } %>
                     </td>
                 </tr>
             <% } %>

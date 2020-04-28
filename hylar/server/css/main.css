@@ -184,6 +184,32 @@ div.powered-by .yasqe {
     box-shadow: #b7dfc0 1px 1px;
 }
 
+div.owl2rl {
+    text-align: center;
+    letter-spacing: 0.5px;
+    font-size: 13px;
+    padding: 2px;
+    padding-bottom: 4px;
+    border: 1px solid #d080a8;
+    border-radius: 5px;
+    color: #d080a8;
+    background-color: #fff4f7;
+    box-shadow: #d080a8 1px 1px;
+}
+
+div.custom {
+    text-align: center;
+    letter-spacing: 0.5px;
+    font-size: 13px;
+    padding: 2px;
+    padding-bottom: 4px;
+    border: 1px solid #b3d059;
+    border-radius: 5px;
+    color: #b3d059;
+    background-color: #eaffdf;
+    box-shadow: #b3d059 1px 1px;
+}
+
 .graph-result {
     border: 1px solid #dbdbdb;
     padding: 10px;

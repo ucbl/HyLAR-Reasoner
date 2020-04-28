@@ -8,6 +8,7 @@
  */
 
 const Logics = require('./Logics/Logics')
+const Rule = require('./Logics/Rule')
 
 Rules = {
     rdfs: Logics.parseRules([
@@ -25,7 +26,7 @@ Rules = {
         "rdfs11 = (?uuu rdfs:subClassOf ?vvv) ^ (?vvv rdfs:subClassOf ?xxx) -> (?uuu rdfs:subClassOf ?xxx)",
         "rdfs12 = (?uuu rdf:type rdfs:ContainerMembershipProperty) -> (?uuu rdfs:subPropertyOf rdfs:member)",
         "rdfs13 = (?uuu rdf:type rdfs:Datatype) -> (?uuu rdfs:subClassOf rdfs:Literal)"
-    ]),
+    ], Rule.types.RDFS),
     owl2rl: Logics.parseRules([
         "prp-dom = (?p http://www.w3.org/2000/01/rdf-schema#domain ?c) ^ (?x ?p ?y) -> (?x http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c)",
         "prp-rng = (?p http://www.w3.org/2000/01/rdf-schema#range ?c) ^ (?x ?p ?y) -> (?y http://www.w3.org/1999/02/22-rdf-syntax-ns#type ?c)",
@@ -79,7 +80,7 @@ Rules = {
         "scm-svf2 = (?c1 http://www.w3.org/2002/07/owl#someValuesFrom ?y) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p1) ^ (?c2 http://www.w3.org/2002/07/owl#someValuesFrom ?y) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p2) ^ (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2)",
         "scm-avf1 = (?c1 http://www.w3.org/2002/07/owl#allValuesFrom ?y1) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?c2 http://www.w3.org/2002/07/owl#allValuesFrom ?y2) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p) ^ (?y1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?y2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2)",
         "scm-avf2 = (?c1 http://www.w3.org/2002/07/owl#allValuesFrom ?y) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p1) ^ (?c2 http://www.w3.org/2002/07/owl#allValuesFrom ?y) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p2) ^ (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) -> (?c2 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c1)"
-    ])
+    ], Rule.types.OWL2RL)
 }
 
 module.exports = Rules
