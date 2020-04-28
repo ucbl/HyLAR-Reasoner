@@ -2,6 +2,8 @@
  * Created by Spadon on 13/11/2015.
  */
 
+const Logics = require("./Logics/Logics");
+
 /**
  * Dictionary used to index triples (in turtle) and their fact representation.
  * @type {{substractFactSets: Function, combine: Function}|exports|module.exports}
@@ -136,6 +138,21 @@ Dictionary.prototype.values = function(graph) {
     }
     return values;
 };
+
+/**
+ * Get all explicit full dictionary graph as turtle.
+ * @returns {Array}
+ */
+Dictionary.prototype.explicitGraphs = function(graph) {
+    let explicitGraphs = []
+    for (let graph in this.dict) {
+        explicitGraphs.push({
+            name: graph,
+            content: ParsingInterface.factsToTurtle(Logics.getOnlyExplicitFacts(this.values(graph)))
+        })
+    }
+    return explicitGraphs
+}
 
 /**
  * Gets facts corresponding to the turtle triples,returns an object

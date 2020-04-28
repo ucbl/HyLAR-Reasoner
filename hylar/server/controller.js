@@ -390,34 +390,35 @@ module.exports = {
         });
     },
 
-    addRules: function(req, res, next) {
+    addRules: async function(req, res, next) {
         let rules = req.body.rules,
             parsedRules;
         if (req.body.rule !== undefined) {
             try {
-                Hylar.addRule(Logics.parseRule(req.body.rule), req.body.rulename);
+                await Hylar.addRule(Logics.parseRule(req.body.rule, req.body.rulename));
+                next();
             } catch(e) {
-                req.error = "Rule parse error!";
+                res.status(500).send(e.stack)
             }
         } else {
             try {
                 parsedRules = Logics.parseRules(rules);
-                Hylar.addRules(parsedRules);
+                await Hylar.addRules(parsedRules);
+                next();
             } catch (e) {
-                req.error = "Rule parse error!";
+                res.status(500).send(e.stack)
             }
         }
+    },
+
+    resetRules: async function(req, res, next) {
+        await Hylar.resetRules();
         next();
     },
 
-    resetRules: function(req, res, next) {
-        Hylar.resetRules();
-        next();
-    },
-
-    removeRule: function(req, res, next) {
-        let ruleIndex = req.params.ruleIndex;
-        Hylar.removeRuleById(ruleIndex);
+    removeRule: async function(req, res, next) {
+        let name = req.params.name;
+        await Hylar.removeRuleByName(name);
         next();
     },
 

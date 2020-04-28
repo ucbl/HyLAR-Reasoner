@@ -2,7 +2,7 @@
  * Created by mt on 21/12/2015.
  */
 
-var Utils = require('../Utils');
+const Utils = require('../Utils');
 
 /**
  * Rule in the form subClassOf(a, b) ^ subClassOf(b, c) -> subClassOf(a, c)
@@ -11,7 +11,7 @@ var Utils = require('../Utils');
  * @param ra the consequence facts
  * @constructor
  */
-Rule = function(slf, srf, name) {
+Rule = function(slf, srf, name, ruleType = Rule.types.CUSTOM) {
     this.name = name;
     this.causes = [];
     this.operatorCauses = [];
@@ -19,6 +19,7 @@ Rule = function(slf, srf, name) {
     this.constants = [];
     this.dependentRules = [];
     this.matches = {};
+    this.type = ruleType
 
     for (var i = 0; i < slf.length; i++) {
         if (!slf[i].operatorPredicate) {
@@ -36,6 +37,12 @@ Rule = function(slf, srf, name) {
     }
     this.orderCausesByMostRestrictive();
 };
+
+Rule.types = {
+    CUSTOM: "CUSTOM",
+    OWL2RL: "OWL2RL",
+    RDFS: "RDFS"
+}
 
 Rule.prototype = {
     /**

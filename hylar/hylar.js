@@ -37,6 +37,7 @@ const logFile = 'hylar.log';
 class Hylar {
     constructor(params = {}) {
         this.dict = new Dictionary()
+        this._customRules = []
         this.sm = new TripleStorageManager()
         this.sm.init()
 
@@ -64,7 +65,7 @@ class Hylar {
      * @return {*}
      */
     get rules() {
-        return Rules[this.entailment]
+        return this._customRules.concat(Rules[this.entailment])
     }
 
     /**
@@ -167,13 +168,15 @@ class Hylar {
         }
     }
 
-    setReasoningOn() {
+    async setReasoningOn() {
         this.reasoning = true
+        await this.recomputeClosure()
     }
 
-    setReasoningOff() {
+    async setReasoningOff() {
         Hylar.displayWarning('Reasoning has been set off.')
         this.reasoning = false
+        await this.recomputeClosure()
     }
 
     clean() {
@@ -186,7 +189,7 @@ class Hylar {
     /**
      * Puts on incremental reasoning
      */
-    setIncremental() {
+    async setIncremental() {
         this.rMethod = Reasoner.process.it.incrementally;
         this.dict.turnOffForgetting();
         Hylar.notify('Reasoner set as incremental.');
@@ -195,14 +198,15 @@ class Hylar {
     /**
      * Puts on tag-based reasoning
      */
-    setTagBased() {
+    async setTagBased() {
         this.rMethod = Reasoner.process.it.tagBased;
         this.dict.turnOnForgetting();
         Hylar.notify('Reasoner set as tag-based.');
     }
 
-    setRules(rules) {
+    async setRules(rules) {
         this.rules = rules;
+        await this.recomputeClosure()
     }
 
     /**
@@ -444,7 +448,7 @@ class Hylar {
     getRulesAsStringArray() {
         var strRules = [];
         for (var i = 0; i < this.rules.length; i++) {
-            strRules.push({ name: this.rules[i].name, rule: this.rules[i].toString() } );
+            strRules.push({ name: this.rules[i].name, rule: this.rules[i].toString(), type: this.rules[i].type } );
         }
         return strRules;
     }
@@ -490,12 +494,15 @@ class Hylar {
         }
 
         let dbconf = {
-            mappingsGraphDbFiles: {}
+            mappingsGraphDbFiles: {},
+            customRules: []
         }
 
         if (fs.existsSync('./db/db.conf')) {
-            dbconf = JSON.parse(fs.readFileSync('./db/db.conf').toString())
+            dbconf = Object.assign(dbconf, JSON.parse(fs.readFileSync('./db/db.conf').toString()))
         }
+
+        dbconf.customRules = this._customRules.map((r => { return { name: r.name, content: r.toString() } }))
 
         for (let graphUri in this.getDictionary().dict) {
             // Write db content on file
@@ -522,16 +529,20 @@ class Hylar {
 
         let files  = fs.readdirSync('./db')
         let dbconf = {
-            mappingsGraphDbFiles: {}
+            mappingsGraphDbFiles: {},
+            customRules: []
         }
 
         if (fs.existsSync('./db/db.conf')) {
-            dbconf = JSON.parse(fs.readFileSync('./db/db.conf').toString())
+            dbconf = Object.assign(dbconf, JSON.parse(fs.readFileSync('./db/db.conf').toString()))
         }
 
         for (let file of files.filter((file) => { return file != 'db.conf'})) {
             try {
                 let content = fs.readFileSync(`./db/${file}`).toString()
+                for (let rule of dbconf.customRules) {
+                    this._customRules.push(Logics.parseRule(rule.content, rule.name))
+                }
                 await this.load(content, 'text/n3', true, dbconf.mappingsGraphDbFiles[file])
             } catch (err) {
                 Hylar.displayWarning(Errors.DBParsing(file))
@@ -716,21 +727,31 @@ class Hylar {
         return true
     }
 
+    async recomputeClosure() {
+        let fullExplicitGraphs = this.dict.explicitGraphs()
+        await this.clean()
+
+        for (let graph of fullExplicitGraphs) {
+            await this.load(graph.content, 'text/turtle', true, graph.name)
+        }
+    }
+
     /**
      * Add rules to the reasoner for
      * the next inferences.
      * @param ruleSet
      */
-    addRules(ruleSet) {
-        this.rules = this.rules.concat(ruleSet);
+    async addRules(ruleSet) {
+        this._customRules.push(...ruleSet)
+        await this.recomputeClosure()
     }
 
-    addRule(rule, name) {
-        this.rules.push(rule);
-        this.rules[this.rules.length-1].setName(name);
+    async addRule(rule) {
+        this._customRules.push(rule)
+        await this.recomputeClosure()
     }
 
-    parseAndAddRule(rawRule, name) {
+    async parseAndAddRule(rawRule, name) {
         var rule;
         try {
             rule = Logics.parseRule(rawRule, name);
@@ -738,77 +759,23 @@ class Hylar {
             Hylar.displayError('Error when parsing rule ' + rule);
             return;
         }
-        this.rules.push(rule);
+        await this.addRule(rule)
     }
 
-    removeRule(nameOrRaw) {
-        var newRules = [],
-            parsedRule = '';
-        try {
-            parsedRule = Logics.parseRule(nameOrRaw);
-        } catch(e) {}
-        for (var i = 0; i < this.rules.length; i++) {
-            if ((this.rules[i].name != nameOrRaw) && (this.rules[i].toString() != parsedRule.toString())) {
-                newRules.push(this.rules[i]);
-            } else {
-                Hylar.notify("Removed rule " + this.rules[i].toString());
-            }
-        }
-        this.rules = newRules;
-    }
-
-    getRuleName(raw) {
-        var newRules = [],
-            parsedRule = '';
-        try {
-            parsedRule = Logics.parseRule(raw);
-        } catch(e) {
-            Hylar.displayError('Error when parsing rule ' + raw);
-            return
-        }
-
-        for (var i = 0; i < this.rules.length; i++) {
-            if (this.rules[i].toString() == parsedRule.toString()) {
-                return this.rules[i].name;
-            }
-        }
-    }
-
-    getRuleId(raw) {
-        var newRules = [],
-            parsedRule = '';
-        try {
-            parsedRule = Logics.parseRule(raw);
-        } catch(e) {
-            Hylar.displayError('Error when parsing rule ' + raw);
-            return
-        }
-
-        for (var i = 0; i < this.rules.length; i++) {
-            if (this.rules[i].toString() == parsedRule.toString()) {
-                return i;
-            }
-        }
-    }
-
-    removeRuleById(index) {
-        var newRules = [];
-        for (var i = 0; i < this.rules.length; i++) {
-            if (i!=index) {
-                newRules.push(this.rules[i]);
-            } else {
-                Hylar.notify("Removed rule " + this.rules[i].toString());
-            }
-        }
-        this.rules = newRules;
+    async removeRuleByName(name) {
+        this._customRules = this._customRules.filter((rule) => {
+            return rule.name != name
+        })
+        await this.recomputeClosure()
     }
 
     addToQueryHistory(query, noError) {
         this.queryHistory.push({ query: query, noError: noError });
     }
 
-    resetRules() {
-        this.rules = Rules.rules;
+    async resetRules() {
+        this._customRules = [];
+        await this.recomputeClosure()
     }
 
     quiet() {

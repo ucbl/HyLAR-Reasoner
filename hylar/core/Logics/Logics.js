@@ -371,27 +371,27 @@ Logics = {
         return newCb;
     },
 
-    parseRules: function(strRuleList) {
+    parseRules: function(strRuleList, entailment = Rule.types.CUSTOM) {
         var parsedRuleList = [];
         for (var i = 0; i < strRuleList.length; i++) {
 			let match = strRuleList[i].match('(.+)=(.+)')
 			if (match) {
-				parsedRuleList.push(this.parseRule(match[2], match[1]))
+				parsedRuleList.push(this.parseRule(match[2], match[1], entailment))
 			} else {
-				parsedRuleList.push(this.parseRule(strRuleList[i]))
+				parsedRuleList.push(this.parseRule(strRuleList[i], null, entailment))
 			}
         }
         return parsedRuleList;
     },
 
-    parseRule: function(strRule, name) {
+    parseRule: function(strRule, name = `rule-${md5(strRule)}`, entailment) {
         let bodyTriples = strRule.split('->')[1].match(RegularExpressions.TRIPLE)
         let headTriples = strRule.split('->')[0].match(RegularExpressions.TRIPLE)
 
         let causes = this._createFactSetFromTriples(headTriples)
         let consequences = this._createFactSetFromTriples(bodyTriples)
 
-        return new Rule(causes, consequences, name)
+        return new Rule(causes, consequences, name, entailment)
     },
 
     _createFactSetFromTriples(triples) {

@@ -233,3 +233,28 @@ const putSparql = (el) => {
 const copy = (el) => {
     sparqlQuery.setValue(`${sparqlQuery.getValue()}${el.innerText}`)
 }
+
+const addRule = (contextPath) => {
+    let rulename = document.querySelector('[name="rulename"]').value
+    let rule = document.querySelector('[id="rule-content"]').value
+
+    if (rulename == "" || rule == "") {
+        alert("Name and content of rule cannot be empty")
+        return
+    }
+
+    $.ajax({
+        url: `${contextPath}/rule`,
+        type: "PUT",
+        data: {
+            rule,
+            rulename
+        },
+        success: function (result) {
+            location.reload()
+        },
+        error: function(error) {
+            alert(error.responseText)
+        }
+    })
+}
