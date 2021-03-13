@@ -2,6 +2,7 @@
  * Created by Spadon on 19/08/2015.
  */
 
+var should = require('should');
 var fs = require('fs');
 var path = require('path');
 var mime = require('mime-types');
