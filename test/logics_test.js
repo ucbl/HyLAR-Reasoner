@@ -4,7 +4,7 @@
 
 
 var should = require('should');
-var rules = require('../hylar/core/OWL2RL').rules;
+var rules = require('../hylar/core/Rules').owl2rl;
 
 var Solver = require('../hylar/core/Logics/Solver');
 var Fact = require('../hylar/core/Logics/Fact');
