@@ -1,9 +1,12 @@
 /hylar/server/npm-debug.log
+bower_components
+db
 node_modules
 npm-debug.log
 hylar/server/db/*
 hylar/test.js
 hylar/server/*.log
+hylar-client.js
 .idea/*
 hylar.log
 .vscode
