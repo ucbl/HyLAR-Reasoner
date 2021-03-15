@@ -15,9 +15,7 @@ let appDir = path.dirname(require.main.filename),
     htmlDir = appDir + '/views',
     port = 3000,
     parsedPort,
-// Changed that to be able to allow proxy to rewrite response contents
     contextPath = ""
-//    contextPath = req.originalUrl
 
 let persistent = true
 let entailment = 'owl2rl'
