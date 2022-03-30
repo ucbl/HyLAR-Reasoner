@@ -1,7 +1,7 @@
 {
-  "name": "hylar",
+  "name": "@equinor/hylar",
   "main": "hylar/hylar.js",
-  "version": "1.10.3",
+  "version": "0.0.1",
   "dependencies": {
     "asciify": "^1.3.2",
     "bluebird": "^3.5.1",
@@ -35,7 +35,10 @@
     "test": "cross-env rm=incremental mocha test/*_test.js",
     "build": "browserify -t brfs test/benchmark_tests_lite.js > bench.js",
     "start": "node hylar/server/server.js",
-    "start-tb": "node hylar/server/server.js -rm tagBased"
+    "start-tb": "node hylar/server/server.js -rm tagBased",
+    "bump:patch": "npm --no-git-tag-version version patch",
+		"bump:minor": "npm --no-git-tag-version version minor",
+		"bump:major": "npm --no-git-tag-version version major",
   },
   "bin": {
     "hylar": "hylar/server/server.js"
@@ -43,7 +46,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ucbl/HyLAR-Reasoner.git"
+    "url": "https://github.com/equinor/hylar"
   },
   "keywords": [
     "reasoning",
