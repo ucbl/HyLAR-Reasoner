@@ -7,7 +7,7 @@
  * @type {{OWL: string, RDF: string, RDFS: string, FIPA: string}}
  */
 
-const RegularExpressions = require('./RegularExpressions')
+import RegularExpressions from './RegularExpressions'
 
 class Prefixes {
     constructor() {
@@ -59,4 +59,5 @@ class Prefixes {
     }
 }
 
-module.exports = new Prefixes()
+// module.exports = Prefixes;
+export default Prefixes;

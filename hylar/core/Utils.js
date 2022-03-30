@@ -2,24 +2,24 @@
  * Created by Spadon on 13/02/2015.
  */
 
-var q = require('q');
+import q from 'q';
 
-var RegularExpressions = require('./RegularExpressions');
-var EventEmitter = require('events').EventEmitter;
+import RegularExpressions from './RegularExpressions';
+import { EventEmitter } from 'events';
 
 /** Event emitter */
 
 var emitter = new EventEmitter();
 
-emitter.on('started', function(task) {
+emitter.on('started', function (task) {
     console.log('started ' + task);
 });
 
-emitter.on('finished', function(task) {
+emitter.on('finished', function (task) {
     console.log('processed ' + task);
 });
 
-Utils = {
+const Utils = {
 
     _instanceid: 1,
 
@@ -32,7 +32,7 @@ Utils = {
      * @param _set2
      * @returns {Array}
      */
-    uniques: function(_set1, _set2) {
+    uniques: function (_set1, _set2) {
         var hash = {}, uniq = [],
             fullSet = _set1.concat(_set2);
 
@@ -46,11 +46,11 @@ Utils = {
         return uniq;
     },
 
-    insertUnique: function(_set, val) {
+    insertUnique: function (_set, val) {
         return this.uniques(_set, [val]);
     },
 
-    containsSubset: function(_set1, _set2) {
+    containsSubset: function (_set1, _set2) {
         return this.uniques(_set1, _set2).length == _set1.length
     },
 
@@ -59,13 +59,13 @@ Utils = {
      * @param str
      * @returns {boolean}
      */
-    isVariable: function(str) {
+    isVariable: function (str) {
         if (str === undefined) {
             return false;
         }
         try {
             return (str.indexOf('?') === 0);
-        } catch(e) {
+        } catch (e) {
             return false;
         }
     },
@@ -75,21 +75,21 @@ Utils = {
      * @param str
      * @returns {boolean}
      */
-    isOperator: function(str) {
+    isOperator: function (str) {
         try {
-            return ((str == '>') || (str == '<') || (str == '<=') || (str == '>=') || (str == '=='));
-        } catch(e) {
+            return ((str == '>') || (str == '<') || (str == '<=') || (str == '>=') || (str == '==') || (str == '!='));
+        } catch (e) {
             return false;
         }
     },
 
-    removeBeforeSharp: function(str) {
+    removeBeforeSharp: function (str) {
         if (str.indexOf('#') === -1 || str.charAt(0) === '"') return str;
         var splitted = str.split('#');
         return /*splitted[0].slice(0,10) + '...#' + */splitted[1];
     },
 
-    equivalentSets: function(s1, s2) {
+    equivalentSets: function (s1, s2) {
         if (s1.toString() == s2.toString()) {
             return true;
         }
@@ -104,50 +104,72 @@ Utils = {
         return true;
     },
 
-    notInSet: function(s1, elem) {
+    notInSet: function (s1, elem) {
         return (s1.toString().indexOf(elem.toString()) === -1);
     },
 
-    getValueFromDatatype: function(datatype) {
-        var rawValueMatch = datatype.match(RegularExpressions.LITERAL_RAW_VALUE)[1],
-           literalWithoutTypeMatch = datatype.match(RegularExpressions.LITERAL_WITHOUT_TYPE)[1];
-        if (parseFloat(rawValueMatch) === NaN) {
+    getValueFromDatatype: function (datatype) {
+        const rawMatchResults = datatype.match(RegularExpressions.LITERAL_RAW_VALUE);
+        const literalWithoutTypeResults = datatype.match(RegularExpressions.LITERAL_WITHOUT_TYPE);
+
+        if (!rawMatchResults && !literalWithoutTypeResults) return `"${datatype}"`;
+
+        const rawValueMatch = rawMatchResults?.length > 1 ? rawMatchResults[1] : false;
+        const literalWithoutTypeMatch = literalWithoutTypeResults?.length > 1 ? literalWithoutTypeResults[1] : false;
+        if (isNaN(parseFloat(rawValueMatch))) {
             return literalWithoutTypeMatch;
         } else {
             return rawValueMatch;
         }
     },
 
-    emptyPromise: function(toBeReturned) {
+    emptyPromise: function (toBeReturned) {
         var deferred = q.defer();
         deferred.resolve(toBeReturned);
         return deferred.promise;
     },
 
-    tripleContainsVariable: function(triple) {
+    tripleContainsVariable: function (triple) {
         if (this.isVariable(triple.subject)
             || this.isVariable(triple.predicate)
             || this.isVariable(triple.object)) {
             return true;
         }
         return false;
-    },    
+    },
 
-    asCHRAtom: function(elem, mapping) {
-        if(Logics.isVariable(elem)) {
-            if(mapping[elem] === undefined) {
+    asCHRAtom: function (elem, mapping) {
+        if (this.isVariable(elem)) {
+            if (mapping[elem] === undefined) {
                 if (mapping.__lastCHRVar) {
-                    mapping.__lastCHRVar = String.fromCharCode(mapping.__lastCHRVar.charCodeAt(0)+1);                                        
+                    mapping.__lastCHRVar = String.fromCharCode(mapping.__lastCHRVar.charCodeAt(0) + 1);
                 } else {
-                    mapping.__lastCHRVar = 'A';                    
+                    mapping.__lastCHRVar = 'A';
                 }
                 mapping[elem] = mapping.__lastCHRVar;
             }
             return mapping[elem];
         } else {
-            return '"' + elem.replace(/[^a-zA-Z]/g,'') + '"';
-        }        
-    }
+            return '"' + elem.replace(/[^a-zA-Z]/g, '') + '"';
+        }
+    },
+    /**
+     * Return true if the two atoms are either both variables, or
+     * identical URIs.
+     * @returns {boolean}
+     */
+    similarAtoms: function (atom1, atom2) {
+        if (this.isVariable(atom1) && this.isVariable(atom2)) {
+            return true;
+        } else if (atom1 == atom2) {
+            return true;
+        } else {
+            return false;
+        }
+    },
 }
-
-module.exports = Utils
+export default Utils;
+// module.exports = Utils;
+// for (const [prop, func] of Object.entries(Utils)) {
+//     module.exports[prop] = func;
+// }

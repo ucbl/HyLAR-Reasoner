@@ -3,34 +3,30 @@
  * Logics module
  */
 
-var Rule = require('./Rule');
-var Fact = require('./Fact');
-var Utils = require('../Utils');
-var Errors = require('../Errors');
-var RegularExpressions = require('../RegularExpressions');
-var Prefixes = require('../Prefixes')
+import Rule from './Rule';
+import Fact from './Fact';
+import Utils from '../Utils';
+import Errors from '../Errors';
+import RegularExpressions from '../RegularExpressions';
+import Prefixes from '../Prefixes'
+import md5 from 'md5';
 
-var md5 = require('md5');
 
-/**
- * All necessary stuff around the Logics module
- * @type {{substractFactSets: Function, mergeFactSets: Function}}
- */
 
-Logics = {
+const Logics = {
     /**
      * True-like merge of two facts sets, which also merges
      * identical facts causedBy properties.
-     * @param fs1
-     * @param fs2
+     * @param fs
+     * @param subset
      */
-    combine: function(fs, subset) {
+    combine: function (fs, subset) {
         for (var i = 0; i < fs.length; i++) {
             for (var j = 0; j < subset.length; j++) {
                 if ((subset[j] !== undefined) && (fs[i].equivalentTo(subset[j]))) {
                     fs[i].causedBy = this.uniquesCausedBy(fs[i].causedBy, subset[j].causedBy);
                     fs[i].consequences = fs[i].consequences.concat(subset[j].consequences);
-                    subset[j].doPropagate(fs[i]);                                                            
+                    subset[j].doPropagate(fs[i]);
                     delete subset[j];
                 }
             }
@@ -45,11 +41,11 @@ Logics = {
      * @param fs
      * @returns {Array}
      */
-    getOnlyImplicitFacts: function(fs) {
+    getOnlyImplicitFacts: function (fs) {
         var fR = [];
         for (var key in fs) {
             var fact = fs[key];
-            if(!fact.explicit) {
+            if (!fact.explicit) {
                 fR.push(fact);
             }
         }
@@ -61,11 +57,11 @@ Logics = {
      * @param fs
      * @returns {Array}
      */
-    getOnlyExplicitFacts: function(fs) {
+    getOnlyExplicitFacts: function (fs) {
         var fR = [];
         for (var key in fs) {
             var fact = fs[key];
-            if(fact.explicit) {
+            if (fact.explicit) {
                 fR.push(fact);
             }
         }
@@ -80,7 +76,7 @@ Logics = {
      * @param fs
      * @returns {Array}
      */
-    restrictRuleSet: function(rs, fs) {
+    restrictRuleSet: function (rs, fs) {
         var restriction = [];
 
         for (var i = 0; i < rs.length; i++) {
@@ -115,8 +111,8 @@ Logics = {
      * @param fact
      * @returns {*}
      */
-    causeMatchesFact: function(cause, fact) {
-        return this.causeMemberMatchesFactMember(cause.predicate, fact.predicate) 
+    causeMatchesFact: function (cause, fact) {
+        return this.causeMemberMatchesFactMember(cause.predicate, fact.predicate)
             && this.causeMemberMatchesFactMember(cause.subject, fact.subject)
             && this.causeMemberMatchesFactMember(cause.object, fact.object);
     },
@@ -128,25 +124,10 @@ Logics = {
      * @param factMember
      * @returns {boolean}
      */
-    causeMemberMatchesFactMember: function(causeMember, factMember) {
-        if(causeMember == factMember) {
+    causeMemberMatchesFactMember: function (causeMember, factMember) {
+        if (causeMember == factMember) {
             return true;
         } else if (causeMember.indexOf('?') === 0) {
-            return true;
-        } else {
-            return false;
-        }
-    },
-
-    /**
-     * Return true if the two atoms are either both variables, or
-     * identical URIs.
-     * @returns {boolean}
-     */
-    similarAtoms: function(atom1, atom2) {
-        if (this.isVariable(atom1) && this.isVariable(atom2) ) {
-            return true;
-        } else if(atom1 == atom2) {
             return true;
         } else {
             return false;
@@ -158,11 +139,11 @@ Logics = {
      * @param fs1 the superset
      * @param fs2 the potential subset
      */
-    containsFacts: function(fs1, fs2) {
-        if(!fs2 || (fs2.length > fs1.length)) return false;
+    containsFacts: function (fs1, fs2) {
+        if (!fs2 || (fs2.length > fs1.length)) return false;
         for (var key in fs2) {
             var fact = fs2[key];
-            if(!(fact.appearsIn(fs1))) {
+            if (!(fact.appearsIn(fs1))) {
                 return false;
             }
         }
@@ -176,12 +157,12 @@ Logics = {
      * @param _set2
      * @returns {Array}
      */
-    minus: function(_set1, _set2) {
+    minus: function (_set1, _set2) {
         var flagEquals,
             newSet = [];
         for (var i = 0; i < _set1.length; i++) {
             flagEquals = false;
-            for(var j = 0; j < _set2.length; j++) {
+            for (var j = 0; j < _set2.length; j++) {
                 if (_set1[i].asString == _set2[j].asString) {
                     flagEquals = true;
                     break;
@@ -195,23 +176,10 @@ Logics = {
         return newSet;
     },
 
-    /**
-     * Checks if a string is a variable,
-     * @param str
-     * @returns {boolean}
-     */
-    isVariable: function(str) {
-        try {
-            return (str.indexOf('?') === 0);
-        } catch(e) {
-            return false;
-        }
-    },
-
-    updateValidTags: function(kb, additions, deletions) {
+    updateValidTags: function (kb, additions, deletions) {
         var newAdditions = [],
             resolvedAdditions = [],
-            kbMap = kb.map(function(x) { return x.toRaw(); }), index;
+            kbMap = kb.map(function (x) { return x.toRaw(); }), index;
         for (var i = 0; i < additions.length; i++) {
             index = kbMap.indexOf(additions[i].toRaw());
             if (index !== -1) {
@@ -225,11 +193,11 @@ Logics = {
                 newAdditions.push(additions[i]);
             }
         }
-        
-        for (i= 0; i < deletions.length; i++) {
+
+        for (i = 0; i < deletions.length; i++) {
             index = kbMap.indexOf(deletions[i].toRaw());
             if (index !== -1 && kb[index].explicit) {
-                kb[index].valid = false;                
+                kb[index].valid = false;
             }
         }
 
@@ -239,7 +207,7 @@ Logics = {
         };
     },
 
-    addAlternativeDerivationAsCausedByFromExplicit: function(kb, kbFact, altFact) {
+    addAlternativeDerivationAsCausedByFromExplicit: function (kb, kbFact, altFact) {
         var derivations = kbFact.consequences;
 
         for (var i = 0; i < derivations.length; i++) {
@@ -250,7 +218,7 @@ Logics = {
         }
     },
 
-    buildCauses: function(conjunction) {
+    buildCauses: function (conjunction) {
         var explicitFacts = this.getOnlyExplicitFacts(conjunction),
             implicitFacts = this.getOnlyImplicitFacts(conjunction),
             combinedImplicitCauses,
@@ -273,7 +241,7 @@ Logics = {
         }
     },
 
-    addConsequences: function(facts, consequences) {
+    addConsequences: function (facts, consequences) {
         for (var i = 0; i < facts.length; i++) {
             if (!facts[i].explicit) {
                 facts[i].consequences = facts[i].consequences.concat(consequences);
@@ -284,7 +252,7 @@ Logics = {
         }
     },
 
-    combineImplicitCauses: function(implicitFacts) {
+    combineImplicitCauses: function (implicitFacts) {
         var combination = implicitFacts[0].causedBy;
         for (var i = 1; i < implicitFacts.length; i++) {
             combination = this.disjunctCauses(combination, implicitFacts[i].causedBy)
@@ -292,7 +260,7 @@ Logics = {
         return combination;
     },
 
-    disjunctCauses: function(prev, next) {
+    disjunctCauses: function (prev, next) {
         var conjunction, disjunction = [];
 
         if ((prev == []) || (next == [])) {
@@ -308,15 +276,15 @@ Logics = {
         return disjunction;
     },
 
-    unifyFactSet: function(fs) {
+    unifyFactSet: function (fs) {
         var unifiedSet = [],
             foundFactIndex;
         for (var i = 0; i < fs.length; i++) {
             if (fs[i] !== undefined) {
                 if (foundFactIndex = fs[i].appearsIn(unifiedSet)) {
                     unifiedSet[foundFactIndex].causedBy = this.uniquesCausedBy(fs[i].causedBy, unifiedSet[foundFactIndex].causedBy);
-                    unifiedSet[foundFactIndex].consequences = Utils.uniques(fs[i].consequences, unifiedSet[foundFactIndex].consequences);                    
-                    fs[i].doPropagate(unifiedSet[foundFactIndex]);                   
+                    unifiedSet[foundFactIndex].consequences = Utils.uniques(fs[i].consequences, unifiedSet[foundFactIndex].consequences);
+                    fs[i].doPropagate(unifiedSet[foundFactIndex]);
                 } else {
                     unifiedSet.push(fs[i]);
                 }
@@ -325,7 +293,7 @@ Logics = {
         return unifiedSet;
     },
 
-    unify: function(subSet, updatingSet) {
+    unify: function (subSet, updatingSet) {
         var initialLength = updatingSet.length;
 
         subSet = this.unifyFactSet(subSet);
@@ -338,7 +306,7 @@ Logics = {
         }
     },
 
-    uniquesCausedBy: function(cb1, cb2) {
+    uniquesCausedBy: function (cb1, cb2) {
         var min, max, newCb = [], found;
 
         if (cb1.length >= cb2.length) {
@@ -371,30 +339,37 @@ Logics = {
         return newCb;
     },
 
-    parseRules: function(strRuleList, entailment = Rule.types.CUSTOM) {
+    parseRules: function (strRuleList, entailment = Rule.types.CUSTOM, prefixes = new Prefixes()) {
         var parsedRuleList = [];
         for (var i = 0; i < strRuleList.length; i++) {
-			let match = strRuleList[i].match('(.+)=(.+)')
-			if (match) {
-				parsedRuleList.push(this.parseRule(match[2], match[1], entailment))
-			} else {
-				parsedRuleList.push(this.parseRule(strRuleList[i], null, entailment))
-			}
+            try{
+
+                let match = strRuleList[i].match(/([^=]+)\s*=\s*(\(.+)/)
+                if (match) {
+                    parsedRuleList.push(this.parseRule(match[2], match[1], entailment, prefixes))
+                } else {
+                    parsedRuleList.push(this.parseRule(strRuleList[i], null, entailment, prefixes))
+                }
+            }
+            catch(e){
+                throw `Error parsing rule ${strRuleList[i]}\n${e}`;
+            }
         }
         return parsedRuleList;
     },
 
-    parseRule: function(strRule, name = `rule-${md5(strRule)}`, entailment) {
-        let bodyTriples = strRule.split('->')[1].match(RegularExpressions.TRIPLE)
-        let headTriples = strRule.split('->')[0].match(RegularExpressions.TRIPLE)
+    parseRule: function (strRule, name = `rule-${md5(strRule)}`, entailment = Rule.types.CUSTOM, prefixes = new Prefixes()) {
+        let [headTriples, bodyTriples] = strRule.split('->')
+            .map(p => p.match(RegularExpressions.TRIPLE));
 
-        let causes = this._createFactSetFromTriples(headTriples)
-        let consequences = this._createFactSetFromTriples(bodyTriples)
+
+        let causes = this._createFactSetFromTriples(headTriples, prefixes)
+        let consequences = this._createFactSetFromTriples(bodyTriples, prefixes)
 
         return new Rule(causes, consequences, name, entailment)
     },
 
-    _createFactSetFromTriples(triples) {
+    _createFactSetFromTriples(triples, prefixes) {
         let set = []
         if (triples[0] == 'false') {
             set.push(new Fact('FALSE'))
@@ -404,7 +379,7 @@ Logics = {
 
                 for (let atom of triples[i].match(RegularExpressions.ATOM).splice(1)) {
                     if (atom.match(RegularExpressions.PREFIXED_URI)) {
-                        atom = Prefixes.replacePrefixWithUri(atom, atom.match(RegularExpressions.PREFIXED_URI)[1])
+                        atom = prefixes.replacePrefixWithUri(atom, atom.match(RegularExpressions.PREFIXED_URI)[1])
                     }
                     atoms.push(atom)
                 }
@@ -415,11 +390,11 @@ Logics = {
         return set
     },
 
-    isBNode: function(elem) {
-        return ( (elem !== undefined) && (elem.indexOf('__bnode__') === 0));
+    isBNode: function (elem) {
+        return ((elem !== undefined) && (elem.indexOf('__bnode__') === 0));
     },
 
-    skolemize: function(facts, elem) {
+    skolemize: function (facts, elem) {
         var skolem = '';
         for (var i = 0; i < facts.length; i++) {
             skolem += facts[i].asString;
@@ -427,5 +402,8 @@ Logics = {
         return md5(skolem) + elem;
     }
 };
-
-module.exports = Logics;
+// for (const [prop, func] of Object.entries(Logics)) {
+//     module.exports[prop] = func;
+//   }
+// module.exports = Logics;
+export default Logics;

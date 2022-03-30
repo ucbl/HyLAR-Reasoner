@@ -7,7 +7,6 @@ var path = require('path');
 var mime = require('mime-types');
 
 var Logics = require('../hylar/core/Logics/Logics');
-var OWL2RL = require('../hylar/core/OWL2RL');
 
 var H = require('../hylar/hylar');
 var owl, ontology, Hylar = new H();
@@ -21,10 +20,6 @@ var univ2 = baseOntoTxt + fs.readFileSync(path.resolve(__dirname + '/ontologies/
 var univ3 = baseOntoTxt + fs.readFileSync(path.resolve(__dirname + '/ontologies/University0_14.ttl')).toString();
 
 Hylar.setRules(Rules.equality.concat(Rules.transitivityInverse, Rules.equivalence, Rules.subsumption));
-//Hylar.setRules(OWL2RL.equality);
-//Hylar.setRules(OWL2RL.equivalence);
-//Hylar.setRules(OWL2RL.subsumption);
-//Hylar.setRules(OWL2RL.transitivityInverse);
 
 var date = new Date().getTime();
 var query, results;

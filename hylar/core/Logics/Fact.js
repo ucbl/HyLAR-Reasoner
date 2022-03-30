@@ -1,18 +1,9 @@
 /**
  * Created by mt on 21/12/2015.
  */
+import Utils from '../Utils';
 
-var Utils = require('../Utils');
-
-/**
- * Fact in the form subClassOf(a, b)
- * @param pred fact's/axiom name (e.g. subClassOf)
- * @param sub left individual
- * @param obj right individual
- * @param originFacts array of facts causing this
- * @constructor
- */
-Fact = function(pred, sub, obj, causes, expl, graphs, consequences, notUsingValidity, fromTriple) {
+const Fact = function(pred, sub, obj, causes, expl, graphs, consequences, notUsingValidity, fromTriple) {
     if(pred == 'FALSE') {
         this.falseFact = 'true';
     }
@@ -153,9 +144,9 @@ Fact.prototype = {
 
     hasSimilarPatternWith: function(fact) {
          return (
-            Logics.similarAtoms(this.subject, fact.subject) &&
-            Logics.similarAtoms(this.predicate, fact.predicate) &&
-            Logics.similarAtoms(this.object, fact.object)
+            Utils.similarAtoms(this.subject, fact.subject) &&
+            Utils.similarAtoms(this.predicate, fact.predicate) &&
+            Utils.similarAtoms(this.object, fact.object)
          );
     },
 
@@ -233,6 +224,6 @@ Fact.prototype = {
         }
     }
 };
-
-module.exports = Fact;
+export default Fact;
+// module.exports = Fact;
 

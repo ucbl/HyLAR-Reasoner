@@ -2,16 +2,12 @@
  * Created by MT on 20/11/2015.
  */
 
-var Fact = require('./Logics/Fact'),
-    Errors = require('./Errors'),
-    RegularExpressions = require('./RegularExpressions'),
-    Utils = require('./Utils');
+import Fact from './Logics/Fact';
+import RegularExpressions from './RegularExpressions';
+import { Parser, Generator } from 'sparqljs';
 
-var q = require('q'),
-    sparqlJs = require('sparqljs'),
-    SparqlParser = new sparqlJs.Parser(),
-    SparqlGenerator = new sparqlJs.Generator()
-
+var SparqlParser = new Parser();
+var SparqlGenerator = new Generator();
 /**
  * The parsing interface, for transforming facts, triples, turtle or even results bindings
  * into other representations.
@@ -25,7 +21,7 @@ var q = require('q'),
  * @deprecated Caused some literals that contain stuff like "blabla\" xsd:string"@en to be replaced with "blabla \" <xsd:string"@en>
  * @returns {string}
  */
-String.prototype.format = function() {
+String.prototype.format = function () {
     if (this.match(RegularExpressions.LITERAL_UNFORMATTED)) {
         return this.replace(RegularExpressions.LITERAL_UNFORMATTED, "$1<$2>");
     } else {
@@ -33,26 +29,26 @@ String.prototype.format = function() {
     }
 };
 
-    
-ParsingInterface = {
+
+const ParsingInterface = {
     /**
      * Transforms a triple into a fact.
      * @param t The triple
      * @param explicit True if the resulting fact is explicit, false otherwise (default: true)
      * @returns Object resulting fact
      */
-    tripleToFact: function(t, explicit, notUsingValid) {
-        if(explicit === undefined) {
+    tripleToFact: function (t, explicit, notUsingValid) {
+        if (explicit === undefined) {
             explicit = true;
         }
         return new Fact(t.predicate.toString(), t.subject.toString(), t.object.toString()/*.format()*/, [], explicit, [], [], notUsingValid, t.toString())
     },
 
-    triplesToFacts: function(t, explicit, notUsingValid) {
+    triplesToFacts: function (t, explicit, notUsingValid) {
         var arr = [], triple,
             that = this;
 
-        if(explicit === undefined) {
+        if (explicit === undefined) {
             explicit = true;
         }
 
@@ -68,7 +64,7 @@ ParsingInterface = {
      * @param entityStr
      * @returns {*}
      */
-    parseStrEntityToTurtle: function(entityStr) {
+    parseStrEntityToTurtle: function (entityStr) {
         var literalPattern = RegularExpressions.LITERAL_UNFORMATTED,
             blankNodePattern = RegularExpressions.BLANK_NODE,
             variablePattern = RegularExpressions.VARIABLE,
@@ -95,7 +91,7 @@ ParsingInterface = {
 
         if (entityStr.match(literalPattern)) {
             return entityStr.replace(literalPattern, '$1<$2>');
-        } else if(entityStr.match(blankNodePattern) || entityStr.match(variablePattern) || entityStr.match(typeOfDatatypePattern) || entityStr.match(dblQuoteInStrPattern)) {
+        } else if (entityStr.match(blankNodePattern) || entityStr.match(variablePattern) || entityStr.match(typeOfDatatypePattern) || entityStr.match(dblQuoteInStrPattern)) {
             return entityStr;
         } else {
             return '<' + entityStr + '>';
@@ -107,14 +103,14 @@ ParsingInterface = {
      * @param fact
      * @returns {string}
      */
-    factToTurtle: function(fact) {
+    factToTurtle: function (fact) {
         var subject, predicate, object;
 
         /*if (fact.fromTriple !== undefined) {
             return fact.fromTriple;
         }*/
 
-        if(fact.falseFact) {
+        if (fact.falseFact) {
             return '';
         }
 
@@ -134,7 +130,7 @@ ParsingInterface = {
      * @param facts
      * @returns {string}
      */
-    factsToTurtle: function(facts) {
+    factsToTurtle: function (facts) {
         var ttl = '', fact,
             that = this;
         for (var i = 0; i < facts.length; i++) {
@@ -149,7 +145,7 @@ ParsingInterface = {
      * @param parsedQuery as update where
      * @returns parsedQuery as construct
      */
-    updateWhereToConstructWhere: function(parsedQuery) {
+    updateWhereToConstructWhere: function (parsedQuery) {
         parsedQuery.type = "query"
         parsedQuery.queryType = "CONSTRUCT"
 
@@ -189,20 +185,20 @@ ParsingInterface = {
      * @param query
      * @returns {*}
      */
-    parseSPARQL: function(query) {
+    parseSPARQL: function (query) {
         // Hack to remove potential CONSTRUCT issues with GRAPH in the first pattern
         query = query.replace(RegularExpressions.CONSTRUCT_GRAPH_1ST_PATTERN, "$1$2$3");
         return SparqlParser.parse(query);
     },
 
-    tripleToTurtle: function(triple) {
+    tripleToTurtle: function (triple) {
         var ttl = this.parseStrEntityToTurtle(triple.subject.toString()) + " "
-                + this.parseStrEntityToTurtle(triple.predicate.toString()) + " "
-                + this.parseStrEntityToTurtle(triple.object.toString()) + " . ";
+            + this.parseStrEntityToTurtle(triple.predicate.toString()) + " "
+            + this.parseStrEntityToTurtle(triple.object.toString()) + " . ";
         return ttl;
     },
 
-    triplesToTurtle: function(triples) {
+    triplesToTurtle: function (triples) {
         var ttl = '';
         for (var i = 0; i < triples.length; i++) {
             ttl += this.tripleToTurtle(triples[i]).replace(/(\n|\r)/g, '').replace(/\\&/g, '&');
@@ -210,7 +206,7 @@ ParsingInterface = {
         return ttl;
     },
 
-    isolateWhereQuery: function(parsedQuery, whereIndex) {
+    isolateWhereQuery: function (parsedQuery, whereIndex) {
         var isolatedQuery,
             patterns = parsedQuery.where[whereIndex].patterns;
         if (parsedQuery.queryType == 'SELECT') {
@@ -220,7 +216,7 @@ ParsingInterface = {
         } else if (parsedQuery.queryType == 'CONSTRUCT') {
             isolatedQuery = parsedQuery.queryType + " { ";
             for (var i = 0; i < parsedQuery.template.length; i++) {
-               isolatedQuery += this.tripleToTurtle(parsedQuery.template[i]);
+                isolatedQuery += this.tripleToTurtle(parsedQuery.template[i]);
             }
             isolatedQuery += " } WHERE { ";
         }
@@ -241,7 +237,7 @@ ParsingInterface = {
         return isolatedQuery + " } ";
     },
 
-    constructEquivalentQuery: function(query, graph) {
+    constructEquivalentQuery: function (query, graph) {
         var rewrittenQuery, regex;
 
         if (query.match(RegularExpressions.CONSTRUCT_BODYQUERY_WITH_BRACKETS)) {
@@ -263,31 +259,31 @@ ParsingInterface = {
         return rewrittenQuery;
     },
 
-    isUpdateWhere: function(parsedQuery) {
+    isUpdateWhere: function (parsedQuery) {
         try {
-            if ( (parsedQuery.updates[0].where)
+            if ((parsedQuery.updates[0].where)
                 || (parsedQuery.updates[0].updateType == "deletewhere")
                 || (parsedQuery.updates[0].updateType == "insertwhere")) {
                 return true;
             } else {
                 return false;
             }
-        } catch(e) {
+        } catch (e) {
             return false;
         }
     },
 
-    isInsert: function(parsedQuery) {
+    isInsert: function (parsedQuery) {
         var res;
         try {
             res = parsedQuery.updates[0].insert.length > 0;
-        } catch(e) {
+        } catch (e) {
             return false;
         }
         return res;
     },
 
-    buildUpdateQueryWithConstructResults: function(initialQuery, results) {
+    buildUpdateQueryWithConstructResults: function (initialQuery, results) {
         if (results.hasOwnProperty('triples')) {
             switch (this.isInsert(initialQuery)) {
                 case true:
@@ -315,4 +311,5 @@ ParsingInterface = {
     }
 };
 
-module.exports = ParsingInterface;
+// module.exports = ParsingInterface;
+export default ParsingInterface;

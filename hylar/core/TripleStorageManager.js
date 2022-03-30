@@ -2,18 +2,19 @@
  * Created by pc on 20/11/2015.
  */
 
-var Prefixes = require('./Prefixes');
+import Prefixes from './Prefixes';
 
-var rdfstore = require('rdfstore');
-var q = require('q');
+import rdfstore from 'rdfstore';
+import q from 'q';
 
 /**
  * Interface used for triple storage.
  * Relies on antonio garrote's rdfstore.js
  */
 
-function TripleStorageManager() {
+function TripleStorageManager(prefixes = new Prefixes()) {
     //
+    this.prefixes = prefixes;
 }
 
     /**
@@ -29,9 +30,9 @@ TripleStorageManager.prototype.init = async function() {
             deferred.reject(err);
         } else {
             that.storage = store;
-            that.storage.setPrefix('owl', Prefixes.OWL);
-            that.storage.setPrefix('rdf', Prefixes.RDF);
-            that.storage.setPrefix('rdfs', Prefixes.RDFS);
+            that.storage.setPrefix('owl', that.prefixes.owl);
+            that.storage.setPrefix('rdf', that.prefixes.rdf);
+            that.storage.setPrefix('rdfs', that.prefixes.rdfs);
             deferred.resolve();
         }
     });
@@ -44,7 +45,7 @@ TripleStorageManager.prototype.init = async function() {
  * @returns {*}
  */
 TripleStorageManager.prototype.query = function(query) {
-    var deferred = q.defer();    
+    var deferred = q.defer(); 
     query = query.replace(/\\/g, '').replace(/(\n|\r)/g, ' ');
     try {      
         this.storage.execute(query, function (err, r) {
@@ -175,4 +176,5 @@ TripleStorageManager.prototype.querySideStore = function(query) {
     return deferred.promise;
 };
 
-module.exports = TripleStorageManager;
+// module.exports = TripleStorageManager;
+export default TripleStorageManager;
