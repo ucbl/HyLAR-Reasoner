@@ -38,7 +38,7 @@
     "start-tb": "node hylar/server/server.js -rm tagBased",
     "bump:patch": "npm --no-git-tag-version version patch",
 		"bump:minor": "npm --no-git-tag-version version minor",
-		"bump:major": "npm --no-git-tag-version version major",
+		"bump:major": "npm --no-git-tag-version version major"
   },
   "bin": {
     "hylar": "hylar/server/server.js"
