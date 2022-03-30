@@ -17,23 +17,6 @@
  import RegularExpressions from './core/RegularExpressions';
  import Prefixes from './core/Prefixes';
  import Axioms from './core/Axioms';
-
-const Promise = require('bluebird');
-
-const emitter = require('./core/Emitter');
-
-const Dictionary = require('./core/Dictionary'),
-    ParsingInterface = require('./core/ParsingInterface'),
-    TripleStorageManager = require('./core/TripleStorageManager'),
-    Logics = require('./core/Logics/Logics'),
-    Reasoner = require('./core/Reasoner'),
-    Rules = require('./core/Rules'),
-    Utils = require('./core/Utils'),
-    Errors = require('./core/Errors'),
-    RegularExpressions = require('./core/RegularExpressions'),
-    Prefixes = require('./core/Prefixes'),
-    Axioms = require('./core/Axioms'),
-    Rule = require('./core/Logics/Rule')
  
  const additionalRules = (() => {
     const rules = Logics.parseRules([
