@@ -2,9 +2,16 @@
  * Created by Spadon on 13/11/2015.
  */
 
-import Logics from "./Logics/Logics";
-import Utils from './Utils'
-import ParsingInterface from './ParsingInterface'
+ const Logics = require("./Logics/Logics");
+
+ /**
+  * Dictionary used to index triples (in turtle) and their fact representation.
+  * @type {{substractFactSets: Function, combine: Function}|exports|module.exports}
+  */
+ 
+ const Utils = require('./Utils')
+ const ParsingInterface = require('./ParsingInterface')
+ 
 
 /**
  * Dictionary used to index triples (in turtle) and their fact representation.
@@ -223,5 +230,5 @@ Dictionary.prototype.getFactFromStringRepresentation = function(factStr, graph) 
     }
     return false;
 }
-export default Dictionary;
-// module.exports = Dictionary;
+// export default Dictionary;
+module.exports = Dictionary;

@@ -2,25 +2,27 @@
  * Created by MT on 01/12/2015.
  */
 
- import fs from 'fs';
- import chalk from 'chalk';
- import chalkRainbow from 'chalk-rainbow';
- import Promise from 'bluebird';
- import emitter from './core/Emitter';
- import Dictionary from './core/Dictionary';
- import ParsingInterface from './core/ParsingInterface';
- import TripleStorageManager from './core/TripleStorageManager';
- import Logics from './core/Logics/Logics';
- import Reasoner from './core/Reasoner';
- import Rules from './core/Rules';
- import Utils from './core/Utils';
- import Errors from './core/Errors';
- import RegularExpressions from './core/RegularExpressions';
- import Prefixes from './core/Prefixes';
- import Axioms from './core/Axioms';
+ const fs = require('fs'),
+    chalk = require('chalk'),
+    chalkRainbow = require('chalk-rainbow')
+    q = require('q');
 
+const Promise = require('bluebird');
 
-import Rule from './core/Logics/Rule';
+const emitter = require('./core/Emitter');
+
+const Dictionary = require('./core/Dictionary'),
+    ParsingInterface = require('./core/ParsingInterface'),
+    TripleStorageManager = require('./core/TripleStorageManager'),
+    Logics = require('./core/Logics/Logics'),
+    Reasoner = require('./core/Reasoner'),
+    Rules = require('./core/Rules'),
+    Utils = require('./core/Utils'),
+    Errors = require('./core/Errors'),
+    RegularExpressions = require('./core/RegularExpressions'),
+    Prefixes = require('./core/Prefixes'),
+    Axioms = require('./core/Axioms'),
+    Rule = require('./core/Logics/Rule')
  
  const additionalRules = (() => {
     const rules = Logics.parseRules([
@@ -839,6 +841,6 @@ import Rule from './core/Logics/Rule';
  }
  
  
- export default Hylar;
- // module.exports = Hylar;
+//  export default Hylar;
+ module.exports = Hylar;
  

@@ -3,7 +3,7 @@
  */
 
 
-export default {
+ module.exports = {
     LITERAL: /^("[\s\S]*")(@([a-zA-Z\-]+)|\^\^<?.+>?)?$/i,
     LITERAL_UNFORMATTED: /("[\s\S]*"\^\^)([^<].+[^>])$/i,
     BLANK_NODE: /^_:/i,

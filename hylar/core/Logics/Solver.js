@@ -2,21 +2,20 @@
  * Created by pc on 27/01/2016.
  */
 
-import Fact from './Fact';
-import Logics from './Logics';
-import Utils from '../Utils';
-
-import emitter from '../Emitter';
-
-import q from 'q';
-
+ var Fact = require('./Fact');
+ var Logics = require('./Logics');
+ var Utils = require('../Utils');
+ 
+ var emitter = require('../Emitter');
+ 
+ var q = require('q');
 
 /**
  * Core solver used to evaluate rules against facts
  * using pattern matching mechanisms.
  */
 
-const Solver = {
+Solver = {
     /**
      * Evaluates a set of rules over a set of facts.
      * @param rs
@@ -326,8 +325,8 @@ const Solver = {
         return substitutedFact;
     }
 };
-// module.exports = Solver;
+module.exports = Solver;
 // for (const [prop, func] of Object.entries(Solver)) {
 //     module.exports[prop] = func;
 // }
-export default Solver;
+// export default Solver;

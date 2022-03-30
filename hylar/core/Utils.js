@@ -2,10 +2,11 @@
  * Created by Spadon on 13/02/2015.
  */
 
-import q from 'q';
+var q = require('q');
 
-import RegularExpressions from './RegularExpressions';
-import { EventEmitter } from 'events';
+var RegularExpressions = require('./RegularExpressions');
+var EventEmitter = require('events').EventEmitter;
+ 
 
 /** Event emitter */
 
@@ -19,7 +20,7 @@ emitter.on('finished', function (task) {
     console.log('processed ' + task);
 });
 
-const Utils = {
+Utils = {
 
     _instanceid: 1,
 
@@ -168,8 +169,8 @@ const Utils = {
         }
     },
 }
-export default Utils;
-// module.exports = Utils;
+// export default Utils;
+module.exports = Utils;
 // for (const [prop, func] of Object.entries(Utils)) {
 //     module.exports[prop] = func;
 // }

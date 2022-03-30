@@ -7,10 +7,10 @@
  * @type {{rules: *[]}}
  */
 
-import Logics from './Logics/Logics'
-import Rule from './Logics/Rule'
+ const Logics = require('./Logics/Logics')
+ const Rule = require('./Logics/Rule')
 
-const Rules = {
+Rules = {
     rdfs: Logics.parseRules([
         "rdf1 = (?uuu ?aaa ?yyy) -> (?aaa rdf:type rdf:Property)",
         "rdfs2 = (?aaa rdfs:domain ?xxx) ^ (?uuu ?aaa ?yyy) -> (?uuu rdf:type ?xxx)",
@@ -83,6 +83,6 @@ const Rules = {
     ], Rule.types.OWL2RL)
 }
 
-// module.exports = Rules
+module.exports = Rules
 
-export default Rules;
+// export default Rules;

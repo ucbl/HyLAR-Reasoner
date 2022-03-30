@@ -1,8 +1,8 @@
-import ParsingInterface from './ParsingInterface'
+const ParsingInterface = require('./ParsingInterface')
 
-const Axioms = {
-
-    rdfs: `
+class Axioms {
+    constructor() {
+        this.rdfs = `
             <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#domain> <http://www.w3.org/2000/01/rdf-schema#Resource> .
             <http://www.w3.org/2000/01/rdf-schema#domain> <http://www.w3.org/2000/01/rdf-schema#domain> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
             <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2000/01/rdf-schema#domain> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
@@ -47,8 +47,10 @@ const Axioms = {
             <http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Datatype> .
             <http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2000/01/rdf-schema#Literal> . 
             <http://www.w3.org/2000/01/rdf-schema#Datatype> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2000/01/rdf-schema#Class> .
-        `,
-    getAxioms: function (entailment) {
+        `
+    }
+
+    getAxioms(entailment) {
         let axioms = []
         if (this.hasOwnProperty(entailment)) {
             axioms = ParsingInterface.turtleToFacts(this[entailment]).map((axiom) => {
@@ -60,5 +62,4 @@ const Axioms = {
     }
 }
 
-// module.exports = new Axioms()
-export default Axioms;
+module.exports = new Axioms();
