@@ -30,7 +30,7 @@ String.prototype.format = function () {
 };
 
 
-const ParsingInterface = {
+var ParsingInterface = {
     /**
      * Transforms a triple into a fact.
      * @param t The triple

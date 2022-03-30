@@ -8,7 +8,7 @@ import ReasoningEngine from './ReasoningEngine'
  * The core reasoner or HyLAR.
  */
 
-const Reasoner = {
+var Reasoner = {
 
     updateRuleDependencies: function(ruleSet) {
         for (var i = 0; i < ruleSet.length; i++) {
@@ -54,7 +54,7 @@ const Reasoner = {
     }
 };
 // module.exports = Reasoner;
-// for (const [prop, func] of Object.entries(Reasoner)) {
+// for (var [prop, func] of Object.entries(Reasoner)) {
 //     module.exports[prop] = func;
 // }
 export default Reasoner;

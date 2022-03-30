@@ -1,5 +1,5 @@
-const xml2js = require('xml2js')
-const builder = new xml2js.Builder({ "rootName": "sparql" })
+var xml2js = require('xml2js')
+var builder = new xml2js.Builder({ "rootName": "sparql" })
 
 /**
  * Standard sparql xml tag attributes
@@ -25,7 +25,7 @@ let acceptedContents = {
  * Generates a brand new empty json object of sparql results
  * @returns {{head: {link: string[], vars: string[]}, results: {bindings: string[]}}}
  */
-const generateJsonSparqlResults = () => {
+var generateJsonSparqlResults = () => {
     return {
         "head": {
             "link": [''],

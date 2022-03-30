@@ -2,13 +2,13 @@
  * Created by Spadon on 02/10/2014.
  */
 
-const fs = require('fs'),
+var fs = require('fs'),
     path = require('path'),
     mime = require('mime-types');
 
-const h = require('../hylar');
-const Logics = require('../core/Logics/Logics');
-const ContentNegotiator = require('./content_negotiator')
+var h = require('../hylar');
+var Logics = require('../core/Logics/Logics');
+var ContentNegotiator = require('./content_negotiator')
 
 let appDir = path.dirname(require.main.filename),
     ontoDir = appDir + '/ontologies',
@@ -32,7 +32,7 @@ process.argv.forEach(function(value, index) {
     }
 });
 
-const Hylar = new h({
+var Hylar = new h({
     persistent, entailment
 });
 
@@ -307,7 +307,7 @@ module.exports = {
         let graph = decodeURIComponent(req.params.graph)
         let consistent = Hylar.checkConsistency().consistent
 
-        const prepareFactForPresentation = (fact, graph) => {
+        var prepareFactForPresentation = (fact, graph) => {
             return {
                 graph,
                 asString: fact.asString,

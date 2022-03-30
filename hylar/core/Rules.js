@@ -10,7 +10,7 @@
 import Logics from './Logics/Logics'
 import Rule from './Logics/Rule'
 
-const Rules = {
+var Rules = {
     rdfs: Logics.parseRules([
         "rdf1 = (?uuu ?aaa ?yyy) -> (?aaa rdf:type rdf:Property)",
         "rdfs2 = (?aaa rdfs:domain ?xxx) ^ (?uuu ?aaa ?yyy) -> (?uuu rdf:type ?xxx)",

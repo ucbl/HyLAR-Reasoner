@@ -13,7 +13,7 @@ import md5 from 'md5';
 
 
 
-const Logics = {
+var Logics = {
     /**
      * True-like merge of two facts sets, which also merges
      * identical facts causedBy properties.
@@ -402,7 +402,7 @@ const Logics = {
         return md5(skolem) + elem;
     }
 };
-// for (const [prop, func] of Object.entries(Logics)) {
+// for (var [prop, func] of Object.entries(Logics)) {
 //     module.exports[prop] = func;
 //   }
 // module.exports = Logics;

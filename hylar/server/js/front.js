@@ -1,4 +1,4 @@
-const fileUpload = (ev, contextPath) => {
+var fileUpload = (ev, contextPath) => {
     let formData = new FormData()
     formData.append('file', ev.files[0])
 
@@ -14,7 +14,7 @@ const fileUpload = (ev, contextPath) => {
     })
 }
 
-const areYouSure = (ev, url) => {
+var areYouSure = (ev, url) => {
     let oldText = ev.innerText
     let oldOnclick = ev.onclick
 
@@ -32,7 +32,7 @@ const areYouSure = (ev, url) => {
     }
 }
 
-const checkStatus = (contextPath = '') => {
+var checkStatus = (contextPath = '') => {
     if (document.getElementById('hylar-navbar')) {
         $.get(`${contextPath}/status`)
             .success((result) => {
@@ -44,10 +44,10 @@ const checkStatus = (contextPath = '') => {
     }
 }
 
-const prove = async(inferredFactId, assertedFactIds, entailment) => {
+var prove = async(inferredFactId, assertedFactIds, entailment) => {
     let facts = []
 
-    const buildFact = (factId) => {
+    var buildFact = (factId) => {
         let sub = document.getElementById(`subject-${factId}`).dataset.atom
         let pred = document.getElementById(`predicate-${factId}`).dataset.atom
         let obj = document.getElementById(`object-${factId}`).dataset.atom
@@ -62,7 +62,7 @@ const prove = async(inferredFactId, assertedFactIds, entailment) => {
 
     let proofChain = [facts]
 
-    const evalLoop = async() => {
+    var evalLoop = async() => {
         let values = await Solver.evaluateRuleSet(Rules[entailment] ? Rules[entailment] : Rules.owl2rl, proofChain.flat(), true)
         if (Utils.uniques(proofChain.flat(), values.cons).length > proofChain.flat().length) {
             let previousDerivations = proofChain[proofChain.length-1]
@@ -111,7 +111,7 @@ const prove = async(inferredFactId, assertedFactIds, entailment) => {
     document.getElementById('proof').scrollIntoView()
 }
 
-const highlightFacts = (ev, entailment) => {
+var highlightFacts = (ev, entailment) => {
     let blocks = Object.keys(ev.dataset).map(blockId => { return document.getElementById(blockId) })
     let factIds = blocks.map(block => { return block.dataset.factId })
 
@@ -132,11 +132,11 @@ const highlightFacts = (ev, entailment) => {
     prove(ev.closest("tr").dataset.factId, factIds, entailment)
 }
 
-const appendPrefix = (ev) => {
+var appendPrefix = (ev) => {
     document.getElementById('rule-content').value = `${document.getElementById('rule-content').value}${ev.value}`
 }
 
-const sparql = (ev, contextPath) => {
+var sparql = (ev, contextPath) => {
     let query = sparqlQuery.getValue()
 
     $.ajax({
@@ -220,21 +220,21 @@ const sparql = (ev, contextPath) => {
     })
 }
 
-const closeProof = () => {
+var closeProof = () => {
     document.getElementById('proof').remove()
 }
 
-const putSparql = (el) => {
+var putSparql = (el) => {
     var query = $(el).text();
     $('#query').val(query);
     $('html, body').animate({ scrollTop: 0 }, 0);
 }
 
-const copy = (el) => {
+var copy = (el) => {
     sparqlQuery.setValue(`${sparqlQuery.getValue()}${el.innerText}`)
 }
 
-const addRule = (contextPath) => {
+var addRule = (contextPath) => {
     let rulename = document.querySelector('[name="rulename"]').value
     let rule = document.querySelector('[id="rule-content"]').value
 

@@ -38,8 +38,8 @@ which takes three parameters:
 - keepOldValues: A boolean: true to keep old values while classfying, false to overwrite the KB. Default is **false**.
 
 ```javascript
-const Hylar = require('hylar');
-const h = new Hylar();
+var Hylar = require('hylar');
+var h = new Hylar();
     
 // async function
 h.load(rawOntology, mimeType, keepOldValues);
@@ -91,7 +91,7 @@ Include this script in your page with this line:
 ```html
 <script src="path-to/hylar-client.js"></script>
 ```
-As in the node module version, you can instantiate HyLAR with `const h = new Hylar();` and call the same methods `query()`, `load()` and `parseAndAddRule()`.
+As in the node module version, you can instantiate HyLAR with `var h = new Hylar();` and call the same methods `query()`, `load()` and `parseAndAddRule()`.
 
 ## Use HyLAR as a server
 

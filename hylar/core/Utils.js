@@ -19,7 +19,7 @@ emitter.on('finished', function (task) {
     console.log('processed ' + task);
 });
 
-const Utils = {
+var Utils = {
 
     _instanceid: 1,
 
@@ -109,13 +109,13 @@ const Utils = {
     },
 
     getValueFromDatatype: function (datatype) {
-        const rawMatchResults = datatype.match(RegularExpressions.LITERAL_RAW_VALUE);
-        const literalWithoutTypeResults = datatype.match(RegularExpressions.LITERAL_WITHOUT_TYPE);
+        var rawMatchResults = datatype.match(RegularExpressions.LITERAL_RAW_VALUE);
+        var literalWithoutTypeResults = datatype.match(RegularExpressions.LITERAL_WITHOUT_TYPE);
 
         if (!rawMatchResults && !literalWithoutTypeResults) return `"${datatype}"`;
 
-        const rawValueMatch = rawMatchResults?.length > 1 ? rawMatchResults[1] : false;
-        const literalWithoutTypeMatch = literalWithoutTypeResults?.length > 1 ? literalWithoutTypeResults[1] : false;
+        var rawValueMatch = rawMatchResults?.length > 1 ? rawMatchResults[1] : false;
+        var literalWithoutTypeMatch = literalWithoutTypeResults?.length > 1 ? literalWithoutTypeResults[1] : false;
         if (isNaN(parseFloat(rawValueMatch))) {
             return literalWithoutTypeMatch;
         } else {
@@ -170,6 +170,6 @@ const Utils = {
 }
 export default Utils;
 // module.exports = Utils;
-// for (const [prop, func] of Object.entries(Utils)) {
+// for (var [prop, func] of Object.entries(Utils)) {
 //     module.exports[prop] = func;
 // }

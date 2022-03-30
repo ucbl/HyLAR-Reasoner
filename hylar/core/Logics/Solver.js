@@ -16,7 +16,7 @@ import q from 'q';
  * using pattern matching mechanisms.
  */
 
-const Solver = {
+var Solver = {
     /**
      * Evaluates a set of rules over a set of facts.
      * @param rs
@@ -327,7 +327,7 @@ const Solver = {
     }
 };
 // module.exports = Solver;
-// for (const [prop, func] of Object.entries(Solver)) {
+// for (var [prop, func] of Object.entries(Solver)) {
 //     module.exports[prop] = func;
 // }
 export default Solver;

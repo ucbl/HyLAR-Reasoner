@@ -3,7 +3,7 @@
  */
 import Utils from '../Utils';
 
-const Fact = function(pred, sub, obj, causes, expl, graphs, consequences, notUsingValidity, fromTriple) {
+var Fact = function(pred, sub, obj, causes, expl, graphs, consequences, notUsingValidity, fromTriple) {
     if(pred == 'FALSE') {
         this.falseFact = 'true';
     }

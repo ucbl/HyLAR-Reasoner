@@ -12,7 +12,7 @@ import q from 'q';
  * and heuristics for KB view maintaining.
  */
 
-const ReasoningEngine = {
+var ReasoningEngine = {
     /**
      * A naive reasoner that recalculates the entire knowledge base.
      * @deprecated

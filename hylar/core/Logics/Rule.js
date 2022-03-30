@@ -11,7 +11,7 @@ import Utils from '../Utils';
  * @param ra the consequence facts
  * @constructor
  */
-const Rule = function(slf, srf, name, ruleType = Rule.types.CUSTOM) {
+var Rule = function(slf, srf, name, ruleType = Rule.types.CUSTOM) {
     this.name = name;
     this.causes = [];
     this.operatorCauses = [];

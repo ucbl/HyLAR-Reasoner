@@ -18,8 +18,8 @@
  import Prefixes from './core/Prefixes';
  import Axioms from './core/Axioms';
  
- const additionalRules = (() => {
-    const rules = Logics.parseRules([
+ var additionalRules = (() => {
+    var rules = Logics.parseRules([
 
 
         // `ls-mbr1 = (?l http://www.w3.org/1999/02/22-rdf-syntax-ns#first ?m) -> (?l http://rdf.equinor.com/ui/adhoc#hasMember ?m)`,
@@ -39,7 +39,7 @@
         // `scm-nv = (?c1 http://rdf.equinor.com/ui/adhoc#notValue ?i) ^ (?c1 http://www.w3.org/2002/07/owl#onProperty ?p1) ^ (?c2 http://rdf.equinor.com/ui/adhoc#notValue ?i) ^ (?c2 http://www.w3.org/2002/07/owl#onProperty ?p2) ^ (?p1 http://www.w3.org/2000/01/rdf-schema#subPropertyOf ?p2) -> (?c1 http://www.w3.org/2000/01/rdf-schema#subClassOf ?c2)`
 
     ], Rule.types.OWL2RL);
-    // const ruleDict = Object.assign({}, ...rules.map((x:any) => ({[x.name]: x })));
+    // var ruleDict = Object.assign({}, ...rules.map((x:any) => ({[x.name]: x })));
     // ruleDict['ls-mbr1 '].addDependentRule(ruleDict['ls-mbr2 ']);
     // ruleDict['ls-mbr1 '].addDependentRule(ruleDict['scm-uni ']);
     // ruleDict['ls-mbr1 '].addDependentRule(ruleDict['cls-uni ']);
@@ -49,7 +49,7 @@
 
 })();
  
- const logFile = 'hylar.log';
+ var logFile = 'hylar.log';
  
  /**
   * HyLAR main module.
@@ -148,7 +148,7 @@
 
     async parseAndAddRules(rawRules, entailment = this.entailment) {
         try {
-            const rules = Logics.parseRules(rawRules, entailment, this.prefixes);
+            var rules = Logics.parseRules(rawRules, entailment, this.prefixes);
             await this.addRules(rules)
         } catch (e) {
             Hylar.displayError(e);
