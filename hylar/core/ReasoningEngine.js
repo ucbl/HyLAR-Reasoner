@@ -1,19 +1,18 @@
 /**
  * Created by Spadon on 11/09/2015.
  */
- 
-var Logics = require('./Logics/Logics'),
-     Solver = require('./Logics/Solver'),
-     Utils = require('./Utils');
- 
- var q = require('q');
+import Logics from './Logics/Logics';
+import Solver from './Logics/Solver';
+import Utils from './Utils';
+
+import q from 'q';
 
 /**
  * Reasoning engine containing incremental algorithms
  * and heuristics for KB view maintaining.
  */
 
-ReasoningEngine = {
+const ReasoningEngine = {
     /**
      * A naive reasoner that recalculates the entire knowledge base.
      * @deprecated
@@ -211,9 +210,13 @@ ReasoningEngine = {
         return deferred.promise;
     }    
 };
-module.exports = {
+export default {
     incrementalBf: ReasoningEngine.incrementalBf,
     incremental: ReasoningEngine.incremental,
     tagging: ReasoningEngine.tagging,
     tagFilter: ReasoningEngine.tagFilter
 };
+// module.exports.incrementalBf = ReasoningEngine.incrementalBf;
+// module.exports.incremental = ReasoningEngine.incremental;
+// module.exports.tagging = ReasoningEngine.tagging;
+// module.exports.tagFilter = ReasoningEngine.tagFilter;

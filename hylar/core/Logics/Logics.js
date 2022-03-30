@@ -3,18 +3,17 @@
  * Logics module
  */
 
- var Rule = require('./Rule');
- var Fact = require('./Fact');
- var Utils = require('../Utils');
- var Errors = require('../Errors');
- var RegularExpressions = require('../RegularExpressions');
- var Prefixes = require('../Prefixes')
- 
- var md5 = require('md5');
+import Rule from './Rule';
+import Fact from './Fact';
+import Utils from '../Utils';
+import Errors from '../Errors';
+import RegularExpressions from '../RegularExpressions';
+import Prefixes from '../Prefixes'
+import md5 from 'md5';
 
 
 
-Logics = {
+const Logics = {
     /**
      * True-like merge of two facts sets, which also merges
      * identical facts causedBy properties.
@@ -406,5 +405,5 @@ Logics = {
 // for (const [prop, func] of Object.entries(Logics)) {
 //     module.exports[prop] = func;
 //   }
-module.exports = Logics;
-// export default Logics;
+// module.exports = Logics;
+export default Logics;

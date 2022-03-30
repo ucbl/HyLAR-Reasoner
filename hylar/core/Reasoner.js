@@ -2,13 +2,13 @@
 * Created by Spadon on 17/10/2014.
 */
 
-const ReasoningEngine = require('./ReasoningEngine')
+import ReasoningEngine from './ReasoningEngine'
 
 /**
  * The core reasoner or HyLAR.
  */
 
-module.exports = {
+const Reasoner = {
 
     updateRuleDependencies: function(ruleSet) {
         for (var i = 0; i < ruleSet.length; i++) {
@@ -53,3 +53,8 @@ module.exports = {
         }
     }
 };
+// module.exports = Reasoner;
+// for (const [prop, func] of Object.entries(Reasoner)) {
+//     module.exports[prop] = func;
+// }
+export default Reasoner;

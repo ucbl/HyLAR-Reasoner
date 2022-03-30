@@ -2,16 +2,12 @@
  * Created by MT on 20/11/2015.
  */
 
-var Fact = require('./Logics/Fact'),
-    Errors = require('./Errors'),
-    RegularExpressions = require('./RegularExpressions'),
-    Utils = require('./Utils');
+import Fact from './Logics/Fact';
+import RegularExpressions from './RegularExpressions';
+import { Parser, Generator } from 'sparqljs';
 
-var q = require('q'),
-    sparqlJs = require('sparqljs'),
-    SparqlParser = new sparqlJs.Parser(),
-    SparqlGenerator = new sparqlJs.Generator()
-
+var SparqlParser = new Parser();
+var SparqlGenerator = new Generator();
 /**
  * The parsing interface, for transforming facts, triples, turtle or even results bindings
  * into other representations.
@@ -34,7 +30,7 @@ String.prototype.format = function () {
 };
 
 
-ParsingInterface = {
+const ParsingInterface = {
     /**
      * Transforms a triple into a fact.
      * @param t The triple
@@ -315,5 +311,5 @@ ParsingInterface = {
     }
 };
 
-module.exports = ParsingInterface;
-// export default ParsingInterface;
+// module.exports = ParsingInterface;
+export default ParsingInterface;

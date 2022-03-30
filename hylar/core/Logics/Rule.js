@@ -2,7 +2,7 @@
  * Created by mt on 21/12/2015.
  */
 
- const Utils = require('../Utils');
+import Utils from '../Utils';
 
 /**
  * Rule in the form subClassOf(a, b) ^ subClassOf(b, c) -> subClassOf(a, c)
@@ -11,7 +11,7 @@
  * @param ra the consequence facts
  * @constructor
  */
-Rule = function(slf, srf, name, ruleType = Rule.types.CUSTOM) {
+const Rule = function(slf, srf, name, ruleType = Rule.types.CUSTOM) {
     this.name = name;
     this.causes = [];
     this.operatorCauses = [];
@@ -140,5 +140,5 @@ Rule.prototype = {
     }
 };
 
-module.exports = Rule;
-// export default Rule;
+// module.exports = Rule;
+export default Rule;

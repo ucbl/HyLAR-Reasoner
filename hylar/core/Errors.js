@@ -1,4 +1,8 @@
-module.exports = {
+/**
+ * Created by aifb on 02.05.16.
+ */
+
+const Errors = {
     IllegalFact: function(fact) {
         return new Error('Illegal fact: ' + fact.toString());
     },
@@ -23,3 +27,4 @@ module.exports = {
         return new Error(`COUNT statement currently only supports single wildcard (*) counts, got '${expr}'`)
     }
 };
+export default Errors;

@@ -1,9 +1,9 @@
 /**
  * Created by mt on 21/12/2015.
  */
-var Utils = require('../Utils');
+import Utils from '../Utils';
 
-Fact = function(pred, sub, obj, causes, expl, graphs, consequences, notUsingValidity, fromTriple) {
+const Fact = function(pred, sub, obj, causes, expl, graphs, consequences, notUsingValidity, fromTriple) {
     if(pred == 'FALSE') {
         this.falseFact = 'true';
     }
@@ -224,6 +224,6 @@ Fact.prototype = {
         }
     }
 };
-
-module.exports = Fact;
+export default Fact;
+// module.exports = Fact;
 

@@ -2,12 +2,10 @@
  * Created by pc on 20/11/2015.
  */
 
+import Prefixes from './Prefixes';
 
- var Prefixes = require('./Prefixes');
-
- var rdfstore = require('rdfstore');
- var q = require('q');
- 
+import rdfstore from 'rdfstore';
+import q from 'q';
 
 /**
  * Interface used for triple storage.
@@ -178,5 +176,5 @@ TripleStorageManager.prototype.querySideStore = function(query) {
     return deferred.promise;
 };
 
-module.exports = TripleStorageManager;
-// export default TripleStorageManager;
+// module.exports = TripleStorageManager;
+export default TripleStorageManager;

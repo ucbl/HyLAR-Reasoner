@@ -2,10 +2,21 @@
  * Created by MT on 01/12/2015.
  */
 
- const fs = require('fs'),
-    chalk = require('chalk'),
-    chalkRainbow = require('chalk-rainbow')
-    q = require('q');
+ import chalk from 'chalk';
+ import chalkRainbow from 'chalk-rainbow';
+ import Promise from 'bluebird';
+ import emitter from './core/Emitter';
+ import Dictionary from './core/Dictionary';
+ import ParsingInterface from './core/ParsingInterface';
+ import TripleStorageManager from './core/TripleStorageManager';
+ import Logics from './core/Logics/Logics';
+ import Reasoner from './core/Reasoner';
+ import Rules from './core/Rules';
+ import Utils from './core/Utils';
+ import Errors from './core/Errors';
+ import RegularExpressions from './core/RegularExpressions';
+ import Prefixes from './core/Prefixes';
+ import Axioms from './core/Axioms';
 
 const Promise = require('bluebird');
 
@@ -85,7 +96,7 @@ const Dictionary = require('./core/Dictionary'),
      static log(msg) {
          let dateMsg = `[ ${new Date().toString()} ] ${msg}\n`
          Hylar.currentInstance.log.push(msg)
-         fs.appendFileSync(logFile, dateMsg);
+        //  fs.appendFileSync(logFile, dateMsg);
      }
  
      /**
@@ -138,7 +149,7 @@ const Dictionary = require('./core/Dictionary'),
      async _setupPersistence(persistent) {
          if (persistent != null && persistent == true) {
              this.allowPersist = true
-             this.restore()
+            //  this.restore()
          } else {
              this.allowPersist = false
          }
@@ -226,7 +237,7 @@ const Dictionary = require('./core/Dictionary'),
         this.dict = new Dictionary();
         this.sm = new TripleStorageManager(this.prefixes);
         await this.sm.init();
-        this.persist();
+        // this.persist();
     }
  
      /**
@@ -509,7 +520,7 @@ const Dictionary = require('./core/Dictionary'),
       */
      setDictionaryContent(dict) {
          this.dict.setContent(dict);
-         this.persist()
+        //  this.persist()
      }
  
      importData(dictionary) {
@@ -527,72 +538,72 @@ const Dictionary = require('./core/Dictionary'),
          return this.sm.load(importedTriples, "text/turtle")
      }
  
-     persist() {
-         if (!this.allowPersist && fs) return
+    //  persist() {
+    //      if (!this.allowPersist && fs) return
  
-         // Check if db folder exists
-         if (!fs.existsSync('./db')){
-             fs.mkdirSync('./db')
-         }
+    //      // Check if db folder exists
+    //      if (!fs.existsSync('./db')){
+    //          fs.mkdirSync('./db')
+    //      }
  
-         let dbconf = {
-             mappingsGraphDbFiles: {},
-             customRules: []
-         }
+    //      let dbconf = {
+    //          mappingsGraphDbFiles: {},
+    //          customRules: []
+    //      }
  
-         if (fs.existsSync('./db/db.conf')) {
-             dbconf = Object.assign(dbconf, JSON.parse(fs.readFileSync('./db/db.conf').toString()))
-         }
+    //      if (fs.existsSync('./db/db.conf')) {
+    //          dbconf = Object.assign(dbconf, JSON.parse(fs.readFileSync('./db/db.conf').toString()))
+    //      }
  
-         dbconf.customRules = this._customRules.map((r => { return { name: r.name, content: r.toString() } }))
+    //      dbconf.customRules = this._customRules.map((r => { return { name: r.name, content: r.toString() } }))
  
-         for (let graphUri in this.getDictionary().dict) {
-             // Write db content on file
-             let filename = `${graphUri.match(RegularExpressions.URI_AFTER_HASH_OR_SLASH)[0]}.n3`
-             let dbfilename = `./db/${filename}`
-             let graphContent = this.getDictionary().dict[graphUri]
-             let explicitEntries = []
+    //      for (let graphUri in this.getDictionary().dict) {
+    //          // Write db content on file
+    //          let filename = `${graphUri.match(RegularExpressions.URI_AFTER_HASH_OR_SLASH)[0]}.n3`
+    //          let dbfilename = `./db/${filename}`
+    //          let graphContent = this.getDictionary().dict[graphUri]
+    //          let explicitEntries = []
  
-             for (let triple in graphContent) {
-                 if (Logics.getOnlyExplicitFacts(graphContent[triple]).length > 0) explicitEntries.push(triple)
-             }
-             fs.writeFileSync(dbfilename, explicitEntries.join('\n'))
+    //          for (let triple in graphContent) {
+    //              if (Logics.getOnlyExplicitFacts(graphContent[triple]).length > 0) explicitEntries.push(triple)
+    //          }
+    //          fs.writeFileSync(dbfilename, explicitEntries.join('\n'))
  
-             dbconf.mappingsGraphDbFiles[filename] = graphUri
-         }
+    //          dbconf.mappingsGraphDbFiles[filename] = graphUri
+    //      }
  
-         fs.writeFileSync('./db/db.conf', JSON.stringify(dbconf, null, 3))
-     }
+    //      fs.writeFileSync('./db/db.conf', JSON.stringify(dbconf, null, 3))
+    //  }
  
-     async restore() {
-         if (!fs || !fs.existsSync('./db') || !this.allowPersist) return
+    //  async restore() {
+    //      if (!fs || !fs.existsSync('./db') || !this.allowPersist) return
  
-         Hylar.notify('... Recovering DB ...')
+    //      Hylar.notify('... Recovering DB ...')
  
-         let files  = fs.readdirSync('./db')
-         let dbconf = {
-             mappingsGraphDbFiles: {},
-             customRules: []
-         }
+    //      let files  = fs.readdirSync('./db')
+    //      let dbconf = {
+    //          mappingsGraphDbFiles: {},
+    //          customRules: []
+    //      }
  
-         if (fs.existsSync('./db/db.conf')) {
-             dbconf = Object.assign(dbconf, JSON.parse(fs.readFileSync('./db/db.conf').toString()))
-         }
+    //      if (fs.existsSync('./db/db.conf')) {
+    //          dbconf = Object.assign(dbconf, JSON.parse(fs.readFileSync('./db/db.conf').toString()))
+    //      }
  
-         for (let file of files.filter((file) => { return file != 'db.conf'})) {
-             try {
-                 let content = fs.readFileSync(`./db/${file}`).toString()
-                 for (let rule of dbconf.customRules) {
-                     this._customRules.push(Logics.parseRule(rule.content, rule.name, this.entailment, this.prefixes))
-                 }
-                 await this.load(content, 'text/n3', true, dbconf.mappingsGraphDbFiles[file])
-             } catch (err) {
-                 Hylar.displayWarning(Errors.DBParsing(file))
-             }
-         }
+    //      for (let file of files.filter((file) => { return file != 'db.conf'})) {
+    //          try {
+    //              let content = fs.readFileSync(`./db/${file}`).toString()
+    //              for (let rule of dbconf.customRules) {
+    //                  this._customRules.push(Logics.parseRule(rule.content, rule.name, this.entailment, this.prefixes))
+    //              }
+    //              await this.load(content, 'text/n3', true, dbconf.mappingsGraphDbFiles[file])
+    //          } catch (err) {
+    //              Hylar.displayWarning(Errors.DBParsing(file))
+    //          }
+    //      }
  
-         Hylar.notify('* DB recover finished *')
-     }
+    //      Hylar.notify('* DB recover finished *')
+    //  }
  
      checkConsistency() {
          var __FALSE__ = this.getDictionary().dict['#default']['__FALSE__'],
@@ -731,7 +742,7 @@ const Dictionary = require('./core/Dictionary'),
              //Prefixes.registerPrefixFrom(factsToBeAdded[i])
          }
  
-         this.persist()
+        //  this.persist()
          Hylar.success('Registered successfully.');
      }
  
