@@ -179,10 +179,10 @@ class Hylar {
         await this.recomputeClosure()
     }
 
-    clean() {
+    async clean() {
         this.dict = new Dictionary();
         this.sm = new TripleStorageManager();
-        this.sm.init();
+        await this.sm.init();
         this.persist()
     }
 
